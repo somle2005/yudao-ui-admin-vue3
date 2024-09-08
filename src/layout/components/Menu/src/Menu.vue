@@ -90,6 +90,11 @@ export default defineComponent({
           backgroundColor="var(--left-menu-bg-color)"
           textColor="var(--left-menu-text-color)"
           activeTextColor="var(--left-menu-text-active-color)"
+          popperClass={
+            unref(menuMode) === 'vertical'
+              ? `${prefixCls}-popper--vertical`
+              : `${prefixCls}-popper--horizontal`
+          }
           onSelect={menuSelect}
         >
           {{
@@ -187,6 +192,16 @@ $prefix-cls: #{$namespace}-menu;
     // transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out !important;
     .#{$prefix-cls}__title {
       display: none;
+    }
+  }
+
+  // 垂直菜单
+  &__vertical {
+    :deep(.#{$elNamespace}-menu--vertical) {
+      &:not(.#{$elNamespace}-menu--collapse) .#{$elNamespace}-sub-menu__title,
+      .#{$elNamespace}-menu-item {
+        padding-right: 0;
+      }
     }
   }
 
