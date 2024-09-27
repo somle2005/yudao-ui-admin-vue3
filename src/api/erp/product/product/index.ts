@@ -12,6 +12,10 @@ export interface ProductVO {
   standard: string // 产品规格
   remark: string // 产品备注
   expiryDay: number // 保质期天数
+  material: string // 材料（中文）
+  length: number // 基础长度（cm）
+  width: number // 基础宽度（cm）
+  height: number // 基础高度（cm）
   weight: number // 重量（kg）
   purchasePrice: number // 采购价格，单位：元
   salePrice: number // 销售价格，单位：元

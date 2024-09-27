@@ -58,18 +58,28 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+      <el-table-column label="图片" align="center" prop="url" width="110px">
+        <template #default="scope">
+          <el-image :src="scope.row.imageUrl" class="w-64px h-64px" />
+        </template>
+      </el-table-column>
       <el-table-column label="条码" align="center" prop="barCode" />
       <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="规格" align="center" prop="standard" />
+      <!-- <el-table-column label="规格" align="center" prop="standard" /> -->
       <el-table-column label="分类" align="center" prop="categoryName" />
       <el-table-column label="单位" align="center" prop="unitName" />
-      <el-table-column
+      <!-- <el-table-column
         label="采购价格"
         align="center"
         prop="purchasePrice"
         :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column
+      /> -->
+      <el-table-column label="材料（中文）" align="center" prop="material" />
+      <el-table-column label="基础长度（cm）" align="center" prop="length" />
+      <el-table-column label="基础宽度（cm）" align="center" prop="width" />
+      <el-table-column label="基础高度（cm）" align="center" prop="height" />
+      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
+      <!-- <el-table-column
         label="销售价格"
         align="center"
         prop="salePrice"
@@ -80,7 +90,7 @@
         align="center"
         prop="minPrice"
         :formatter="erpPriceTableColumnFormatter"
-      />
+      /> -->
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />

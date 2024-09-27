@@ -15,6 +15,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item label="图片" prop="avatar">
+            <UploadImg v-model="formData.imageUrl" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="条码" prop="barCode">
             <el-input v-model="formData.barCode" placeholder="请输入条码" />
           </el-form-item>
@@ -57,18 +62,53 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item label="规格" prop="standard">
             <el-input v-model="formData.standard" placeholder="请输入规格" />
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
+        </el-col> -->
+        <!-- <el-col :span="12">
           <el-form-item label="保质期天数" prop="expiryDay">
             <el-input-number
               v-model="formData.expiryDay"
               placeholder="请输入保质期天数"
               :min="0"
               :precision="0"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </el-col> -->
+        <el-col :span="12">
+          <el-form-item label="材料（中文）" prop="material">
+            <el-input v-model="formData.material" placeholder="请输入材料（中文）" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="长度（cm）" prop="length">
+            <el-input-number
+              v-model="formData.length" 
+              placeholder="请输入长度（cm）" 
+              :min="0"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="宽度（cm）" prop="width">
+            <el-input-number
+              v-model="formData.width" 
+              placeholder="请输入宽度（cm）" 
+              :min="0"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="高度（cm）" prop="height">
+            <el-input-number
+              v-model="formData.height" 
+              placeholder="请输入高度（cm）" 
+              :min="0"
               class="!w-1/1"
             />
           </el-form-item>
@@ -83,7 +123,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item label="采购价格" prop="purchasePrice">
             <el-input-number
               v-model="formData.purchasePrice"
@@ -93,8 +133,8 @@
               class="!w-1/1"
             />
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
+        </el-col> -->
+        <!-- <el-col :span="12">
           <el-form-item label="销售价格" prop="salePrice">
             <el-input-number
               v-model="formData.salePrice"
@@ -104,8 +144,8 @@
               class="!w-1/1"
             />
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
+        </el-col> -->
+        <!-- <el-col :span="12">
           <el-form-item label="最低价格" prop="minPrice">
             <el-input-number
               v-model="formData.minPrice"
@@ -115,12 +155,12 @@
               class="!w-1/1"
             />
           </el-form-item>
-        </el-col>
-        <el-col :span="24">
+        </el-col> -->
+        <!-- <el-col :span="24">
           <el-form-item label="备注" prop="remark">
             <el-input type="textarea" v-model="formData.remark" placeholder="请输入备注" />
           </el-form-item>
-        </el-col>
+        </el-col> -->
       </el-row>
     </el-form>
     <template #footer>
@@ -150,6 +190,7 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
   name: undefined,
+  imageUrl: undefined,
   barCode: undefined,
   categoryId: undefined,
   unitId: undefined,
@@ -157,6 +198,10 @@ const formData = ref({
   standard: undefined,
   remark: undefined,
   expiryDay: undefined,
+  material: undefined,
+  length: undefined,
+  width: undefined,
+  height: undefined,
   weight: undefined,
   purchasePrice: undefined,
   salePrice: undefined,
@@ -232,6 +277,10 @@ const resetForm = () => {
     standard: undefined,
     remark: undefined,
     expiryDay: undefined,
+    material: undefined,
+    length: undefined,
+    width: undefined,
+    height: undefined,
     weight: undefined,
     purchasePrice: undefined,
     salePrice: undefined,
