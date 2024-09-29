@@ -5,12 +5,12 @@
 
   <el-row :gutter="20">
     <!-- 左侧部门树 -->
-    <el-col :span="4" :xs="24">
+    <el-col :span="5" :xs="24">
       <ContentWrap class="h-1/1">
         <DeptTree @node-click="handleDeptNodeClick" />
       </ContentWrap>
     </el-col>
-    <el-col :span="20" :xs="24">
+    <el-col :span="19" :xs="24">
       <!-- 搜索 -->
       <ContentWrap>
         <el-form
@@ -20,9 +20,9 @@
           :inline="true"
           label-width="68px"
         >
-          <el-form-item label="用户名称" prop="username">
+          <el-form-item label="用户昵称" prop="username">
             <el-input
-              v-model="queryParams.username"
+              v-model="queryParams.nickname"
               placeholder="请输入用户名称"
               clearable
               @keyup.enter="handleQuery"
@@ -222,6 +222,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   username: undefined,
+  nickname: undefined,
   mobile: undefined,
   status: undefined,
   deptId: undefined,
