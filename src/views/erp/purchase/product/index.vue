@@ -143,8 +143,10 @@
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
       <el-table-column label="供应商产品编号" align="center" prop="id" />
       <el-table-column label="供应商产品编码" align="center" prop="code" />
-      <el-table-column label="供应商编号" align="center" prop="supplierId" />
-      <el-table-column label="产品编号" align="center" prop="productId" />
+      <!-- <el-table-column label="供应商编号" align="center" prop="supplierId" />
+      <el-table-column label="产品编号" align="center" prop="productId" /> -->
+      <el-table-column label="供应商" align="center" prop="supplierName" />
+      <el-table-column label="产品" align="center" prop="productName" />
       <el-table-column label="包装高度" align="center" prop="packageHeight" />
       <el-table-column label="包装长度" align="center" prop="packageLength" />
       <el-table-column label="包装重量" align="center" prop="packageWeight" />

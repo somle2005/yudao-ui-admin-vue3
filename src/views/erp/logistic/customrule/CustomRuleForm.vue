@@ -4,7 +4,7 @@
       ref="formRef"
       :model="formData"
       :rules="formRules"
-      label-width="100px"
+      label-width="150px"
       v-loading="formLoading"
     >
       <el-form-item label="国家编码" prop="countryCode">
@@ -12,11 +12,29 @@
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-select v-model="formData.type" placeholder="请选择类型">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="item in type"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="供应商产品编号" prop="supplierProductId">
-        <el-input v-model="formData.supplierProductId" placeholder="请输入供应商产品编号" />
+      <el-form-item label="供应商产品" prop="productId">
+        <el-select
+          v-model="formData.supplierProductId"
+          clearable
+          filterable
+          placeholder="请选择供应商产品"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in supplierProductList"
+            :key="item.id"
+            :label="item.code"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
         <el-input v-model="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
@@ -50,6 +68,7 @@
 </template>
 <script setup lang="ts">
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
+import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product';
 
 /** ERP 海关规则 表单 */
 defineOptions({ name: 'CustomRuleForm' })
@@ -80,6 +99,17 @@ const formRules = reactive({
   supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
+const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
+const type = [
+  {
+    value: 'export',
+    label: '报关',
+  },
+  {
+    value: 'import',
+    label: '清关',
+  }
+]
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -96,6 +126,7 @@ const open = async (type: string, id?: number) => {
       formLoading.value = false
     }
   }
+  supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 

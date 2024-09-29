@@ -20,6 +20,15 @@
           class="!w-240px"
         />
       </el-form-item>
+      <el-form-item label="编码" prop="code">
+        <el-input
+          v-model="queryParams.code"
+          placeholder="请输入编码"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
       <el-form-item label="分类" prop="categoryId">
         <el-tree-select
           v-model="queryParams.categoryId"
@@ -63,7 +72,7 @@
           <el-image :src="scope.row.imageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column label="条码" align="center" prop="barCode" />
+      <el-table-column label="编码" align="center" prop="barCode" />
       <el-table-column label="名称" align="center" prop="name" />
       <!-- <el-table-column label="规格" align="center" prop="standard" /> -->
       <el-table-column label="分类" align="center" prop="categoryName" />
@@ -160,6 +169,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: undefined,
+  code: undefined,
   categoryId: undefined
 })
 const queryFormRef = ref() // 搜索的表单

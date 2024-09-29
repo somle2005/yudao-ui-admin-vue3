@@ -42,23 +42,61 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="包装高度" prop="packageHeight">
-        <el-input v-model="formData.packageHeight" placeholder="请输入包装高度" />
-      </el-form-item>
       <el-form-item label="包装长度" prop="packageLength">
-        <el-input v-model="formData.packageLength" placeholder="请输入包装长度" />
-      </el-form-item>
-      <el-form-item label="包装重量" prop="packageWeight">
-        <el-input v-model="formData.packageWeight" placeholder="请输入包装重量" />
+        <el-input-number
+              v-model="formData.packageLength" 
+              placeholder="请输入包装长度（cm）" 
+              :min="0"
+              class="!w-1/1"
+            />
       </el-form-item>
       <el-form-item label="包装宽度" prop="packageWidth">
-        <el-input v-model="formData.packageWidth" placeholder="请输入包装宽度" />
+        <el-input-number
+              v-model="formData.packageWidth" 
+              placeholder="请输入包装宽度（cm）" 
+              :min="0"
+              class="!w-1/1"
+            />
+      </el-form-item>
+      <el-form-item label="包装高度" prop="packageHeight">
+        <el-input-number
+              v-model="formData.packageHeight" 
+              placeholder="请输入包装高度（cm）" 
+              :min="0"
+              class="!w-1/1"
+            />
+      </el-form-item>
+      <el-form-item label="包装重量" prop="packageWeight">
+        <el-input-number
+              v-model="formData.packageWeight" 
+              placeholder="请输入包装重量（kg）" 
+              :min="0"
+              class="!w-1/1"
+            />
       </el-form-item>
       <el-form-item label="采购价格" prop="purchasePrice">
-        <el-input v-model="formData.purchasePrice" placeholder="请输入采购价格" />
+        <el-input-number
+              v-model="formData.purchasePrice"
+              placeholder="请输入采购价格，单位：元"
+              :min="0"
+              :precision="2"
+              class="!w-1/1"
+        />
       </el-form-item>
       <el-form-item label="采购货币代码" prop="purchasePriceCurrencyCode">
-        <el-input v-model="formData.purchasePriceCurrencyCode" placeholder="请输入采购货币代码" />
+        <el-select
+          v-model="formData.purchasePriceCurrencyCode"
+          placeholder="请输入采购货币代码"
+          size="large"
+          style="width: 240px"
+        >
+          <el-option
+            v-for="item in currencyCode"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -101,6 +139,12 @@ const formRules = reactive({
 const formRef = ref() // 表单 Ref
 const productList = ref<ProductVO[]>([]) // 产品列表
 const supplierList = ref<SupplierVO[]>([]) // 供应商列表
+const currencyCode = [
+  {
+    value: 'RMB',
+    label: 'RMB',
+  }
+]
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -158,7 +202,7 @@ const resetForm = () => {
     packageWeight: undefined,
     packageWidth: undefined,
     purchasePrice: undefined,
-    purchasePriceCurrencyCode: undefined
+    purchasePriceCurrencyCode: 'RMB'
   }
   formRef.value?.resetFields()
 }

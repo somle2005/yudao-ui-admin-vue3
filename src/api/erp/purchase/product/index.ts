@@ -4,8 +4,10 @@ import request from '@/config/axios'
 export interface SupplierProductVO {
   id: number // 供应商产品编号
   code: string // 供应商产品编码
-  supplierId: number // 供应商编号
-  productId: number // 产品编号
+  // supplierId: number // 供应商编号
+  // productId: number // 产品编号
+  supplierName: string // 供应商
+  productName: string // 产品
   packageHeight: number // 包装高度
   packageLength: number // 包装长度
   packageWeight: number // 包装重量
@@ -19,6 +21,11 @@ export const SupplierProductApi = {
   // 查询ERP 供应商产品分页
   getSupplierProductPage: async (params: any) => {
     return await request.get({ url: `/erp/supplier-product/page`, params })
+  },
+
+  // 查询ERP 供应商产品简列表
+  getSupplierProductSimpleList: async () => {
+    return await request.get({ url: `/erp/supplier-product/simple-list` })
   },
 
   // 查询ERP 供应商产品详情

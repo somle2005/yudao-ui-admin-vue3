@@ -20,8 +20,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="条码" prop="barCode">
-            <el-input v-model="formData.barCode" placeholder="请输入条码" />
+          <el-form-item label="编码" prop="barCode">
+            <el-input v-model="formData.barCode" placeholder="请输入编码" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -209,7 +209,7 @@ const formData = ref({
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
-  barCode: [{ required: true, message: '产品条码不能为空', trigger: 'blur' }],
+  barCode: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   categoryId: [{ required: true, message: '产品分类编号不能为空', trigger: 'blur' }],
   unitId: [{ required: true, message: '单位编号不能为空', trigger: 'blur' }],
   status: [{ required: true, message: '产品状态不能为空', trigger: 'blur' }]

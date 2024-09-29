@@ -6,7 +6,7 @@
       :model="queryParams"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="150px"
     >
       <el-form-item label="国家编码" prop="countryCode">
         <el-input
