@@ -23,7 +23,7 @@
           <el-form-item label="用户昵称" prop="username">
             <el-input
               v-model="queryParams.nickname"
-              placeholder="请输入用户名称"
+              placeholder="请输入用户昵称"
               clearable
               @keyup.enter="handleQuery"
               class="!w-240px"
@@ -98,7 +98,7 @@
         <el-table v-loading="loading" :data="list">
           <el-table-column label="用户编号" align="center" key="id" prop="id" />
           <el-table-column
-            label="用户名称"
+            label="用户名"
             align="center"
             prop="username"
             :show-overflow-tooltip="true"
