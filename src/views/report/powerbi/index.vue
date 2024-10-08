@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 // import { getAccessToken } from '@/utils/auth'
 
-defineOptions({ name: 'PowerBI' })
+defineOptions({ name: 'ShopifyBI' })
 
 // const src = 'http://127.0.0.1:3000'
 // const src = 'https://app.powerbi.cn/home'
