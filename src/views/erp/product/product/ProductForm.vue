@@ -15,7 +15,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="图片" prop="avatar">
+          <el-form-item label="图片" prop="imageUrl">
             <UploadImg v-model="formData.imageUrl" />
           </el-form-item>
         </el-col>
@@ -209,6 +209,7 @@ const formData = ref({
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
+  imageUrl: [{ required: true, message: '产品图片不能为空', trigger: 'blur' }],
   barCode: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   categoryId: [{ required: true, message: '产品分类编号不能为空', trigger: 'blur' }],
   unitId: [{ required: true, message: '单位编号不能为空', trigger: 'blur' }],
