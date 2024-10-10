@@ -1,7 +1,7 @@
-<!-- 可入库的订单列表 -->
+<!-- 可退货的订单列表 -->
 <template>
   <Dialog
-    title="选择采购订单（仅展示可入库）"
+    title="选择采购订单（仅展示可退货）"
     v-model="dialogVisible"
     :appendToBody="true"
     :scroll="true"
@@ -96,6 +96,12 @@
           :formatter="erpCountTableColumnFormatter"
         />
         <el-table-column
+          label="退货数量"
+          align="center"
+          prop="returnCount"
+          :formatter="erpCountTableColumnFormatter"
+        />
+        <el-table-column
           label="金额合计"
           align="center"
           prop="totalProductPrice"
@@ -122,16 +128,17 @@
     </template>
   </Dialog>
 </template>
+
 <script lang="ts" setup>
 import { ElTable } from 'element-plus'
-import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
+import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/erp/purchase/request'
 import { dateFormatter2 } from '@/utils/formatTime'
 import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
 
-defineOptions({ name: 'ErpPurchaseOrderOutEnableList' })
+defineOptions({ name: 'PurchaseRequestReturnEnableList' })
 
-const list = ref<PurchaseOrderVO[]>([]) // 列表的数据
+const list = ref<PurchaseRequestVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const loading = ref(false) // 列表的加载中
 const dialogVisible = ref(false) // 弹窗的是否展示
@@ -141,7 +148,7 @@ const queryParams = reactive({
   no: undefined,
   productId: undefined,
   orderTime: [],
-  inEnable: true
+  returnEnable: true
 })
 const queryFormRef = ref() // 搜索的表单
 const productList = ref<ProductVO[]>([]) // 产品列表
@@ -157,7 +164,7 @@ const handleCurrentChange = (row) => {
 const open = async () => {
   dialogVisible.value = true
   await nextTick() // 等待，避免 queryFormRef 为空
-  // 加载可入库的订单列表
+  // 加载可退货的订单列表
   await resetQuery()
   // 加载产品列表
   productList.value = await ProductApi.getProductSimpleList()
@@ -166,7 +173,7 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交选择 */
 const emits = defineEmits<{
-  (e: 'success', value: PurchaseOrderVO): void
+  (e: 'success', value: PurchaseRequestVO): void
 }>()
 const submitForm = () => {
   try {
@@ -181,7 +188,7 @@ const submitForm = () => {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
+    const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {

@@ -8,6 +8,9 @@ const props = defineProps({
 })
 const loading = ref(true)
 const frameRef = ref<HTMLElement | null>(null)
+// Expose frameRef to allow access from the parent component
+defineExpose({ frameRef })
+
 const init = () => {
   nextTick(() => {
     loading.value = true

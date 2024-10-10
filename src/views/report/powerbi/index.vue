@@ -11,21 +11,24 @@
       <br />Somle2023<br />
     </ElText>
 
-    <!-- <IFrame :src="src" /> -->
-    <iframe ref="frameRef" title="独立站流量" width="1140" height="541.25" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" frameborder="0" allowFullScreen="true"></iframe>
+    <IFrame ref="iframeComponent" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" />
+    <IFrame src="https://app.powerbi.cn/reportEmbed?reportId=e3c7c618-0442-411c-bd61-11ca72a065a8&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" />
+    <!-- <iframe ref="frameRef" title="独立站流量" width="1140" height="541.25" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" frameborder="0" allowFullScreen="true"></iframe> -->
 
 
 
   </ContentWrap>
 </template>
+
+
 <script lang="ts" setup>
 // import { getAccessToken } from '@/utils/auth'
+// import IFrame from 'vue';
 
 defineOptions({ name: 'ShopifyBI' })
 
 // const src = 'http://127.0.0.1:3000'
 // const src = 'https://app.powerbi.cn/home'
-const src = 'https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412'
 // const src = ref(import.meta.env.VITE_BASE_URL + '/jmreport/list?token=' + getAccessToken())
 
 // const frameRef = ref<HTMLIFrameElement | null>(null);
@@ -55,35 +58,41 @@ const src = 'https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33
 //   }
 // });
 
-const frameRef = ref(null); // Create a ref to hold the iframe element
+// const iframeComponent = ref<InstanceType<typeof IFrame> | null>(null);
 
 onMounted(() => {
-  console.log('Page is fully loaded');
-  const iframe = frameRef.value; // Access iframe through the ref
+  console.log('Page is fully loaded');// Access iframe through the ref
 
-  iframe.onload = () => {
-    console.log('Frame is loading');
-    const iframeDocument = iframe.contentDocument || iframe.contentWindow.document; // Access the iframe's document
+  // if (iframeComponent.value?.frameRef) {
+  //   // Access the iframe element directly
+  //   console.log(iframeComponent.value.frameRef)
+  //   // Perform actions on the iframe, e.g., change attributes or call methods
+  //   iframeComponent.value.frameRef.src = 'https://another-example.com'
+  // }
+
+  // iframe.onload = () => {
+  //   console.log('Frame is loading');
+  //   const iframeDocument = iframe.contentDocument || iframe.contentWindow.document; // Access the iframe's document
     
-    // Click the button inside the iframe
-    const buttons = iframeDocument.getElementsByClassName('bibutton primary pbi-fluent-button');
-    if (buttons.length > 0) {
-      buttons[0].click();
-    }
+  //   // Click the button inside the iframe
+  //   const buttons = iframeDocument.getElementsByClassName('bibutton primary pbi-fluent-button');
+  //   if (buttons.length > 0) {
+  //     buttons[0].click();
+  //   }
 
-    // Fill in the username
-    const usernameInput = iframeDocument.getElementById('i0116');
-    if (usernameInput) {
-      usernameInput.value = '您的用户名';
-    }
+  //   // Fill in the username
+  //   const usernameInput = iframeDocument.getElementById('i0116');
+  //   if (usernameInput) {
+  //     usernameInput.value = '您的用户名';
+  //   }
 
-    // Optionally, proceed to password input and login (uncomment if needed)
-    // const nextButton = iframeDocument.getElementById('idSIButton9');
-    // if (nextButton) nextButton.click();
-    // const passwordInput = iframeDocument.getElementById('i0118');
-    // if (passwordInput) passwordInput.value = '您的密码';
-    // if (nextButton) nextButton.click();
-  };
+  //   // Optionally, proceed to password input and login (uncomment if needed)
+  //   // const nextButton = iframeDocument.getElementById('idSIButton9');
+  //   // if (nextButton) nextButton.click();
+  //   // const passwordInput = iframeDocument.getElementById('i0118');
+  //   // if (passwordInput) passwordInput.value = '您的密码';
+  //   // if (nextButton) nextButton.click();
+  // };
 });
 
 </script>

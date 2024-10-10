@@ -10,22 +10,22 @@
     >
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="订单单号" prop="no">
+          <el-form-item label="申请单号" prop="no">
             <el-input disabled v-model="formData.no" placeholder="保存时自动生成" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="订单时间" prop="orderTime">
+          <el-form-item label="创单时间" prop="orderTime">
             <el-date-picker
               v-model="formData.orderTime"
               type="date"
               value-format="x"
-              placeholder="选择订单时间"
+              placeholder="选择创单时间"
               class="!w-1/1"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <!-- <el-col :span="8">
           <el-form-item label="供应商" prop="supplierId">
             <el-select
               v-model="formData.supplierId"
@@ -42,7 +42,7 @@
               />
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="16">
           <el-form-item label="备注" prop="remark">
             <el-input
@@ -62,8 +62,8 @@
       <!-- 子表的表单 -->
       <ContentWrap>
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
-          <el-tab-pane label="订单产品清单" name="item">
-            <PurchaseOrderItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
+          <el-tab-pane label="申请产品清单" name="item">
+            <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
           </el-tab-pane>
         </el-tabs>
       </ContentWrap>
@@ -135,15 +135,15 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
-import PurchaseOrderItemForm from './components/PurchaseOrderItemForm.vue'
+import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/erp/purchase/request'
+import PurchaseRequestItemForm from './components/PurchaseRequestItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 
-/** ERP 销售订单表单 */
-defineOptions({ name: 'PurchaseOrderForm' })
+/** ERP 采购申请表单 */
+defineOptions({ name: 'PurchaseRequestForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -164,11 +164,11 @@ const formData = ref({
   totalPrice: 0,
   depositPrice: 0,
   items: [],
-  no: undefined // 订单单号，后端返回
+  no: undefined // 申请单号，后端返回
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
-  orderTime: [{ required: true, message: '订单时间不能为空', trigger: 'blur' }]
+  orderTime: [{ required: true, message: '创单时间不能为空', trigger: 'blur' }]
 })
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -206,7 +206,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await PurchaseOrderApi.getPurchaseOrder(id)
+      formData.value = await PurchaseRequestApi.getPurchaseRequest(id)
     } finally {
       formLoading.value = false
     }
@@ -233,12 +233,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as PurchaseOrderVO
+    const data = formData.value as unknown as PurchaseRequestVO
     if (formType.value === 'create') {
-      await PurchaseOrderApi.createPurchaseOrder(data)
+      await PurchaseRequestApi.createPurchaseRequest(data)
       message.success(t('common.createSuccess'))
     } else {
-      await PurchaseOrderApi.updatePurchaseOrder(data)
+      await PurchaseRequestApi.updatePurchaseRequest(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false

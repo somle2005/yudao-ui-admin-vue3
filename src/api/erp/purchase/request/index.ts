@@ -1,45 +1,48 @@
 import request from '@/config/axios'
 
-// ERP 采购订单 VO
+// ERP采购申请单 VO
 export interface PurchaseRequestVO {
-  id: number // 订单工单编号
-  no: string // 采购订单号
-  customerId: number // 客户编号
-  requestTime: Date // 订单时间
-  totalCount: number // 合计数量
-  totalPrice: number // 合计金额，单位：元
-  status: number // 状态
-  remark: string // 备注
-  outCount: number // 采购出库数量
-  returnCount: number // 采购退货数量
+  id: number // id
+  serial: string // 单据编号
+  num: number // 当日申请排序编号
+  applicant: string // 申请人
+  applicationDept: string // 申请部门
+  date: Date // 单据日期
+  applicationStatus: number // 审核状态(0:待审核，1:审核通过，2:审核未通过)
+  offStatus: number // 关闭状态（0已关闭，1已开启）
+  orderStatus: number // 订购状态（0部分订购，1全部订购）
+  auditor: string // 审核者
+  auditTime: Date // 审核时间
 }
 
-// ERP 采购订单 API
+// ERP采购申请单 API
 export const PurchaseRequestApi = {
-  // 查询采购订单分页
+  // 查询ERP采购申请单分页
   getPurchaseRequestPage: async (params: any) => {
     return await request.get({ url: `/erp/purchase-request/page`, params })
   },
 
-  // 查询采购订单详情
+  // 查询ERP采购申请单详情
   getPurchaseRequest: async (id: number) => {
     return await request.get({ url: `/erp/purchase-request/get?id=` + id })
   },
 
-  // 新增采购订单
+  // 新增ERP采购申请单
   createPurchaseRequest: async (data: PurchaseRequestVO) => {
     return await request.post({ url: `/erp/purchase-request/create`, data })
   },
 
-  // 修改采购订单
+  // 修改ERP采购申请单
   updatePurchaseRequest: async (data: PurchaseRequestVO) => {
     return await request.put({ url: `/erp/purchase-request/update`, data })
   },
 
+
+
   // 更新采购订单的状态
   updatePurchaseRequestStatus: async (id: number, status: number) => {
     return await request.put({
-      url: `/erp/purchase-request/update-status`,
+      url: `/erp/purchase-order/update-status`,
       params: {
         id,
         status
@@ -50,15 +53,15 @@ export const PurchaseRequestApi = {
   // 删除采购订单
   deletePurchaseRequest: async (ids: number[]) => {
     return await request.delete({
-      url: `/erp/purchase-request/delete`,
+      url: `/erp/purchase-order/delete`,
       params: {
         ids: ids.join(',')
       }
     })
   },
 
-  // 导出采购订单 Excel
-  exportPurchaseRequest: async (params: any) => {
+  // 导出ERP采购申请单 Excel
+  exportPurchaseRequest: async (params) => {
     return await request.download({ url: `/erp/purchase-request/export-excel`, params })
   }
 }

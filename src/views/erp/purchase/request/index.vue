@@ -45,7 +45,7 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="供应商" prop="supplierId">
+      <!-- <el-form-item label="供应商" prop="supplierId">
         <el-select
           v-model="queryParams.supplierId"
           clearable
@@ -60,8 +60,24 @@
             :value="item.id"
           />
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="申请人" prop="creator">
+        <el-select
+          v-model="queryParams.applicant"
+          clearable
+          filterable
+          placeholder="请选择申请人"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in userList"
+            :key="item.id"
+            :label="item.nickname"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="创建人" prop="creator">
+      <!-- <el-form-item label="创建人" prop="creator">
         <el-select
           v-model="queryParams.creator"
           clearable
@@ -76,7 +92,7 @@
             :value="item.id"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">
           <el-option
@@ -96,7 +112,7 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="入库数量" prop="inStatus">
+      <!-- <el-form-item label="入库数量" prop="inStatus">
         <el-select
           v-model="queryParams.inStatus"
           placeholder="请选择入库数量"
@@ -107,8 +123,8 @@
           <el-option label="部分入库" value="1" />
           <el-option label="全部入库" value="2" />
         </el-select>
-      </el-form-item>
-      <el-form-item label="退货数量" prop="returnStatus">
+      </el-form-item> -->
+      <!-- <el-form-item label="退货数量" prop="returnStatus">
         <el-select
           v-model="queryParams.returnStatus"
           placeholder="请选择退货数量"
@@ -119,7 +135,7 @@
           <el-option label="部分退货" value="1" />
           <el-option label="全部退货" value="2" />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -165,7 +181,7 @@
       <el-table-column width="30" label="选择" type="selection" />
       <el-table-column min-width="180" label="申请单号" align="center" prop="no" />
       <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
-      <el-table-column label="供应商" align="center" prop="supplierName" />
+      <!-- <el-table-column label="供应商" align="center" prop="supplierName" /> -->
       <el-table-column
         label="申请时间"
         align="center"
@@ -173,14 +189,15 @@
         :formatter="dateFormatter2"
         width="120px"
       />
-      <el-table-column label="创建人" align="center" prop="creatorName" />
+      <el-table-column label="申请人" align="center" prop="applicantName" />
+      <!-- <el-table-column label="创建人" align="center" prop="creatorName" /> -->
       <el-table-column
         label="总数量"
         align="center"
         prop="totalCount"
         :formatter="erpCountTableColumnFormatter"
       />
-      <el-table-column
+      <!-- <el-table-column
         label="入库数量"
         align="center"
         prop="inCount"
@@ -209,7 +226,7 @@
         align="center"
         prop="depositPrice"
         :formatter="erpPriceTableColumnFormatter"
-      />
+      /> -->
       <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status" />
@@ -285,7 +302,7 @@ import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
 import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
-import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+// import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 
 /** ERP 采购申请列表 */
 defineOptions({ name: 'ErpPurchaseRequest' })
@@ -300,11 +317,12 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   no: undefined,
-  supplierId: undefined,
+  // supplierId: undefined,
   productId: undefined,
   requestTime: [],
   status: undefined,
   remark: undefined,
+  applicant: undefined,
   creator: undefined,
   inStatus: undefined,
   returnStatus: undefined
@@ -312,7 +330,7 @@ const queryParams = reactive({
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
 const productList = ref<ProductVO[]>([]) // 产品列表
-const supplierList = ref<SupplierVO[]>([]) // 供应商列表
+// const supplierList = ref<SupplierVO[]>([]) // 供应商列表
 const userList = ref<UserVO[]>([]) // 用户列表
 
 /** 查询列表 */
@@ -398,7 +416,7 @@ onMounted(async () => {
   await getList()
   // 加载产品、仓库列表、供应商
   productList.value = await ProductApi.getProductSimpleList()
-  supplierList.value = await SupplierApi.getSupplierSimpleList()
+  // supplierList.value = await SupplierApi.getSupplierSimpleList()
   userList.value = await UserApi.getSimpleUserList()
 })
 // TODO 芋艿：可优化功能：列表界面，支持导入
