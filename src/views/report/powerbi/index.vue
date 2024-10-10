@@ -12,8 +12,8 @@
     </ElText>
 
     <IFrame ref="iframeComponent" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" />
+    <iframe ref="frameRef" title="独立站流量" width="1140" height="541.25" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" frameborder="0" allowFullScreen="true"></iframe>
     <IFrame src="https://app.powerbi.cn/reportEmbed?reportId=e3c7c618-0442-411c-bd61-11ca72a065a8&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" />
-    <!-- <iframe ref="frameRef" title="独立站流量" width="1140" height="541.25" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" frameborder="0" allowFullScreen="true"></iframe> -->
 
 
 
@@ -27,36 +27,10 @@
 
 defineOptions({ name: 'ShopifyBI' })
 
-// const src = 'http://127.0.0.1:3000'
-// const src = 'https://app.powerbi.cn/home'
 // const src = ref(import.meta.env.VITE_BASE_URL + '/jmreport/list?token=' + getAccessToken())
 
-// const frameRef = ref<HTMLIFrameElement | null>(null);
+const frameRef = ref<HTMLIFrameElement | null>(null);
 
-// onMounted(() => {
-//   console.log('Page is fully loaded');
-//     // var iframe = frameRef
-//   var iframe = document.getElementById('biFrame'); // 获取iframe元素
-//   iframe.onload = function() {
-//     console.log('Frame is loading');
-//     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document; // 获取iframe的文档对象
-
-//     const buttons = iframeDocument.getElementsByClassName('bibutton primary pbi-fluent-button');
-//     buttons[0].click();
-    
-//     // 填写用户名和密码
-//     var usernameInput = iframeDocument.getElementById('i0116');
-//     usernameInput.value = '您的用户名';
-//     // var nextButton = iframeDocument.getElementById('idSIButton9');
-//     // nextButton.click();
-//     // var passwordInput = iframeDocument.getElementById('i0118');
-//     // passwordInput.value = '您的密码';
-//     // var nextButton = iframeDocument.getElementById('idSIButton9');
-//     // nextButton.click();
-    
-//     // 执行登录操作
-//   }
-// });
 
 // const iframeComponent = ref<InstanceType<typeof IFrame> | null>(null);
 
