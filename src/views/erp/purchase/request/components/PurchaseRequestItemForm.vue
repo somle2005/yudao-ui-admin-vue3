@@ -64,7 +64,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="产品单价" fixed="right" min-width="120">
+      <!-- <el-table-column label="产品单价" fixed="right" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productPrice`" class="mb-0px!">
             <el-input-number
@@ -76,47 +76,7 @@
             />
           </el-form-item>
         </template>
-      </el-table-column>
-      <el-table-column label="金额" prop="totalProductPrice" fixed="right" min-width="100">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.totalProductPrice`" class="mb-0px!">
-            <el-input
-              disabled
-              v-model="row.totalProductPrice"
-              :formatter="erpPriceInputFormatter"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column label="税率（%）" fixed="right" min-width="115">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-            <el-input-number
-              v-model="row.taxPercent"
-              controls-position="right"
-              :min="0"
-              :precision="2"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column label="税额" prop="taxPrice" fixed="right" min-width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-            <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-              <el-input disabled v-model="row.taxPrice" :formatter="erpPriceInputFormatter" />
-            </el-form-item>
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column label="税额合计" prop="totalPrice" fixed="right" min-width="100">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.totalPrice`" class="mb-0px!">
-            <el-input disabled v-model="row.totalPrice" :formatter="erpPriceInputFormatter" />
-          </el-form-item>
-        </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="备注" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
@@ -216,13 +176,10 @@ const handleAdd = () => {
     productId: undefined,
     productUnitName: undefined, // 产品单位
     productBarCode: undefined, // 产品条码
-    productPrice: undefined,
+    // productPrice: undefined,
     stockCount: undefined,
     count: 1,
-    totalProductPrice: undefined,
-    taxPercent: undefined,
-    taxPrice: undefined,
-    totalPrice: undefined,
+    // totalProductPrice: undefined,
     remark: undefined
   }
   formData.value.push(row)

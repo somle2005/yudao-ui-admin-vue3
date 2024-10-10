@@ -15,14 +15,32 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="创单时间" prop="orderTime">
+          <el-form-item label="申请时间" prop="requestTime">
             <el-date-picker
-              v-model="formData.orderTime"
+              v-model="formData.requestTime"
               type="date"
               value-format="x"
-              placeholder="选择创单时间"
+              placeholder="选择申请时间"
               class="!w-1/1"
             />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="申请人" prop="applicant">
+            <el-select
+              v-model="formData.applicant"
+              clearable
+              filterable
+              placeholder="请选择申请人"
+              class="!w-1/1"
+            >
+              <el-option
+                v-for="item in userList"
+                :key="item.id"
+                :label="item.nickname"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
         <!-- <el-col :span="8">
@@ -67,64 +85,6 @@
           </el-tab-pane>
         </el-tabs>
       </ContentWrap>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="优惠率（%）" prop="discountPercent">
-            <el-input-number
-              v-model="formData.discountPercent"
-              controls-position="right"
-              :min="0"
-              :precision="2"
-              placeholder="请输入优惠率"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="付款优惠" prop="discountPrice">
-            <el-input
-              disabled
-              v-model="formData.discountPrice"
-              :formatter="erpPriceInputFormatter"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="优惠后金额">
-            <el-input disabled v-model="formData.totalPrice" :formatter="erpPriceInputFormatter" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="结算账户" prop="accountId">
-            <el-select
-              v-model="formData.accountId"
-              clearable
-              filterable
-              placeholder="请选择结算账户"
-              class="!w-1/1"
-            >
-              <el-option
-                v-for="item in accountList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="支付订金" prop="depositPrice">
-            <el-input-number
-              v-model="formData.depositPrice"
-              controls-position="right"
-              :min="0"
-              :precision="2"
-              placeholder="请输入支付订金"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
     </el-form>
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading" v-if="!disabled">
@@ -154,21 +114,18 @@ const formLoading = ref(false) // 表单的加载中：1）修改时的数据加
 const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
 const formData = ref({
   id: undefined,
-  supplierId: undefined,
+  // supplierId: undefined,
+  applicant: undefined,
   accountId: undefined,
-  orderTime: undefined,
+  requestTime: undefined,
   remark: undefined,
   fileUrl: '',
-  discountPercent: 0,
-  discountPrice: 0,
-  totalPrice: 0,
-  depositPrice: 0,
   items: [],
   no: undefined // 申请单号，后端返回
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
-  orderTime: [{ required: true, message: '创单时间不能为空', trigger: 'blur' }]
+  requestTime: [{ required: true, message: '申请时间不能为空', trigger: 'blur' }]
 })
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -180,21 +137,7 @@ const userList = ref<UserApi.UserVO[]>([]) // 用户列表
 const subTabsName = ref('item')
 const itemFormRef = ref()
 
-/** 计算 discountPrice、totalPrice 价格 */
-watch(
-  () => formData.value,
-  (val) => {
-    if (!val) {
-      return
-    }
-    const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
-    const discountPrice =
-      val.discountPercent != null ? erpPriceMultiply(totalPrice, val.discountPercent / 100.0) : 0
-    formData.value.discountPrice = discountPrice
-    formData.value.totalPrice = totalPrice - discountPrice
-  },
-  { deep: true }
-)
+
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -255,7 +198,7 @@ const resetForm = () => {
     id: undefined,
     supplierId: undefined,
     accountId: undefined,
-    orderTime: undefined,
+    requestTime: undefined,
     remark: undefined,
     fileUrl: undefined,
     discountPercent: 0,
