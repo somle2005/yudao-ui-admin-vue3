@@ -26,6 +26,17 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
+          <el-form-item label="关联订单" prop="orderNo">
+            <el-input v-model="formData.orderNo" readonly>
+              <template #append>
+                <el-button @click="openPurchaseRequestOrderEnableList">
+                  <Icon icon="ep:search" /> 选择
+                </el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="供应商" prop="supplierId">
             <el-select
               v-model="formData.supplierId"
@@ -133,6 +144,12 @@
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
+
+  <!-- 可订单的申请列表 -->
+  <PurchaseRequestOrderEnableList
+    ref="purchaseRequestOrderEnableListRef"
+    @success="handlePurchaseRequestChange"
+  />
 </template>
 <script setup lang="ts">
 import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
@@ -141,6 +158,7 @@ import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { PurchaseRequestVO } from '@/api/erp/purchase/request'
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -223,6 +241,29 @@ const open = async (type: string, id?: number) => {
   }
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
+
+/** 打开【可入库的订单列表】弹窗 */
+const purchaseRequestOrderEnableListRef = ref() // 可入库的订单列表 Ref
+const openPurchaseRequestOrderEnableList = () => {
+  purchaseRequestOrderEnableListRef.value.open()
+}
+
+const handlePurchaseRequestChange = (request: PurchaseRequestVO) => {
+  // 将申请单设置到订单
+  formData.value.requestId = request.id
+  formData.value.requestNo = request.no
+  formData.value.accountId = request.accountId
+  formData.value.remark = request.remark
+  formData.value.fileUrl = request.fileUrl
+  // 将申请单设置到订单项
+  request.items.forEach((item) => {
+    item.totalCount = item.count
+    item.count = item.totalCount - item.orderCount
+    item.requestItemId = item.id
+    item.id = undefined
+  })
+  formData.value.items = request.items.filter((item) => item.count > 0)
+}
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
