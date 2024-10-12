@@ -8,9 +8,11 @@ export function hasRole(app: App<Element>) {
     const { wsCache } = useCache()
     const { value } = binding
     const super_admin = 'admin'
+    // 获取用户拥有的角色
     const roles = wsCache.get(CACHE_KEY.USER).roles
 
     if (value && value instanceof Array && value.length > 0) {
+      // 权限所需的角色
       const roleFlag = value
 
       const hasRole = roles.some((role: string) => {
