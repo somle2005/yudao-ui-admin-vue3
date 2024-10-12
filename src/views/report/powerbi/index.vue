@@ -3,17 +3,20 @@
 
   <ContentWrap :bodyStyle="{ padding: '0px' }" class="!mb-0">
     
-    <a href="https://app.powerbi.cn/home" target="_blank">跳转到新窗口打开</a>
+    <!-- <a href="https://app.powerbi.cn/home" target="_blank">跳转到新窗口打开</a>
     <ElText>
       <br />账号: 
       <br />general@somleNB.partner.onmschina.cn
       <br />密码: 
       <br />Somle2023<br />
-    </ElText>
+    </ElText> -->
 
-    <IFrame ref="iframeComponent" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" />
-    <iframe ref="frameRef" title="独立站流量" width="1140" height="541.25" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" frameborder="0" allowFullScreen="true"></iframe>
-    <IFrame src="https://app.powerbi.cn/reportEmbed?reportId=e3c7c618-0442-411c-bd61-11ca72a065a8&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" />
+    <IFrame src="https://app.powerbi.cn/view?r=eyJrIjoiODBjZDA5NmUtYjM3Yy00MmYzLWI4MTctOGM2N2U4ZmZiZDQ3IiwidCI6IjllYzI5NDE2LTc3MmMtNDFlNC05ODk0LTlmNTM3YTRmYjQxMiJ9" />
+    <!-- <IFrame ref="iframeComponent" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" /> -->
+    <!-- <iframe ref="frameRef" title="独立站流量" width="1140" height="541.25" src="https://app.powerbi.cn/reportEmbed?reportId=1da2d9c2-11f2-4cd8-8a33-9eff31d8b614&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" frameborder="0" allowFullScreen="true"></iframe> -->
+    <IFrame src="https://app.powerbi.cn/view?r=eyJrIjoiOTQ3MWQyYTctNzQ1Ny00ZDA0LWE5YWUtZDRjYjA2MjI2ZGU0IiwidCI6IjllYzI5NDE2LTc3MmMtNDFlNC05ODk0LTlmNTM3YTRmYjQxMiJ9" />
+    <!-- <IFrame src="https://app.powerbi.cn/reportEmbed?reportId=e3c7c618-0442-411c-bd61-11ca72a065a8&autoAuth=true&ctid=9ec29416-772c-41e4-9894-9f537a4fb412" /> -->
+
 
 
 
