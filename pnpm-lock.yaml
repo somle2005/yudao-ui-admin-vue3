@@ -119,6 +119,12 @@ importers:
       pinia-plugin-persistedstate:
         specifier: ^3.2.1
         version: 3.2.1(pinia@2.1.7(typescript@5.3.3)(vue@3.4.21(typescript@5.3.3)))
+      powerbi-client:
+        specifier: ^2.23.1
+        version: 2.23.1
+      powerbi-client-vue-js:
+        specifier: ^1.1.1
+        version: 1.1.1(typescript@5.3.3)
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
@@ -3120,6 +3126,9 @@ packages:
   es6-iterator@2.0.3:
     resolution: {integrity: sha512-zw4SRzoUkd+cl+ZoE15A9o1oQd920Bb0iOJMQkQhl3jNc03YqVjAhG7scf9C5KWRU/R13Orf588uCC6525o02g==}
 
+  es6-promise@3.3.1:
+    resolution: {integrity: sha512-SOp9Phqvqn7jtEUxPWdWfWoLmyt2VaJ6MpvP9Comy1MceMXqE6bxvaTu4iaxpYYPzhny28Lc+M87/c2cPK6lDg==}
+
   es6-symbol@3.1.4:
     resolution: {integrity: sha512-U9bFFjX8tFiATgtkJ1zg25+KviIXpgRvRHS8sau3GfhVzThRQrOeksPeT0BWW2MNZs1OEWJ1DPXOQMn0KKRkvg==}
     engines: {node: '>=0.12'}
@@ -3574,6 +3583,9 @@ packages:
 
   htmlparser2@8.0.2:
     resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
+
+  http-post-message@0.2.3:
+    resolution: {integrity: sha512-76heerrzYhvWptJfWxUarHw2O3fkMqF48bbq/S6XFWHUc34o8tkySBwtReXuAKJAECZWVu8U0TYLckFcwtSdrg==}
 
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
@@ -4574,6 +4586,21 @@ packages:
     resolution: {integrity: sha512-spBB5sgC4cv2YcW03f/IAUN1pgDJWNWD8FzkyY4mArLUMJW+KlQhlmUdKAHQuPfb00Jl5xIfImeOsf6YL8QK7Q==}
     engines: {node: '>=0.10.0'}
 
+  powerbi-client-vue-js@1.1.1:
+    resolution: {integrity: sha512-yks5Pascgw0n8vwmHJJJCa5vmNzZ4j/e+/6JEtuaQii5oKLpQmzQmgnBCGbKIWrRyGEu+JGu4Ca5xIpfeOAUbg==}
+
+  powerbi-client@2.23.1:
+    resolution: {integrity: sha512-r04gDDq8YkrkZjSwOw4UBgzPwudXnA+x8B9ekVE7XDlhTDC7tujbcT15Z+iLDrx+49Bj4qVez0PgjA9CgEFpGw==}
+
+  powerbi-models@1.15.2:
+    resolution: {integrity: sha512-UcBLtBB2wa8pL412DxyVZvv/bKiUVJfLTCXAuGmIqnOkoA/EnYDUM3B8oS2piN1azyEN8pjN353rE9DeARCJtA==}
+
+  powerbi-report-authoring@1.1.3:
+    resolution: {integrity: sha512-gkbGlecTfWTlqb0topfG5+wNaXJOkP1QFJSz075pzWpMDmq8hpKCYC0cjEtprSLbIKrAIMd3G7moo1gyL8hWBg==}
+
+  powerbi-router@0.1.5:
+    resolution: {integrity: sha512-DFJCKxwh/DqMZXtHSo6xZl87mbRviZGn4P7Oi2rT0L4HMI4AjnWIrwg0JCSM7ymBzYnNe5UmrsCaf2Upur5RQA==}
+
   preact@10.20.2:
     resolution: {integrity: sha512-S1d1ernz3KQ+Y2awUxKakpfOg2CEmJmwOP+6igPx6dgr6pgDvenqYviyokWso2rhHvGtTlWWnJDa7RaPbQerTg==}
 
@@ -4777,6 +4804,9 @@ packages:
     resolution: {integrity: sha512-0gG94inrUtg25sB2V/pApwiv1lUb0bQ25FPNuzO89Baa+B+c0ccaaBKM5zkZV/12pUUdH+lWCSm9wmHqyocuVQ==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
+
+  route-recognizer@0.1.11:
+    resolution: {integrity: sha512-7JNu5mXQVa39zxmUKyk/bfpeF2WyEC5JKVTJO5HATcoUQpcQsI3eLzhwGU69xeOagQxfOQ+yr2sSv0G8xy+vQA==}
 
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
@@ -5522,6 +5552,9 @@ packages:
 
   wildcard@1.1.2:
     resolution: {integrity: sha512-DXukZJxpHA8LuotRwL0pP1+rS6CS7FF2qStDDE1C7DDg2rLud2PXRMuEDYIPhgEezwnlHNL4c+N6MfMTjCGTng==}
+
+  window-post-message-proxy@0.2.9:
+    resolution: {integrity: sha512-hHmF5dvY27wy4EKN9c5qukPtzlbrdUzkMiCHud4gYKXCFAiGOBhCfi/dVBvwbUf0qrEGwFNnqkvk6DE54sdlcw==}
 
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
@@ -8924,6 +8957,8 @@ snapshots:
       es5-ext: 0.10.64
       es6-symbol: 3.1.4
 
+  es6-promise@3.3.1: {}
+
   es6-symbol@3.1.4:
     dependencies:
       d: 1.0.2
@@ -9469,6 +9504,10 @@ snapshots:
       domhandler: 5.0.3
       domutils: 3.1.0
       entities: 4.5.0
+
+  http-post-message@0.2.3:
+    dependencies:
+      es6-promise: 3.3.1
 
   human-signals@2.1.0: {}
 
@@ -10415,6 +10454,34 @@ snapshots:
       posthtml-parser: 0.2.1
       posthtml-render: 1.4.0
 
+  powerbi-client-vue-js@1.1.1(typescript@5.3.3):
+    dependencies:
+      powerbi-client: 2.23.1
+      powerbi-report-authoring: 1.1.3
+      vue: 3.4.21(typescript@5.3.3)
+    transitivePeerDependencies:
+      - typescript
+
+  powerbi-client@2.23.1:
+    dependencies:
+      http-post-message: 0.2.3
+      powerbi-models: 1.15.2
+      powerbi-router: 0.1.5
+      window-post-message-proxy: 0.2.9
+
+  powerbi-models@1.15.2: {}
+
+  powerbi-report-authoring@1.1.3:
+    dependencies:
+      http-post-message: 0.2.3
+      powerbi-client: 2.23.1
+      powerbi-models: 1.15.2
+
+  powerbi-router@0.1.5:
+    dependencies:
+      es6-promise: 3.3.1
+      route-recognizer: 0.1.11
+
   preact@10.20.2: {}
 
   prelude-ls@1.2.1: {}
@@ -10618,6 +10685,8 @@ snapshots:
       '@rollup/rollup-win32-ia32-msvc': 4.17.1
       '@rollup/rollup-win32-x64-msvc': 4.17.1
       fsevents: 2.3.3
+
+  route-recognizer@0.1.11: {}
 
   run-parallel@1.2.0:
     dependencies:
@@ -11522,6 +11591,10 @@ snapshots:
       isexe: 2.0.0
 
   wildcard@1.1.2: {}
+
+  window-post-message-proxy@0.2.9:
+    dependencies:
+      es6-promise: 3.3.1
 
   word-wrap@1.2.5: {}
 
