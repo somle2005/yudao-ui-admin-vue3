@@ -31,6 +31,15 @@ const reload = () => {
 // 为组件后代提供刷新方法
 provide('reload', reload)
 //endregion
+
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+
+// Get the current route object
+const route = useRoute();
+
+// Create a computed property to reactively track the matched route configuration
+const routeConfig = computed(() => route.matched);
 </script>
 
 <template>
@@ -44,7 +53,15 @@ provide('reload', reload)
     ]"
   >
     <router-view v-if="routerAlive">
+<!--      作用域插槽，解构赋值子组件回传参数到Compenet和route-->
       <template #default="{ Component, route }">
+        <div>
+          <!-- Print route's fullPath -->
+          <p><strong>Current Path:</strong> {{ route.fullPath }}</p>
+
+          <!-- Display the entire route object (for debugging or inspection) -->
+          <pre><strong>Route Configuration:</strong> {{ routeConfig }}</pre>
+        </div>
         <keep-alive :include="getCaches">
           <component :is="Component" :key="route.fullPath" />
         </keep-alive>
