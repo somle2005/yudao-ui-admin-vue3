@@ -39,7 +39,7 @@ export const SystemRoleTypeEnum = {
 /**
  * 数据字段枚举
  */
-export const SystemDtaTypeEnum = {
+export const SystemFieldEnum = {
   NO: false, // 否
   YES: true // 是
 }

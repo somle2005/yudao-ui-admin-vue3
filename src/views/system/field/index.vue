@@ -48,7 +48,7 @@
           class="!w-240px"
         >
           <el-option
-            v-for="dict in getStrDictOptions(DICT_TYPE.SYSTEM_DATA_TYPE)"
+            v-for="dict in getStrDictOptions(DICT_TYPE.SYSTEM_FILED)"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"/>
@@ -72,7 +72,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:data-type:create']"
+          v-hasPermi="['system:field:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -81,7 +81,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['system:data-type:export']"
+          v-hasPermi="['system:field:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -102,7 +102,7 @@
       </el-table-column>
       <el-table-column label="数据类型" align="center" prop="type" >
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.SYSTEM_DATA_TYPE" :value="scope.row.type" />
+          <dict-tag :type="DICT_TYPE.SYSTEM_FILED" :value="scope.row.type" />
         </template>
       </el-table-column>
       <el-table-column
@@ -119,7 +119,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:data-type:update']"
+            v-hasPermi="['system:field:update']"
           >
             编辑
           </el-button>
@@ -127,7 +127,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:data-type:delete']"
+            v-hasPermi="['system:field:delete']"
           >
             删除
           </el-button>
@@ -144,24 +144,24 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <DataTypeForm ref="formRef" @success="getList" />
+  <FieldForm ref="formRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { DataTypeApi, DataTypeVO } from '@/api/system/data'
-import DataTypeForm from './DataTypeForm.vue'
+import { FieldApi, FieldVO } from '@/api/system/field'
+import FieldForm from './FieldForm.vue'
 import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
 
 /** 字段属性 列表 */
-defineOptions({ name: 'SystemDataType' })
+defineOptions({ name: 'SystemField' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<DataTypeVO[]>([]) // 列表的数据
+const list = ref<FieldVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
@@ -180,7 +180,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await DataTypeApi.getDataTypePage(queryParams)
+    const data = await FieldApi.getFieldPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -212,7 +212,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await DataTypeApi.deleteDataType(id)
+    await FieldApi.deleteField(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -226,7 +226,7 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await DataTypeApi.exportDataType(queryParams)
+    const data = await FieldApi.exportField(queryParams)
     download.excel(data, '字段属性.xls')
   } catch {
   } finally {

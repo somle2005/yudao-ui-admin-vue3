@@ -30,7 +30,7 @@
       <el-form-item label="数据类型" prop="type">
         <el-select v-model="formData.type" placeholder="请选择数据类型">
           <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.SYSTEM_DATA_TYPE)"
+            v-for="dict in getIntDictOptions(DICT_TYPE.SYSTEM_FILED)"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value" />
@@ -44,12 +44,12 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { DataTypeApi, DataTypeVO } from '@/api/system/data'
+import { FieldApi, FieldVO } from '@/api/system/field'
 import {DICT_TYPE, getBoolDictOptions, getIntDictOptions} from '@/utils/dict'
-import {SystemDtaTypeEnum} from "@/utils/constants";
+import {SystemFieldEnum} from "@/utils/constants";
 
 /** 字段属性 表单 */
-defineOptions({ name: 'DataTypeForm' })
+defineOptions({ name: 'FieldForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -65,7 +65,7 @@ const formData = ref({
   sort: 0,
   require: undefined,
   type: undefined,
-  require: SystemDtaTypeEnum.YES
+  require: SystemFieldEnum.YES
 })
 const formRules = reactive({
   attribute: [{ required: true, message: '属性名称不能为空', trigger: 'blur' }],
@@ -85,7 +85,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await DataTypeApi.getDataType(id)
+      formData.value = await FieldApi.getField(id)
     } finally {
       formLoading.value = false
     }
@@ -101,12 +101,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as DataTypeVO
+    const data = formData.value as unknown as FieldVO
     if (formType.value === 'create') {
-      await DataTypeApi.createDataType(data)
+      await FieldApi.createField(data)
       message.success(t('common.createSuccess'))
     } else {
-      await DataTypeApi.updateDataType(data)
+      await FieldApi.updateField(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -126,7 +126,7 @@ const resetForm = () => {
     sort: 0,
     require: undefined,
     type: undefined,
-    require: SystemDtaTypeEnum.YES
+    require: SystemFieldEnum.YES
   }
   formRef.value?.resetFields()
 }
