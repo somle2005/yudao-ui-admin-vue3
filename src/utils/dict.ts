@@ -129,6 +129,7 @@ export enum DICT_TYPE {
   SYSTEM_MAIL_SEND_STATUS = 'system_mail_send_status',
   SYSTEM_NOTIFY_TEMPLATE_TYPE = 'system_notify_template_type',
   SYSTEM_SOCIAL_TYPE = 'system_social_type',
+  SYSTEM_WHETHER = 'system_whether',
 
   // ========== INFRA 模块 ==========
   INFRA_BOOLEAN_STRING = 'infra_boolean_string',
@@ -216,6 +217,7 @@ export enum DICT_TYPE {
   // ========== ERP - 企业资源计划模块  ==========
   ERP_AUDIT_STATUS = 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE = 'erp_stock_record_biz_type', // 库存明细的业务类型
+  SYSTEM_FILED = 'system_field',
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台
