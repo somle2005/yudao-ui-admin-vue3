@@ -18,6 +18,7 @@ export const UserTypeEnum = {
 }
 
 // ========== SYSTEM 模块 ==========
+
 /**
  * 菜单的类型枚举
  */
@@ -33,6 +34,14 @@ export const SystemMenuTypeEnum = {
 export const SystemRoleTypeEnum = {
   SYSTEM: 1, // 内置角色
   CUSTOM: 2 // 自定义角色
+}
+
+/**
+ * 数据字段枚举
+ */
+export const SystemDtaTypeEnum = {
+  NO: false, // 否
+  YES: true // 是
 }
 
 /**
@@ -437,3 +446,4 @@ export const ErpBizType = {
   SALE_OUT: 21,
   SALE_RETURN: 22
 }
+
