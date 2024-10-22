@@ -60,6 +60,7 @@ export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormal
   }
 }
 
+// TODO:整理逻辑，使得path，component，componentName的功能更简单易懂
 // 后端控制路由生成
 export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecordRaw[] => {
   const res: AppRouteRecordRaw[] = []
@@ -92,7 +93,6 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
       name:
         route.componentName && route.componentName.length > 0
           ? route.componentName
-          // : undefined,
           : toCamelCase(route.path, true),
       redirect: route.redirect,
       meta: meta
@@ -135,6 +135,7 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
         // 处理菜单（非顶级非目录）
         data.component = findComponent(route)
       }
+      // 递归生成子路由
       if (route.children) {
         data.children = generateRoute(route.children)
       }

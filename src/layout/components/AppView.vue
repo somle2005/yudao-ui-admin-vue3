@@ -55,16 +55,16 @@ const routeConfig = computed(() => route.matched);
     <router-view v-if="routerAlive">
 <!--      作用域插槽，解构赋值子组件回传参数到Compenet和route-->
       <template #default="{ Component, route }">
-        <div>
-          <!-- Print route's fullPath -->
-          <p><strong>Current Path:</strong> {{ route.fullPath }}</p>
-
-<!--          &lt;!&ndash; Display the entire route object (for debugging or inspection) &ndash;&gt;-->
-<!--          <pre><strong>Route Configuration:</strong> {{ routeConfig }}</pre>-->
-        </div>
         <keep-alive :include="getCaches">
           <component :is="Component" :key="route.fullPath" />
         </keep-alive>
+<!--        <div>-->
+<!--          &lt;!&ndash; Print route's fullPath &ndash;&gt;-->
+<!--          <p><strong>Current Path:</strong> {{ route.fullPath }}</p>-->
+
+<!--          &lt;!&ndash; Display the entire route object (for debugging or inspection) &ndash;&gt;-->
+<!--          <pre><strong>Route Configuration:</strong> {{ routeConfig }}</pre>-->
+<!--        </div>-->
       </template>
     </router-view>
   </section>
