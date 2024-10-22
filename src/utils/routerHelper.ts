@@ -63,7 +63,6 @@ export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormal
 // 后端控制路由生成
 export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecordRaw[] => {
   const res: AppRouteRecordRaw[] = []
-  const modulesRoutesKeys = Object.keys(modules)
   for (const route of routes) {
     // 1. 生成 meta 菜单元数据
     const meta = {
@@ -88,16 +87,18 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
     // 2. 生成 data（AppRouteRecordRaw）
     // 路由地址转首字母大写驼峰，作为路由名称，适配keepAlive
     let data: AppRouteRecordRaw = {
+      // 如果路径有？则截取？前的部分
       path: route.path.indexOf('?') > -1 ? route.path.split('?')[0] : route.path,
       name:
         route.componentName && route.componentName.length > 0
           ? route.componentName
+          // : undefined,
           : toCamelCase(route.path, true),
       redirect: route.redirect,
       meta: meta
     }
-    //处理顶级非目录路由
     if (!route.children && route.parentId == 0 && route.component) {
+      //处理顶级非目录路由
       data.component = Layout
       data.meta = {}
       data.name = toCamelCase(route.path, true) + 'Parent'
@@ -112,18 +113,16 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
         redirect: route.redirect,
         meta: meta
       }
-      const index = route?.component
-        ? modulesRoutesKeys.findIndex((ev) => ev.includes(route.component))
-        : modulesRoutesKeys.findIndex((ev) => ev.includes(route.path))
-      childrenData.component = modules[modulesRoutesKeys[index]]
+      childrenData.component = findComponent(route)
       data.children = [childrenData]
     } else {
-      // 目录
+      // 处理目录以及非顶级
       if (route.children) {
+        // 处理目录
         data.component = Layout
         data.redirect = getRedirect(route.path, route.children)
-        // 外链
       } else if (isUrl(route.path)) {
+        // 处理外链
         data = {
           path: '/external-link',
           component: Layout,
@@ -132,13 +131,9 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
           },
           children: [data]
         } as AppRouteRecordRaw
-        // 菜单
       } else {
-        // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会根path保持一致）
-        const index = route?.component
-          ? modulesRoutesKeys.findIndex((ev) => ev.includes(route.component))
-          : modulesRoutesKeys.findIndex((ev) => ev.includes(route.path))
-        data.component = modules[modulesRoutesKeys[index]]
+        // 处理菜单（非顶级非目录）
+        data.component = findComponent(route)
       }
       if (route.children) {
         data.children = generateRoute(route.children)
@@ -182,6 +177,16 @@ export const flatMultiLevelRoutes = (routes: AppRouteRecordRaw[]) => {
     promoteRouteLevel(route)
   }
   return modules
+}
+
+// 根据route找组件
+const findComponent = (route: AppRouteRecordRaw) => {
+  const modulesRoutesKeys = Object.keys(modules)
+  // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会根path保持一致）
+  const index = route?.component
+    ? modulesRoutesKeys.findIndex((ev) => ev.includes(route.component))
+    : modulesRoutesKeys.findIndex((ev) => ev.includes(route.path))
+  return modules[modulesRoutesKeys[index]]
 }
 
 // 层级是否大于2

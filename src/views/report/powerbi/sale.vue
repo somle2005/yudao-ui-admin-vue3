@@ -5,12 +5,6 @@
   />
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import PowerBIReport from './nofilter.vue'
-
-export default {
-  components: {
-    PowerBIReport,
-  },
-};
 </script>

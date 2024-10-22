@@ -5,7 +5,7 @@
       v-loading="formLoading"
       :model="formData"
       :rules="formRules"
-      label-width="100px"
+      label-width="140px"
     >
       <el-form-item label="上级菜单">
         <el-tree-select
@@ -46,7 +46,7 @@
       <el-form-item v-if="formData.type === 2" label="组件地址" prop="component">
         <el-input v-model="formData.component" clearable placeholder="例如说：system/user/index" />
       </el-form-item>
-      <el-form-item v-if="formData.type === 2" label="组件名字" prop="componentName">
+      <el-form-item v-if="formData.type === 2" label="路由（组件）名字" prop="componentName">
         <el-input v-model="formData.componentName" clearable placeholder="例如说：SystemUser" />
       </el-form-item>
       <el-form-item v-if="formData.type !== 1" label="权限标识" prop="permission">
@@ -149,6 +149,8 @@ const formRules = reactive({
   name: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
   sort: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
   path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
+  component: [{ required: true, message: '组件地址不能为空', trigger: 'blur' }],
+  componentName: [{ required: true, message: '路由（组件）名字不能为空', trigger: 'blur' }],
   status: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
