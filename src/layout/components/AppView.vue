@@ -33,13 +33,12 @@ provide('reload', reload)
 //endregion
 
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
 
 // Get the current route object
 const route = useRoute();
 
-// Create a computed property to reactively track the matched route configuration
-const routeConfig = computed(() => route.matched);
+// // Create a computed property to reactively track the matched route configuration
+// const routeConfig = computed(() => route.matched);
 </script>
 
 <template>
@@ -55,7 +54,7 @@ const routeConfig = computed(() => route.matched);
     <router-view v-if="routerAlive">
 <!--      作用域插槽，解构赋值子组件回传参数到Compenet和route-->
       <template #default="{ Component, route }">
-        <keep-alive :include="getCaches">
+        <keep-alive>
           <component :is="Component" :key="route.fullPath" />
         </keep-alive>
 <!--        <div>-->

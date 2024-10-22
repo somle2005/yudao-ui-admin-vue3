@@ -1,13 +1,9 @@
 <template>
-  <ContentWrap :bodyStyle="{ padding: '0px' }" class="!mb-0">
-    <div>{{ deptName }}</div>
-
-    <PowerBIReportEmbed
-      v-if="configReady"
-      class="w-full h-[calc(100vh-var(--top-tool-height)-var(--tags-view-height)-var(--app-content-padding)-var(--app-content-padding)-2px)]"
-      :embedConfig="embedConfig"
-    />
-  </ContentWrap>
+  <PowerBIReportEmbed
+    v-if="configReady"
+    class="w-full h-[calc(100vh-var(--top-tool-height)-var(--tags-view-height)-var(--app-content-padding)-var(--app-content-padding)-2px)]"
+    :embedConfig="embedConfig"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -73,6 +69,7 @@ onMounted(async () => {
   deptName.value = await getUserDeptName();
   await getReport();
 });
+
 </script>
 
 <style scoped>

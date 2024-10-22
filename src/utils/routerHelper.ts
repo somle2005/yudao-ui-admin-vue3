@@ -181,7 +181,7 @@ export const flatMultiLevelRoutes = (routes: AppRouteRecordRaw[]) => {
 }
 
 // 根据route找组件
-const findComponent = (route: AppRouteRecordRaw) => {
+const findComponent = (route: AppCustomRouteRecordRaw) => {
   const modulesRoutesKeys = Object.keys(modules)
   // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会根path保持一致）
   const index = route?.component
