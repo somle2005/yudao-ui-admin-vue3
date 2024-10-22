@@ -59,8 +59,8 @@ const routeConfig = computed(() => route.matched);
           <!-- Print route's fullPath -->
           <p><strong>Current Path:</strong> {{ route.fullPath }}</p>
 
-          <!-- Display the entire route object (for debugging or inspection) -->
-          <pre><strong>Route Configuration:</strong> {{ routeConfig }}</pre>
+<!--          &lt;!&ndash; Display the entire route object (for debugging or inspection) &ndash;&gt;-->
+<!--          <pre><strong>Route Configuration:</strong> {{ routeConfig }}</pre>-->
         </div>
         <keep-alive :include="getCaches">
           <component :is="Component" :key="route.fullPath" />
