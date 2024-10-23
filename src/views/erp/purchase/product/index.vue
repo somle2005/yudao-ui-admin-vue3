@@ -141,7 +141,6 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="供应商产品编号" align="center" prop="id" />
       <el-table-column label="供应商产品编码" align="center" prop="code" />
       <!-- <el-table-column label="供应商编号" align="center" prop="supplierId" />
       <el-table-column label="产品编号" align="center" prop="productId" /> -->

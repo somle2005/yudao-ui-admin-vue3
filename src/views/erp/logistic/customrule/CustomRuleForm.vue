@@ -20,7 +20,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="供应商产品" prop="productId">
+      <el-form-item label="供应商产品" prop="supplierProductId">
         <el-select
           v-model="formData.supplierProductId"
           clearable

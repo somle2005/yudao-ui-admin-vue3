@@ -4,9 +4,9 @@ import request from '@/config/axios'
 export interface SupplierProductVO {
   id: number // 供应商产品编号
   code: string // 供应商产品编码
-  // supplierId: number // 供应商编号
-  // productId: number // 产品编号
+  supplierId: number // 供应商编号
   supplierName: string // 供应商
+  productId: number // 产品编号
   productName: string // 产品
   packageHeight: number // 包装高度
   packageLength: number // 包装长度
