@@ -40,9 +40,7 @@
         <el-input v-model="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
       </el-form-item>
       <el-form-item label="申报品名" prop="declaredType">
-        <el-select v-model="formData.declaredType" placeholder="请选择申报品名">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
+        <el-input v-model="formData.declaredType" placeholder="请输入申报品名" />
       </el-form-item>
       <el-form-item label="申报金额" prop="declaredValue">
         <el-input v-model="formData.declaredValue" placeholder="请输入申报金额" />
