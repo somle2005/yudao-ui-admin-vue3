@@ -49,7 +49,12 @@
         <el-input v-model="formData.declaredValueCurrencyCode" placeholder="请输入申报金额币种" />
       </el-form-item>
       <el-form-item label="税率" prop="taxRate">
-        <el-input v-model="formData.taxRate" placeholder="请输入税率" />
+        <el-input-number
+          v-model="formData.taxRate"
+          placeholder="请输入税率"
+          :min="0"
+          class="!w-1/1"
+        />
       </el-form-item>
       <el-form-item label="hs编码" prop="hscode">
         <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
