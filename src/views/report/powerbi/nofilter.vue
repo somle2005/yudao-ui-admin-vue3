@@ -8,11 +8,9 @@
 
 <script lang="ts" setup>
 defineOptions({ name: 'PowerBIReport' })
-import { ref, onMounted, defineProps } from 'vue';
-import * as DeptApi from '@/api/system/dept';
 import { PowerbiApi } from '@/api/report/powerbi';
-import { CACHE_KEY, useCache } from '@/hooks/web/useCache';
 import { PowerBIReportEmbed } from 'powerbi-client-vue-js';
+
 import { IReportEmbedConfiguration, models } from 'powerbi-client';
 
 const props = defineProps<{

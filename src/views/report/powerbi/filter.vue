@@ -19,16 +19,15 @@ import { PowerbiApi} from '@/api/report/powerbi';
 import { PowerBIReportEmbed} from 'powerbi-client-vue-js';
 import { useUserStore } from '@/store/modules/user'
 
-import { IReportEmbedConfiguration } from 'powerbi-client';
-import { models } from 'powerbi-client';
+import { IReportEmbedConfiguration, models } from 'powerbi-client';
+
+const props = defineProps<{
+  groupId: string;
+  reportId: string;
+}>();
 
 const configReady = ref(false);
 const userDeptId = useUserStore().getUser.deptId;
-
-const queryParams = {
-  groupId : "992affd7-1e95-4213-bb80-758a9d1dbe86",
-  reportId : "e5e3fbe6-bd1b-479a-b417-fac868bcbd4a",
-}
 
 
 const filter: models.IBasicFilter = {
@@ -44,7 +43,7 @@ const filter: models.IBasicFilter = {
 const embedConfig = ref<IReportEmbedConfiguration>({
   type: 'report',
   settings: {
-    // filterPaneEnabled:false,
+    filterPaneEnabled:false,
     // customLayout: {
     //   pageSize: {
     //     type:5
@@ -62,24 +61,24 @@ const embedConfig = ref<IReportEmbedConfiguration>({
 });
 
 
-// const deptName = ref('');
 
 const getReport = async () => {
   try {
-    const embedReport = await PowerbiApi.getEmbedReport(queryParams)
-    console.log(embedReport.reportId)
-    embedConfig.value.id = embedReport.reportId
-    embedConfig.value.embedUrl = embedReport.embedUrl
-    embedConfig.value.accessToken = embedReport.reportToken
-    console.log(embedConfig.value)
-    configReady.value = true
-  } finally {
+    const embedReport = await PowerbiApi.getEmbedReport({
+      groupId: props.groupId,
+      reportId: props.reportId
+    });
+    embedConfig.value.id = embedReport.reportId;
+    embedConfig.value.embedUrl = embedReport.embedUrl;
+    embedConfig.value.accessToken = embedReport.reportToken;
+    configReady.value = true;
+  } catch (error) {
+    console.error("Error fetching report:", error);
   }
-}
-
+};
 
 onMounted(async () => {
-  await getReport()
+  await getReport();
 });
 
 </script>
