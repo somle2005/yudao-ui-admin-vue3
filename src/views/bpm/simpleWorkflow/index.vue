@@ -24,5 +24,5 @@ let nodeConfig = ref({
 })
 </script>
 <style>
-@use url('@/components/SimpleProcessDesigner/theme/workflow.css') as *;
+@import url('@/components/SimpleProcessDesigner/theme/workflow.css');
 </style>

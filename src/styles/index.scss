@@ -1,7 +1,7 @@
-@use './var.css' as *;
+@import './var.css';
 @use './FormCreate/index.scss' as *;
 @use './theme.scss' as *;
-@use 'element-plus/theme-chalk/dark/css-vars.css' as *;
+@import 'element-plus/theme-chalk/dark/css-vars.css';
 
 .reset-margin [class*='el-icon'] + span {
   margin-left: 2px !important;
