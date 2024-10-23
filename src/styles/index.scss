@@ -1,6 +1,6 @@
-@import './var.css';
 @use './FormCreate/index.scss' as *;
 @use './theme.scss' as *;
+@import './var.css';
 @import 'element-plus/theme-chalk/dark/css-vars.css';
 
 .reset-margin [class*='el-icon'] + span {
