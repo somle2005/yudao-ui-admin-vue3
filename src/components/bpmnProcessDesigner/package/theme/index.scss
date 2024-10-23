@@ -1,2 +1,2 @@
-@import './process-designer.scss';
-@import './process-panel.scss';
+@use './process-designer.scss' as *;
+@use './process-panel.scss' as *;

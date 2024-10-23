@@ -52,8 +52,8 @@ const getNickname = (sendFrom: SendFrom) =>
 
 <style lang="scss" scoped>
 /* 因为 joolun 实现依赖 avue 组件，该页面使用了 comment.scss、card.scc  */
-@import url('../comment.scss');
-@import url('../card.scss');
+@use '../comment.scss' as *;
+@use '../card.scss' as *;
 
 .avatar-div {
   width: 80px;
