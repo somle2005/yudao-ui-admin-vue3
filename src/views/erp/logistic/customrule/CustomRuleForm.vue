@@ -53,6 +53,7 @@
           v-model="formData.taxRate"
           placeholder="请输入税率"
           :min="0"
+          :precision="1"
           class="!w-1/1"
         />
       </el-form-item>
