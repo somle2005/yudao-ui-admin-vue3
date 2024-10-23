@@ -1,18 +1,12 @@
 
 
 <template>
-
-  <ContentWrap :bodyStyle="{ padding: '0px' }" class="!mb-0">
-
-    <div>{{ deptName }}</div>
-
-    <PowerBIReportEmbed
-      v-if="configReady"
-      class="w-full h-[calc(100vh-var(--top-tool-height)-var(--tags-view-height)-var(--app-content-padding)-var(--app-content-padding)-2px)]"
-      :embedConfig="embedConfig"
-    />
-
-  </ContentWrap>
+  <h2>{{userDeptId}}</h2>
+  <PowerBIReportEmbed
+    v-if="configReady"
+    class="w-full h-[calc(100vh-var(--top-tool-height)-var(--tags-view-height)-var(--app-content-padding)-var(--app-content-padding)-2px)]"
+    :embedConfig="embedConfig"
+  />
 </template>
 
 
@@ -20,16 +14,16 @@
 
 <script lang="ts" setup>
 
-defineOptions({ name: 'ShopifyBI' })
-import * as DeptApi from '@/api/system/dept'
+defineOptions({ name: 'PowerBIReportFiltered' })
 import { PowerbiApi} from '@/api/report/powerbi';
-import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { PowerBIReportEmbed} from 'powerbi-client-vue-js';
+import { useUserStore } from '@/store/modules/user'
 
 import { IReportEmbedConfiguration } from 'powerbi-client';
 import { models } from 'powerbi-client';
 
 const configReady = ref(false);
+const userDeptId = useUserStore().getUser.deptId;
 
 const queryParams = {
   groupId : "992affd7-1e95-4213-bb80-758a9d1dbe86",
@@ -38,9 +32,9 @@ const queryParams = {
 
 
 const filter: models.IBasicFilter = {
-  target: { table: "stylesku", column: "stylesku" },
+  target: { table: "system_dept", column: "id" },
   operator: "In",
-  values: ["F07F4061L"],
+  values: [userDeptId],
   $schema: '',
   filterType: models.FilterType.Basic
 };
@@ -68,7 +62,7 @@ const embedConfig = ref<IReportEmbedConfiguration>({
 });
 
 
-const deptName = ref('');
+// const deptName = ref('');
 
 const getReport = async () => {
   try {
@@ -84,21 +78,8 @@ const getReport = async () => {
 }
 
 
-async function getUserDeptName(): Promise<string> {
-  const { wsCache } = useCache()
-  // 获取用户拥有的角色
-  const id = wsCache.get(CACHE_KEY.USER).user.deptId
-  const dept = await DeptApi.getDept(id) as DeptApi.DeptVO
-  return dept.name
-}
-// const iframeComponent = ref<InstanceType<typeof IFrame> | null>(null);
-
 onMounted(async () => {
-  console.log('Page is fully loaded')// Access iframe through the ref
-  deptName.value = await getUserDeptName();
   await getReport()
-
-
 });
 
 </script>

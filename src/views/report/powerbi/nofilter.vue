@@ -41,7 +41,7 @@ const embedConfig = ref<IReportEmbedConfiguration>({
   hostname: "https://app.powerbi.cn"
 });
 
-const deptName = ref('');
+
 
 const getReport = async () => {
   try {
@@ -58,20 +58,8 @@ const getReport = async () => {
   }
 };
 
-async function getUserDeptName(): Promise<string> {
-  const { wsCache } = useCache();
-  const id = wsCache.get(CACHE_KEY.USER).user.deptId;
-  const dept = await DeptApi.getDept(id) as DeptApi.DeptVO;
-  return dept.name;
-}
-
 onMounted(async () => {
-  deptName.value = await getUserDeptName();
   await getReport();
 });
 
 </script>
-
-<style scoped>
-/* Add any component-specific styles here */
-</style>
