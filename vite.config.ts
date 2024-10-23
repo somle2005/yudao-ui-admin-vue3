@@ -44,7 +44,7 @@ export default ({command, mode}: ConfigEnv): UserConfig => {
             preprocessorOptions: {
                 scss: {
                     api: 'modern-compiler',
-                    additionalData: '@use "./src/styles/variables.scss" as *;',
+                    additionalData: '@use "./src/styles/variables.scss" as *;\n',
                     javascriptEnabled: true
                 }
             }
