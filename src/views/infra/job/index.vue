@@ -271,10 +271,16 @@ const handleCommand = (command, row) => {
 /** 执行一次 */
 const handleRun = async (row: JobApi.JobVO) => {
   try {
+    let handlerParam
     // 二次确认
-    await message.confirm('确认要立即执行一次' + row.name + '?', t('common.reminder'))
+    // await message.confirm('确认要立即执行一次' + row.name + '?', t('common.reminder'))
+    await message.prompt('确认要立即执行' + row.name + '? 参数（可选）：', t('common.reminder'))
+      .then(({ value }) => {
+        handlerParam = value
+      })
+
+    JobApi.runJobWithParam(row.id, value)
     // 提交执行
-    await JobApi.runJob(row.id)
     message.success('执行成功')
     // 刷新列表
     await getList()

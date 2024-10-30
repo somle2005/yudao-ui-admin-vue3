@@ -57,6 +57,11 @@ export const runJob = (id: number) => {
   return request.put({ url: '/infra/job/trigger?id=' + id })
 }
 
+// 定时任务立即执行一次
+export const runJobWithParam = (id: number, handlerParam: string) => {
+  return request.put({ url: '/infra/job/trigger?id=' + id + '&handlerParam=' + handlerParam })
+}
+
 // 获得定时任务的下 n 次执行时间
 export const getJobNextTimes = (id: number) => {
   return request.get({ url: '/infra/job/get_next_times?id=' + id })
