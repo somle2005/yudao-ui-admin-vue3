@@ -279,7 +279,7 @@ const handleRun = async (row: JobApi.JobVO) => {
         handlerParam = value
       })
 
-    await JobApi.runJobWithParam(row.id, value)
+    await JobApi.runJobWithParam(row.id, handlerParam)
     // 提交执行
     message.success('执行成功')
     // 刷新列表
