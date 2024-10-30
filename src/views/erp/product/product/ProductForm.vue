@@ -79,6 +79,18 @@
           </el-form-item>
         </el-col> -->
         <el-col :span="12">
+          <el-form-item label="部门" prop="deptId">
+            <!--            <el-input v-model="formData.deptId" placeholder="请输入部门id" />-->
+            <el-cascader
+              v-model="formData.deptId"
+              :options="deptList"
+              :props="cascaderProps"
+              placeholder="请选择"
+              clearable
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="材料（中文）" prop="material">
             <el-input v-model="formData.material" placeholder="请输入材料（中文）" />
           </el-form-item>
@@ -86,8 +98,8 @@
         <el-col :span="12">
           <el-form-item label="长度（cm）" prop="length">
             <el-input-number
-              v-model="formData.length" 
-              placeholder="请输入长度（cm）" 
+              v-model="formData.length"
+              placeholder="请输入长度（cm）"
               :min="0"
               class="!w-1/1"
             />
@@ -96,8 +108,8 @@
         <el-col :span="12">
           <el-form-item label="宽度（cm）" prop="width">
             <el-input-number
-              v-model="formData.width" 
-              placeholder="请输入宽度（cm）" 
+              v-model="formData.width"
+              placeholder="请输入宽度（cm）"
               :min="0"
               class="!w-1/1"
             />
@@ -106,8 +118,8 @@
         <el-col :span="12">
           <el-form-item label="高度（cm）" prop="height">
             <el-input-number
-              v-model="formData.height" 
-              placeholder="请输入高度（cm）" 
+              v-model="formData.height"
+              placeholder="请输入高度（cm）"
               :min="0"
               class="!w-1/1"
             />
@@ -176,6 +188,7 @@ import { ProductUnitApi, ProductUnitVO } from '@/api/erp/product/unit'
 import { CommonStatusEnum } from '@/utils/constants'
 import { defaultProps, handleTree } from '@/utils/tree'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { getTreeDeptList } from '@/api/system/dept'
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
@@ -205,7 +218,8 @@ const formData = ref({
   weight: undefined,
   purchasePrice: undefined,
   salePrice: undefined,
-  minPrice: undefined
+  minPrice: undefined,
+  deptId: undefined
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
@@ -213,11 +227,21 @@ const formRules = reactive({
   barCode: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   categoryId: [{ required: true, message: '产品分类编号不能为空', trigger: 'blur' }],
   unitId: [{ required: true, message: '单位编号不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '产品状态不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '产品状态不能为空', trigger: 'blur' }],
+  deptId: [{ required: true, message: '部门编号不能为空', trigger: 'blur' }]
 })
+const cascaderProps = {
+  multiple: false, // 设置为单选
+  checkStrictly: true, // 允许选择任意一级
+  expandTrigger: 'hover',
+  value: 'id',
+  label: 'name',
+  children: 'children'
+}
 const formRef = ref() // 表单 Ref
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
+const deptList = ref([]) //部门树形列表
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -239,6 +263,8 @@ const open = async (type: string, id?: number) => {
   categoryList.value = handleTree(categoryData, 'id', 'parentId')
   // 产品单位
   unitList.value = await ProductUnitApi.getProductUnitSimpleList()
+  //部门树形数据
+  deptList.value = await getTreeDeptList()
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
@@ -250,6 +276,11 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
+    //由于是单选，后端的deptId是Long类型，所以将数组转化为number
+    const length = formData.value.deptId.length
+    if (length > 0){
+      formData.value.deptId = formData.value.deptId[length-1]
+    }
     const data = formData.value as unknown as ProductVO
     if (formType.value === 'create') {
       await ProductApi.createProduct(data)
@@ -285,7 +316,8 @@ const resetForm = () => {
     weight: undefined,
     purchasePrice: undefined,
     salePrice: undefined,
-    minPrice: undefined
+    minPrice: undefined,
+    deptId: undefined
   }
   formRef.value?.resetFields()
 }

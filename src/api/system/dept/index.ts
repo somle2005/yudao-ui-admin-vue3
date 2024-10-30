@@ -41,3 +41,8 @@ export const updateDept = async (params: DeptVO) => {
 export const deleteDept = async (id: number) => {
   return await request.delete({ url: '/system/dept/delete?id=' + id })
 }
+
+//获得二级部门和一级部门（构建树结构）
+export const getTreeDeptList = async () => {
+  return await request.get({ url: '/system/dept/getTreeDeptList' })
+}

@@ -1,4 +1,5 @@
 import request from '@/config/axios'
+import {list} from "postcss";
 
 // ERP 产品 VO
 export interface ProductVO {
@@ -20,6 +21,7 @@ export interface ProductVO {
   purchasePrice: number // 采购价格，单位：元
   salePrice: number // 销售价格，单位：元
   minPrice: number // 最低价格，单位：元
+  deptId: number //部门id
 }
 
 // ERP 产品 API

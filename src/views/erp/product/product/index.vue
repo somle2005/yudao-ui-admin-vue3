@@ -77,6 +77,7 @@
       <!-- <el-table-column label="规格" align="center" prop="standard" /> -->
       <el-table-column label="分类" align="center" prop="categoryName" />
       <el-table-column label="单位" align="center" prop="unitName" />
+      <el-table-column label="部门" align="center" prop="deptName" />
       <!-- <el-table-column
         label="采购价格"
         align="center"
