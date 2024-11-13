@@ -1,6 +1,6 @@
 <template>
   <DataVEmbed
-    src="https://datav.aliyuncs.com/share/page/6e28bbd716ba67b970b1dbc73621c104"
+    src="https://datav.aliyuncs.com/share/page/55515afd64a9b0e4d5c42cee2f226fe7"
   />
 </template>
 
