@@ -6,6 +6,7 @@
           <el-select
             v-model="selectedYears"
             multiple
+            filterable
             placeholder="请选择年份"
             style="width: 200px;"
           >
@@ -22,6 +23,7 @@
           <el-select
             v-model="selectedPlatforms"
             multiple
+            filterable
             placeholder="请选择平台"
             style="width: 200px;"
           >
@@ -38,6 +40,7 @@
           <el-select
             v-model="selectedSkus"
             multiple
+            filterable
             placeholder="请选择SKU"
             style="width: 200px;"
           >
@@ -54,7 +57,11 @@
       </el-form>
     </div>
 
-    <div id="map" ref="mapContainer"></div>
+    <div
+      id="map"
+      ref="mapContainer"
+      style="width: 100%; height: 70vh;"
+    ></div>
 
     <div class="controls">
       <el-button type="success" @click="toggleHeatmap">切换热图</el-button>
@@ -70,6 +77,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import { PowerBIReportEmbed } from 'powerbi-client-vue-js'
 
 const mapContainer = ref<HTMLElement | null>(null);
 
@@ -98,9 +106,9 @@ onMounted(() => {
 
 async function loadGoogleMapsScript() {
   try {
-    const { data } = await axios.get('https://kerwin.org.cn/api/google-maps-script-url');
+    // const { data } = await axios.get('https://kerwin.org.cn/api/google-maps-script-url');
     const script = document.createElement('script');
-    script.src = `${data.scriptUrl}&libraries=visualization`; // No callback
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAJhMG_t2IcSck60ta18BPFRxiTOmXHaeU&callback=initMap&libraries=visualization`; // No callback
     script.async = true;
     script.defer = true;
     script.onload = initMap;
@@ -117,10 +125,39 @@ async function initMap() {
   const { HeatmapLayer } = await google.maps.importLibrary('visualization');
 
   map = new Map(mapContainer.value as HTMLElement, {
-    zoom: 13,
+    zoom: 6,
     center: { lat: 38.913611, lng: -77.013222 },
     mapId,
   });
+
+  // // 绘制经线
+  // for (let lng = -180; lng <= 180; lng += 10) {
+  //   new google.maps.Polyline({
+  //     map: map,
+  //     path: [
+  //       { lat: -90, lng: lng }, // 南极
+  //       { lat: 90, lng: lng },  // 北极
+  //     ],
+  //     strokeColor: "#000000",
+  //     strokeOpacity: 0.5,
+  //     strokeWeight: 1,
+  //   });
+  // }
+
+  // 绘制纬线
+  for (let lat = -90; lat <= 90; lat += 10) {
+    new google.maps.Polyline({
+      map: map,
+      path: [
+        { lat: lat, lng: -180 }, // 左侧边界
+        { lat: lat, lng: 0 }, // 中点
+        { lat: lat, lng: 180 },  // 右侧边界
+      ],
+      strokeColor: "#000000",
+      strokeOpacity: 0.5,
+      strokeWeight: 1,
+    });
+  }
 }
 
 function loadOptions() {
@@ -154,6 +191,7 @@ async function loadData() {
     ElMessage.error('获取数据时出错');
     console.error('获取数据时出错:', error);
   }
+
 }
 
 async function fetchStreetView(latitude: number, longitude: number): Promise<string | null> {
@@ -174,7 +212,17 @@ async function fetchStreetView(latitude: number, longitude: number): Promise<str
   }
 }
 
-function updateMap(data: any[]) {
+const colorPalette = [
+  '#FF5733', '#33FF57', '#3357FF', '#F333FF', '#33FFF5', '#FFA733',
+  '#571311', '#FDF3F7', '#A733FF', '#33FF9C',
+]; // 10 distinct colors for SKUs
+
+function getColorForSku(sku: string): string {
+  const skuIndex = selectedSkus.value.indexOf(sku);
+  return colorPalette[skuIndex % colorPalette.length]; // Rotate through the colors
+}
+
+function updateHeatmap(data: any[]) {
   if (!map) return;
 
   const points = data
@@ -182,49 +230,72 @@ function updateMap(data: any[]) {
     .map((row) => new google.maps.LatLng(row.latitude, row.longtitude));
 
   if (heatmap) heatmap.setMap(null);
-  heatmap = new google.maps.visualization.HeatmapLayer({ data: points, map });
 
+  heatmap = new google.maps.visualization.HeatmapLayer({
+    data: points,
+    map,
+  });
+}
+
+function createMarker(row: any, color: string): google.maps.marker.AdvancedMarkerElement {
+  // Create a pin element with custom styles.
+  const pin = new google.maps.marker.PinElement({
+    scale: 0.8, // Adjust the scale of the pin
+    background: color, // Set the pin's background color based on SKU
+  });
+
+  // Create the marker with the customized pin element.
+  return new AdvancedMarkerElement({
+    map: markersVisible ? map : null,
+    position: new google.maps.LatLng(row.latitude, row.longtitude),
+    content: pin.element, // Apply the customized pin element
+  });
+}
+
+
+
+
+function updateMarkers(data: any[]) {
   markers.forEach((marker) => marker.setMap(null));
   markers = [];
 
+  const infoWindow = new google.maps.InfoWindow();
+
   data.forEach((row) => {
     if (row.latitude && row.longtitude) {
-      const marker = new AdvancedMarkerElement({
-        position: new google.maps.LatLng(row.latitude, row.longtitude),
-        map: markersVisible ? map : null,
-        title: row.buyer_name,
-      });
-
-      const infoWindow = new google.maps.InfoWindow();
-
-      marker.content.addEventListener('mouseover', async () => {
-        if (isImageLoading) return;
-        isImageLoading = true;
+      const color = getColorForSku(row.sku);
+      const marker = createMarker(row, color);
+      marker.content.addEventListener('click', async () => {
         const streetViewUrl = await fetchStreetView(row.latitude, row.longtitude);
         if (streetViewUrl) {
           infoWindow.setContent(`
-            买家名称: ${row.buyer_name}<br>
-            国家名称: ${row.country_code}<br>
-            城市名称: ${row.city_name}<br>
-            平台: ${row.platform}<br>
-            SKU: ${row.sku}<br>
-            纬度: ${row.latitude}<br>
-            经度: ${row.longtitude}<br>
-            <img src="${streetViewUrl}" alt="Street View Image">
+            <div>
+              <p>买家名称: ${row.buyer_name}</p>
+              <p>国家名称: ${row.country_code}</p>
+              <p>城市名称: ${row.city_name}</p>
+              <p>平台: ${row.platform}</p>
+              <p>SKU: ${row.sku}</p>
+              <p>纬度: ${row.latitude}</p>
+              <p>经度: ${row.longtitude}</p>
+              <img src="${streetViewUrl}" alt="Street View Image" style="width:auto;height:auto;">
+            </div>
           `);
           infoWindow.open(map, marker);
         }
-        isImageLoading = false;
       });
-
-      marker.content.addEventListener('mouseout', () => {
-        infoWindow.close();
-      });
-
       markers.push(marker);
     }
+
+
   });
 }
+
+function updateMap(data: any[]) {
+  updateHeatmap(data);
+  updateMarkers(data);
+}
+
+
 
 function toggleHeatmap() {
   if (heatmap) heatmap.setMap(heatmap.getMap() ? null : map);
