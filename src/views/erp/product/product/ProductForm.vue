@@ -230,7 +230,10 @@
         </el-col>
       </el-row>
       <!-- 额外字段 -->
-      <ProductTvStandForm ref="productTvStandFormRef"/>
+<!--      <ProductTvStandForm :details="formData.details" @update:details="formData.details = $event" ref="productTvStandFormRef"/>-->
+<!--      <ProductTvStandForm  v-model:details="formData.details" ref="productTvStandFormRef"/>-->
+      <ProductTvStandForm  ref="productTvStandFormRef"/>
+      <a>{{formData}}</a>
     </el-form>
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
@@ -284,6 +287,7 @@ const formData = ref({
   rdId: undefined,
   meId: undefined,
   color: undefined,
+  details: undefined,
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
@@ -308,6 +312,12 @@ const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
 const isEditMode = ref(false)  // 控制是否为编辑模式
 const productTvStandFormRef = ref()
+
+// /**给子表单的修改详情方法**/
+// function updateDetails(details:any) {
+//   // formData.value.details = details
+//   console.log(details)
+// }
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -337,17 +347,22 @@ const open = async (type: string, id?: number) => {
   // 加载用户列表
   userList.value = await UserApi.getSimpleUserList()
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
+
+defineExpose({
+  open,
+}) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
+  await productTvStandFormRef.value.validateForm()
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as ProductVO
+    const data = {...formData.value, ...productTvStandFormRef.value.formData} as unknown as ProductVO
+    // data.details = productTvStandFormRef.value.formData
     if (formType.value === 'create') {
       await ProductApi.createProduct(data)
       message.success(t('common.createSuccess'))
@@ -391,6 +406,7 @@ const resetForm = () => {
     rdId: undefined,
     meId: undefined,
     color: undefined,
+    details: undefined,
   }
   formRef.value?.resetFields()
 }

@@ -27,6 +27,7 @@ export interface ProductVO {
   rdId: number // RD研发工程师id
   meId: number // 维护工程师id
   color: string // 颜色
+  details: {} // 详情
 }
 
 // ERP 产品 API
