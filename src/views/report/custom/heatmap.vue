@@ -8,14 +8,9 @@
             multiple
             filterable
             placeholder="请选择年份"
-            style="width: 200px;"
+            style="width: 200px"
           >
-            <el-option
-              v-for="year in years"
-              :key="year"
-              :label="year"
-              :value="year"
-            />
+            <el-option v-for="year in years" :key="year" :label="year" :value="year" />
           </el-select>
         </el-form-item>
 
@@ -25,7 +20,7 @@
             multiple
             filterable
             placeholder="请选择平台"
-            style="width: 200px;"
+            style="width: 200px"
           >
             <el-option
               v-for="platform in platforms"
@@ -42,14 +37,9 @@
             multiple
             filterable
             placeholder="请选择SKU"
-            style="width: 200px;"
+            style="width: 200px"
           >
-            <el-option
-              v-for="sku in skus"
-              :key="sku"
-              :label="sku"
-              :value="sku"
-            />
+            <el-option v-for="sku in skus" :key="sku" :label="sku" :value="sku" />
           </el-select>
         </el-form-item>
 
@@ -57,11 +47,7 @@
       </el-form>
     </div>
 
-    <div
-      id="map"
-      ref="mapContainer"
-      style="width: 100%; height: 70vh;"
-    ></div>
+    <div id="map" ref="mapContainer" style="width: 100%; height: 70vh"></div>
 
     <div class="controls">
       <el-button type="success" @click="toggleHeatmap">切换热图</el-button>
@@ -74,61 +60,61 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { ElMessage } from 'element-plus';
-import { PowerBIReportEmbed } from 'powerbi-client-vue-js'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { ElMessage } from 'element-plus'
+import { getConfigKey } from '@/api/infra/config'
 
-const mapContainer = ref<HTMLElement | null>(null);
+const mapContainer = ref<HTMLElement | null>(null)
 
-const years = ref<string[]>([]);
-const platforms = ref<string[]>([]);
-const skus = ref<string[]>([]);
+const years = ref<string[]>([])
+const platforms = ref<string[]>([])
+const skus = ref<string[]>([])
 
-const selectedYears = ref<string[]>([]);
-const selectedPlatforms = ref<string[]>([]);
-const selectedSkus = ref<string[]>([]);
+const selectedYears = ref<string[]>([])
+const selectedPlatforms = ref<string[]>([])
+const selectedSkus = ref<string[]>([])
 
-let map: google.maps.Map | null = null;
-let heatmap: google.maps.visualization.HeatmapLayer | null = null;
-let markers: google.maps.marker.AdvancedMarkerElement[] = [];
-let markersVisible = true;
-let AdvancedMarkerElement: any;
-const imageCache: Record<string, string> = {};
-let isImageLoading = false;
+let map: google.maps.Map | null = null
+let heatmap: google.maps.visualization.HeatmapLayer | null = null
+let markers: google.maps.marker.AdvancedMarkerElement[] = []
+let markersVisible = true
+let AdvancedMarkerElement: any
+const imageCache: Record<string, string> = {}
 
-const mapId = 'YOUR_MAP_ID';
+const mapId = 'YOUR_MAP_ID'
 
 onMounted(() => {
-  loadOptions();
-  loadGoogleMapsScript();
-});
+  loadOptions()
+  loadGoogleMapsScript()
+})
 
 async function loadGoogleMapsScript() {
   try {
     // const { data } = await axios.get('https://kerwin.org.cn/api/google-maps-script-url');
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAJhMG_t2IcSck60ta18BPFRxiTOmXHaeU&callback=initMap&libraries=visualization`; // No callback
-    script.async = true;
-    script.defer = true;
-    script.onload = initMap;
-    document.head.appendChild(script);
+    const script = document.createElement('script')
+    const key = await getConfigKey('google.map.key')
+    console.log(key)
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap&libraries=visualization` // No callback
+    script.async = true
+    script.defer = true
+    script.onload = initMap
+    document.head.appendChild(script)
   } catch (error) {
-    ElMessage.error('加载Google Maps脚本时出错');
-    console.error('加载Google Maps脚本时出错:', error);
+    ElMessage.error('加载Google Maps脚本时出错')
+    console.error('加载Google Maps脚本时出错:', error)
   }
 }
 
 async function initMap() {
-  const { Map } = await google.maps.importLibrary('maps');
-  AdvancedMarkerElement = (await google.maps.importLibrary('marker')).AdvancedMarkerElement;
-  const { HeatmapLayer } = await google.maps.importLibrary('visualization');
+  const { Map } = await google.maps.importLibrary('maps')
+  AdvancedMarkerElement = (await google.maps.importLibrary('marker')).AdvancedMarkerElement
 
   map = new Map(mapContainer.value as HTMLElement, {
     zoom: 6,
     center: { lat: 38.913611, lng: -77.013222 },
-    mapId,
-  });
+    mapId
+  })
 
   // // 绘制经线
   // for (let lng = -180; lng <= 180; lng += 10) {
@@ -151,12 +137,12 @@ async function initMap() {
       path: [
         { lat: lat, lng: -180 }, // 左侧边界
         { lat: lat, lng: 0 }, // 中点
-        { lat: lat, lng: 180 },  // 右侧边界
+        { lat: lat, lng: 180 } // 右侧边界
       ],
-      strokeColor: "#000000",
+      strokeColor: '#000000',
       strokeOpacity: 0.5,
-      strokeWeight: 1,
-    });
+      strokeWeight: 1
+    })
   }
 }
 
@@ -164,109 +150,117 @@ function loadOptions() {
   axios
     .get('https://kerwin.org.cn/api/options')
     .then(({ data }) => {
-      years.value = data.years;
-      platforms.value = data.platforms;
-      skus.value = data.skus;
+      years.value = data.years
+      platforms.value = data.platforms
+      skus.value = data.skus
     })
     .catch((error) => {
-      ElMessage.error('加载选项数据时出错');
-      console.error('加载选项数据时出错:', error);
-    });
+      ElMessage.error('加载选项数据时出错')
+      console.error('加载选项数据时出错:', error)
+    })
 }
 
 async function loadData() {
-  if (!selectedYears.value.length || !selectedPlatforms.value.length || !selectedSkus.value.length) {
-    ElMessage.warning('请选择所有选项');
-    return;
+  if (
+    !selectedYears.value.length ||
+    !selectedPlatforms.value.length ||
+    !selectedSkus.value.length
+  ) {
+    ElMessage.warning('请选择所有选项')
+    return
   }
 
   const apiUrl = `https://kerwin.org.cn/api/data?years=${selectedYears.value.join(
     ','
-  )}&platforms=${selectedPlatforms.value.join(',')}&skus=${selectedSkus.value.join(',')}`;
+  )}&platforms=${selectedPlatforms.value.join(',')}&skus=${selectedSkus.value.join(',')}`
 
   try {
-    const { data } = await axios.get(apiUrl);
-    if (Array.isArray(data)) updateMap(data);
+    const { data } = await axios.get(apiUrl)
+    if (Array.isArray(data)) updateMap(data)
   } catch (error) {
-    ElMessage.error('获取数据时出错');
-    console.error('获取数据时出错:', error);
+    ElMessage.error('获取数据时出错')
+    console.error('获取数据时出错:', error)
   }
-
 }
 
 async function fetchStreetView(latitude: number, longitude: number): Promise<string | null> {
-  const cacheKey = `${latitude},${longitude}`;
-  if (imageCache[cacheKey]) return imageCache[cacheKey];
+  const cacheKey = `${latitude},${longitude}`
+  if (imageCache[cacheKey]) return imageCache[cacheKey]
 
   try {
     const { data } = await axios.get(
       `https://kerwin.org.cn/api/street-view?latitude=${latitude}&longitude=${longitude}`,
       { responseType: 'blob' }
-    );
-    const imageUrl = URL.createObjectURL(data);
-    imageCache[cacheKey] = imageUrl;
-    return imageUrl;
+    )
+    const imageUrl = URL.createObjectURL(data)
+    imageCache[cacheKey] = imageUrl
+    return imageUrl
   } catch (error) {
-    console.error('获取Street View图像时出错:', error);
-    return null;
+    console.error('获取Street View图像时出错:', error)
+    return null
   }
 }
 
 const colorPalette = [
-  '#FF5733', '#33FF57', '#3357FF', '#F333FF', '#33FFF5', '#FFA733',
-  '#571311', '#FDF3F7', '#A733FF', '#33FF9C',
-]; // 10 distinct colors for SKUs
+  '#FF5733',
+  '#33FF57',
+  '#3357FF',
+  '#F333FF',
+  '#33FFF5',
+  '#FFA733',
+  '#571311',
+  '#FDF3F7',
+  '#A733FF',
+  '#33FF9C'
+] // 10 distinct colors for SKUs
 
 function getColorForSku(sku: string): string {
-  const skuIndex = selectedSkus.value.indexOf(sku);
-  return colorPalette[skuIndex % colorPalette.length]; // Rotate through the colors
+  const skuIndex = selectedSkus.value.indexOf(sku)
+  return colorPalette[skuIndex % colorPalette.length] // Rotate through the colors
 }
 
 function updateHeatmap(data: any[]) {
-  if (!map) return;
+  if (!map) return
 
   const points = data
     .filter((row) => row.latitude && row.longtitude)
-    .map((row) => new google.maps.LatLng(row.latitude, row.longtitude));
+    .map((row) => new google.maps.LatLng(row.latitude, row.longtitude))
 
-  if (heatmap) heatmap.setMap(null);
+  if (heatmap) heatmap.setMap(null)
 
   heatmap = new google.maps.visualization.HeatmapLayer({
     data: points,
-    map,
-  });
+    map
+  })
 }
 
 function createMarker(row: any, color: string): google.maps.marker.AdvancedMarkerElement {
   // Create a pin element with custom styles.
   const pin = new google.maps.marker.PinElement({
     scale: 0.8, // Adjust the scale of the pin
-    background: color, // Set the pin's background color based on SKU
-  });
+    background: color // Set the pin's background color based on SKU
+  })
 
   // Create the marker with the customized pin element.
   return new AdvancedMarkerElement({
     map: markersVisible ? map : null,
     position: new google.maps.LatLng(row.latitude, row.longtitude),
-    content: pin.element, // Apply the customized pin element
-  });
+    content: pin.element // Apply the customized pin element
+  })
 }
 
-
-
-
 function updateMarkers(data: any[]) {
-  markers.forEach((marker) => marker.setMap(null));
-  markers = [];
+  markers.forEach((marker) => marker.setMap(null))
+  markers = []
 
-  const infoWindow = new google.maps.InfoWindow();
+  const infoWindow = new google.maps.InfoWindow()
 
   data.forEach((row) => {
     if (row.latitude && row.longtitude) {
-      const color = getColorForSku(row.sku);
-      const marker = createMarker(row, color);
+      const color = getColorForSku(row.sku)
+      const marker = createMarker(row, color)
       marker.content.addEventListener('click', async () => {
-        const streetViewUrl = await fetchStreetView(row.latitude, row.longtitude);
+        const streetViewUrl = await fetchStreetView(row.latitude, row.longtitude)
         if (streetViewUrl) {
           infoWindow.setContent(`
             <div>
@@ -279,26 +273,22 @@ function updateMarkers(data: any[]) {
               <p>经度: ${row.longtitude}</p>
               <img src="${streetViewUrl}" alt="Street View Image" style="width:auto;height:auto;">
             </div>
-          `);
-          infoWindow.open(map, marker);
+          `)
+          infoWindow.open(map, marker)
         }
-      });
-      markers.push(marker);
+      })
+      markers.push(marker)
     }
-
-
-  });
+  })
 }
 
 function updateMap(data: any[]) {
-  updateHeatmap(data);
-  updateMarkers(data);
+  updateHeatmap(data)
+  updateMarkers(data)
 }
 
-
-
 function toggleHeatmap() {
-  if (heatmap) heatmap.setMap(heatmap.getMap() ? null : map);
+  if (heatmap) heatmap.setMap(heatmap.getMap() ? null : map)
 }
 
 function changeGradient() {
@@ -316,22 +306,22 @@ function changeGradient() {
     'rgba(63, 0, 91, 1)',
     'rgba(127, 0, 63, 1)',
     'rgba(191, 0, 31, 1)',
-    'rgba(255, 0, 0, 1)',
-  ];
-  heatmap?.set('gradient', heatmap.get('gradient') ? null : gradient);
+    'rgba(255, 0, 0, 1)'
+  ]
+  heatmap?.set('gradient', heatmap.get('gradient') ? null : gradient)
 }
 
 function changeRadius() {
-  heatmap?.set('radius', heatmap.get('radius') ? null : 20);
+  heatmap?.set('radius', heatmap.get('radius') ? null : 20)
 }
 
 function changeOpacity() {
-  heatmap?.set('opacity', heatmap.get('opacity') ? null : 0.2);
+  heatmap?.set('opacity', heatmap.get('opacity') ? null : 0.2)
 }
 
 function toggleMarkers() {
-  markersVisible = !markersVisible;
-  markers.forEach((marker) => marker.setMap(markersVisible ? map : null));
+  markersVisible = !markersVisible
+  markers.forEach((marker) => marker.setMap(markersVisible ? map : null))
 }
 </script>
 
