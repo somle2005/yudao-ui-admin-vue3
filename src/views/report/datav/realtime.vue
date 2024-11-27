@@ -1,6 +1,6 @@
 <template>
   <IFrame
-    class="w-full h-[calc(100vh-var(--top-tool-height)-var(--tags-view-height)-var(--app-content-padding)-var(--app-content-padding)-2px)]"
+    style="width: 90%; height: 100vh"
     :src="url"
   />
 </template>
