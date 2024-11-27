@@ -161,14 +161,14 @@ function loadOptions() {
 }
 
 async function loadData() {
-  if (
-    !selectedYears.value.length ||
-    !selectedPlatforms.value.length ||
-    !selectedSkus.value.length
-  ) {
-    ElMessage.warning('请选择所有选项')
-    return
-  }
+  // if (
+  //   !selectedYears.value.length ||
+  //   !selectedPlatforms.value.length ||
+  //   !selectedSkus.value.length
+  // ) {
+  //   ElMessage.warning('请选择所有选项')
+  //   return
+  // }
 
   const apiUrl = `https://kerwin.org.cn/api/data?years=${selectedYears.value.join(
     ','
