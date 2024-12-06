@@ -230,15 +230,13 @@
         </el-col>
       </el-row>
       <!-- 额外字段 -->
-<!--      <ProductTvStandForm :details="formData.details" @update:details="formData.details = $event" ref="productTvStandFormRef"/>-->
-<!--      <ProductTvStandForm  v-model:details="formData.details" ref="productTvStandFormRef"/>-->
-      <ProductTvStandForm  ref="productTvStandFormRef"/>
+      <component :is="productDetailFormRef"/>
+      <template #footer>
+        <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+      </template>
       <a>{{formData}}</a>
     </el-form>
-    <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
-    </template>
   </Dialog>
 </template>
 <script setup lang="ts">
@@ -287,7 +285,6 @@ const formData = ref({
   rdId: undefined,
   meId: undefined,
   color: undefined,
-  details: undefined,
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
@@ -311,7 +308,12 @@ const deptList = ref<Tree[]>([]) // 树形结构
 const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
 const isEditMode = ref(false)  // 控制是否为编辑模式
-const productTvStandFormRef = ref()
+
+// 找到categoryId对应的子组件
+const formDict: Record<string, any> = {
+  87: ProductTvStandForm,
+};
+const productDetailFormRef = computed(() => formDict[formData.value.categoryId]);
 
 // /**给子表单的修改详情方法**/
 // function updateDetails(details:any) {
@@ -357,11 +359,11 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
-  await productTvStandFormRef.value.validateForm()
+  await productDetailFormRef.value.validateForm()
   // 提交请求
   formLoading.value = true
   try {
-    const data = {...formData.value, ...productTvStandFormRef.value.formData} as unknown as ProductVO
+    const data = {...formData.value, ...productDetailFormRef.value.formData} as unknown as ProductVO
     // data.details = productTvStandFormRef.value.formData
     if (formType.value === 'create') {
       await ProductApi.createProduct(data)
