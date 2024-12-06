@@ -56,6 +56,9 @@
     </el-card>
   </div>
 
+  <DraggableCube color="#ff0000" size="2" style="width: 100%; height: 400px"/>
+
+
   <el-row class="mt-8px" :gutter="8" justify="space-between">
     <el-col :xl="16" :lg="16" :md="24" :sm="24" :xs="24" class="mb-8px">
       <el-card shadow="never">
@@ -180,6 +183,9 @@ import { useUserStore } from '@/store/modules/user'
 import { useWatermark } from '@/hooks/web/useWatermark'
 import type { WorkplaceTotal, Project, Notice, Shortcut } from './types'
 import { pieOptions, barOptions } from './echarts-data'
+
+import DraggableCube from './cube.vue'
+
 
 defineOptions({ name: 'Home' })
 

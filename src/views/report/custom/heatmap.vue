@@ -47,6 +47,7 @@
       </el-form>
     </div>
 
+    <div ref="chartRef" style="width: 100%; height: 400px; display: block;"></div>
     <div id="map" ref="mapContainer" style="width: 100%; height: 70vh"></div>
 
     <div class="controls">
@@ -64,7 +65,10 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { getConfigKey } from '@/api/infra/config'
+import * as echarts from "echarts";
 
+// 定义图表的 DOM 容器引用
+const chartRef = ref<HTMLDivElement | null>(null);
 const mapContainer = ref<HTMLElement | null>(null)
 
 const years = ref<string[]>([])
@@ -87,6 +91,32 @@ const mapId = 'YOUR_MAP_ID'
 onMounted(() => {
   loadOptions()
   loadGoogleMapsScript()
+
+  const chart = echarts.init(chartRef.value!);
+  chart.setOption({
+    tooltip: {
+      trigger: "item",
+      formatter: "{b}: {c} ({d}%)", // Show name, value, and percentage
+    },
+    series: [
+      {
+        type: "pie",
+        data: [
+          { value: 1048, name: "Search Engine" },
+          { value: 735, name: "Direct" },
+          { value: 580, name: "Email" },
+          { value: 484, name: "Union Ads" },
+          { value: 300, name: "Video Ads" },
+        ],
+        label: {
+          formatter: "{b}: {c} ({d}%)", // Display on the chart
+        },
+      },
+    ],
+  });
+  chart.resize()
+
+
 })
 
 async function loadGoogleMapsScript() {
