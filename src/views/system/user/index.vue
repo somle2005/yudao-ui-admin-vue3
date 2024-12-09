@@ -53,6 +53,21 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="角色" prop="roleId">
+            <el-select
+              v-model="queryParams.roleId"
+              placeholder="用户角色"
+              clearable
+              class="!w-240px"
+            >
+              <el-option
+                v-for="role in roleList"
+                :key="role.id"
+                :label="role.name"
+                :value="role.id"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="创建时间" prop="createTime">
             <el-date-picker
               v-model="queryParams.createTime"
@@ -104,6 +119,12 @@
             :show-overflow-tooltip="true"
           />
           <el-table-column
+            label="工号"
+            align="center"
+            prop="no"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
             label="用户昵称"
             align="center"
             prop="nickname"
@@ -116,6 +137,7 @@
             prop="deptName"
             :show-overflow-tooltip="true"
           />
+          <el-table-column label="角色" align="center" prop="roleNames" />
           <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
           <el-table-column label="状态" key="status">
             <template #default="scope">
@@ -131,6 +153,13 @@
             label="创建时间"
             align="center"
             prop="createTime"
+            :formatter="dateFormatter"
+            width="180"
+          />
+          <el-table-column
+            label="最后登录时间"
+            align="center"
+            prop="loginDate"
             :formatter="dateFormatter"
             width="180"
           />
@@ -209,6 +238,7 @@ import UserForm from './UserForm.vue'
 import UserImportForm from './UserImportForm.vue'
 import UserAssignRoleForm from './UserAssignRoleForm.vue'
 import DeptTree from './DeptTree.vue'
+import * as RoleApi from "@/api/system/role";
 
 defineOptions({ name: 'SystemUser' })
 
@@ -218,6 +248,7 @@ const { t } = useI18n() // 国际化
 const loading = ref(true) // 列表的加载中
 const total = ref(0) // 列表的总页数
 const list = ref([]) // 列表的数
+const roleList = ref([] as RoleApi.RoleVO[]) // 角色的列表
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -226,7 +257,8 @@ const queryParams = reactive({
   mobile: undefined,
   status: undefined,
   deptId: undefined,
-  createTime: []
+  createTime: [],
+  roleId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -240,6 +272,8 @@ const getList = async () => {
   } finally {
     loading.value = false
   }
+  // 获得角色列表
+  roleList.value = await RoleApi.getSimpleRoleList()
 }
 
 /** 搜索按钮操作 */

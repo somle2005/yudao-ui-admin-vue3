@@ -82,6 +82,13 @@
         </el-col>
       </el-row>
       <el-row>
+        <el-col :span="12">
+          <el-form-item v-if="formData.id === undefined" label="工号" prop="no">
+            <el-input v-model="formData.no" placeholder="请输入工号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="24">
           <el-form-item label="备注">
             <el-input v-model="formData.remark" placeholder="请输入内容" type="textarea" />
@@ -119,6 +126,7 @@ const formData = ref({
   mobile: '',
   email: '',
   id: undefined,
+  no: '',
   username: '',
   password: '',
   sex: undefined,
@@ -131,6 +139,7 @@ const formRules = reactive<FormRules>({
   username: [{ required: true, message: '用户名称不能为空', trigger: 'blur' }],
   nickname: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],
   password: [{ required: true, message: '用户密码不能为空', trigger: 'blur' }],
+  no: [{ required: true, message: '工号不能为空', trigger: 'blur' }],
   email: [
     {
       type: 'email',
@@ -207,6 +216,7 @@ const resetForm = () => {
     email: '',
     id: undefined,
     username: '',
+    no: '',
     password: '',
     sex: undefined,
     postIds: [],

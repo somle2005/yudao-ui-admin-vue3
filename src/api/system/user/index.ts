@@ -2,6 +2,7 @@ import request from '@/config/axios'
 
 export interface UserVO {
   id: number
+  no: string
   username: string
   nickname: string
   deptId: number
@@ -15,6 +16,7 @@ export interface UserVO {
   remark: string
   loginDate: Date
   createTime: Date
+  roleNames: string
 }
 
 // 查询用户管理列表
