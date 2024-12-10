@@ -152,9 +152,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="PO产品经理" prop="poId">
+          <el-form-item label="PO产品经理" prop="productManagerId">
             <el-select
-              v-model="formData.poId"
+              v-model="formData.productManagerId"
               placeholder="请选择"
               clearable
               filterable
@@ -170,9 +170,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="ID工业设计" prop="idId">
+          <el-form-item label="ID工业设计" prop="industrialDesignerId">
             <el-select
-              v-model="formData.idId"
+              v-model="formData.industrialDesignerId"
               placeholder="请选择"
               clearable
               filterable
@@ -188,9 +188,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="RD研发工程师" prop="rdId">
+          <el-form-item label="RD研发工程师" prop="researchDeveloperId">
             <el-select
-              v-model="formData.rdId"
+              v-model="formData.researchDeveloperId"
               placeholder="请选择"
               clearable
               filterable
@@ -206,9 +206,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="维护工程师" prop="meId">
+          <el-form-item label="维护工程师" prop="maintenanceEngineerId">
             <el-select
-              v-model="formData.meId"
+              v-model="formData.maintenanceEngineerId"
               placeholder="请选择"
               clearable
               filterable
@@ -223,20 +223,19 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="formData.remark" placeholder="请输入备注" />
+            <el-input v-model="formData.remark" placeholder="请输入内容" type="textarea" />
           </el-form-item>
         </el-col>
       </el-row>
       <!-- 额外字段 -->
-      <component :is="productDetailFormRef"/>
+      <component :is="productDetailForm" ref="productDetailFormRef" :datas="formData"/>
+    </el-form>
       <template #footer>
         <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
         <el-button @click="dialogVisible = false">取 消</el-button>
       </template>
-      <a>{{formData}}</a>
-    </el-form>
   </Dialog>
 </template>
 <script setup lang="ts">
@@ -280,10 +279,10 @@ const formData = ref({
   imageUrl: undefined,
   guidePrice: undefined,
   patent: undefined,
-  poId: undefined,
-  idId: undefined,
-  rdId: undefined,
-  meId: undefined,
+  productManagerId: undefined,
+  industrialDesignerId: undefined,
+  researchDeveloperId: undefined,
+  maintenanceEngineerId: undefined,
   color: undefined,
 })
 const formRules = reactive({
@@ -313,7 +312,8 @@ const isEditMode = ref(false)  // 控制是否为编辑模式
 const formDict: Record<string, any> = {
   87: ProductTvStandForm,
 };
-const productDetailFormRef = computed(() => formDict[formData.value.categoryId]);
+const productDetailForm = computed(() => formDict[formData.value.categoryId]);
+const productDetailFormRef = ref()
 
 // /**给子表单的修改详情方法**/
 // function updateDetails(details:any) {
@@ -351,7 +351,7 @@ const open = async (type: string, id?: number) => {
 }
 
 defineExpose({
-  open,
+  open
 }) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
@@ -359,12 +359,17 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
-  await productDetailFormRef.value.validateForm()
+  // 检查 productDetailFormRef 是否存在
+  if (productDetailFormRef.value && typeof productDetailFormRef.value.validateForm === 'function') {
+    await productDetailFormRef.value.validateForm()
+  }
   // 提交请求
   formLoading.value = true
   try {
-    const data = {...formData.value, ...productDetailFormRef.value.formData} as unknown as ProductVO
-    // data.details = productTvStandFormRef.value.formData
+    let data = formData.value as unknown as ProductVO;
+    if (productDetailFormRef.value && productDetailFormRef.value.formData) {
+      data = {...formData.value, ...productDetailFormRef.value.formData} as unknown as ProductVO
+    }
     if (formType.value === 'create') {
       await ProductApi.createProduct(data)
       message.success(t('common.createSuccess'))
@@ -403,10 +408,10 @@ const resetForm = () => {
     imageUrl: undefined,
     guidePrice: undefined,
     patent: undefined,
-    poId: undefined,
-    idId: undefined,
-    rdId: undefined,
-    meId: undefined,
+    productManagerId: undefined,
+    industrialDesignerId: undefined,
+    researchDeveloperId: undefined,
+    maintenanceEngineerId: undefined,
     color: undefined,
     details: undefined,
   }

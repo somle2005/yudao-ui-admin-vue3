@@ -19,7 +19,7 @@
       </el-form-item>
       <el-form-item label="编码" prop="code">
         <el-input
-          v-model="queryParams.code"
+          v-model="queryParams.barCode"
           placeholder="请输入编码"
           clearable
           @keyup.enter="handleQuery"
@@ -68,7 +68,6 @@
       <el-table-column label="SKU（编码）" align="center" prop="barCode" />
       <el-table-column label="产品名称" align="center" prop="name" />
       <el-table-column label="产品分类" align="center" prop="categoryName" />
-      <el-table-column label="产品备注" align="center" prop="remark" />
       <el-table-column label="部门" align="center" prop="deptName" />
       <el-table-column label="单位" align="center" prop="unitName" />
       <el-table-column label="材料（中文）" align="center" prop="material" />
@@ -87,10 +86,11 @@
       <el-table-column label="基础高度（mm）" align="center" prop="height" />
       <el-table-column label="指导价" align="center" prop="guidePrice" />
       <el-table-column label="专利" align="center" prop="patent" />
-      <el-table-column label="PO产品经理" align="center" prop="poName" />
-      <el-table-column label="ID工业设计" align="center" prop="idName" />
-      <el-table-column label="RD研发工程师" align="center" prop="rdName" />
-      <el-table-column label="维护工程师" align="center" prop="meName" />
+      <el-table-column label="PO产品经理" align="center" prop="productManagerName" />
+      <el-table-column label="ID工业设计" align="center" prop="industrialDesignerName" />
+      <el-table-column label="RD研发工程师" align="center" prop="researchDeveloperName" />
+      <el-table-column label="维护工程师" align="center" prop="maintenanceEngineerName" />
+      <el-table-column label="产品备注" align="center" prop="remark" />
       <el-table-column label="创建时间" align="center" prop="createTime" :formatter="dateFormatter" width="180px"/>
       <el-table-column label="操作" align="center" min-width="120px">
         <template #default="scope">
@@ -168,10 +168,10 @@ const queryParams = reactive({
   imageUrl: undefined,
   guidePrice: undefined,
   patent: undefined,
-  poId: undefined,
-  idId: undefined,
-  rdId: undefined,
-  meId: undefined,
+  productManagerId: undefined,
+  industrialDesignerId: undefined,
+  researchDeveloperId: undefined,
+  maintenanceEngineerId: undefined,
   color: undefined,
 })
 const queryFormRef = ref() // 搜索的表单

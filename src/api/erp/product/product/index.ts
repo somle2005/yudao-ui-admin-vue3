@@ -22,10 +22,10 @@ export interface ProductVO {
   imageUrl: string // 图片url
   guidePrice: string // 指导价，json格式
   patent: string // 专利
-  poId: number // PO产品经理id
-  idId: number // ID工业设计id
-  rdId: number // RD研发工程师id
-  meId: number // 维护工程师id
+  productManagerId: number // PO产品经理id
+  industrialDesignerId: number // ID工业设计id
+  researchDeveloperId: number // RD研发工程师id
+  maintenanceEngineerId: number // 维护工程师id
   color: string // 颜色
   details: {} // 详情
 }
