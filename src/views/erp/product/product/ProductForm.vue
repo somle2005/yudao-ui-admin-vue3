@@ -286,6 +286,7 @@ const formData = reactive({
   length: undefined,
   height: undefined,
   imageUrl: undefined,
+  imageUrls: undefined,
   guidePrice: {
     us: 10,
     gb: 20
