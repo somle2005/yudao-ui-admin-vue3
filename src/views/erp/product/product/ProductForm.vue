@@ -9,6 +9,16 @@
     >
       <el-row :gutter="20">
         <el-col :span="12">
+          <el-form-item label="封面图" prop="imageUrl">
+            <UploadImg v-model="formData.imageUrl" :disabled="isDetail" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="轮播图" prop="imageUrls">
+            <UploadImgs v-model="formData.imageUrls" :disabled="isDetail" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="产品名称" prop="name">
             <el-input v-model="formData.name" placeholder="请输入产品名称" />
           </el-form-item>
@@ -91,7 +101,8 @@
               v-model="formData.weight"
               controls-position="right"
               :min="0.01"
-              :precision="2"/>
+              :precision="2"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -100,7 +111,8 @@
               v-model="formData.width"
               controls-position="right"
               :min="0.01"
-              :precision="2"/>
+              :precision="2"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -109,7 +121,8 @@
               v-model="formData.length"
               controls-position="right"
               :min="0.01"
-              :precision="2"/>
+              :precision="2"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -118,7 +131,8 @@
               v-model="formData.height"
               controls-position="right"
               :min="0.01"
-              :precision="2"/>
+              :precision="2"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -137,13 +151,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="图片" prop="imageUrl">
-            <el-input v-model="formData.imageUrl" placeholder="请输入图片url" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="指导价" prop="guidePrice">
-            <el-input v-model="formData.guidePrice" placeholder="请输入指导价" />
+            <JsonEditor v-model="formData.guidePrice" placeholder="请输入指导价"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -230,22 +239,22 @@
         </el-col>
       </el-row>
       <!-- 额外字段 -->
-      <component :is="productDetailForm" ref="productDetailFormRef" :datas="formData"/>
+      <component :is="productDetailForm" ref="productDetailFormRef" :datas="formData" />
     </el-form>
-      <template #footer>
-        <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-      </template>
+    <template #footer>
+      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button @click="dialogVisible = false">取 消</el-button>
+    </template>
   </Dialog>
 </template>
 <script setup lang="ts">
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
-import {defaultProps, handleTree} from "@/utils/tree";
-import {ProductCategoryApi, ProductCategoryVO} from "@/api/erp/product/category";
+import { defaultProps, handleTree } from '@/utils/tree'
+import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
 import * as DeptApi from '@/api/system/dept'
 import * as UserApi from '@/api/system/user'
-import {ProductUnitApi, ProductUnitVO} from "@/api/erp/product/unit";
-import {DICT_TYPE, getBoolDictOptions} from "@/utils/dict";
+import { ProductUnitApi, ProductUnitVO } from '@/api/erp/product/unit'
+import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
 import ProductTvStandForm from './ProductTvStandForm.vue'
 
 /** ERP 产品 表单 */
@@ -258,7 +267,7 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
+const formData = reactive({
   id: undefined,
   name: undefined,
   categoryId: undefined,
@@ -277,13 +286,16 @@ const formData = ref({
   length: undefined,
   height: undefined,
   imageUrl: undefined,
-  guidePrice: undefined,
+  guidePrice: {
+    us: 10,
+    gb: 20
+  },
   patent: undefined,
   productManagerId: undefined,
   industrialDesignerId: undefined,
   researchDeveloperId: undefined,
   maintenanceEngineerId: undefined,
-  color: undefined,
+  color: undefined
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
@@ -299,27 +311,27 @@ const formRules = reactive({
   height: [{ required: true, message: '基础高度（mm）不能为空', trigger: 'blur' }],
   //guidePrice: [{ required: true, message: '指导价不能为空', trigger: 'blur' }],
   barCode: [{ required: true, message: 'SKU(编码)不能为空', trigger: 'blur' }],
-  color: [{ required: true, message: '颜色不能为空', trigger: 'blur' }],
+  color: [{ required: true, message: '颜色不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 const deptList = ref<Tree[]>([]) // 树形结构
 const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
-const isEditMode = ref(false)  // 控制是否为编辑模式
+const isEditMode = ref(false) // 控制是否为编辑模式
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
-  87: ProductTvStandForm,
-};
-const productDetailForm = computed(() => formDict[formData.value.categoryId]);
+  87: ProductTvStandForm
+}
+const productDetailForm = computed(() => formDict[formData.value.categoryId])
 const productDetailFormRef = ref()
 
-// /**给子表单的修改详情方法**/
-// function updateDetails(details:any) {
-//   // formData.value.details = details
-//   console.log(details)
-// }
+
+const defaultData = ref({
+  title: '标题',
+  content: '内容'
+})
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -337,7 +349,7 @@ const open = async (type: string, id?: number) => {
       formLoading.value = false
     }
   } else {
-    isEditMode.value = false; // 设置为新增模式
+    isEditMode.value = false // 设置为新增模式
   }
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
@@ -366,9 +378,9 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    let data = formData.value as unknown as ProductVO;
+    let data = formData.value as unknown as ProductVO
     if (productDetailFormRef.value && productDetailFormRef.value.formData) {
-      data = {...formData.value, ...productDetailFormRef.value.formData} as unknown as ProductVO
+      data = { ...formData.value, ...productDetailFormRef.value.formData } as unknown as ProductVO
     }
     if (formType.value === 'create') {
       await ProductApi.createProduct(data)
@@ -413,7 +425,7 @@ const resetForm = () => {
     researchDeveloperId: undefined,
     maintenanceEngineerId: undefined,
     color: undefined,
-    details: undefined,
+    details: undefined
   }
   formRef.value?.resetFields()
 }
