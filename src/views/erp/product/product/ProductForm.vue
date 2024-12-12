@@ -9,13 +9,13 @@
     >
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="封面图" prop="imageUrl">
-            <UploadImg v-model="formData.imageUrl" :disabled="isDetail" />
+          <el-form-item label="主图" prop="primaryImageUrl">
+            <UploadImg v-model="formData.primaryImageUrl"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="轮播图" prop="imageUrls">
-            <UploadImgs v-model="formData.imageUrls" :disabled="isDetail" />
+          <el-form-item label="次图" prop="secondaryImageUrlList">
+            <UploadImgs v-model="formData.secondaryImageUrlList"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -83,7 +83,7 @@
             <el-select v-model="formData.status" clearable placeholder="请选择状态">
               <el-option
                 v-for="dict in getBoolDictOptions(DICT_TYPE.COMMON_BOOLEAN_STATUS)"
-                :key="dict.value"
+                :key="String(dict.value)"
                 :label="dict.label"
                 :value="dict.value"
               />
@@ -150,10 +150,14 @@
             <el-input v-model="formData.color" placeholder="请输入颜色" />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="指导价" prop="guidePrice">
-            <JsonEditor v-model="formData.guidePrice" placeholder="请输入指导价"/>
-          </el-form-item>
+        <el-col :span="24">
+        <ContentWrap>
+          <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
+            <el-tab-pane label="指导价" name="item">
+              <ProductGuidePriceItemForm ref="itemFormRef" :guidePriceList="formData.guidePriceList"/>
+            </el-tab-pane>
+          </el-tabs>
+        </ContentWrap>
         </el-col>
         <el-col :span="12">
           <el-form-item label="专利" prop="patent">
@@ -161,9 +165,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="PO产品经理" prop="productManagerId">
+          <el-form-item label="PO产品经理" prop="productOwnerId">
             <el-select
-              v-model="formData.productManagerId"
+              v-model="formData.productOwnerId"
               placeholder="请选择"
               clearable
               filterable
@@ -267,7 +271,10 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = reactive({
+/** 子表的表单 */
+const subTabsName = ref('item')
+const itemFormRef = ref()
+const formData = ref({
   id: undefined,
   name: undefined,
   categoryId: undefined,
@@ -285,14 +292,11 @@ const formData = reactive({
   width: undefined,
   length: undefined,
   height: undefined,
-  imageUrl: undefined,
-  imageUrls: undefined,
-  guidePrice: {
-    us: 10,
-    gb: 20
-  },
+  primaryImageUrl: undefined,
+  secondaryImageUrlList: [],
+  guidePriceList: [],
   patent: undefined,
-  productManagerId: undefined,
+  productOwnerId: undefined,
   industrialDesignerId: undefined,
   researchDeveloperId: undefined,
   maintenanceEngineerId: undefined,
@@ -310,9 +314,9 @@ const formRules = reactive({
   width: [{ required: true, message: '基础宽度（mm）不能为空', trigger: 'blur' }],
   length: [{ required: true, message: '基础长度（mm）不能为空', trigger: 'blur' }],
   height: [{ required: true, message: '基础高度（mm）不能为空', trigger: 'blur' }],
-  //guidePrice: [{ required: true, message: '指导价不能为空', trigger: 'blur' }],
   barCode: [{ required: true, message: 'SKU(编码)不能为空', trigger: 'blur' }],
-  color: [{ required: true, message: '颜色不能为空', trigger: 'blur' }]
+  color: [{ required: true, message: '颜色不能为空', trigger: 'blur' }],
+  primaryImageUrl: [{ required: true, message: '封面图不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
@@ -325,14 +329,8 @@ const isEditMode = ref(false) // 控制是否为编辑模式
 const formDict: Record<string, any> = {
   87: ProductTvStandForm
 }
-const productDetailForm = computed(() => formDict[formData.value.categoryId])
+const productDetailForm = computed(() => formData.value.categoryId !== undefined ? formDict[formData.value.categoryId] : null)
 const productDetailFormRef = ref()
-
-
-const defaultData = ref({
-  title: '标题',
-  content: '内容'
-})
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -372,6 +370,7 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
+  await itemFormRef.value.validate()
   // 检查 productDetailFormRef 是否存在
   if (productDetailFormRef.value && typeof productDetailFormRef.value.validateForm === 'function') {
     await productDetailFormRef.value.validateForm()
@@ -383,6 +382,7 @@ const submitForm = async () => {
     if (productDetailFormRef.value && productDetailFormRef.value.formData) {
       data = { ...formData.value, ...productDetailFormRef.value.formData } as unknown as ProductVO
     }
+    console.log(data);
     if (formType.value === 'create') {
       await ProductApi.createProduct(data)
       message.success(t('common.createSuccess'))
@@ -418,15 +418,15 @@ const resetForm = () => {
     width: undefined,
     length: undefined,
     height: undefined,
-    imageUrl: undefined,
-    guidePrice: undefined,
+    primaryImageUrl: undefined,
+    secondaryImageUrlList: [],
+    guidePriceList: [],
     patent: undefined,
-    productManagerId: undefined,
+    productOwnerId: undefined,
     industrialDesignerId: undefined,
     researchDeveloperId: undefined,
     maintenanceEngineerId: undefined,
     color: undefined,
-    details: undefined
   }
   formRef.value?.resetFields()
 }

@@ -19,15 +19,15 @@ export interface ProductVO {
   width: number // 基础宽度（mm）
   length: number // 基础长度（mm）
   height: number // 基础高度（mm）
-  imageUrl: string // 图片url
-  guidePrice: string // 指导价，json格式
+  primaryImageUrl: string // 图片url
+  secondaryImageUrlList: [] //副图urls
+  guidePriceList: [] // 指导价
   patent: string // 专利
-  productManagerId: number // PO产品经理id
+  productOwnerId: number // PO产品经理id
   industrialDesignerId: number // ID工业设计id
   researchDeveloperId: number // RD研发工程师id
   maintenanceEngineerId: number // 维护工程师id
   color: string // 颜色
-  details: {} // 详情
 }
 
 // ERP 产品 API

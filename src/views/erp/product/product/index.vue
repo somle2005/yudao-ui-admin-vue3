@@ -64,7 +64,11 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="图片" align="center" prop="imageUrl" />
+      <el-table-column label="主图" align="center" prop="primaryImageUrl" width="110px">
+        <template #default="scope">
+          <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+        </template>
+      </el-table-column>
       <el-table-column label="SKU（编码）" align="center" prop="barCode" />
       <el-table-column label="产品名称" align="center" prop="name" />
       <el-table-column label="产品分类" align="center" prop="categoryName" />
@@ -84,12 +88,18 @@
       <el-table-column label="基础宽度（mm）" align="center" prop="width" />
       <el-table-column label="基础长度（mm）" align="center" prop="length" />
       <el-table-column label="基础高度（mm）" align="center" prop="height" />
-      <el-table-column label="指导价" align="center" prop="guidePrice" />
-      <el-table-column label="专利" align="center" prop="patent" />
-      <el-table-column label="PO产品经理" align="center" prop="productManagerName" />
+      <el-table-column label="指导价" align="center" prop="guidePriceList">
+        <template #default="scope">
+          <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
+            <el-tag type="primary">{{ guidePrice.name }} | {{ guidePrice.price }}</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="专利" align="center" prop="patent" />
+      <el-table-column label="PO产品经理" align="center" prop="productOwnerName" />
       <el-table-column label="ID工业设计" align="center" prop="industrialDesignerName" />
       <el-table-column label="RD研发工程师" align="center" prop="researchDeveloperName" />
-      <el-table-column label="维护工程师" align="center" prop="maintenanceEngineerName" />
+      <el-table-column label="维护工程师" align="center" prop="maintenanceEngineerName" />-->
       <el-table-column label="产品备注" align="center" prop="remark" />
       <el-table-column label="创建时间" align="center" prop="createTime" :formatter="dateFormatter" width="180px"/>
       <el-table-column label="操作" align="center" min-width="120px">
@@ -165,10 +175,10 @@ const queryParams = reactive({
   width: undefined,
   length: undefined,
   height: undefined,
-  imageUrl: undefined,
-  guidePrice: undefined,
+  primaryImageUrl: undefined,
+  guidePriceList: [],
   patent: undefined,
-  productManagerId: undefined,
+  productOwnerId: undefined,
   industrialDesignerId: undefined,
   researchDeveloperId: undefined,
   maintenanceEngineerId: undefined,
