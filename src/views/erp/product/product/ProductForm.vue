@@ -59,7 +59,7 @@
           <el-form-item label="单位" prop="unitId">
             <el-select
               v-model="formData.unitId"
-              placeholder="请输入单位"
+              placeholder="请选择单位"
               clearable
               filterable
               class="!w-240px"
@@ -259,7 +259,8 @@ import * as DeptApi from '@/api/system/dept'
 import * as UserApi from '@/api/system/user'
 import { ProductUnitApi, ProductUnitVO } from '@/api/erp/product/unit'
 import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
-import ProductTvStandForm from './ProductTvStandForm.vue'
+import ProductTvStandForm from "@/views/erp/product/product/ProductTvStandForm.vue";
+import ProductGuidePriceItemForm from "@/views/erp/product/product/components/ProductGuidePriceItemForm.vue";
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
