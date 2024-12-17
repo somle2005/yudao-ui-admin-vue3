@@ -1,7 +1,4 @@
-<!-- ERP 产品列表 -->
 <template>
-  <doc-alert title="【产品】产品信息、分类、单位" url="https://doc.iocoder.cn/erp/product/" />
-
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
@@ -22,7 +19,7 @@
       </el-form-item>
       <el-form-item label="编码" prop="code">
         <el-input
-          v-model="queryParams.code"
+          v-model="queryParams.barCode"
           placeholder="请输入编码"
           clearable
           @keyup.enter="handleQuery"
@@ -67,53 +64,45 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="图片" align="center" prop="url" width="110px">
+      <el-table-column label="主图" align="center" prop="primaryImageUrl" width="110px">
         <template #default="scope">
-          <el-image :src="scope.row.imageUrl" class="w-64px h-64px" />
+          <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column label="编码" align="center" prop="barCode" />
-      <el-table-column label="名称" align="center" prop="name" />
-      <!-- <el-table-column label="规格" align="center" prop="standard" /> -->
-      <el-table-column label="分类" align="center" prop="categoryName" />
-      <el-table-column label="单位" align="center" prop="unitName" />
+      <el-table-column label="SKU（编码）" align="center" prop="barCode" />
+      <el-table-column label="产品名称" align="center" prop="name" />
+      <el-table-column label="产品分类" align="center" prop="categoryName" />
       <el-table-column label="部门" align="center" prop="deptName" />
-      <!-- <el-table-column
-        label="采购价格"
-        align="center"
-        prop="purchasePrice"
-        :formatter="erpPriceTableColumnFormatter"
-      /> -->
+      <el-table-column label="单位" align="center" prop="unitName" />
       <el-table-column label="材料（中文）" align="center" prop="material" />
-      <el-table-column label="基础长度（cm）" align="center" prop="length" />
-      <el-table-column label="基础宽度（cm）" align="center" prop="width" />
-      <el-table-column label="基础高度（cm）" align="center" prop="height" />
-      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
-      <!-- <el-table-column
-        label="销售价格"
-        align="center"
-        prop="salePrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column
-        label="最低价格"
-        align="center"
-        prop="minPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      /> -->
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />
+          <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="操作" align="center" width="110">
+      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
+      <el-table-column label="系列" align="center" prop="series" />
+      <el-table-column label="颜色" align="center" prop="color" />
+      <el-table-column label="型号" align="center" prop="model" />
+      <el-table-column label="生产编号" align="center" prop="productionNo" />
+      <el-table-column label="基础宽度（mm）" align="center" prop="width" />
+      <el-table-column label="基础长度（mm）" align="center" prop="length" />
+      <el-table-column label="基础高度（mm）" align="center" prop="height" />
+      <el-table-column label="指导价" align="center" prop="guidePriceList">
+        <template #default="scope">
+          <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
+            <el-tag type="primary">{{ guidePrice.name }} | {{ guidePrice.price }}</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="专利" align="center" prop="patent" />
+      <el-table-column label="PO产品经理" align="center" prop="productOwnerName" />
+      <el-table-column label="ID工业设计" align="center" prop="industrialDesignerName" />
+      <el-table-column label="RD研发工程师" align="center" prop="researchDeveloperName" />
+      <el-table-column label="维护工程师" align="center" prop="maintenanceEngineerName" />-->
+      <el-table-column label="产品备注" align="center" prop="remark" />
+      <el-table-column label="创建时间" align="center" prop="createTime" :formatter="dateFormatter" width="180px"/>
+      <el-table-column label="操作" align="center" min-width="120px">
         <template #default="scope">
           <el-button
             link
@@ -151,13 +140,12 @@
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
-import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
 import ProductForm from './ProductForm.vue'
-import { DICT_TYPE } from '@/utils/dict'
-import { defaultProps, handleTree } from '@/utils/tree'
-import { erpPriceTableColumnFormatter } from '@/utils'
+import {ProductCategoryApi, ProductCategoryVO} from "@/api/erp/product/category";
+import {defaultProps, handleTree} from "@/utils/tree";
+import {DICT_TYPE} from "@/utils/dict";
 
-/** ERP 产品列表 */
+/** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
 
 const message = useMessage() // 消息弹窗
@@ -165,17 +153,39 @@ const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
 const list = ref<ProductVO[]>([]) // 列表的数据
+const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: undefined,
-  code: undefined,
-  categoryId: undefined
+  categoryId: undefined,
+  remark: undefined,
+  createTime: [],
+  deptId: undefined,
+  barCode: undefined,
+  unitId: undefined,
+  material: undefined,
+  status: undefined,
+  weight: undefined,
+  series: undefined,
+  model: undefined,
+  serial: undefined,
+  productionNo: undefined,
+  width: undefined,
+  length: undefined,
+  height: undefined,
+  primaryImageUrl: undefined,
+  guidePriceList: [],
+  patent: undefined,
+  productOwnerId: undefined,
+  industrialDesignerId: undefined,
+  researchDeveloperId: undefined,
+  maintenanceEngineerId: undefined,
+  color: undefined,
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -228,7 +238,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await ProductApi.exportProduct(queryParams)
-    download.excel(data, '产品.xls')
+    download.excel(data, 'ERP 产品.xls')
   } catch {
   } finally {
     exportLoading.value = false
