@@ -328,7 +328,7 @@ const isEditMode = ref(false) // 控制是否为编辑模式
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
-  87: ProductTvStandForm
+  1: ProductTvStandForm
 }
 const productDetailForm = computed(() => formData.value.categoryId !== undefined ? formDict[formData.value.categoryId] : null)
 const productDetailFormRef = ref()
