@@ -344,6 +344,14 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await ProductApi.getProduct(id)
+      // 检查 secondaryImageUrlList 并赋值为默认值 []
+      if (formData.value.secondaryImageUrlList == null) {
+        formData.value.secondaryImageUrlList = [];
+      }
+      // 检查 guidePriceList 并赋值为默认值 []
+      if (formData.value.guidePriceList == null) {
+        formData.value.guidePriceList = [];
+      }
       isEditMode.value = true
     } finally {
       formLoading.value = false
