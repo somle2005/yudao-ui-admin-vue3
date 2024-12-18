@@ -99,9 +99,9 @@
           <el-form-item label="基础重量（kg）" prop="weight">
             <el-input-number
               v-model="formData.weight"
+              placeholder="请输入基础重量"
               controls-position="right"
-              :min="0.01"
-              :precision="2"
+              :min="1"
             />
           </el-form-item>
         </el-col>
@@ -109,9 +109,9 @@
           <el-form-item label="基础宽度（mm）" prop="width">
             <el-input-number
               v-model="formData.width"
+              placeholder="请输入基础宽度"
               controls-position="right"
-              :min="0.01"
-              :precision="2"
+              :min="1"
             />
           </el-form-item>
         </el-col>
@@ -119,9 +119,9 @@
           <el-form-item label="基础长度（mm）" prop="length">
             <el-input-number
               v-model="formData.length"
+              placeholder="请输入基础长度"
               controls-position="right"
-              :min="0.01"
-              :precision="2"
+              :min="1"
             />
           </el-form-item>
         </el-col>
@@ -129,9 +129,9 @@
           <el-form-item label="基础高度（mm）" prop="height">
             <el-input-number
               v-model="formData.height"
+              placeholder="请输入基础高度"
               controls-position="right"
-              :min="0.01"
-              :precision="2"
+              :min="1"
             />
           </el-form-item>
         </el-col>

@@ -9,10 +9,22 @@
   >
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column label="名称" min-width="150">
+      <el-table-column label="国别代码" min-width="150">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.name`" :rules="formRules.name" class="mb-0px!">
-            <el-input v-model="row.name" placeholder="请输入名称" />
+          <el-form-item :prop="`${$index}.code`" :rules="formRules.code" class="mb-0px!">
+            <el-select
+              v-model="row.code"
+              placeholder="请选择国别代码"
+              clearable
+              class="!w-240px"
+            >
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.COUNTRY_CODE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </template>
       </el-table-column>
@@ -21,6 +33,7 @@
           <el-form-item :prop="`${$index}.price`" class="mb-0px!">
             <el-input-number
               v-model="row.price"
+              placeholder="请输入指导价"
               controls-position="right"
               :min="0.01"
               :precision="2"
@@ -55,8 +68,9 @@
 <script setup lang="ts">
 
 import {ElForm} from "element-plus";
+import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
 interface GuidePrice {
-  name: string | undefined;
+  code: number | undefined;
   price: number | undefined;
   sort: number;
 }
@@ -68,7 +82,7 @@ const props = defineProps<{
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<GuidePrice[]>([]);
 const formRules = reactive({
-  name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
+  code: [{ required: true, message: '请选择国别代码', trigger: 'change' }],
   price: [{ required: true, message: '指导价不能为空', trigger: 'blur' }]
 })
 const formRef = ref<InstanceType<typeof ElForm>>() // 表单 Ref
@@ -84,7 +98,7 @@ watch(
 /** 新增按钮操作 */
 const handleAdd = () => {
   const row = {
-    name: undefined,
+    code: undefined,
     price: undefined,
     sort: 0
   }

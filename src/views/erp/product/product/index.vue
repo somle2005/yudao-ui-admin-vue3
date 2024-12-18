@@ -91,7 +91,9 @@
       <el-table-column label="指导价" align="center" prop="guidePriceList">
         <template #default="scope">
           <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
-            <el-tag type="primary">{{ guidePrice.name }} | {{ guidePrice.price }}</el-tag>
+            <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="guidePrice.code" />
+            <el-tag class="ml-5px">{{ guidePrice.price }}</el-tag>
+<!--            <el-tag type="primary">{{ guidePrice.name }} | {{ guidePrice.price }}</el-tag>-->
           </div>
         </template>
       </el-table-column>
