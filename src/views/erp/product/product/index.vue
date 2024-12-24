@@ -81,6 +81,7 @@
         </template>
       </el-table-column>
       <el-table-column label="基础重量（kg）" align="center" prop="weight" />
+      <el-table-column label="品牌" align="center" prop="brand" />
       <el-table-column label="系列" align="center" prop="series" />
       <el-table-column label="颜色" align="center" prop="color" />
       <el-table-column label="型号" align="center" prop="model" />
@@ -146,6 +147,9 @@ import ProductForm from './ProductForm.vue'
 import {ProductCategoryApi, ProductCategoryVO} from "@/api/erp/product/category";
 import {defaultProps, handleTree} from "@/utils/tree";
 import {DICT_TYPE} from "@/utils/dict";
+import Pagination from "../../../../components/Pagination/index.vue";
+import {DictTag} from "../../../../components/DictTag";
+import {ContentWrap} from "../../../../components/ContentWrap";
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })

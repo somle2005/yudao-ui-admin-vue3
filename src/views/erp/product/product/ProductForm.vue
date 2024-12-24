@@ -150,6 +150,11 @@
             <el-input v-model="formData.color" placeholder="请输入颜色" />
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="品牌" prop="brand">
+            <el-input v-model="formData.brand" placeholder="请输入品牌" />
+          </el-form-item>
+        </el-col>
         <el-col :span="24">
         <ContentWrap>
           <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
@@ -261,6 +266,7 @@ import { ProductUnitApi, ProductUnitVO } from '@/api/erp/product/unit'
 import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
 import ProductTvStandForm from "@/views/erp/product/product/ProductTvStandForm.vue";
 import ProductGuidePriceItemForm from "@/views/erp/product/product/components/ProductGuidePriceItemForm.vue";
+import {ContentWrap} from "../../../../components/ContentWrap";
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
@@ -301,7 +307,8 @@ const formData = ref({
   industrialDesignerId: undefined,
   researchDeveloperId: undefined,
   maintenanceEngineerId: undefined,
-  color: undefined
+  color: undefined,
+  brand: undefined
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
@@ -436,6 +443,7 @@ const resetForm = () => {
     researchDeveloperId: undefined,
     maintenanceEngineerId: undefined,
     color: undefined,
+    brand: undefined
   }
   formRef.value?.resetFields()
 }
