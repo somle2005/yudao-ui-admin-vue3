@@ -232,22 +232,22 @@ onMounted(() => {
     })
   )
   // 检查 tvRotation 是否为空
-  if (formData.value.tvRotation !== undefined && formData.value.tvRotation.trim() !== '') {
+  if (formData.value.tvRotation !== undefined && formData.value.tvRotation !== '') {
     tvRotationShow.value = true
   }
-  if (formData.value.tvTilt !== undefined && formData.value.tvTilt.trim() !== '') {
+  if (formData.value.tvTilt !== undefined && formData.value.tvTilt !== '') {
     tvTiltShow.value = true
   }
-  if (formData.value.heightAdjustment !== undefined && formData.value.heightAdjustment.trim() !== '') {
+  if (formData.value.heightAdjustment !== undefined && formData.value.heightAdjustment !== '') {
     heightAdjustmentShow.value = true
   }
-  if (formData.value.horizontalScreenRotation !== undefined && formData.value.horizontalScreenRotation.trim() !== '') {
+  if (formData.value.horizontalScreenRotation !== undefined && formData.value.horizontalScreenRotation !== '') {
     horizontalScreenRotationShow.value = true
   }
-  if (formData.value.cableManagement !== undefined && formData.value.cableManagement.trim() !== '') {
+  if (formData.value.cableManagement !== undefined && formData.value.cableManagement !== '') {
     cableManagementShow.value = true
   }
-  if (formData.value.storageManagement !== undefined && formData.value.storageManagement.trim() !== '') {
+  if (formData.value.storageManagement !== undefined && formData.value.storageManagement !== '') {
     storageManagementShow.value = true
   }
 

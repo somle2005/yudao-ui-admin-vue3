@@ -81,10 +81,10 @@ onMounted(() => {
       return [key, key in props.datas ? props.datas[key] : defaultValue]
     })
   )
-  if (formData.value.storageManagement !== undefined && formData.value.storageManagement.trim() !== '') {
+  if (formData.value.storageManagement !== undefined && formData.value.storageManagement !== '') {
     storageManagementShow.value = true
   }
-  if (formData.value.adjustableFootPad !== undefined && formData.value.adjustableFootPad.trim() !== '') {
+  if (formData.value.adjustableFootPad !== undefined && formData.value.adjustableFootPad !== '') {
     adjustableFootPadShow.value = true
   }
 

@@ -82,10 +82,10 @@ onMounted(() => {
     })
   )
   // 检查 tvRotation 是否为空
-  if (formData.value.cableManagement !== undefined && formData.value.cableManagement.trim() !== '') {
+  if (formData.value.cableManagement !== undefined && formData.value.cableManagement !== '') {
     cableManagementShow.value = true
   }
-  if (formData.value.storageManagement !== undefined && formData.value.storageManagement.trim() !== '') {
+  if (formData.value.storageManagement !== undefined && formData.value.storageManagement !== '') {
     storageManagementShow.value = true
   }
 

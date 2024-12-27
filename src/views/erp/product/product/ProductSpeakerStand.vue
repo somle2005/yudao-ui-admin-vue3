@@ -130,13 +130,13 @@ onMounted(() => {
   )
   // 检查 tvRotation 是否为空
 
-  if (formData.value.heightAdjustment !== undefined && formData.value.heightAdjustment.trim() !== '') {
+  if (formData.value.heightAdjustment !== undefined && formData.value.heightAdjustment !== '') {
     heightAdjustmentShow.value = true
   }
-  if (formData.value.cableManagement !== undefined && formData.value.cableManagement.trim() !== '') {
+  if (formData.value.cableManagement !== undefined && formData.value.cableManagement !== '') {
     cableManagementShow.value = true
   }
-  if (formData.value.adjustableFootPad !== undefined && formData.value.adjustableFootPad.trim() !== '') {
+  if (formData.value.adjustableFootPad !== undefined && formData.value.adjustableFootPad !== '') {
     adjustableFootPadShow.value = true
   }
 
