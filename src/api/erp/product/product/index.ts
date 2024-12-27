@@ -29,6 +29,8 @@ export interface ProductVO {
   maintenanceEngineerId: number // 维护工程师id
   color: string // 颜色
   brand: string // 品牌
+  patentCountryCodeList: [], //专利国别代码
+  patentType: number,   //专利类型
 }
 
 // ERP 产品 API
