@@ -2,23 +2,23 @@
   <el-form ref="formRef" :model="formData" :rules="formRules" label-width="180px">
     <el-row>
       <el-col :span="12">
-        <el-form-item label="VESA最小长度（mm）" prop="lengthMin">
-          <el-input-number v-model="formData.lengthMin" controls-position="right" :min="1" />
+        <el-form-item label="VESA最小长度（mm）" prop="vesaLengthMin">
+          <el-input-number v-model="formData.vesaLengthMin" controls-position="right" :min="1" />
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="VESA最大长度（mm）" prop="lengthMax">
-          <el-input-number v-model="formData.lengthMax" controls-position="right" :min="1" />
+        <el-form-item label="VESA最大长度（mm）" prop="vesaLengthMax">
+          <el-input-number v-model="formData.vesaLengthMax" controls-position="right" :min="1" />
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="VESA最小宽度（mm）" prop="widthMin">
-          <el-input-number v-model="formData.widthMin" controls-position="right" :min="1" />
+        <el-form-item label="VESA最小宽度（mm）" prop="vesaWidthMin">
+          <el-input-number v-model="formData.vesaWidthMin" controls-position="right" :min="1" />
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="VESA最大宽度（mm）" prop="widthMax">
-          <el-input-number v-model="formData.widthMax" controls-position="right" :min="1" />
+        <el-form-item label="VESA最大宽度（mm）" prop="vesaWidthMax">
+          <el-input-number v-model="formData.vesaWidthMax" controls-position="right" :min="1" />
         </el-form-item>
       </el-col>
 
@@ -235,10 +235,10 @@ import { ElForm } from 'element-plus'
 // 定义 formData 的类型接口
 interface FormData {
   productId?: number | undefined;
-  widthMin?: number | undefined;
-  widthMax?: number | undefined;
-  lengthMax?: number | undefined;
-  lengthMin?: number | undefined;
+  vesaWidthMin?: number | undefined;
+  vesaWidthMax?: number | undefined;
+  vesaLengthMax?: number | undefined;
+  vesaLengthMin?: number | undefined;
   tvSizeMin?: number | undefined;
   tvSizeMax?: number | undefined;
   loadCapacity?: number | undefined;
@@ -307,10 +307,10 @@ onMounted(() => {
 })
 const formData = ref<FormData>({
   productId: undefined,
-  widthMin: undefined,
-  widthMax: undefined,
-  lengthMax: undefined,
-  lengthMin: undefined,
+  vesaWidthMin: undefined,
+  vesaWidthMax: undefined,
+  vesaLengthMax: undefined,
+  vesaLengthMin: undefined,
   tvSizeMin: undefined,
   tvSizeMax: undefined,
   loadCapacity: undefined,
@@ -369,10 +369,10 @@ const validateForm = async () => {
 const resetForm = () => {
   formData.value = {
     productId: undefined,
-    widthMin: undefined,
-    widthMax: undefined,
-    lengthMax: undefined,
-    lengthMin: undefined,
+    vesaWidthMin: undefined,
+    vesaWidthMax: undefined,
+    vesaLengthMax: undefined,
+    vesaLengthMin: undefined,
     tvSizeMin: undefined,
     tvSizeMax: undefined,
     loadCapacity: undefined,
