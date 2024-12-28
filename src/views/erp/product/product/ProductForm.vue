@@ -150,6 +150,11 @@
             <el-input v-model="formData.color" placeholder="请输入颜色" />
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="品牌" prop="brand">
+            <el-input v-model="formData.brand" placeholder="请输入品牌" />
+          </el-form-item>
+        </el-col>
         <el-col :span="24">
         <ContentWrap>
           <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
@@ -160,8 +165,37 @@
         </ContentWrap>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="专利" prop="patent">
-            <el-input v-model="formData.patent" placeholder="请输入专利" />
+          <el-form-item label="专利国别" prop="patentCountryCodeList">
+            <el-select
+              v-model="formData.patentCountryCodeList"
+              placeholder="请选择国别代码"
+              multiple
+              class="!w-240px"
+            >
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.COUNTRY_CODE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="专利类型" prop="patentType">
+            <el-select
+              v-model="formData.patentType"
+              placeholder="请选择专利类型"
+              clearable
+              class="!w-240px"
+            >
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.ERP_PATENT_TYPE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -258,9 +292,23 @@ import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/categor
 import * as DeptApi from '@/api/system/dept'
 import * as UserApi from '@/api/system/user'
 import { ProductUnitApi, ProductUnitVO } from '@/api/erp/product/unit'
-import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
-import ProductTvStandForm from "@/views/erp/product/product/ProductTvStandForm.vue";
+import {DICT_TYPE, getBoolDictOptions, getIntDictOptions} from '@/utils/dict'
 import ProductGuidePriceItemForm from "@/views/erp/product/product/components/ProductGuidePriceItemForm.vue";
+import {ContentWrap} from "../../../../components/ContentWrap";
+import ProductFloorTVStand from "@/views/erp/product/product/ProductFloorTVStand.vue";
+import ProductBedsideCabinet from "@/views/erp/product/product/ProductBedsideCabinet.vue";
+import ProductMediaStand from "@/views/erp/product/product/ProductMediaStand.vue";
+import ProductTVStandWithMount from "@/views/erp/product/product/ProductTVStandWithMount.vue";
+import ProductWallMountedTVMount from "@/views/erp/product/product/ProductWallMountedTVMount.vue";
+import ProductSpeakerStand from "@/views/erp/product/product/ProductSpeakerStand.vue";
+import ProductFloatingShelf from "@/views/erp/product/product/ProductFloatingShelf.vue";
+import ProductTableTopTVStand from "@/views/erp/product/product/ProductTableTopTVStand.vue";
+import ProductOfficeDesk from "@/views/erp/product/product/ProductOfficeDesk.vue";
+import ProductMonitorRiser from "@/views/erp/product/product/ProductMonitorRiser.vue";
+import ProductBookcase from "@/views/erp/product/product/ProductBookcase.vue";
+import ProductIronFilingCabinet from "@/views/erp/product/product/ProductIronFilingCabinet.vue";
+import ProductDesktopStorageRack from "@/views/erp/product/product/ProductDesktopStorageRack.vue";
+import ProductKeyboardTray from "@/views/erp/product/product/ProductKeyboardTray.vue";
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
@@ -296,12 +344,14 @@ const formData = ref({
   primaryImageUrl: undefined,
   secondaryImageUrlList: [],
   guidePriceList: [],
-  patent: undefined,
+  patentCountryCodeList: [],
+  patentType: undefined,
   productOwnerId: undefined,
   industrialDesignerId: undefined,
   researchDeveloperId: undefined,
   maintenanceEngineerId: undefined,
-  color: undefined
+  color: undefined,
+  brand: undefined
 })
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
@@ -328,7 +378,20 @@ const isEditMode = ref(false) // 控制是否为编辑模式
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
-  1: ProductTvStandForm
+  1: ProductFloorTVStand,// 1L对应落地电视支架的服务实现类
+  2: ProductBedsideCabinet,// 2L对应床头柜的服务实现类
+  3: ProductMediaStand,// 3L对应多媒体支架的服务实现类
+  5: ProductTVStandWithMount,// 5L对应电视柜支架的服务实现类
+  6: ProductWallMountedTVMount,// 6L对应挂墙电视支架的服务实现类
+  7: ProductSpeakerStand,// 7L对应音响支架的服务实现类
+  9: ProductFloatingShelf,// 9L对应多媒体挂墙支架的服务实现类
+  10: ProductTableTopTVStand,// 10L对应桌面电视架的服务实现类
+  11: ProductOfficeDesk,// 11L对应办公桌的服务实现类
+  13: ProductMonitorRiser,// 13L对应显示器增高架的服务实现类
+  14: ProductBookcase,// 14L对应书架的服务实现类
+  15: ProductKeyboardTray,// 15L对应键盘托的服务实现类
+  16: ProductIronFilingCabinet,// 16L对应铁质文件柜的服务实现类
+  17: ProductDesktopStorageRack,// 17L对应桌面置物架的服务实现类
 }
 const productDetailForm = computed(() => formData.value.categoryId !== undefined ? formDict[formData.value.categoryId] : null)
 const productDetailFormRef = ref()
@@ -351,6 +414,10 @@ const open = async (type: string, id?: number) => {
       // 检查 guidePriceList 并赋值为默认值 []
       if (formData.value.guidePriceList == null) {
         formData.value.guidePriceList = [];
+      }
+      // 检查 patentCountryCodeList 并赋值为默认值 []
+      if (formData.value.patentCountryCodeList == null) {
+        formData.value.patentCountryCodeList = [];
       }
       isEditMode.value = true
     } finally {
@@ -430,12 +497,14 @@ const resetForm = () => {
     primaryImageUrl: undefined,
     secondaryImageUrlList: [],
     guidePriceList: [],
-    patent: undefined,
+    patentCountryCodeList: [],
+    patentType: undefined,
     productOwnerId: undefined,
     industrialDesignerId: undefined,
     researchDeveloperId: undefined,
     maintenanceEngineerId: undefined,
     color: undefined,
+    brand: undefined
   }
   formRef.value?.resetFields()
 }

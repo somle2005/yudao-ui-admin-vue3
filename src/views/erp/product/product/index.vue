@@ -81,6 +81,7 @@
         </template>
       </el-table-column>
       <el-table-column label="基础重量（kg）" align="center" prop="weight" />
+      <el-table-column label="品牌" align="center" prop="brand" />
       <el-table-column label="系列" align="center" prop="series" />
       <el-table-column label="颜色" align="center" prop="color" />
       <el-table-column label="型号" align="center" prop="model" />
@@ -93,15 +94,9 @@
           <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
             <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="guidePrice.code" />
             <el-tag class="ml-5px">{{ guidePrice.price }}</el-tag>
-<!--            <el-tag type="primary">{{ guidePrice.name }} | {{ guidePrice.price }}</el-tag>-->
           </div>
         </template>
       </el-table-column>
-<!--      <el-table-column label="专利" align="center" prop="patent" />
-      <el-table-column label="PO产品经理" align="center" prop="productOwnerName" />
-      <el-table-column label="ID工业设计" align="center" prop="industrialDesignerName" />
-      <el-table-column label="RD研发工程师" align="center" prop="researchDeveloperName" />
-      <el-table-column label="维护工程师" align="center" prop="maintenanceEngineerName" />-->
       <el-table-column label="产品备注" align="center" prop="remark" />
       <el-table-column label="创建时间" align="center" prop="createTime" :formatter="dateFormatter" width="180px"/>
       <el-table-column label="操作" align="center" min-width="120px">
@@ -146,6 +141,9 @@ import ProductForm from './ProductForm.vue'
 import {ProductCategoryApi, ProductCategoryVO} from "@/api/erp/product/category";
 import {defaultProps, handleTree} from "@/utils/tree";
 import {DICT_TYPE} from "@/utils/dict";
+import Pagination from "../../../../components/Pagination/index.vue";
+import {DictTag} from "../../../../components/DictTag";
+import {ContentWrap} from "../../../../components/ContentWrap";
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
@@ -179,11 +177,6 @@ const queryParams = reactive({
   height: undefined,
   primaryImageUrl: undefined,
   guidePriceList: [],
-  patent: undefined,
-  productOwnerId: undefined,
-  industrialDesignerId: undefined,
-  researchDeveloperId: undefined,
-  maintenanceEngineerId: undefined,
   color: undefined,
 })
 const queryFormRef = ref() // 搜索的表单

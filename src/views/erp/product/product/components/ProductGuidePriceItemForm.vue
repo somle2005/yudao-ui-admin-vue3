@@ -42,18 +42,6 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="排序" fixed="right" min-width="115">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.sort`" class="mb-0px!">
-            <el-input-number
-              v-model="row.sort"
-              controls-position="right"
-              :min="0"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
           <el-button @click="handleDelete($index)" link>—</el-button>
@@ -72,7 +60,6 @@ import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
 interface GuidePrice {
   code: number | undefined;
   price: number | undefined;
-  sort: number;
 }
 
 const props = defineProps<{
@@ -99,8 +86,7 @@ watch(
 const handleAdd = () => {
   const row = {
     code: undefined,
-    price: undefined,
-    sort: 0
+    price: undefined
   }
   formData.value.push(row)
 }

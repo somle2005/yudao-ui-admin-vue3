@@ -37,7 +37,7 @@
           <el-option
             v-for="item in productList"
             :key="item.id"
-            :label="item.name"
+            :label="`${item.barCode} | ${item.name}`"
             :value="item.id"
           />
         </el-select>
