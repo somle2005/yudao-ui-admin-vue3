@@ -100,7 +100,9 @@ const formData = ref({
 const formRules = reactive({
   countryCode: [{ required: true, message: '国家编码不能为空', trigger: 'blur' }],
   type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
-  supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }]
+  supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
+  declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
+  declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表

@@ -134,7 +134,11 @@ const formData = ref({
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商编号不能为空', trigger: 'blur' }],
-  productId: [{ required: true, message: '产品编号不能为空', trigger: 'blur' }]
+  productId: [{ required: true, message: '产品编号不能为空', trigger: 'blur' }],
+  packageHeight: [{ required: true, message: '包装高度不能为空', trigger: 'blur' }],
+  packageLength: [{ required: true, message: '包装长度不能为空', trigger: 'blur' }],
+  packageWeight: [{ required: true, message: '包装重量不能为空', trigger: 'blur' }],
+  packageWidth: [{ required: true, message: '包装宽度不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 const productList = ref<ProductVO[]>([]) // 产品列表
