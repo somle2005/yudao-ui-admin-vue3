@@ -18,24 +18,19 @@
         />
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-select
-          v-model="queryParams.type"
-          placeholder="请选择类型"
-          clearable
-          class="!w-240px"
-        >
+        <el-select v-model="queryParams.type" placeholder="请选择类型" clearable class="!w-240px">
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="供应商产品编码" prop="supplierProductId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.supplierProductId"-->
-<!--          placeholder="请输入供应商产品编码"-->
-<!--          clearable-->
-<!--          @keyup.enter="handleQuery"-->
-<!--          class="!w-240px"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="供应商产品编码" prop="supplierProductId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.supplierProductId"-->
+      <!--          placeholder="请输入供应商产品编码"-->
+      <!--          clearable-->
+      <!--          @keyup.enter="handleQuery"-->
+      <!--          class="!w-240px"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
 
       <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
         <el-input
@@ -139,7 +134,7 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-<!--      <el-table-column label="产品编号" align="center" prop="id" />-->
+      <!--      <el-table-column label="产品编号" align="center" prop="id" />-->
       <el-table-column label="国家编码" align="center" prop="countryCode" />
       <el-table-column label="供应商产品编码" align="center" prop="supplierProductCode" />
       <el-table-column label="类型" align="center" prop="type" />
@@ -197,6 +192,7 @@ import download from '@/utils/download'
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { defaultProps } from '@/utils/tree'
+import { TYPE } from '../constant/index'
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -230,7 +226,10 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
-    list.value = data.list
+    list.value = data.list.map((item: CustomRuleVO) => {
+      item.type = TYPE[item.type]
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false

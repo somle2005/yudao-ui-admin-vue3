@@ -64,12 +64,18 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="主图" align="center" prop="primaryImageUrl" width="110px">
+      <el-table-column
+        fixed="left"
+        label="主图"
+        align="center"
+        prop="primaryImageUrl"
+        width="110px"
+      >
         <template #default="scope">
           <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column label="SKU（编码）" align="center" prop="barCode" />
+      <el-table-column fixed="left" label="SKU（编码）" align="center" prop="barCode" />
       <el-table-column label="产品名称" align="center" prop="name" />
       <el-table-column label="产品分类" align="center" prop="categoryName" />
       <el-table-column label="部门" align="center" prop="deptName" />
@@ -98,8 +104,14 @@
         </template>
       </el-table-column>
       <el-table-column label="产品备注" align="center" prop="remark" />
-      <el-table-column label="创建时间" align="center" prop="createTime" :formatter="dateFormatter" width="180px"/>
-      <el-table-column label="操作" align="center" min-width="120px">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        :formatter="dateFormatter"
+        width="180px"
+      />
+      <el-table-column fixed="right" label="操作" align="center" min-width="120px">
         <template #default="scope">
           <el-button
             link
@@ -138,12 +150,12 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import ProductForm from './ProductForm.vue'
-import {ProductCategoryApi, ProductCategoryVO} from "@/api/erp/product/category";
-import {defaultProps, handleTree} from "@/utils/tree";
-import {DICT_TYPE} from "@/utils/dict";
-import Pagination from "../../../../components/Pagination/index.vue";
-import {DictTag} from "../../../../components/DictTag";
-import {ContentWrap} from "../../../../components/ContentWrap";
+import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
+import { defaultProps, handleTree } from '@/utils/tree'
+import { DICT_TYPE } from '@/utils/dict'
+import Pagination from '../../../../components/Pagination/index.vue'
+import { DictTag } from '../../../../components/DictTag'
+import { ContentWrap } from '../../../../components/ContentWrap'
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
@@ -177,7 +189,7 @@ const queryParams = reactive({
   height: undefined,
   primaryImageUrl: undefined,
   guidePriceList: [],
-  color: undefined,
+  color: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
