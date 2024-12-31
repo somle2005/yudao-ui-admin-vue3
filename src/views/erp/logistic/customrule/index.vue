@@ -9,29 +9,20 @@
       label-width="150px"
     >
       <el-form-item label="国家编码" prop="countryCode">
-        <el-input
+        <el-select
           v-model="queryParams.countryCode"
-          placeholder="请输入国家编码"
+          placeholder="请选择国家编码"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择类型" clearable class="!w-240px">
-          <el-option label="请选择字典生成" value="" />
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.COUNTRY_CODE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
         </el-select>
       </el-form-item>
-      <!--      <el-form-item label="供应商产品编码" prop="supplierProductId">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.supplierProductId"-->
-      <!--          placeholder="请输入供应商产品编码"-->
-      <!--          clearable-->
-      <!--          @keyup.enter="handleQuery"-->
-      <!--          class="!w-240px"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-
       <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
         <el-input
           v-model="queryParams.declaredTypeEn"
@@ -42,70 +33,28 @@
         />
       </el-form-item>
       <el-form-item label="申报品名" prop="declaredType">
-        <el-select
+        <el-input
           v-model="queryParams.declaredType"
-          placeholder="请选择申报品名"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="申报金额" prop="declaredValue">
-        <el-input
-          v-model="queryParams.declaredValue"
-          placeholder="请输入申报金额"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="申报金额币种" prop="declaredValueCurrencyCode">
-        <el-input
-          v-model="queryParams.declaredValueCurrencyCode"
-          placeholder="请输入申报金额币种"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="税率" prop="taxRate">
-        <el-input
-          v-model="queryParams.taxRate"
-          placeholder="请输入税率"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="hs编码" prop="hscode">
-        <el-input
-          v-model="queryParams.hscode"
-          placeholder="请输入hs编码"
+          placeholder="请输入申报品名"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
       </el-form-item>
       <el-form-item label="物流属性" prop="logisticAttribute">
-        <el-input
+        <el-select
           v-model="queryParams.logisticAttribute"
-          placeholder="请输入物流属性"
+          placeholder="请选择物流属性"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker
-          v-model="queryParams.createTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
@@ -134,17 +83,28 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <!--      <el-table-column label="产品编号" align="center" prop="id" />-->
-      <el-table-column label="国家编码" align="center" prop="countryCode" />
+      <el-table-column label="国家编码" align="center" prop="countryCode" >
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
+        </template>
+      </el-table-column>
       <el-table-column label="供应商产品编码" align="center" prop="supplierProductCode" />
       <el-table-column label="类型" align="center" prop="type" />
       <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
       <el-table-column label="申报品名" align="center" prop="declaredType" />
       <el-table-column label="申报金额" align="center" prop="declaredValue" />
-      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode" />
+      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode" >
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
+        </template>
+      </el-table-column>
       <el-table-column label="税率" align="center" prop="taxRate" />
       <el-table-column label="hs编码" align="center" prop="hscode" />
-      <el-table-column label="物流属性" align="center" prop="logisticAttribute" />
+      <el-table-column label="物流属性" align="center" prop="logisticAttribute" >
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
+        </template>
+      </el-table-column>
       <el-table-column
         label="创建时间"
         align="center"
@@ -191,8 +151,9 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
-import { defaultProps } from '@/utils/tree'
-import { TYPE } from '../constant/index'
+import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
+import {DictTag} from "@/components/DictTag";
+import {typeFind} from "@/views/erp/logistic/constant";
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -227,7 +188,7 @@ const getList = async () => {
   try {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
     list.value = data.list.map((item: CustomRuleVO) => {
-      item.type = TYPE[item.type]
+      item.type = typeFind[item.type]
       return item
     })
     total.value = data.total

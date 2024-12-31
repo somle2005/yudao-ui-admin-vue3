@@ -8,7 +8,19 @@
       v-loading="formLoading"
     >
       <el-form-item label="国家编码" prop="countryCode">
-        <el-input v-model="formData.countryCode" placeholder="请输入国家编码" />
+        <el-select
+          v-model="formData.countryCode"
+          placeholder="请选择国家编码"
+          clearable
+          class="!w-240px"
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.COUNTRY_CODE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-select v-model="formData.type" placeholder="请选择类型">
@@ -46,7 +58,19 @@
         <el-input v-model="formData.declaredValue" placeholder="请输入申报金额" />
       </el-form-item>
       <el-form-item label="申报金额币种" prop="declaredValueCurrencyCode">
-        <el-input v-model="formData.declaredValueCurrencyCode" placeholder="请输入申报金额币种" />
+        <el-select
+          v-model="formData.declaredValueCurrencyCode"
+          placeholder="请选择申报金额币种"
+          clearable
+          class="!w-240px"
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="税率" prop="taxRate">
         <el-input-number
@@ -61,7 +85,19 @@
         <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
       <el-form-item label="物流属性" prop="logisticAttribute">
-        <el-input v-model="formData.logisticAttribute" placeholder="请输入物流属性" />
+        <el-select
+          v-model="formData.logisticAttribute"
+          placeholder="请选择物流属性"
+          clearable
+          class="!w-240px"
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -72,7 +108,8 @@
 </template>
 <script setup lang="ts">
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
-import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product';
+import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
 
 /** ERP 海关规则 表单 */
 defineOptions({ name: 'CustomRuleForm' })
@@ -102,7 +139,8 @@ const formRules = reactive({
   type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
   supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
   declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
-  declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }]
+  declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '申报品名（英文）不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
