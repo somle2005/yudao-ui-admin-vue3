@@ -37,6 +37,56 @@
           class="!w-240px"
         />
       </el-form-item>
+      <el-form-item label="部门" prop="deptName">
+        <el-input
+          v-model="queryParams.deptName"
+          placeholder="请输入部门"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="品牌" prop="brand">
+        <el-input
+          v-model="queryParams.brand"
+          placeholder="请输入品牌"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="系列" prop="series">
+        <el-input
+          v-model="queryParams.series"
+          placeholder="请输入系列"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select class="!w-240px" v-model="queryParams.status" clearable placeholder="请选择状态">
+          <el-option
+            v-for="dict in getBoolDictOptions(DICT_TYPE.COMMON_BOOLEAN_STATUS)"
+            :key="String(dict.value)"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="部门" prop="deptId">
+        <el-tree-select
+          class="!w-240px"
+          v-model="queryParams.deptId"
+          :data="deptList"
+          :props="defaultProps"
+          check-strictly
+          node-key="id"
+          placeholder="请选择部门"
+          clearable
+        />
+      </el-form-item>
+
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -152,14 +202,16 @@ import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import ProductForm from './ProductForm.vue'
 import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
 import { defaultProps, handleTree } from '@/utils/tree'
-import { DICT_TYPE } from '@/utils/dict'
+import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
 import Pagination from '../../../../components/Pagination/index.vue'
 import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
+import { getDeptTree } from './data/index'
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
 
+const deptList = ref<Tree[]>([]) // 树形结构
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
@@ -189,7 +241,9 @@ const queryParams = reactive({
   height: undefined,
   primaryImageUrl: undefined,
   guidePriceList: [],
-  color: undefined
+  color: undefined,
+  deptId: undefined,
+  brand: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -214,6 +268,7 @@ const handleQuery = () => {
 
 /** 重置按钮操作 */
 const resetQuery = () => {
+  produ
   queryFormRef.value.resetFields()
   handleQuery()
 }
@@ -258,5 +313,6 @@ onMounted(async () => {
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
   categoryList.value = handleTree(categoryData, 'id', 'parentId')
+  deptList.value = (await getDeptTree()).value
 })
 </script>
