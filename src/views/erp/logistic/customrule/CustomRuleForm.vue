@@ -72,7 +72,8 @@
 </template>
 <script setup lang="ts">
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
-import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product';
+import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import { type } from '../constant/index'
 
 /** ERP 海关规则 表单 */
 defineOptions({ name: 'CustomRuleForm' })
@@ -106,16 +107,6 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
-const type = [
-  {
-    value: 'export',
-    label: '报关',
-  },
-  {
-    value: 'import',
-    label: '清关',
-  }
-]
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {

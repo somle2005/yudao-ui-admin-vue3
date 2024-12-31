@@ -1,4 +1,14 @@
-export const TYPE = {
-  export: '出口',
-  import: '进口'
+export const type = [
+  {
+    value: 'export',
+    label: '报关'
+  },
+  {
+    value: 'import',
+    label: '清关'
+  }
+]
+
+export const typeFind = (kind) => {
+  return type.find((item) => item.value === kind)?.label || ''
 }

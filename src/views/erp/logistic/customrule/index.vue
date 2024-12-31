@@ -192,7 +192,7 @@ import download from '@/utils/download'
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { defaultProps } from '@/utils/tree'
-import { TYPE } from '../constant/index'
+import { typeFind } from '../constant/index'
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -227,7 +227,7 @@ const getList = async () => {
   try {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
     list.value = data.list.map((item: CustomRuleVO) => {
-      item.type = TYPE[item.type]
+      item.type = typeFind(item.type)
       return item
     })
     total.value = data.total
