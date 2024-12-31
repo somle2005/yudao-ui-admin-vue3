@@ -139,8 +139,7 @@ const formData = ref({
 })
 const formRules = reactive({
   name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
-  sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 

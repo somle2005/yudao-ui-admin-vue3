@@ -221,6 +221,8 @@ export enum DICT_TYPE {
   SYSTEM_FILED = 'system_field',
   COUNTRY_CODE = 'country_code',    //国别代码
   ERP_PATENT_TYPE = 'erp_patent_type',  //专利类型
+  ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
+  ERP_PURCHASE_PRICE_CURRENCY_CODE = 'erp_purchase_price_currency_code',
 
 
   // ========== AI - 人工智能模块  ==========

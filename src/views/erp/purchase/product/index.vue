@@ -49,59 +49,20 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="包装高度" prop="packageHeight">
-        <el-input
-          v-model="queryParams.packageHeight"
-          placeholder="请输入包装高度"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="包装长度" prop="packageLength">
-        <el-input
-          v-model="queryParams.packageLength"
-          placeholder="请输入包装长度"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="包装重量" prop="packageWeight">
-        <el-input
-          v-model="queryParams.packageWeight"
-          placeholder="请输入包装重量"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="包装宽度" prop="packageWidth">
-        <el-input
-          v-model="queryParams.packageWidth"
-          placeholder="请输入包装宽度"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="采购价格" prop="purchasePrice">
-        <el-input
-          v-model="queryParams.purchasePrice"
-          placeholder="请输入采购价格"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
       <el-form-item label="采购货币代码" prop="purchasePriceCurrencyCode">
-        <el-input
+        <el-select
           v-model="queryParams.purchasePriceCurrencyCode"
-          placeholder="请输入采购货币代码"
+          placeholder="请选择采购货币代码"
           clearable
-          @keyup.enter="handleQuery"
           class="!w-240px"
-        />
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="创建时间" prop="createTime">
         <el-date-picker
@@ -140,10 +101,8 @@
 
   <!-- 列表 -->
   <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+    <el-table v-loading="loading" :data="list" :stripe="true">
       <el-table-column label="供应商产品编码" align="center" prop="code" />
-      <!-- <el-table-column label="供应商编号" align="center" prop="supplierId" />
-      <el-table-column label="产品编号" align="center" prop="productId" /> -->
       <el-table-column label="供应商" align="center" prop="supplierName" />
       <el-table-column label="产品" align="center" prop="productName" />
       <el-table-column label="包装高度" align="center" prop="packageHeight" />
@@ -151,7 +110,11 @@
       <el-table-column label="包装重量" align="center" prop="packageWeight" />
       <el-table-column label="包装宽度" align="center" prop="packageWidth" />
       <el-table-column label="采购价格" align="center" prop="purchasePrice" />
-      <el-table-column label="采购货币代码" align="center" prop="purchasePriceCurrencyCode" />
+      <el-table-column label="采购货币代码" align="center" prop="purchasePriceCurrencyCode" >
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE" :value="scope.row.purchasePriceCurrencyCode" />
+        </template>
+      </el-table-column>
       <el-table-column
         label="创建时间"
         align="center"
@@ -200,6 +163,8 @@ import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/produc
 import SupplierProductForm from './SupplierProductForm.vue'
 import { ProductApi, ProductVO } from '@/api/erp/product/product';
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier';
+import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
+import {DictTag} from "@/components/DictTag";
 
 /** ERP 供应商产品 列表 */
 defineOptions({ name: 'ErpSupplierProduct' })

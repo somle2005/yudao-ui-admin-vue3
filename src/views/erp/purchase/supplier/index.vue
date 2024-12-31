@@ -70,7 +70,6 @@
       <el-table-column label="联系电话" align="center" prop="telephone" />
       <el-table-column label="电子邮箱" align="center" prop="email" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />

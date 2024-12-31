@@ -86,15 +86,15 @@
       <el-form-item label="采购货币代码" prop="purchasePriceCurrencyCode">
         <el-select
           v-model="formData.purchasePriceCurrencyCode"
-          placeholder="请输入采购货币代码"
-          size="large"
-          style="width: 240px"
+          placeholder="请选择采购货币代码"
+          clearable
+          class="!w-240px"
         >
           <el-option
-            v-for="item in currencyCode"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
           />
         </el-select>
       </el-form-item>
@@ -109,6 +109,7 @@
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import { ProductApi, ProductVO } from '@/api/erp/product/product';
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier';
+import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
 
 /** ERP 供应商产品 表单 */
 defineOptions({ name: 'SupplierProductForm' })
@@ -139,16 +140,11 @@ const formRules = reactive({
   packageLength: [{ required: true, message: '包装长度不能为空', trigger: 'blur' }],
   packageWeight: [{ required: true, message: '包装重量不能为空', trigger: 'blur' }],
   packageWidth: [{ required: true, message: '包装宽度不能为空', trigger: 'blur' }],
+  purchasePriceCurrencyCode: [{ required: true, message: '采购货币代码不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = ref<ProductVO[]>([]) // 产品列表
 const supplierList = ref<SupplierVO[]>([]) // 供应商列表
-const currencyCode = [
-  {
-    value: 'RMB',
-    label: 'RMB',
-  }
-]
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -206,7 +202,7 @@ const resetForm = () => {
     packageWeight: undefined,
     packageWidth: undefined,
     purchasePrice: undefined,
-    purchasePriceCurrencyCode: 'RMB'
+    purchasePriceCurrencyCode: undefined
   }
   formRef.value?.resetFields()
 }
