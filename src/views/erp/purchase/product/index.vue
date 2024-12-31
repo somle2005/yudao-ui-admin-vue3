@@ -57,7 +57,7 @@
           class="!w-240px"
         >
           <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE)"
+            v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -112,7 +112,7 @@
       <el-table-column label="采购价格" align="center" prop="purchasePrice" />
       <el-table-column label="采购货币代码" align="center" prop="purchasePriceCurrencyCode" >
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE" :value="scope.row.purchasePriceCurrencyCode" />
+          <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.purchasePriceCurrencyCode" />
         </template>
       </el-table-column>
       <el-table-column

@@ -65,7 +65,7 @@
           class="!w-240px"
         >
           <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE)"
+            v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"

@@ -95,7 +95,7 @@
       <el-table-column label="申报金额" align="center" prop="declaredValue" />
       <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode" >
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.ERP_PURCHASE_PRICE_CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
+          <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
         </template>
       </el-table-column>
       <el-table-column label="税率" align="center" prop="taxRate" />

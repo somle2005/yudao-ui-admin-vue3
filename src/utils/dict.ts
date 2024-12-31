@@ -222,7 +222,7 @@ export enum DICT_TYPE {
   COUNTRY_CODE = 'country_code',    //国别代码
   ERP_PATENT_TYPE = 'erp_patent_type',  //专利类型
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
-  ERP_PURCHASE_PRICE_CURRENCY_CODE = 'erp_purchase_price_currency_code',
+  CURRENCY_CODE = 'currency_code',
 
 
   // ========== AI - 人工智能模块  ==========
