@@ -120,7 +120,11 @@
       inline
       v-model="queryParams"
       :options="formOptions"
+      @update:model-value="watchQuery"
     >
+      <template #primaryImageUrl="{ scope, model }">
+        <UploadImg v-model="model[scope.prop]" />
+      </template>
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -387,8 +391,8 @@ let queryParams = reactive({
   primaryImageUrl: undefined,
   guidePriceList: [],
   color: undefined,
-  deptId: undefined,
-  brand: undefined
+  brand: undefined,
+  deptName: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -461,7 +465,23 @@ onMounted(async () => {
   deptList.value = (await getDeptTree()).value
 })
 
+const watchQuery = () => {
+  console.log(queryParams, 'queryParams变化')
+}
+
 const formOptions = ref<FormOptions[]>([
+  {
+    slot: 'primaryImageUrl',
+    value: '',
+    label: '主图',
+    prop: 'primaryImageUrl',
+    placeholder: '请上传主图',
+    attrs: {
+      class: '!w-240px',
+      clearable: true
+    }
+  },
+
   {
     type: 'input',
     value: '',

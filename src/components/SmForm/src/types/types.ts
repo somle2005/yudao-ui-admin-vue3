@@ -10,7 +10,7 @@ interface Callback {
 // 表单每一项的配置选项
 export interface FormOptions {
   // 表单项显示的元素
-  type:
+  type?:
     | 'cascader'
     | 'checkbox'
     | 'checkbox-group'
@@ -43,6 +43,7 @@ export interface FormOptions {
   rules?: RuleItem[]
   // 表单项的占位符
   placeholder?: string
+  slot?: string
   // 表单元素特有的属性
   // 不同表单元素例如 date-picker属性配置差距会很大所以any &联合很麻烦自己看官方文档
   attrs?: {

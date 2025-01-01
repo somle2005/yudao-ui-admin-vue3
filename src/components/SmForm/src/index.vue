@@ -23,31 +23,17 @@
           v-on="item.events || {}"
           @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
         />
-        <!-- <el-upload
-          v-if="item.type === 'upload'"
-          v-bind="item.uploadAttrs"
-          :on-preview="onPreview"
-          :on-remove="onRemove"
-          :on-success="(response, file, fileList) => onSuccess(response, file, fileList, item)"
-          :on-error="onError"
-          :on-progress="onProgress"
-          :on-change="onChange"
-          :before-upload="beforeUpload"
-          :before-remove="beforeRemove"
-          :http-request="httpRequest"
-          :on-exceed="onExceed"
-        >
-          <slot name="uploadArea"></slot>
-          <slot name="uploadTip"></slot>
-        </el-upload> -->
         <SmUpload
-          v-if="item.type === 'upload'"
+          v-else-if="item.type === 'upload'"
           :uploadItem="item"
           v-bind="item.uploadAttrs"
           @before-upload="beforeUpload"
           @on-success="onSuccess"
         />
-        <div v-if="item.type === 'editor'" id="editor"></div>
+
+        <slot v-if="item.slot" :name="item.slot" :model="model" :scope="item"></slot>
+
+        <div v-else-if="item.type === 'editor'" id="editor"></div>
       </el-form-item>
       <el-form-item
         v-if="item.children && item.children.length"
@@ -92,7 +78,7 @@ const dealEvents = (e: any, item: any, type: string) => {
 
 const showType = (item: any) => {
   const typeList = ['upload', 'editor']
-  return !typeList.includes(item.type)
+  return !typeList.includes(item.type) && !item.slot
 }
 
 const emits = defineEmits(['on-success', 'before-upload', 'update:modelValue'])

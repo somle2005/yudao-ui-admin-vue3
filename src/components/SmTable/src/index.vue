@@ -80,7 +80,6 @@ const pageAttrs = () => {
   return Object.assign({ total: 0 }, pageAttrs)
 }
 const columnItem = (item) => {
-  console.log(item, 'item-column')
   const list = ['label', 'prop', 'width', 'align', 'formatter']
   const filterItem = {}
   for (const key in item) {
