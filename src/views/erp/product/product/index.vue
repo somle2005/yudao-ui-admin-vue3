@@ -111,6 +111,88 @@
     </el-form>
   </ContentWrap>
 
+  <ContentWrap>
+    <!-- 搜索工作栏 -->
+    <SmForm
+      class="-mb-15px"
+      ref="form"
+      label-width="68px"
+      inline
+      v-model="queryParams"
+      :options="formOptions"
+    >
+      <template #action>
+        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
+        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button
+          type="primary"
+          plain
+          @click="openForm('create')"
+          v-hasPermi="['erp:product:create']"
+        >
+          <Icon icon="ep:plus" class="mr-5px" /> 新增
+        </el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['erp:product:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
+      </template>
+    </SmForm>
+  </ContentWrap>
+
+  <!-- 列表 -->
+  <ContentWrap>
+    <SmTable
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
+      :total="total"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      @pagination="getList"
+    >
+      <template #primaryImageUrl="{ scope }">
+        <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+      </template>
+      <template #status="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
+      </template>
+
+      <template #guidePriceList="{ scope }">
+        <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
+          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="guidePrice.code" />
+          <el-tag class="ml-5px">{{ guidePrice.price }}</el-tag>
+        </div>
+      </template>
+
+      <template #action="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:product:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['erp:product:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
+  </ContentWrap>
+
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
@@ -161,7 +243,8 @@
         :formatter="dateFormatter"
         width="180px"
       />
-      <el-table-column fixed="right" label="操作" align="center" min-width="120px">
+      <el-table-column fixed="right" label="操作" align="center" min-width="120px" />
+      <el-table-column label="操作" align="center" min-width="120px">
         <template #default="scope">
           <el-button
             link
@@ -208,6 +291,68 @@ import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
 
+import { TableOptions } from '@/components/SmTable/src/types'
+import { transformTableOptions } from '@/components/SmTable/src/utils'
+import { FormOptions } from '@/components/SmForm/src/types/types'
+
+const handleSizeChange = (val) => {
+  console.log(val, 'handleSizeChange')
+}
+const handleCurrentChange = (val) => {
+  console.log(val, 'handleCurrentChange')
+}
+
+const tableOptions = ref<TableOptions[]>([])
+
+const fieldMap = {
+  primaryImageUrl: {
+    label: '主图',
+    slot: 'primaryImageUrl',
+    fixed: 'left'
+  },
+  barCode: {
+    label: 'SKU（编码）',
+    fixed: 'left'
+  },
+  name: '产品名称',
+  categoryName: '产品分类',
+  deptName: '部门',
+  unitName: '单位',
+  material: '材料（中文）',
+  status: {
+    label: '状态',
+    slot: 'status'
+  },
+
+  weight: '基础重量（kg）',
+  brand: '品牌',
+  series: '系列',
+  color: '颜色',
+  model: '型号',
+
+  productionNo: '生产编号',
+  width: '基础宽度（mm）',
+  length: '基础长度（mm）',
+  height: '基础高度（mm）',
+  guidePriceList: {
+    label: '指导价',
+    slot: 'guidePriceList'
+  },
+  remark: '产品备注',
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  action: {
+    label: '操作',
+    fixed: 'right',
+    action: true,
+    'min-width': '120px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap)
+
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
 
@@ -219,7 +364,7 @@ const loading = ref(true) // 列表的加载中
 const list = ref<ProductVO[]>([]) // 列表的数据
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 const total = ref(0) // 列表的总页数
-const queryParams = reactive({
+let queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: undefined,
@@ -250,6 +395,7 @@ const exportLoading = ref(false) // 导出的加载中
 
 /** 查询列表 */
 const getList = async () => {
+  console.log(queryParams, 'queryParams变化')
   loading.value = true
   try {
     const data = await ProductApi.getProductPage(queryParams)
@@ -268,7 +414,6 @@ const handleQuery = () => {
 
 /** 重置按钮操作 */
 const resetQuery = () => {
-  produ
   queryFormRef.value.resetFields()
   handleQuery()
 }
@@ -315,4 +460,108 @@ onMounted(async () => {
   categoryList.value = handleTree(categoryData, 'id', 'parentId')
   deptList.value = (await getDeptTree()).value
 })
+
+const formOptions = ref<FormOptions[]>([
+  {
+    type: 'input',
+    value: '',
+    label: '名称',
+    prop: 'name',
+    placeholder: '请输入名称',
+    attrs: {
+      class: '!w-240px',
+      clearable: true
+    },
+    // rules: [
+    //   {
+    //     required: true,
+    //     message: '用户名不能为空',
+    //     trigger: 'blur'
+    //   },
+    //   {
+    //     min: 2,
+    //     max: 6,
+    //     message: '用户名在2-6位之间',
+    //     trigger: 'blur'
+    //   }
+    // ],
+    events: {
+      // input: (e) => {
+      //   console.log(e, '点击事件出发了')
+      // },
+      'keyup.enter': (e, item) => {
+        handleQuery()
+        console.log(e, '回车事件出发了', item)
+      }
+    }
+  },
+  {
+    type: 'input',
+    value: '',
+    label: '编码',
+    prop: 'barCode',
+    placeholder: '请输入编码',
+    attrs: {
+      class: '!w-240px',
+      clearable: true
+    },
+    events: {
+      'keyup.enter': (e, item) => {
+        handleQuery()
+        console.log(e, '回车事件出发了', item)
+      }
+    }
+  },
+  {
+    type: 'tree-select',
+    value: '',
+    placeholder: '请输入分类',
+    prop: 'categoryId',
+    label: '分类',
+    attrs: {
+      data: categoryList,
+      props: defaultProps,
+      defaultExpandAll: true,
+      checkStrictly: true,
+      class: '!w-240px'
+      // style: {
+      //   width: '100%'
+      // }
+    }
+    // children: [
+    //   {
+    //     type: 'option',
+    //     label: '经理',
+    //     value: '1'
+    //   },
+    //   {
+    //     type: 'option',
+    //     label: '主管',
+    //     value: '2'
+    //   },
+    //   {
+    //     type: 'option',
+    //     label: '员工',
+    //     value: '3'
+    //   }
+    // ]
+  },
+  {
+    type: 'upload',
+    label: '上传',
+    prop: 'pic',
+    uploadAttrs: {
+      // action: 'https://jsonplaceholder.typicode.com/posts/',
+      multiple: true,
+      limit: 3
+    },
+    rules: [
+      {
+        required: true,
+        message: '图片不能为空',
+        trigger: 'blur'
+      }
+    ]
+  }
+])
 </script>

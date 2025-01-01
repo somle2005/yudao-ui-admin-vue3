@@ -87,6 +87,7 @@ router.beforeEach(async (to, from, next) => {
           //   router.addRoute(route as unknown as RouteRecordRaw);
           // }
         })
+        console.log('路由', router.getRoutes())
         const redirectPath = from.query.redirect || to.path
         // 修复跳转时不带参数的问题
         const redirect = decodeURIComponent(redirectPath as string)
