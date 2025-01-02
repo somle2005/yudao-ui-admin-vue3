@@ -37,15 +37,6 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="部门" prop="deptName">
-        <el-input
-          v-model="queryParams.deptName"
-          placeholder="请输入部门"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
       <el-form-item label="品牌" prop="brand">
         <el-input
           v-model="queryParams.brand"
