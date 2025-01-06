@@ -56,6 +56,32 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="供应商产品" prop="supplierProductId">
+        <el-select
+          v-model="queryParams.supplierProductId"
+          clearable
+          filterable
+          placeholder="请选择供应商产品"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in supplierProductList"
+            :key="item.id"
+            :label="item.code"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="类型" prop="type">
+        <el-select class="!w-240px" v-model="queryParams.type" placeholder="请选择类型">
+          <el-option
+            v-for="item in type"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -161,7 +187,8 @@ import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
-import { typeFind } from '@/views/erp/logistic/constant'
+import {type, typeFind} from '@/views/erp/logistic/constant'
+import {SupplierProductApi, SupplierProductVO} from "@/api/erp/purchase/product";
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -189,6 +216,7 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
+const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -203,6 +231,7 @@ const getList = async () => {
   } finally {
     loading.value = false
   }
+  supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
 }
 
 /** 搜索按钮操作 */
