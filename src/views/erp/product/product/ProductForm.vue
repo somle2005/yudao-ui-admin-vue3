@@ -102,7 +102,10 @@
               placeholder="请输入基础重量"
               controls-position="right"
               :min="1"
+              :step="0.01"
+              :precision="2"
             />
+
           </el-form-item>
         </el-col>
         <el-col :span="12">
