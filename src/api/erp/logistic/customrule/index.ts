@@ -2,7 +2,7 @@ import request from '@/config/axios'
 
 // ERP 海关规则 VO
 export interface CustomRuleVO {
-  id: number // 产品编号
+  id?: number // 产品编号
   countryCode: string // 国家编码
   type: string // 类型
   supplierProductId: number // 供应商产品编号

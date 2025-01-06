@@ -108,8 +108,8 @@
 </template>
 <script setup lang="ts">
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
-import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product';
-import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
+import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { type } from '../constant/index'
 /** ERP 海关规则 表单 */
 defineOptions({ name: 'CustomRuleForm' })
@@ -140,7 +140,7 @@ const formRules = reactive({
   supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
   declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
   declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }],
-  declaredTypeEn: [{ required: true, message: '申报品名（英文）不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '申报品名（英文）不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
@@ -174,6 +174,7 @@ const submitForm = async () => {
   try {
     const data = formData.value as unknown as CustomRuleVO
     if (formType.value === 'create') {
+      data.id = undefined
       await CustomRuleApi.createCustomRule(data)
       message.success(t('common.createSuccess'))
     } else {

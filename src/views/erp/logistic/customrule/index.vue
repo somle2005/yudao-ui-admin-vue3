@@ -83,7 +83,7 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="国家编码" align="center" prop="countryCode" >
+      <el-table-column label="国家编码" align="center" prop="countryCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
         </template>
@@ -93,14 +93,14 @@
       <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
       <el-table-column label="申报品名" align="center" prop="declaredType" />
       <el-table-column label="申报金额" align="center" prop="declaredValue" />
-      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode" >
+      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
         </template>
       </el-table-column>
       <el-table-column label="税率" align="center" prop="taxRate" />
       <el-table-column label="hs编码" align="center" prop="hscode" />
-      <el-table-column label="物流属性" align="center" prop="logisticAttribute" >
+      <el-table-column label="物流属性" align="center" prop="logisticAttribute">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
         </template>
@@ -114,6 +114,14 @@
       />
       <el-table-column label="操作" align="center" min-width="120px">
         <template #default="scope">
+          <el-button
+            link
+            type="default"
+            @click="copyForm(scope.row.id)"
+            v-hasPermi="['erp:custom-rule:create']"
+          >
+            复制
+          </el-button>
           <el-button
             link
             type="primary"
@@ -151,9 +159,9 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
-import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
-import {DictTag} from "@/components/DictTag";
-import {typeFind} from "@/views/erp/logistic/constant";
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { DictTag } from '@/components/DictTag'
+import { typeFind } from '@/views/erp/logistic/constant'
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -241,6 +249,11 @@ const handleExport = async () => {
   } finally {
     exportLoading.value = false
   }
+}
+
+/** 操作栏复制 */
+const copyForm = (id?: number) => {
+  openForm('create', id)
 }
 
 /** 初始化 **/
