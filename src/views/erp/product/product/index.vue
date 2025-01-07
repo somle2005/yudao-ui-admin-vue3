@@ -116,7 +116,13 @@
           <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column fixed="left" label="SKU（编码）" align="center" prop="barCode" />
+      <el-table-column
+        fixed="left"
+        label="SKU（编码）"
+        align="center"
+        prop="barCode"
+        :min-width="columnMinWidth"
+      />
       <el-table-column label="产品名称" align="center" prop="name" />
       <el-table-column label="产品分类" align="center" prop="categoryName" />
       <el-table-column label="部门" align="center" prop="deptName" />
@@ -198,6 +204,7 @@ import Pagination from '../../../../components/Pagination/index.vue'
 import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
+import { computeColumnMinWidth } from '@/utils/computeGeometry'
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
@@ -233,7 +240,6 @@ const queryParams = reactive({
   primaryImageUrl: undefined,
   guidePriceList: [],
   color: undefined,
-  deptId: undefined,
   brand: undefined
 })
 const queryFormRef = ref() // 搜索的表单
@@ -259,7 +265,6 @@ const handleQuery = () => {
 
 /** 重置按钮操作 */
 const resetQuery = () => {
-  produ
   queryFormRef.value.resetFields()
   handleQuery()
 }
@@ -297,6 +302,8 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
+
+const columnMinWidth = computeColumnMinWidth(list, 'barCode')
 
 /** 初始化 **/
 onMounted(async () => {

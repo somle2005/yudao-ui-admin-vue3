@@ -212,7 +212,8 @@ const resetForm = () => {
     declaredValueCurrencyCode: undefined,
     taxRate: undefined,
     hscode: undefined,
-    logisticAttribute: undefined
+    logisticAttribute: undefined,
+    fbaBarCode: undefined
   }
   formRef.value?.resetFields()
 }

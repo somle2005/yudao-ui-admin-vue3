@@ -102,7 +102,12 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true">
-      <el-table-column label="供应商产品编码" align="center" prop="code" />
+      <el-table-column
+        label="供应商产品编码"
+        align="center"
+        prop="code"
+        :min-width="columnMinWidth"
+      />
       <el-table-column label="供应商" align="center" prop="supplierName" />
       <el-table-column label="产品" align="center" prop="productName" />
       <el-table-column label="包装高度" align="center" prop="packageHeight" />
@@ -110,7 +115,7 @@
       <el-table-column label="包装重量" align="center" prop="packageWeight" />
       <el-table-column label="包装宽度" align="center" prop="packageWidth" />
       <el-table-column label="采购价格" align="center" prop="purchasePrice" />
-      <el-table-column label="采购货币代码" align="center" prop="purchasePriceCurrencyCode" >
+      <el-table-column label="采购货币代码" align="center" prop="purchasePriceCurrencyCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.purchasePriceCurrencyCode" />
         </template>
@@ -161,10 +166,11 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import SupplierProductForm from './SupplierProductForm.vue'
-import { ProductApi, ProductVO } from '@/api/erp/product/product';
-import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier';
-import {DICT_TYPE, getIntDictOptions} from "@/utils/dict";
-import {DictTag} from "@/components/DictTag";
+import { ProductApi, ProductVO } from '@/api/erp/product/product'
+import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { DictTag } from '@/components/DictTag'
+import { computeColumnMinWidth } from '@/utils/computeGeometry'
 
 /** ERP 供应商产品 列表 */
 defineOptions({ name: 'ErpSupplierProduct' })
@@ -253,7 +259,7 @@ const handleExport = async () => {
   }
 }
 
-
+const columnMinWidth = computeColumnMinWidth(list, 'code')
 /** 初始化 **/
 onMounted(async () => {
   await getList()

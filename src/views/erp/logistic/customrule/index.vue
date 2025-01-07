@@ -118,7 +118,7 @@
         label="供应商产品编码"
         align="center"
         prop="supplierProductCode"
-        min-width="250px"
+        :min-width="columnMinWidth"
       />
       <el-table-column label="类型" align="center" prop="type" />
       <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
@@ -195,6 +195,7 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
 import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import { computeColumnMinWidth } from '@/utils/computeGeometry'
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -291,6 +292,7 @@ const copyForm = (id?: number) => {
   openForm('create', id)
 }
 
+const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
 /** 初始化 **/
 onMounted(() => {
   getList()
