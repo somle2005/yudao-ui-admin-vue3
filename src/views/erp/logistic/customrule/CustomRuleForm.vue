@@ -90,6 +90,9 @@
       <el-form-item label="hs编码" prop="hscode">
         <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
+      <el-form-item label="FBA条形码" prop="fbaBarCode">
+        <el-input v-model="formData.fbaBarCode" placeholder="请输入FBA条形码" />
+      </el-form-item>
       <el-form-item label="物流属性" prop="logisticAttribute">
         <el-select
           v-model="formData.logisticAttribute"
@@ -138,7 +141,8 @@ const formData = ref({
   declaredValueCurrencyCode: undefined,
   taxRate: undefined,
   hscode: undefined,
-  logisticAttribute: undefined
+  logisticAttribute: undefined,
+  fbaBarCode: undefined
 })
 const formRules = reactive({
   countryCode: [{ required: true, message: '国家编码不能为空', trigger: 'blur' }],

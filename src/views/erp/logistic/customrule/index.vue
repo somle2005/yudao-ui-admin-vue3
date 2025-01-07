@@ -114,7 +114,12 @@
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
         </template>
       </el-table-column>
-      <el-table-column label="供应商产品编码" align="center" prop="supplierProductCode" />
+      <el-table-column
+        label="供应商产品编码"
+        align="center"
+        prop="supplierProductCode"
+        min-width="250px"
+      />
       <el-table-column label="类型" align="center" prop="type" />
       <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
       <el-table-column label="申报品名" align="center" prop="declaredType" />
@@ -131,6 +136,7 @@
           <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
         </template>
       </el-table-column>
+      <el-table-column label="FBA条形码" align="center" prop="fbaBarCode" />
       <el-table-column
         label="创建时间"
         align="center"

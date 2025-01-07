@@ -14,6 +14,7 @@ export interface CustomRuleVO {
   taxRate: number // 税率
   hscode: string // hs编码
   logisticAttribute: string // 物流属性
+  fbaBarCode?: string // FBA条码
 }
 
 // ERP 海关规则 API
