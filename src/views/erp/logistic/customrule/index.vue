@@ -138,11 +138,11 @@
         :formatter="dateFormatter"
         width="180px"
       />
-      <el-table-column label="操作" align="center" min-width="120px">
+      <el-table-column label="操作" align="center" min-width="180px">
         <template #default="scope">
           <el-button
             link
-            type="default"
+            type="primary"
             @click="copyForm(scope.row.id)"
             v-hasPermi="['erp:custom-rule:create']"
           >
@@ -187,8 +187,8 @@ import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
-import {type, typeFind} from '@/views/erp/logistic/constant'
-import {SupplierProductApi, SupplierProductVO} from "@/api/erp/purchase/product";
+import { type, typeFind } from '@/views/erp/logistic/constant'
+import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
