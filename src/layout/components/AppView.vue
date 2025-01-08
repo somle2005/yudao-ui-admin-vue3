@@ -32,10 +32,10 @@ const reload = () => {
 provide('reload', reload)
 //endregion
 
-import { useRoute } from 'vue-router';
+import { useRoute } from 'vue-router'
 
 // Get the current route object
-const route = useRoute();
+const routeObj = useRoute()
 
 // // Create a computed property to reactively track the matched route configuration
 // const routeConfig = computed(() => route.matched);
@@ -52,18 +52,18 @@ const route = useRoute();
     ]"
   >
     <router-view v-if="routerAlive">
-<!--      作用域插槽，解构赋值子组件回传参数到Compenet和route-->
+      <!--      作用域插槽，解构赋值子组件回传参数到Compenet和route-->
       <template #default="{ Component, route }">
         <keep-alive>
           <component :is="Component" :key="route.fullPath" />
         </keep-alive>
-<!--        <div>-->
-<!--          &lt;!&ndash; Print route's fullPath &ndash;&gt;-->
-<!--          <p><strong>Current Path:</strong> {{ route.fullPath }}</p>-->
+        <!--        <div>-->
+        <!--          &lt;!&ndash; Print route's fullPath &ndash;&gt;-->
+        <!--          <p><strong>Current Path:</strong> {{ route.fullPath }}</p>-->
 
-<!--          &lt;!&ndash; Display the entire route object (for debugging or inspection) &ndash;&gt;-->
-<!--          <pre><strong>Route Configuration:</strong> {{ routeConfig }}</pre>-->
-<!--        </div>-->
+        <!--          &lt;!&ndash; Display the entire route object (for debugging or inspection) &ndash;&gt;-->
+        <!--          <pre><strong>Route Configuration:</strong> {{ routeConfig }}</pre>-->
+        <!--        </div>-->
       </template>
     </router-view>
   </section>
