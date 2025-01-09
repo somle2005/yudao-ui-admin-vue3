@@ -7,6 +7,7 @@
     v-bind="$attrs"
     @row-click="rowClick"
   >
+    <el-table-column v-if="isSelection" width="30" label="选择" type="selection" />
     <template v-for="(item, index) in tableOption" :key="index">
       <el-table-column
         v-if="item.prop && !item.action"
@@ -75,6 +76,9 @@ import { toLine } from './utils'
 import { cloneDeep } from 'lodash-es'
 import Pagination from './components/Pagination.vue'
 
+/** 基础列表 */
+defineOptions({ name: 'SmTable' })
+
 const pageAttrs = () => {
   const pageAttrs = useAttrs() || {}
   return Object.assign({ total: 0 }, pageAttrs)
@@ -91,6 +95,11 @@ const columnItem = (item) => {
 }
 
 const props = defineProps({
+  // 是否开启选择列
+  isSelection: {
+    type: Boolean,
+    default: false
+  },
   // 是否在加载中
   loading: {
     type: Boolean,
@@ -149,7 +158,7 @@ const tableData = ref<any[]>([])
 watch(
   () => props.data,
   (val) => {
-    console.log(val, '拿到data值了')
+    // console.log(val, '拿到data值了')
     if (val?.length) {
       tableData.value = cloneDeep(val).map((item: any) => {
         item.rowEdit = false
