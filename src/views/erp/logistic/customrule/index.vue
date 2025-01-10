@@ -72,7 +72,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="类型" prop="type">
+      <!-- <el-form-item label="类型" prop="type">
         <el-select class="!w-240px" v-model="queryParams.type" placeholder="请选择类型">
           <el-option
             v-for="item in type"
@@ -81,8 +81,8 @@
             :value="item.value"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item>
+      </el-form-item> -->
+      <el-form-item class="ml-70px">
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
         <el-button
@@ -120,7 +120,7 @@
         prop="supplierProductCode"
         :min-width="columnMinWidth"
       />
-      <el-table-column label="类型" align="center" prop="type" />
+      <!-- <el-table-column label="类型" align="center" prop="type" /> -->
       <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
       <el-table-column label="申报品名" align="center" prop="declaredType" />
       <el-table-column label="申报金额" align="center" prop="declaredValue" />
@@ -193,7 +193,7 @@ import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
-import { type, typeFind } from '@/views/erp/logistic/constant'
+// import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import { computeColumnMinWidth } from '@/utils/computeGeometry'
 
@@ -210,7 +210,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   countryCode: undefined,
-  type: undefined,
+  // type: undefined,
   supplierProductId: undefined,
   declaredTypeEn: undefined,
   declaredType: undefined,
@@ -230,10 +230,11 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
-    list.value = data.list.map((item: CustomRuleVO) => {
-      item.type = typeFind(item.type)
-      return item
-    })
+    list.value = data.list
+    // list.value = data.list.map((item: CustomRuleVO) => {
+    //   item.type = typeFind(item.type)
+    //   return item
+    // })
     total.value = data.total
   } finally {
     loading.value = false

@@ -4,7 +4,7 @@ import request from '@/config/axios'
 export interface CustomRuleVO {
   id?: number // 产品编号
   countryCode: string // 国家编码
-  type: string // 类型
+  // type: string // 类型
   supplierProductId: number // 供应商产品编号
   supplierProductCode: number // 供应商产品编号
   declaredTypeEn: string // 申报品名（英文）

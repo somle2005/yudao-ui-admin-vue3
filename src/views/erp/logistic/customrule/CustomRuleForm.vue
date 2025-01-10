@@ -22,7 +22,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="类型" prop="type">
+      <!-- <el-form-item label="类型" prop="type">
         <el-select v-model="formData.type" placeholder="请选择类型">
           <el-option
             v-for="item in type"
@@ -31,7 +31,7 @@
             :value="item.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="供应商产品" prop="supplierProductId">
         <el-select
           v-model="formData.supplierProductId"
@@ -133,7 +133,7 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
   countryCode: undefined,
-  type: undefined,
+  // type: undefined,
   supplierProductId: undefined,
   declaredTypeEn: undefined,
   declaredType: undefined,
@@ -146,7 +146,7 @@ const formData = ref({
 })
 const formRules = reactive({
   countryCode: [{ required: true, message: '国家编码不能为空', trigger: 'blur' }],
-  type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
+  // type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
   supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
   declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
   declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }],
@@ -204,7 +204,7 @@ const resetForm = () => {
   formData.value = {
     id: undefined,
     countryCode: undefined,
-    type: undefined,
+    // type: undefined,
     supplierProductId: undefined,
     declaredTypeEn: undefined,
     declaredType: undefined,
