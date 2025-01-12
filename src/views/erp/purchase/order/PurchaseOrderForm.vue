@@ -25,17 +25,21 @@
             />
           </el-form-item>
         </el-col>
+
+        
         <el-col :span="8">
-          <el-form-item label="关联订单" prop="orderNo">
-            <el-input v-model="formData.orderNo" readonly>
-              <template #append>
-                <el-button @click="openPurchaseRequestOrderEnableList">
-                  <Icon icon="ep:search" /> 选择
-                </el-button>
-              </template>
-            </el-input>
+          <el-form-item label="结算日期" prop="settlementDate">
+            <el-date-picker
+              v-model="formData.settlementDate"
+              type="date"
+              value-format="x"
+              placeholder="选择结算日期"
+              class="!w-1/1"
+            />
           </el-form-item>
         </el-col>
+
+
         <el-col :span="8">
           <el-form-item label="供应商" prop="supplierId">
             <el-select
@@ -54,15 +58,83 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="16">
-          <el-form-item label="备注" prop="remark">
-            <el-input
-              type="textarea"
-              v-model="formData.remark"
-              :rows="1"
-              placeholder="请输入备注"
+
+        <!-- <el-col :span="8">
+          <el-form-item label="部门" prop="departmentId">
+            <el-tree-select
+              v-model="formData.departmentId"
+              :data="deptList"
+              :props="defaultProps"
+              check-strictly
+              node-key="id"
+              placeholder="请选择部门"
+              clearable
             />
           </el-form-item>
+        </el-col> -->
+
+        <el-col :span="8">
+          <el-form-item label="采购主体编号" prop="no">
+            <el-input  v-model="formData.purchaseEntityId" placeholder="请输入采购主体编号" />
+          </el-form-item>
+        </el-col>
+
+
+        <el-col :span="8">
+          <el-form-item label="结算账户" prop="accountId">
+            <el-select
+              v-model="formData.accountId"
+              clearable
+              filterable
+              placeholder="请选择结算账户"
+              class="!w-1/1"
+            >
+              <el-option
+                v-for="item in accountList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="订金" prop="depositPrice">
+            <el-input-number
+              v-model="formData.depositPrice"
+              controls-position="right"
+              :min="0"
+              :precision="2"
+              placeholder="请输入订金"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </el-col>
+  
+
+
+
+        <!-- <el-col :span="8">
+          <el-form-item label="关联订单" prop="orderNo">
+            <el-input v-model="formData.orderNo" readonly>
+              <template #append>
+                <el-button @click="openPurchaseRequestOrderEnableList">
+                  <Icon icon="ep:search" /> 选择
+                </el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-col> -->
+      
+         <el-col :span="8">
+            <el-form-item label="备注" prop="remark">
+              <el-input
+                type="textarea"
+                v-model="formData.remark"
+                :rows="1"
+                placeholder="请输入备注"
+              />
+            </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="附件" prop="fileUrl">
@@ -70,15 +142,10 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <!-- 子表的表单 -->
-      <ContentWrap>
-        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
-          <el-tab-pane label="订单产品清单" name="item">
-            <PurchaseOrderItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
-          </el-tab-pane>
-        </el-tabs>
-      </ContentWrap>
-      <el-row :gutter="20">
+
+
+
+      <!-- <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="优惠率（%）" prop="discountPercent">
             <el-input-number
@@ -135,7 +202,18 @@
             />
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
+
+
+      <!-- 子表的表单 -->
+      <ContentWrap>
+        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
+          <el-tab-pane label="订单产品清单" name="item">
+            <PurchaseOrderItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
+          </el-tab-pane>
+        </el-tabs>
+      </ContentWrap>
+
     </el-form>
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading" v-if="!disabled">
@@ -159,6 +237,12 @@ import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import { PurchaseRequestVO } from '@/api/erp/purchase/request'
+import PurchaseRequestOrderEnableList from '@/views/erp/purchase/request/components/PurchaseRequestOrderEnableList.vue'
+import { getDeptTree } from '@/commonData'
+
+
+
+const { deptList,defaultProps }  = getDeptTree()
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -170,18 +254,54 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
+// const formData = ref({
+//   id: undefined,
+//   supplierId: undefined,
+//   accountId: undefined,
+//   orderTime: undefined,
+//   remark: undefined,
+//   fileUrl: '',
+//   discountPercent: 0,
+//   discountPrice: 0,
+//   totalPrice: 0,
+//   depositPrice: 0,
+//   items: [],
+//   no: undefined // 订单单号，后端返回
+// })
+
+/**
+1-结算账户编号-accountId
+2-交货日期-deliveryDate
+3-部门编号-departmentId
+4-定金金额 depositPrice 单位：元
+5-附件地址 fileUrl
+6-id 编号
+7-items[] 订单清单列表
+8-orderTime 采购时间
+9-purchaseEntityId 采购主体编号
+10-remark 备注
+11-settlementDate 结算日期
+12-supplierId 供应商编号
+
+ */
+
 const formData = ref({
-  id: undefined,
-  supplierId: undefined,
   accountId: undefined,
-  orderTime: undefined,
-  remark: undefined,
+  // departmentId: undefined,
+  depositPrice: 0,
   fileUrl: '',
+  id: undefined,
+  items: [],
+  orderTime: undefined,
+  purchaseEntityId: undefined,
+  remark: undefined,
+  settlementDate: undefined,
+  deliveryDate: undefined,
+  supplierId: undefined,
+
   discountPercent: 0,
   discountPrice: 0,
   totalPrice: 0,
-  depositPrice: 0,
-  items: [],
   no: undefined // 订单单号，后端返回
 })
 const formRules = reactive({
@@ -293,18 +413,24 @@ const submitForm = async () => {
 /** 重置表单 */
 const resetForm = () => {
   formData.value = {
-    id: undefined,
-    supplierId: undefined,
     accountId: undefined,
+    // departmentId: undefined,
+    depositPrice: 0,
+    fileUrl: '',
+    id: undefined,
+    items: [],
     orderTime: undefined,
+    purchaseEntityId: undefined,
     remark: undefined,
-    fileUrl: undefined,
+    settlementDate: undefined,
+    deliveryDate: undefined,
+    supplierId: undefined,
+
     discountPercent: 0,
     discountPrice: 0,
     totalPrice: 0,
-    depositPrice: 0,
-    items: []
-  }
+    no: undefined // 订单单号，后端返回
+  } as any
   formRef.value?.resetFields()
 }
 </script>

@@ -394,7 +394,8 @@ const fieldMap = {
   },
 
   depositPrice: {
-    label: '支付订金',
+    // label: '支付订金',
+    label: '订金',
     formatter: erpPriceTableColumnFormatter
   },
 
