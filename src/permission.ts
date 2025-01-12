@@ -77,6 +77,8 @@ router.beforeEach(async (to, from, next) => {
         isRelogin.show = false
         // 后端过滤菜单
         await permissionStore.generateRoutes()
+
+        console.log('路由权限数据', permissionStore.getAddRouters)
         permissionStore.getAddRouters.forEach((route) => {
           router.addRoute(route as unknown as RouteRecordRaw) // 动态添加可访问路由表
           // if (router.hasRoute(route.name)) {
