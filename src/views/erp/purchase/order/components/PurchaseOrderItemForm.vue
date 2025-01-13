@@ -410,12 +410,12 @@ const handleAdd = () => {
     // discountPercent: undefined, // 4-优惠率，百分比-需新增-放在外面还是总的-不需要
     id: undefined, // 5-订单项编号-存在
     inCount: undefined, // 6-采购入库数量 inCount?: number;-需新增
-    // ItemName: undefined, // productName7-产品名称ItemName?: string; 替换ItemName
+    // ItemName: undefined, // productName7-产品名称ItemName?: string; 替换ItemName(传productId即可)
     productId: undefined, // 8-产品编号
     productPrice: undefined, //  9-产品单价-productPrice?: number;
     productUnitName: undefined, // 10-产品单位 替换成productUnitId: number;-必填
     remark: undefined, // 11-备注-remark?: string;
-    // supplierProductId: undefined, // 12-供应商产品编号-supplierProductId: string;-需新增-必填
+    // supplierProductId: undefined, // 12-供应商产品编号-supplierProductId: string;-需新增-必填(领导说没有了)
     taxPercent: undefined, // 13-增值税税率(%)
     warehouseId: undefined, // 14-仓库编号- warehouseId?: string;
     xCode: undefined, // 15-x码
