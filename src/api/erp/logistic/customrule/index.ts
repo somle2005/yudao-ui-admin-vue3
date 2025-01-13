@@ -1,20 +1,68 @@
 import request from '@/config/axios'
 
 // ERP 海关规则 VO
+// export interface CustomRuleVO {
+//   id?: number // 产品编号
+//   countryCode: string // 国家编码
+//   // type: string // 类型
+//   supplierProductId: number // 供应商产品编号
+//   supplierProductCode: number // 供应商产品编号
+//   declaredTypeEn: string // 申报品名（英文）
+//   declaredType: string // 申报品名
+//   declaredValue: number // 申报金额
+//   declaredValueCurrencyCode: string // 申报金额币种
+//   taxRate: number // 税率
+//   hscode: string // hs编码
+//   logisticAttribute: string // 物流属性
+//   fbaBarCode?: string // FBA条码
+// }
+
+
 export interface CustomRuleVO {
-  id?: number // 产品编号
-  countryCode: string // 国家编码
-  // type: string // 类型
-  supplierProductId: number // 供应商产品编号
-  supplierProductCode: number // 供应商产品编号
-  declaredTypeEn: string // 申报品名（英文）
-  declaredType: string // 申报品名
-  declaredValue: number // 申报金额
-  declaredValueCurrencyCode: string // 申报金额币种
-  taxRate: number // 税率
-  hscode: string // hs编码
-  logisticAttribute: string // 物流属性
-  fbaBarCode?: string // FBA条码
+  /**
+   * 国家编码
+   */
+  countryCode: number;
+  /**
+   * 申报品名
+   */
+  declaredType?: string;
+  /**
+   * 申报品名（英文）
+   */
+  declaredTypeEn: string;
+  /**
+   * 申报金额
+   */
+  declaredValue: number;
+  /**
+   * 申报金额币种
+   */
+  declaredValueCurrencyCode: number;
+  /**
+   * 条形码
+   */
+  fbaBarCode?: string;
+  /**
+   * hs编码
+   */
+  hscode?: string;
+  /**
+   * 海关规则id
+   */
+  id?: number;
+  /**
+   * 物流属性
+   */
+  logisticAttribute?: number;
+  /**
+   * 产品id
+   */
+  productId: number;
+  /**
+   * 税率
+   */
+  taxRate?: number;
 }
 
 // ERP 海关规则 API

@@ -114,12 +114,14 @@
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="供应商产品编码"
         align="center"
         prop="supplierProductCode"
         :min-width="columnMinWidth"
-      />
+      /> -->
+      <el-table-column label="产品名称" align="center" prop="product-name" />
+      <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
       <!-- <el-table-column label="类型" align="center" prop="type" /> -->
       <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
       <el-table-column label="申报品名" align="center" prop="declaredType" />
@@ -230,11 +232,12 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
-    list.value = data.list
-    // list.value = data.list.map((item: CustomRuleVO) => {
-    //   item.type = typeFind(item.type)
-    //   return item
-    // })
+    list.value = data.list.map((item: any) => {
+      // item.type = typeFind(item.type)
+      item['product-name'] = item.product.name
+      item['product-barCode'] = item.product.barCode
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false

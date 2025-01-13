@@ -32,7 +32,7 @@
           />
         </el-select>
       </el-form-item> -->
-      <el-form-item label="供应商产品" prop="supplierProductId">
+      <!-- <el-form-item label="供应商产品" prop="supplierProductId">
         <el-select
           v-model="formData.supplierProductId"
           clearable
@@ -47,7 +47,27 @@
             :value="item.id"
           />
         </el-select>
+      </el-form-item> -->
+
+      <el-form-item label="产品" prop="supplierProductId">
+        <el-select
+          v-model="formData.productId"
+          clearable
+          filterable
+          placeholder="请选择产品"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in productList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
+
+
+
       <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
         <el-input v-model="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
       </el-form-item>
@@ -118,8 +138,13 @@
 <script setup lang="ts">
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import { getProductList } from '@/commonData'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
-import { type } from '../constant/index'
+// import { type } from '../constant/index'
+
+const productList = getProductList()
+
+
 /** ERP 海关规则 表单 */
 defineOptions({ name: 'CustomRuleForm' })
 
@@ -134,7 +159,8 @@ const formData = ref({
   id: undefined,
   countryCode: undefined,
   // type: undefined,
-  supplierProductId: undefined,
+  // supplierProductId: undefined,
+  productId: undefined,
   declaredTypeEn: undefined,
   declaredType: undefined,
   declaredValue: undefined,
@@ -147,7 +173,8 @@ const formData = ref({
 const formRules = reactive({
   countryCode: [{ required: true, message: '国家编码不能为空', trigger: 'blur' }],
   // type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
-  supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
+  productId: [{ required: true, message: '产品编号不能为空', trigger: 'blur' }],
+  //supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
   declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
   declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }],
   declaredTypeEn: [{ required: true, message: '申报品名（英文）不能为空', trigger: 'blur' }]
@@ -205,7 +232,8 @@ const resetForm = () => {
     id: undefined,
     countryCode: undefined,
     // type: undefined,
-    supplierProductId: undefined,
+    // supplierProductId: undefined,
+    productId: undefined,
     declaredTypeEn: undefined,
     declaredType: undefined,
     declaredValue: undefined,
