@@ -56,7 +56,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="供应商产品" prop="supplierProductId">
+      <!-- <el-form-item label="供应商产品" prop="supplierProductId">
         <el-select
           v-model="queryParams.supplierProductId"
           clearable
@@ -71,7 +71,7 @@
             :value="item.id"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="类型" prop="type">
         <el-select class="!w-240px" v-model="queryParams.type" placeholder="请选择类型">
           <el-option
@@ -109,6 +109,18 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+      <el-table-column
+        fixed="left"
+        label="图片"
+        align="center"
+        prop="primaryImageUrl"
+        width="110px"
+      >
+        <template #default="scope">
+          <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+        </template>
+      </el-table-column>
+      <el-table-column label="材料" align="center" prop="material" />
       <el-table-column label="国家编码" align="center" prop="countryCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
@@ -123,16 +135,18 @@
       <el-table-column label="产品名称" align="center" prop="product-name" />
       <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
       <!-- <el-table-column label="类型" align="center" prop="type" /> -->
-      <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
-      <el-table-column label="申报品名" align="center" prop="declaredType" />
       <!-- <el-table-column label="申报金额" align="center" prop="declaredValue" />
       <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
         </template>
       </el-table-column> -->
+
+      <el-table-column label="hs编码" align="center" prop="hsCode" />
+      <el-table-column label="申报品名(英文)" align="center" prop="declaredTypeEn" />
+      <el-table-column label="申报品名" align="center" prop="declaredType" />
+
       <el-table-column label="税率" align="center" prop="taxRate" />
-      <el-table-column label="hs编码" align="center" prop="hscode" />
       <el-table-column label="物流属性" align="center" prop="logisticAttribute">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
@@ -146,6 +160,7 @@
         :formatter="dateFormatter"
         width="180px"
       />
+    
       <el-table-column label="操作" align="center" min-width="180px">
         <template #default="scope">
           <el-button
@@ -213,7 +228,7 @@ const queryParams = reactive({
   pageSize: 10,
   countryCode: undefined,
   // type: undefined,
-  supplierProductId: undefined,
+  // supplierProductId: undefined,
   declaredTypeEn: undefined,
   declaredType: undefined,
   declaredValue: undefined,
@@ -236,6 +251,8 @@ const getList = async () => {
       // item.type = typeFind(item.type)
       item['product-name'] = item.product.name
       item['product-barCode'] = item.product.barCode
+      item.primaryImageUrl = item.product.primaryImageUrl
+      item.material = item.product.material
       return item
     })
     total.value = data.total
