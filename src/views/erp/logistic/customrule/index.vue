@@ -126,11 +126,11 @@
       <el-table-column label="申报品名（英文）" align="center" prop="declaredTypeEn" />
       <el-table-column label="申报品名" align="center" prop="declaredType" />
       <!-- <el-table-column label="申报金额" align="center" prop="declaredValue" />
-      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode"> -->
+      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="税率" align="center" prop="taxRate" />
       <el-table-column label="hs编码" align="center" prop="hscode" />
       <el-table-column label="物流属性" align="center" prop="logisticAttribute">
