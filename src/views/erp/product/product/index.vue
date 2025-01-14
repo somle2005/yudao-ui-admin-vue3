@@ -139,6 +139,12 @@
       <el-table-column label="颜色" align="center" prop="color" />
       <el-table-column label="型号" align="center" prop="model" />
       <el-table-column label="生产编号" align="center" prop="productionNo" />
+
+      <el-table-column label="包装高度" align="center" prop="packageHeight" />
+      <el-table-column label="包装长度" align="center" prop="packageLength" />
+      <el-table-column label="包装重量" align="center" prop="packageWeight" />
+      <el-table-column label="包装宽度" align="center" prop="packageWidth" />
+
       <el-table-column label="基础宽度（mm）" align="center" prop="width" />
       <el-table-column label="基础长度（mm）" align="center" prop="length" />
       <el-table-column label="基础高度（mm）" align="center" prop="height" />

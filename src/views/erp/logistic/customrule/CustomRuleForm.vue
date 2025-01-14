@@ -74,7 +74,7 @@
       <el-form-item label="申报品名" prop="declaredType">
         <el-input v-model="formData.declaredType" placeholder="请输入申报品名" />
       </el-form-item>
-      <el-form-item label="申报金额" prop="declaredValue">
+      <!-- <el-form-item label="申报金额" prop="declaredValue">
         <el-input-number
           v-model="formData.declaredValue"
           placeholder="请输入申报金额"
@@ -82,8 +82,8 @@
           :precision="1"
           class="!w-1/1"
         />
-      </el-form-item>
-      <el-form-item label="申报金额币种" prop="declaredValueCurrencyCode">
+      </el-form-item> -->
+      <!-- <el-form-item label="申报金额币种" prop="declaredValueCurrencyCode">
         <el-select
           v-model="formData.declaredValueCurrencyCode"
           placeholder="请选择申报金额币种"
@@ -97,7 +97,7 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="税率" prop="taxRate">
         <el-input-number
           v-model="formData.taxRate"
@@ -163,8 +163,8 @@ const formData = ref({
   productId: undefined,
   declaredTypeEn: undefined,
   declaredType: undefined,
-  declaredValue: undefined,
-  declaredValueCurrencyCode: undefined,
+  // declaredValue: undefined,
+  // declaredValueCurrencyCode: undefined,
   taxRate: undefined,
   hscode: undefined,
   logisticAttribute: undefined,
@@ -175,8 +175,8 @@ const formRules = reactive({
   // type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
   productId: [{ required: true, message: '产品编号不能为空', trigger: 'blur' }],
   //supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
-  declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
-  declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }],
+  // declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
+  // declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }],
   declaredTypeEn: [{ required: true, message: '申报品名（英文）不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
@@ -236,8 +236,8 @@ const resetForm = () => {
     productId: undefined,
     declaredTypeEn: undefined,
     declaredType: undefined,
-    declaredValue: undefined,
-    declaredValueCurrencyCode: undefined,
+    // declaredValue: undefined,
+    // declaredValueCurrencyCode: undefined,
     taxRate: undefined,
     hscode: undefined,
     logisticAttribute: undefined,
