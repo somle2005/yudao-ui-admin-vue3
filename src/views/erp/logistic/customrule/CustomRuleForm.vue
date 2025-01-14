@@ -56,7 +56,6 @@
           filterable
           placeholder="请选择产品"
           class="!w-240px"
-          @change="changeProduct"
         >
           <el-option
             v-for="item in productList"
@@ -67,8 +66,8 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="hs编码" prop="hsCode">
-        <el-input v-model="formData.hsCode" placeholder="请输入hs编码" />
+      <el-form-item label="hs编码" prop="hscode">
+        <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
       <el-form-item label="申报品名(英文)" prop="declaredTypeEn" >
         <el-input v-model="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
@@ -172,12 +171,11 @@ const initFormData = () => {
   declaredValue: undefined,
   declaredValueCurrencyCode: undefined,
   taxRate: undefined,
-  hscode: undefined,
   logisticAttribute: undefined,
   fbaBarCode: undefined,
+  hscode: undefined,
   declaredTypeEn: undefined,
   declaredType: undefined,
-  hsCode: undefined
 }
 }
 formData.value = initFormData()
@@ -257,12 +255,24 @@ const resetForm = () => {
   formData.value = initFormData()
   formRef.value?.resetFields()
 }
+
+watch(
+  () => formData.value.productId,
+  (val) => {
+    if(val) {
+      changeProduct(val)
+    }
+  }
+)
+
+
+// 编辑-复制调用的时候也进行监听变化
 const changeProduct = (val: any) => {
   const product = productList.value.find(item => item.id === val)
   if (!product) return
   const {categoryId} = product
   ProductCategoryApi.getProductCategory(categoryId).then(res => {
-      formData.value.hsCode = formData.value.hsCode ?? res.defaultHsCode
+      formData.value.hscode = formData.value.hsCode ?? res.defaultHsCode
       formData.value.declaredTypeEn = formData.value.declaredTypeEn ?? res.defaultDeclaredTypeEn 
       formData.value.declaredType = formData.value.declaredType ?? res.defaultDeclaredType 
     }

@@ -135,6 +135,7 @@
       <el-table-column label="产品名称" align="center" prop="product-name" />
       <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
       <!-- <el-table-column label="类型" align="center" prop="type" /> -->
+
       <!-- <el-table-column label="申报金额" align="center" prop="declaredValue" />
       <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode">
         <template #default="scope">
@@ -142,7 +143,7 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column label="hs编码" align="center" prop="hsCode" />
+      <el-table-column label="hs编码" align="center" prop="hscode" />
       <el-table-column label="申报品名(英文)" align="center" prop="declaredTypeEn" />
       <el-table-column label="申报品名" align="center" prop="declaredType" />
 
