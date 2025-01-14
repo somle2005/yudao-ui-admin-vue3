@@ -74,8 +74,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="材料（中文）" prop="material">
-            <el-input v-model="formData.material" placeholder="请输入材料（中文）" />
+          <el-form-item label="材料" prop="material">
+            <el-input v-model="formData.material" placeholder="请输入材料" />
           </el-form-item>
         </el-col>
         <el-col :span="12">

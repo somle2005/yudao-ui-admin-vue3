@@ -127,7 +127,7 @@
       <el-table-column label="产品分类" align="center" prop="categoryName" />
       <el-table-column label="部门" align="center" prop="deptName" />
       <el-table-column label="单位" align="center" prop="unitName" />
-      <el-table-column label="材料（中文）" align="center" prop="material" />
+      <el-table-column label="材料" align="center" prop="material" />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
