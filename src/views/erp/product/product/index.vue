@@ -133,7 +133,6 @@
           <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
       <el-table-column label="品牌" align="center" prop="brand" />
       <el-table-column label="系列" align="center" prop="series" />
       <el-table-column label="颜色" align="center" prop="color" />
