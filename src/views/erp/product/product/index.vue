@@ -148,6 +148,7 @@
       <el-table-column label="基础宽度（mm）" align="center" prop="width" />
       <el-table-column label="基础长度（mm）" align="center" prop="length" />
       <el-table-column label="基础高度（mm）" align="center" prop="height" />
+      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
       <el-table-column label="指导价" align="center" prop="guidePriceList">
         <template #default="scope">
           <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
