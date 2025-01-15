@@ -23,6 +23,18 @@
           />
         </el-select>
       </el-form-item>
+
+      <el-form-item label="sku（编码）" prop="barCode">
+        <el-input
+          v-model="queryParams.barCode"
+          placeholder="请输入sku（编码）"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      
+      
       <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
         <el-input
           v-model="queryParams.declaredTypeEn"
@@ -213,7 +225,7 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
-import { computeColumnMinWidth } from '@/utils/computeGeometry'
+// import { computeColumnMinWidth } from '@/utils/computeGeometry'
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -237,7 +249,8 @@ const queryParams = reactive({
   taxRate: undefined,
   hscode: undefined,
   logisticAttribute: undefined,
-  createTime: []
+  createTime: [],
+  barCode: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -314,7 +327,7 @@ const copyForm = (id?: number) => {
   openForm('create', id)
 }
 
-const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
+// const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
 /** 初始化 **/
 onMounted(() => {
   getList()
