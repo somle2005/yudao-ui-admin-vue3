@@ -330,17 +330,16 @@ import { transformTableOptions } from '@/components/SmTable/src/utils'
 
 const tableOptions = ref<TableOptions[]>([])
 const fieldMap = {
-
+  primaryImageUrl: {
+     label:"图片",
+     slot: 'primaryImageUrl',
+  },
   'product-barCode': 'SKU（编码）',
   countryCode:{
     label: '国家编码',
     slot: 'countryCode',
   },
   'product-name':'产品名称',
-  primaryImageUrl: {
-     label:"图片",
-     slot: 'primaryImageUrl',
-  },
   hscode:'hs编码',
   declaredTypeEn:'申报品名(英文)',
   declaredType:'申报品名',
