@@ -264,7 +264,7 @@
       >
 
         <template #countryCode="{ scope }">
-              <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
+              <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode || ''" />
         </template>
 
         <template #primaryImageUrl="{scope}">
@@ -272,14 +272,8 @@
         </template>
 
         <template #logisticAttribute="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
+            <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute || ''" />
         </template>
-
-
-        <!-- <template #status="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
-        </template> -->
-
         <template #action="{ scope }">
           <el-button
               link
