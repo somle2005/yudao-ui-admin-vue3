@@ -4,7 +4,7 @@
       ref="formRef"
       :model="formData"
       :rules="formRules"
-      label-width="100px"
+      label-width="130px"
       v-loading="formLoading"
     >
       <el-form-item label="供应商产品编码" prop="code">
@@ -42,7 +42,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="包装长度" prop="packageLength">
+      <el-form-item label="包装长度（cm）" prop="packageLength">
         <el-input-number
               v-model="formData.packageLength" 
               placeholder="请输入包装长度（cm）" 
@@ -50,7 +50,7 @@
               class="!w-1/1"
             />
       </el-form-item>
-      <el-form-item label="包装宽度" prop="packageWidth">
+      <el-form-item label="包装宽度（cm）" prop="packageWidth">
         <el-input-number
               v-model="formData.packageWidth" 
               placeholder="请输入包装宽度（cm）" 
@@ -58,7 +58,7 @@
               class="!w-1/1"
             />
       </el-form-item>
-      <el-form-item label="包装高度" prop="packageHeight">
+      <el-form-item label="包装高度（cm）" prop="packageHeight">
         <el-input-number
               v-model="formData.packageHeight" 
               placeholder="请输入包装高度（cm）" 
@@ -66,7 +66,7 @@
               class="!w-1/1"
             />
       </el-form-item>
-      <el-form-item label="包装重量" prop="packageWeight">
+      <el-form-item label="包装重量（kg）" prop="packageWeight">
         <el-input-number
               v-model="formData.packageWeight" 
               placeholder="请输入包装重量（kg）" 
@@ -74,7 +74,7 @@
               class="!w-1/1"
             />
       </el-form-item>
-      <el-form-item label="采购价格" prop="purchasePrice">
+      <el-form-item label="采购价格（元）" prop="purchasePrice">
         <el-input-number
               v-model="formData.purchasePrice"
               placeholder="请输入采购价格，单位：元"

@@ -37,15 +37,6 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="部门" prop="deptName">
-        <el-input
-          v-model="queryParams.deptName"
-          placeholder="请输入部门"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
       <el-form-item label="品牌" prop="brand">
         <el-input
           v-model="queryParams.brand"
@@ -211,26 +202,38 @@
           <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column fixed="left" label="SKU（编码）" align="center" prop="barCode" />
+      <el-table-column
+        fixed="left"
+        label="SKU（编码）"
+        align="center"
+        prop="barCode"
+        :min-width="columnMinWidth"
+      />
       <el-table-column label="产品名称" align="center" prop="name" />
       <el-table-column label="产品分类" align="center" prop="categoryName" />
       <el-table-column label="部门" align="center" prop="deptName" />
       <el-table-column label="单位" align="center" prop="unitName" />
-      <el-table-column label="材料（中文）" align="center" prop="material" />
+      <el-table-column label="材料" align="center" prop="material" />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
       <el-table-column label="品牌" align="center" prop="brand" />
       <el-table-column label="系列" align="center" prop="series" />
       <el-table-column label="颜色" align="center" prop="color" />
       <el-table-column label="型号" align="center" prop="model" />
       <el-table-column label="生产编号" align="center" prop="productionNo" />
+
+      <el-table-column label="包装高度" align="center" prop="packageHeight" />
+      <el-table-column label="包装长度" align="center" prop="packageLength" />
+      <el-table-column label="包装重量" align="center" prop="packageWeight" />
+      <el-table-column label="包装宽度" align="center" prop="packageWidth" />
+
       <el-table-column label="基础宽度（mm）" align="center" prop="width" />
       <el-table-column label="基础长度（mm）" align="center" prop="length" />
       <el-table-column label="基础高度（mm）" align="center" prop="height" />
+      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
       <el-table-column label="指导价" align="center" prop="guidePriceList">
         <template #default="scope">
           <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
@@ -294,6 +297,7 @@ import Pagination from '../../../../components/Pagination/index.vue'
 import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
+import { computeColumnMinWidth } from '@/utils/computeGeometry'
 
 import { TableOptions } from '@/components/SmTable/src/types'
 import { transformTableOptions } from '@/components/SmTable/src/utils'
@@ -391,8 +395,7 @@ let queryParams = reactive({
   primaryImageUrl: undefined,
   guidePriceList: [],
   color: undefined,
-  brand: undefined,
-  deptName: undefined
+  brand: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -455,6 +458,8 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
+
+const columnMinWidth = computeColumnMinWidth(list, 'barCode')
 
 /** 初始化 **/
 onMounted(async () => {

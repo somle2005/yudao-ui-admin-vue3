@@ -4,7 +4,7 @@
       ref="formRef"
       :model="formData"
       :rules="formRules"
-      label-width="100px"
+      label-width="150px"
       v-loading="formLoading"
     >
       <el-form-item label="上级编号" prop="parentId">
@@ -17,6 +17,7 @@
           placeholder="请选择上级编号"
         />
       </el-form-item>
+
       <el-form-item label="名称" prop="name">
         <el-input v-model="formData.name" placeholder="请输入名称" />
       </el-form-item>
@@ -24,7 +25,8 @@
         <el-input v-model="formData.code" placeholder="请输入编码" />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input v-model="formData.sort" placeholder="请输入排序" />
+        <!-- <el-input v-model="formData.sort" placeholder="请输入排序" /> -->
+        <el-input-number v-model="formData.sort" :min="0" controls-position="right" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-radio-group v-model="formData.status">
@@ -36,6 +38,16 @@
             {{ dict.label }}
           </el-radio>
         </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="默认hs编码" prop="defaultHsCode">
+        <el-input v-model="formData.defaultHsCode" placeholder="请输入默认hs编码" />
+      </el-form-item>
+      <el-form-item label="默认申报品名(英文)" prop="defaultDeclaredTypeEn">
+        <el-input v-model="formData.defaultDeclaredTypeEn" placeholder="请输入默认申报品名（英文）" />
+      </el-form-item>
+      <el-form-item label="默认申报品名" prop="defaultDeclaredType">
+        <el-input v-model="formData.defaultDeclaredType" placeholder="请输入默认申报品名" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -60,14 +72,26 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
-  id: undefined,
-  parentId: undefined,
-  name: undefined,
-  code: undefined,
-  sort: undefined,
-  status: CommonStatusEnum.ENABLE
-})
+const formData = ref()
+
+const initFormData = () => {
+  return {
+    id: undefined,
+    parentId: undefined,
+    name: undefined,
+    code: undefined,
+    sort: undefined,
+    status: CommonStatusEnum.ENABLE,
+    // hsCode: undefined,
+    // declaredTypeEn: undefined,
+    // declaredType: undefined
+    defaultHsCode: undefined,
+    defaultDeclaredTypeEn: undefined,
+    defaultDeclaredType: undefined
+  }
+}
+formData.value = initFormData()
+
 const formRules = reactive({
   parentId: [{ required: true, message: '上级编号不能为空', trigger: 'blur' }],
   name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
@@ -123,14 +147,16 @@ const submitForm = async () => {
 
 /** 重置表单 */
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    parentId: undefined,
-    name: undefined,
-    code: undefined,
-    sort: undefined,
-    status: CommonStatusEnum.ENABLE
-  }
+  // formData.value = {
+  //   id: undefined,
+  //   parentId: undefined,
+  //   name: undefined,
+  //   code: undefined,
+  //   sort: undefined,
+  //   status: CommonStatusEnum.ENABLE
+  // }
+
+  formData.value = initFormData()
   formRef.value?.resetFields()
 }
 

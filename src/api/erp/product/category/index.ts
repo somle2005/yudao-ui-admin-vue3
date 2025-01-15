@@ -8,6 +8,9 @@ export interface ProductCategoryVO {
   code: string // 分类编码
   sort: number // 分类排序
   status: number // 开启状态
+  hsCode?:string // 海关编码
+  declaredTypeEn?:string // 申报品名（英文）
+  declaredType?:string //申报品名
 }
 
 // ERP 产品分类 API
