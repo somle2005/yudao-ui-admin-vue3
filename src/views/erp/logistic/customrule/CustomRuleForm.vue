@@ -57,25 +57,39 @@
           placeholder="请选择产品"
           class="!w-240px"
         >
+          <!-- <template #label="{ barCode, name }">
+            <div class="product-option">
+              <div class="item">{{ barCode }}</div>
+              <div class="item">{{ name }}</div>
+            </div>
+          </template> -->
+
           <el-option
             v-for="item in productList"
             :key="item.id"
             :label="item.label"
             :value="item.id"
-          />
+          >
+            <template #default>
+              <div class="product-option">
+                <div class="item">{{ item.barCode }} </div>
+                <div class="item-span w-4em" ></div>
+                <div class="item">{{ item.name }}</div>
+              </div>
+            </template>
+          </el-option>
         </el-select>
       </el-form-item>
 
       <el-form-item label="hs编码" prop="hscode">
         <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
-      <el-form-item label="申报品名(英文)" prop="declaredTypeEn" >
+      <el-form-item label="申报品名(英文)" prop="declaredTypeEn">
         <el-input v-model="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
       </el-form-item>
       <el-form-item label="申报品名" prop="declaredType">
         <el-input v-model="formData.declaredType" placeholder="请输入申报品名" />
       </el-form-item>
-
 
       <el-form-item label="申报金额" prop="declaredValue">
         <el-input-number
@@ -85,8 +99,8 @@
           :precision="1"
           class="!w-1/1"
         />
-      </el-form-item> 
-       <el-form-item label="申报金额币种" prop="declaredValueCurrencyCode">
+      </el-form-item>
+      <el-form-item label="申报金额币种" prop="declaredValueCurrencyCode">
         <el-select
           v-model="formData.declaredValueCurrencyCode"
           placeholder="请选择申报金额币种"
@@ -100,7 +114,7 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item> 
+      </el-form-item>
       <el-form-item label="税率" prop="taxRate">
         <el-input-number
           v-model="formData.taxRate"
@@ -146,9 +160,7 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 // import { type } from '../constant/index'
 import { ProductCategoryApi } from '@/api/erp/product/category'
 
-
-const productList:any = getProductList()
-
+const productList: any = getProductList()
 
 /** ERP 海关规则 表单 */
 defineOptions({ name: 'CustomRuleForm' })
@@ -163,20 +175,20 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref()
 const initFormData = () => {
   return {
-  id: undefined,
-  countryCode: undefined,
-  // type: undefined,
-  // supplierProductId: undefined,
-  productId: undefined,
-  declaredValue: undefined,
-  declaredValueCurrencyCode: undefined,
-  taxRate: undefined,
-  logisticAttribute: undefined,
-  fbaBarCode: undefined,
-  hscode: undefined,
-  declaredTypeEn: undefined,
-  declaredType: undefined,
-}
+    id: undefined,
+    countryCode: undefined,
+    // type: undefined,
+    // supplierProductId: undefined,
+    productId: undefined,
+    declaredValue: undefined,
+    declaredValueCurrencyCode: undefined,
+    taxRate: undefined,
+    logisticAttribute: undefined,
+    fbaBarCode: undefined,
+    hscode: undefined,
+    declaredTypeEn: undefined,
+    declaredType: undefined
+  }
 }
 formData.value = initFormData()
 const formRules = reactive({
@@ -185,7 +197,7 @@ const formRules = reactive({
   productId: [{ required: true, message: '产品编号不能为空', trigger: 'blur' }],
   //supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
   declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
-  declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }],
+  declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }]
   // declaredTypeEn: [{ required: true, message: '申报品名（英文）不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
@@ -259,25 +271,31 @@ const resetForm = () => {
 watch(
   () => formData.value.productId,
   (val) => {
-    if(val) {
+    if (val) {
       changeProduct(val)
     }
   }
 )
 
-
 // 编辑-复制调用的时候也进行监听变化
 const changeProduct = (val: any) => {
-  const product = productList.value.find(item => item.id === val)
+  const product = productList.value.find((item) => item.id === val)
   if (!product) return
-  const {categoryId} = product
-  ProductCategoryApi.getProductCategory(categoryId).then(res => {
+  const { categoryId } = product
+  ProductCategoryApi.getProductCategory(categoryId)
+    .then((res) => {
       formData.value.hscode = formData.value.hsCode ?? res.defaultHsCode
-      formData.value.declaredTypeEn = formData.value.declaredTypeEn ?? res.defaultDeclaredTypeEn 
-      formData.value.declaredType = formData.value.declaredType ?? res.defaultDeclaredType 
-    }
-  ).catch(e=> {
-    console.log(e,'报错了')
-  })
+      formData.value.declaredTypeEn = formData.value.declaredTypeEn ?? res.defaultDeclaredTypeEn
+      formData.value.declaredType = formData.value.declaredType ?? res.defaultDeclaredType
+    })
+    .catch((e) => {
+      console.log(e, '报错了')
+    })
 }
 </script>
+<style lang="scss" scoped>
+.product-option {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
