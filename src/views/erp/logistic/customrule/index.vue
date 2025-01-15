@@ -152,7 +152,7 @@
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
+<!--  <ContentWrap>
     <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
 
       <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
@@ -176,22 +176,22 @@
       </el-table-column>
       <el-table-column label="材料" align="center" prop="material" />
 
-      <!-- <el-table-column
+      <!~~ <el-table-column
         label="供应商产品编码"
         align="center"
         prop="supplierProductCode"
         :min-width="columnMinWidth"
-      /> -->
+      /> ~~>
 
     
-      <!-- <el-table-column label="类型" align="center" prop="type" /> -->
+      <!~~ <el-table-column label="类型" align="center" prop="type" /> ~~>
 
-      <!-- <el-table-column label="申报金额" align="center" prop="declaredValue" />
+      <!~~ <el-table-column label="申报金额" align="center" prop="declaredValue" />
       <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
         </template>
-      </el-table-column> -->
+      </el-table-column> ~~>
 
       <el-table-column label="hs编码" align="center" prop="hscode" />
       <el-table-column label="申报品名(英文)" align="center" prop="declaredTypeEn" />
@@ -241,14 +241,79 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页 -->
+    <!~~ 分页 ~~>
     <Pagination
       :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
     />
+  </ContentWrap>-->
+
+  <!-- isSelection -->
+  <ContentWrap>
+    <SmTable  
+        border
+        :loading="loading"
+        :options="tableOptions"
+        :data="list"
+        :total="total"
+        v-model:currentPage="queryParams.pageNo"
+        v-model:pageSize="queryParams.pageSize"
+        @pagination="getList"
+      >
+
+        <template #countryCode="{ scope }">
+              <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
+        </template>
+
+        <template #primaryImageUrl="{scope}">
+            <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+        </template>
+
+        <template #logisticAttribute="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
+        </template>
+
+
+        <!-- <template #status="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
+        </template> -->
+
+        <template #action="{ scope }">
+          <el-button
+              link
+              type="primary"
+              @click="copyForm(scope.row.id)"
+              v-hasPermi="['erp:custom-rule:create']"
+            >
+              复制
+            </el-button>
+            <el-button
+              link
+              type="primary"
+              @click="openForm('update', scope.row.id)"
+              v-hasPermi="['erp:custom-rule:update']"
+            >
+              编辑
+            </el-button>
+            <el-button
+              link
+              type="danger"
+              @click="handleDelete(scope.row.id)"
+              v-hasPermi="['erp:custom-rule:delete']"
+            >
+              删除
+            </el-button>
+        </template>
+    </SmTable>
   </ContentWrap>
+
+
+
+
+
+
 
   <!-- 表单弹窗：添加/修改 -->
   <CustomRuleForm ref="formRef" @success="getList" />
@@ -263,8 +328,47 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
-import { cloneDeep } from 'lodash-es'
 // import { computeColumnMinWidth } from '@/utils/computeGeometry'
+import { TableOptions } from '@/components/SmTable/src/types'
+import { transformTableOptions } from '@/components/SmTable/src/utils'
+
+
+
+const tableOptions = ref<TableOptions[]>([])
+const fieldMap = {
+
+  'product-barCode': 'SKU（编码）',
+  countryCode:{
+    label: '国家编码',
+    slot: 'countryCode',
+  },
+  'product-name':'产品名称',
+  primaryImageUrl: {
+     label:"图片",
+     slot: 'primaryImageUrl',
+  },
+  hscode:'hs编码',
+  declaredTypeEn:'申报品名(英文)',
+  declaredType:'申报品名',
+  taxRate:'税率',
+  logisticAttribute: {
+    label: '物流属性',
+    slot: 'logisticAttribute',
+  },
+  fbaBarCode:'FBA条形码',
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width:"180px"
+  },
+  action: {
+    label: '操作',
+    fixed: 'right',
+    action: true,
+    width: '180px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap)
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
