@@ -33,6 +33,39 @@
           class="!w-240px"
         />
       </el-form-item>
+
+      <el-form-item label="hs编码" prop="hscode">
+        <el-input
+          v-model="queryParams.hscode"
+          placeholder="请输入hs编码"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+
+      <el-form-item label="FBA条形码" prop="fbaBarCode">
+        <el-input
+          v-model="queryParams.fbaBarCode"
+          placeholder="请输入FBA条形码"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+
+      <el-form-item label="创建时间" prop="createTimeStr">
+        <el-date-picker
+            v-model="queryParams.createTime"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            type="daterange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
+            class="!w-240px"
+            @change="createTimeChange"
+          />
+      </el-form-item>
       
       
       <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
@@ -120,9 +153,18 @@
 
   <!-- 列表 -->
   <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+    <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+
+      <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
+      <el-table-column label="国家编码" align="center" prop="countryCode">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
+        </template>
+      </el-table-column>
+      <el-table-column label="产品名称" align="center" prop="product-name" />
+      
+      
       <el-table-column
-        fixed="left"
         label="图片"
         align="center"
         prop="primaryImageUrl"
@@ -133,19 +175,15 @@
         </template>
       </el-table-column>
       <el-table-column label="材料" align="center" prop="material" />
-      <el-table-column label="国家编码" align="center" prop="countryCode">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
-        </template>
-      </el-table-column>
+
       <!-- <el-table-column
         label="供应商产品编码"
         align="center"
         prop="supplierProductCode"
         :min-width="columnMinWidth"
       /> -->
-      <el-table-column label="产品名称" align="center" prop="product-name" />
-      <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
+
+    
       <!-- <el-table-column label="类型" align="center" prop="type" /> -->
 
       <!-- <el-table-column label="申报金额" align="center" prop="declaredValue" />
@@ -225,6 +263,7 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import { cloneDeep } from 'lodash-es'
 // import { computeColumnMinWidth } from '@/utils/computeGeometry'
 
 /** ERP 海关规则 列表 */
@@ -247,10 +286,11 @@ const queryParams = reactive({
   declaredValue: undefined,
   declaredValueCurrencyCode: undefined,
   taxRate: undefined,
-  hscode: undefined,
   logisticAttribute: undefined,
-  createTime: [],
-  barCode: undefined
+  barCode: undefined,
+  hscode: undefined,
+  createTime: [] as string[],
+  fbaBarCode: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -328,6 +368,13 @@ const copyForm = (id?: number) => {
 }
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
+
+const createTimeChange = (val:any) => {
+  console.log(val,'时间选择')
+  queryParams.createTime = val
+  handleQuery()
+}
+
 /** 初始化 **/
 onMounted(() => {
   getList()
