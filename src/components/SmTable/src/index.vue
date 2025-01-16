@@ -8,6 +8,7 @@
     @row-click="rowClick"
   >
     <el-table-column v-if="isSelection" width="30" label="选择" type="selection" />
+
     <template v-for="(item, index) in tableOption" :key="index">
       <el-table-column
         v-if="item.prop && !item.action"
@@ -48,6 +49,20 @@
             </template>
           </template>
         </template>
+        <!-- <template v-if="item.slotHeader" #header>
+          <el-dropdown trigger="click" @command="handleCommand">
+            <span>日期（{{ command }}）<i class="el-icon-arrow-down el-icon--right" /></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                v-for="item in headerSelect"
+                :key="item.value"
+                :command="item.text"
+              >
+                {{ item.text }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template> -->
       </el-table-column>
     </template>
     <el-table-column
