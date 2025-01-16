@@ -30,7 +30,23 @@ export interface ProductVO {
   color: string // 颜色
   brand: string // 品牌
   patentCountryCodeList: [], //专利国别代码
-  patentType: number,   //专利类型
+  patentType: number   //专利类型
+   /**
+     * 包装高度（整数，没有小数点，单位mm，必须为正数）
+     */
+   packageHeight: number
+   /**
+    * 包装长度（整数，没有小数点，单位mm，必须为正数）
+    */
+   packageLength: number
+   /**
+    * 包装重量（保留至小数点后两位，单位kg，必须为非负数）
+    */
+   packageWeight: number
+   /**
+    * 包装宽度（整数，没有小数点，单位mm，必须为正数）
+    */
+   packageWidth: number
 }
 
 // ERP 产品 API
