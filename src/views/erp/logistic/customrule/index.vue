@@ -150,8 +150,7 @@
     </el-form>
   </ContentWrap>
 
-  <!-- 表格配置 -->
-  <SmTableField v-model="tableFieldConfigList" :tableList="tableFieldColumnList" :iconSize="25" @update:model-value="saveTableFieldConfig" @restore-value="dealTableField" />
+ 
 
   <!-- 列表 -->
   <!--  <ContentWrap>
@@ -252,6 +251,11 @@
     />
   </ContentWrap>-->
 
+
+
+   <!-- 表格配置 -->
+   <SmTableField  :tableList="tableFieldColumnList" :iconSize="25"  @confirm="tableFieldConfigConfirm" />
+
   <!-- isSelection -->
   <ContentWrap>
     <SmTable
@@ -321,12 +325,14 @@ import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 // import { computeColumnMinWidth } from '@/utils/computeGeometry'
-import { TableOptions } from '@/components/SmTable/src/types'
-import { transformTableOptions } from '@/components/SmTable/src/utils'
+import { useTableData } from '@/components/SmTable/src/utils'
 import { useSmTableField } from '@/components/SmTableField/src/utils'
 import { cloneDeep } from 'lodash-es'
 
-const tableOptions = ref<TableOptions[]>([])
+
+const { tableOptions,allTableOptions, transformTableOptions, dealTableField} =  useTableData()
+
+
 const fieldMap = {
   primaryImageUrl: {
     label: '图片',
@@ -360,31 +366,23 @@ const fieldMap = {
   }
 }
 tableOptions.value = transformTableOptions(fieldMap)
+allTableOptions.value = cloneDeep(tableOptions.value)
 
-const { tableFieldConfigList, tableFieldColumnList,saveTableFieldConfig,dealTableOption } = useSmTableField(cloneDeep(tableOptions.value))
+const { tableFieldColumnList,saveTableFieldConfig } = useSmTableField(cloneDeep(tableOptions.value))
 
-tableOptions.value = dealTableOption(tableOptions.value)
 console.log(tableFieldColumnList.value, 'tableFieldColumnList.value')
 console.log(tableOptions.value, 'tableOptions.value')
 
-const dealTableField = (data) => {
-  console.log(data,'获取原先传递的数据格式')
+const tableFieldConfigConfirm = (data) => {
+  saveTableFieldConfig(data)
+  tableFieldColumnList.value = data
+  // 处理表格数据 
+  console.log('tableFieldConfigConfirm',data)
+  tableOptions.value = dealTableField(data,allTableOptions.value )
 }
 
-// interface TableOptionsConfig {
-//   originName: string
-//   prop: string
-//   width: string
-//   isEnable: string
-//   sort: string
-// }
-// {
-//         originName: 'title',
-//         prop: 'key',
-//         width: 'width',
-//         isEnable: 'isEnable',
-//         sort: 'sort'
-//       }
+
+
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })

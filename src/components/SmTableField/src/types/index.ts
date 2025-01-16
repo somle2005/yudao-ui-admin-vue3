@@ -16,6 +16,7 @@ interface TableOptionsProps {
   width?: string | number
   isEnable?: boolean
   sort?: number
+  fixed?: string
 }
 
 /**
@@ -32,6 +33,7 @@ interface TableOptionsConfigProps {
   width: string | number
   isEnable: boolean
   sort: number
+  fixed: string
 }
 
 /**
@@ -48,4 +50,5 @@ interface TableOptionsConfig {
   width: string
   isEnable: string
   sort: string
+  fixed: string
 }

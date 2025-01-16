@@ -158,7 +158,6 @@ const tableData = ref<any[]>([])
 watch(
   () => props.data,
   (val) => {
-    // console.log(val, '拿到data值了')
     if (val?.length) {
       tableData.value = cloneDeep(val).map((item: any) => {
         item.rowEdit = false
