@@ -9,7 +9,6 @@
     "prod": "vite --mode prod",
     "dev": "vite --mode env.local",
     "dev-server": "vite --mode dev",
-    "prod": "vite --mode prod",
     "ts:check": "vue-tsc --noEmit",
     "build:local": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build",
     "build:dev": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build --mode dev",

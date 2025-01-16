@@ -56,18 +56,17 @@
 
       <el-form-item label="创建时间" prop="createTimeStr">
         <el-date-picker
-            v-model="queryParams.createTime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            type="daterange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-            class="!w-240px"
-            @change="createTimeChange"
-          />
+          v-model="queryParams.createTime"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          type="daterange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
+          class="!w-240px"
+          @change="createTimeChange"
+        />
       </el-form-item>
-      
-      
+
       <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
         <el-input
           v-model="queryParams.declaredTypeEn"
@@ -151,8 +150,11 @@
     </el-form>
   </ContentWrap>
 
+  <!-- 表格配置 -->
+  <SmTableField v-model="tableFieldConfigList" :tableList="tableFieldColumnList" :iconSize="25" @update:model-value="saveTableFieldConfig" @restore-value="dealTableField" />
+
   <!-- 列表 -->
-<!--  <ContentWrap>
+  <!--  <ContentWrap>
     <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
 
       <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
@@ -252,62 +254,58 @@
 
   <!-- isSelection -->
   <ContentWrap>
-    <SmTable  
-        border
-        :loading="loading"
-        :options="tableOptions"
-        :data="list"
-        :total="total"
-        v-model:currentPage="queryParams.pageNo"
-        v-model:pageSize="queryParams.pageSize"
-        @pagination="getList"
-      >
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
+      :total="total"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
+      @pagination="getList"
+    >
+      <template #countryCode="{ scope }">
+        <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode || ''" />
+      </template>
 
-        <template #countryCode="{ scope }">
-              <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode || ''" />
-        </template>
+      <template #primaryImageUrl="{ scope }">
+        <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+      </template>
 
-        <template #primaryImageUrl="{scope}">
-            <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
-        </template>
-
-        <template #logisticAttribute="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute || ''" />
-        </template>
-        <template #action="{ scope }">
-          <el-button
-              link
-              type="primary"
-              @click="copyForm(scope.row.id)"
-              v-hasPermi="['erp:custom-rule:create']"
-            >
-              复制
-            </el-button>
-            <el-button
-              link
-              type="primary"
-              @click="openForm('update', scope.row.id)"
-              v-hasPermi="['erp:custom-rule:update']"
-            >
-              编辑
-            </el-button>
-            <el-button
-              link
-              type="danger"
-              @click="handleDelete(scope.row.id)"
-              v-hasPermi="['erp:custom-rule:delete']"
-            >
-              删除
-            </el-button>
-        </template>
+      <template #logisticAttribute="{ scope }">
+        <dict-tag
+          :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE"
+          :value="scope.row.logisticAttribute || ''"
+        />
+      </template>
+      <template #action="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="copyForm(scope.row.id)"
+          v-hasPermi="['erp:custom-rule:create']"
+        >
+          复制
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:custom-rule:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['erp:custom-rule:delete']"
+        >
+          删除
+        </el-button>
+      </template>
     </SmTable>
   </ContentWrap>
-
-
-
-
-
-
 
   <!-- 表单弹窗：添加/修改 -->
   <CustomRuleForm ref="formRef" @success="getList" />
@@ -325,34 +323,34 @@ import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/produc
 // import { computeColumnMinWidth } from '@/utils/computeGeometry'
 import { TableOptions } from '@/components/SmTable/src/types'
 import { transformTableOptions } from '@/components/SmTable/src/utils'
-
-
+import { useSmTableField } from '@/components/SmTableField/src/utils'
+import { cloneDeep } from 'lodash-es'
 
 const tableOptions = ref<TableOptions[]>([])
 const fieldMap = {
   primaryImageUrl: {
-     label:"图片",
-     slot: 'primaryImageUrl',
+    label: '图片',
+    slot: 'primaryImageUrl'
   },
   'product-barCode': 'SKU（编码）',
-  countryCode:{
+  countryCode: {
     label: '国家编码',
-    slot: 'countryCode',
+    slot: 'countryCode'
   },
-  'product-name':'产品名称',
-  hscode:'hs编码',
-  declaredTypeEn:'申报品名(英文)',
-  declaredType:'申报品名',
-  taxRate:'税率',
+  'product-name': '产品名称',
+  hscode: 'hs编码',
+  declaredTypeEn: '申报品名(英文)',
+  declaredType: '申报品名',
+  taxRate: '税率',
   logisticAttribute: {
     label: '物流属性',
-    slot: 'logisticAttribute',
+    slot: 'logisticAttribute'
   },
-  fbaBarCode:'FBA条形码',
+  fbaBarCode: 'FBA条形码',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
-    width:"180px"
+    width: '180px'
   },
   action: {
     label: '操作',
@@ -362,6 +360,31 @@ const fieldMap = {
   }
 }
 tableOptions.value = transformTableOptions(fieldMap)
+
+const { tableFieldConfigList, tableFieldColumnList,saveTableFieldConfig,dealTableOption } = useSmTableField(cloneDeep(tableOptions.value))
+
+tableOptions.value = dealTableOption(tableOptions.value)
+console.log(tableFieldColumnList.value, 'tableFieldColumnList.value')
+console.log(tableOptions.value, 'tableOptions.value')
+
+const dealTableField = (data) => {
+  console.log(data,'获取原先传递的数据格式')
+}
+
+// interface TableOptionsConfig {
+//   originName: string
+//   prop: string
+//   width: string
+//   isEnable: string
+//   sort: string
+// }
+// {
+//         originName: 'title',
+//         prop: 'key',
+//         width: 'width',
+//         isEnable: 'isEnable',
+//         sort: 'sort'
+//       }
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
@@ -466,8 +489,8 @@ const copyForm = (id?: number) => {
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
 
-const createTimeChange = (val:any) => {
-  console.log(val,'时间选择')
+const createTimeChange = (val: any) => {
+  console.log(val, '时间选择')
   queryParams.createTime = val
   handleQuery()
 }

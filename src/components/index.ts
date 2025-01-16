@@ -4,6 +4,7 @@ import { SmTable } from './SmTable'
 import { SmForm } from './SmForm'
 import { ElTreeSelect } from 'element-plus'
 import { SmUpload } from './SmUpload'
+import { SmTableField } from './SmTableField'
 
 export const setupGlobCom = (app: App<Element>): void => {
   const componentsMap = {
@@ -11,7 +12,8 @@ export const setupGlobCom = (app: App<Element>): void => {
     ElTreeSelect: ElTreeSelect,
     SmTable: SmTable,
     SmForm: SmForm,
-    SmUpload: SmUpload
+    SmUpload: SmUpload,
+    SmTableField:SmTableField
   }
   for (const key in componentsMap) {
     app.component(key, componentsMap[key])
