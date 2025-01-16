@@ -305,10 +305,6 @@
 
 
 
-
-
-
-
   <!-- 表单弹窗：添加/修改 -->
   <CustomRuleForm ref="formRef" @success="getList" />
 </template>
@@ -322,13 +318,12 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
-// import { computeColumnMinWidth } from '@/utils/computeGeometry'
-import { TableOptions } from '@/components/SmTable/src/types'
-import { transformTableOptions } from '@/components/SmTable/src/utils'
+import { useTableData } from '@/components/SmTable/src/utils'
 
 
 
-const tableOptions = ref<TableOptions[]>([])
+const { tableOptions,transformTableOptions} =  useTableData()
+
 const fieldMap = {
   primaryImageUrl: {
      label:"图片",

@@ -20,3 +20,30 @@ export const transformTableOptions = (fieldMap: { [key: string]: any }) => {
   }
   return tableOption
 }
+
+export const dealTableField = (data,tableOptions) => {
+  // 传递过来的数据已经排好序了
+  const list = data.filter((item) => item.isEnable)
+  const filterData:any = []
+  list.forEach((item) => {
+      const source = tableOptions.find((option) => option.prop === item.prop)
+      if(!source)  return
+      const obj = Object.assign(source, item)
+      filterData.push(obj)
+  })
+  console.log(data,'获取原先传递的数据格式-tableOptions数据', tableOptions)
+  console.log(filterData,'filterData')
+  return filterData
+}
+
+export const useTableData = () => {
+  const tableOptions = ref<TableOptions[]>([])
+  const allTableOptions = ref<TableOptions[]>([])
+
+  return {
+    allTableOptions,
+    tableOptions,
+    transformTableOptions,
+    dealTableField
+  }
+}
