@@ -12,6 +12,7 @@ const props = defineProps({
         originName: 'label',
         prop: 'prop',
         width: 'width',
+        align: 'align',
         isEnable: 'isEnable',
         sort: 'sort',
         fixed: 'fixed'
@@ -41,6 +42,24 @@ const columnData = [
   {
     prop: 'width',
     label: '宽度'
+  },
+  {
+    prop: 'align',
+    label: '居中方式',
+    data: [
+      {
+        label: '左',
+        value: 'left'
+      },
+      {
+        label: '中',
+        value: 'center'
+      },
+      {
+        label: '右',
+        value: 'right'
+      }
+    ]
   },
   {
     prop: 'isEnable',
@@ -198,6 +217,16 @@ watch(
             </template>
             <template v-else-if="item.prop === 'isEnable'" #default="{ row }">
               <ElCheckbox v-model="row.isEnable" />
+            </template>
+            <template v-else-if="item.prop === 'align'" #default="{ row }">
+              <el-select v-model="row.align" clearable placeholder="请选择左右固定">
+                <el-option
+                  v-for="dict in item.data"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
             </template>
             <template v-else-if="item.prop === 'fixed'" #default="{ row }">
               <el-select v-model="row.fixed" clearable placeholder="请选择左右固定">

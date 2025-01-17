@@ -3,6 +3,7 @@ export const DEFAULT_TABLE_CONFIG_VAl = {
   prop: '',
   // width: '120px',
   // 'min-width': '120px',
+  align: 'center',
   isEnable: true,
   sort: 0, // 后期会排序
 }

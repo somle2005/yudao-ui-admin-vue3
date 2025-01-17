@@ -14,6 +14,7 @@ interface TableOptionsProps {
   originName?: string
   prop?: string
   width?: string | number
+  align?: 'left' | 'center' | 'right',
   isEnable?: boolean
   sort?: number
   fixed?: string
@@ -31,6 +32,7 @@ interface TableOptionsConfigProps {
   originName: string
   prop: string
   width: string | number
+  align: 'left' | 'center' | 'right',
   isEnable: boolean
   sort: number
   fixed: string
@@ -48,6 +50,7 @@ interface TableOptionsConfig {
   originName: string
   prop: string
   width: string
+  align: 'left' | 'center' | 'right',
   isEnable: string
   sort: string
   fixed: string
