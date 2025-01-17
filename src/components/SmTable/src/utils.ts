@@ -31,8 +31,6 @@ export const dealTableField = (data,tableOptions) => {
       const obj = Object.assign(source, item)
       filterData.push(obj)
   })
-  console.log(data,'获取原先传递的数据格式-tableOptions数据', tableOptions)
-  console.log(filterData,'filterData')
   return filterData
 }
 

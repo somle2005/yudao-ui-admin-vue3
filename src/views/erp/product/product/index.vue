@@ -103,7 +103,7 @@
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
+  <!--  <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
       <el-table-column
         fixed="left"
@@ -185,13 +185,61 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页 -->
+    <!~~ 分页 ~~>
     <Pagination
       :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
     />
+  </ContentWrap>-->
+
+  <!-- 列表 -->
+  <ContentWrap>
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
+      :total="total"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
+      @pagination="getList"
+    >
+      <template #primaryImageUrl="{ scope }">
+        <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+      </template>
+
+      <template #status="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
+      </template>
+
+      <template #guidePriceList="{ scope }">
+        <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
+          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="guidePrice.code" />
+          <el-tag class="ml-5px">{{ guidePrice.price }}</el-tag>
+        </div>
+      </template>
+
+      <template #action="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:product:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['erp:product:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -206,11 +254,12 @@ import ProductForm from './ProductForm.vue'
 import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
 import { defaultProps, handleTree } from '@/utils/tree'
 import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
-import Pagination from '../../../../components/Pagination/index.vue'
+// import Pagination from '../../../../components/Pagination/index.vue'
 import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
 import { computeColumnMinWidth } from '@/utils/computeGeometry'
+import { useTableData } from '@/components/SmTable/src/utils'
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
@@ -310,6 +359,61 @@ const handleExport = async () => {
 }
 
 const columnMinWidth = computeColumnMinWidth(list, 'barCode')
+
+const { tableOptions, transformTableOptions } = useTableData()
+const fieldMap = {
+  primaryImageUrl: {
+    label: '主图',
+    slot: 'primaryImageUrl',
+    fixed: 'left',
+    width: '110px'
+  },
+  barCode: {
+    label: 'SKU（编码）',
+    fixed: 'left',
+    'min-width': columnMinWidth
+  },
+  name: '产品名称',
+  categoryName: '产品分类',
+  deptName: '部门',
+  unitName: '单位',
+  material: '材料',
+  status: {
+    label: '状态',
+    slot: 'status'
+  },
+  brand: '品牌',
+  series: '系列',
+  color: '颜色',
+  model: '型号',
+  productionNo: '生产编号',
+  packageHeight: '包装高度',
+  packageLength: '包装长度',
+  packageWeight: '包装重量',
+  packageWidth: '包装宽度',
+
+  width: '基础宽度（mm）',
+  length: '基础长度（mm）',
+  height: '基础高度（mm）',
+  weight: '基础重量（kg）',
+  guidePriceList: {
+    label: '指导价',
+    slot: 'guidePriceList'
+  },
+  remark: '产品备注',
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  action: {
+    label: '操作',
+    fixed: 'right',
+    action: true,
+    width: '120px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap)
 
 /** 初始化 **/
 onMounted(async () => {
