@@ -2,7 +2,8 @@
 import { Icon } from '@/components/Icon'
 import { PropType, ref, watch } from 'vue'
 import { DEFAULT_TABLE_CONFIG_VAl } from './utils'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, debounce } from 'lodash-es'
+
 
 const props = defineProps({
   tableConfig: {
@@ -105,18 +106,19 @@ const handleDragOver = (e) => {
   e.dataTransfer.dropEffect = 'move'
 }
 
-const handleDragEnter = (e, item) => {
+
+
+const handleDragEnter = debounce((e, item) => {
   e.dataTransfer.effectAllowed = 'move'
   if (dragItem === item) {
     return
   }
-
   const updateItems = [...tableData.value]
   const src = updateItems.indexOf(dragItem)
   const dst = updateItems.indexOf(item)
   updateItems.splice(dst, 0, ...updateItems.splice(src, 1))
   tableData.value = handleSort(updateItems)
-}
+},100)
 
 // const transformTableData = (data: Array<TableOptionsProps>): Array<TableOptionsProps> => {
 const transformTableData = (data: Array<TableOptionsProps>, config = props.tableConfig) => {
@@ -188,6 +190,7 @@ watch(
     immediate: true
   }
 )
+
 </script>
 
 <template>
