@@ -199,22 +199,22 @@ const close = (scope: any) => {
 // 点击行的事件
 const rowClick = (row: any, column: any) => {
   emits('row-click', row, column)
-  // 判断是否是点击的操作项
-  const clickOperate =
-    column.label === actionOption.value!.label && props.isEditRow && props.editRowType === 'edit'
-  //&& cloneeditRowType.value === props.editRowType
+  // // 判断是否是点击的操作项
+  // const clickOperate =
+  //   column.label === actionOption.value!.label && props.isEditRow && props.editRowType === 'edit'
+  // //&& cloneeditRowType.value === props.editRowType
 
-  if (clickOperate) {
-    // 编辑行的操作
-    row.rowEdit = !row.rowEdit
-    // 重置其他数据的rowEdit
-    tableData.value.map((item) => {
-      if (item !== row) item.rowEdit = false
-    })
+  // if (clickOperate) {
+  //   // 编辑行的操作
+  //   row.rowEdit = !row.rowEdit
+  //   // 重置其他数据的rowEdit
+  //   tableData.value.map((item) => {
+  //     if (item !== row) item.rowEdit = false
+  //   })
 
-    // 重置按钮的标识
-    if (!row.rowEdit) emits('update:editRowType', '')
-  }
+  //   // 重置按钮的标识
+  //   if (!row.rowEdit) emits('update:editRowType', '')
+  // }
 }
 </script>
 
