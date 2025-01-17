@@ -282,7 +282,7 @@
           :value="scope.row.logisticAttribute || ''"
         />
       </template>
-      <template #action="{ scope }">
+      <template #operate="{ scope }">
         <el-button
           link
           type="primary"
@@ -358,10 +358,11 @@ const fieldMap = {
     formatter: dateFormatter,
     width: '180px'
   },
-  action: {
+  operate: {
     label: '操作',
+    slot: 'operate',
     fixed: 'right',
-    action: true,
+    // action: true,
     width: '180px'
   }
 }
