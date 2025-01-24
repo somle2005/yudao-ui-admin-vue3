@@ -284,7 +284,7 @@ const changeProduct = (val: any) => {
   const { categoryId } = product
   ProductCategoryApi.getProductCategory(categoryId)
     .then((res) => {
-      formData.value.hscode = formData.value.hsCode ?? res.defaultHsCode
+      formData.value.hscode = formData.value.hscode ?? res.defaultHsCode
       formData.value.declaredTypeEn = formData.value.declaredTypeEn ?? res.defaultDeclaredTypeEn
       formData.value.declaredType = formData.value.declaredType ?? res.defaultDeclaredType
     })
