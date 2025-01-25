@@ -103,7 +103,7 @@
         /> -->
 
         <el-select
-          v-model="queryParams.brand"
+          v-model="queryParams.series"
           clearable
           filterable
           placeholder="请选择系列"
@@ -161,9 +161,37 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+        <el-button @click="moreDialog = true"
+          ><Icon icon="ep:search" class="mr-5px" /> 更多</el-button
+        >
       </el-form-item>
     </el-form>
   </ContentWrap>
+
+  <!-- 更多 -->
+
+  <Dialog title="更多" v-model="moreDialog" width="50%" >
+    <SmForm
+      class="-mb-15px"
+      ref="form"
+      label-width="150px"
+      inline
+      v-model="queryParams"
+      :options="moreFormOptions"
+    >
+      <!-- <template #primaryImageUrl="{ scope, model }">
+        <UploadImg v-model="model[scope.prop]" />
+      </template> -->
+      <!-- <template #action>
+        <div class="moreBtnList">
+          <el-button type="primary" @click="handleQuery"> 确定</el-button>
+        </div>
+      </template> -->
+    </SmForm>
+    <div class="moreBtnList">
+        <el-button type="primary" @click="moreConfirm"> 确定</el-button>
+    </div>
+  </Dialog>
 
   <!-- 列表 -->
   <!--  <ContentWrap>
@@ -336,10 +364,10 @@ import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
 import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
-import { computeColumnMinWidth, computeColumnWidthFor } from '@/utils/computeGeometry'
+import { computeColumnWidthFor } from '@/utils/computeGeometry'
 import { getProductNameList } from '@/commonData'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { wrap } from 'module'
+import { useFormData } from '@/components/SmForm/src/utils'
 
 const { productNameList, productSkuList, productSeriesList, productBrandList } =
   getProductNameList()
@@ -355,7 +383,7 @@ const loading = ref(true) // 列表的加载中
 const list = ref<ProductVO[]>([]) // 列表的数据
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 const total = ref(0) // 列表的总页数
-const queryParams = reactive({
+let queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: undefined,
@@ -440,8 +468,11 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
-// deptName: '部门',   brand: '品牌',
-const {deptNameColumnWidth, brandColumnWidth} = computeColumnWidthFor(list, ['deptName','brand', ]) as any
+
+const { deptNameColumnWidth, brandColumnWidth } = computeColumnWidthFor(list, [
+  'deptName',
+  'brand'
+]) as any
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -471,7 +502,7 @@ const fieldMap = {
   deptName: {
     label: '部门',
     width: deptNameColumnWidth
-  }, 
+  },
   brand: {
     label: '品牌',
     width: brandColumnWidth
@@ -524,7 +555,6 @@ const fieldMap = {
     width: '180px'
   }
 
-
   // unitName: '单位',
   // material: '材料',
   // color: '颜色',
@@ -536,6 +566,46 @@ const fieldMap = {
   // remark: '产品备注',
 }
 tableOptions.value = transformTableOptions(fieldMap)
+
+const { formOptions: moreFormOptions } = useFormData()
+
+const moreDialog = ref(false)
+const excludeFields = ['name', 'code', 'barCode', 'categoryName', 'brand', 'series','status', 'deptName', 'model', 'operate', 'primaryImageUrl']
+
+
+const moreFormOptionsInit = () => {
+  const list:any = []
+  tableOptions.value.forEach((item: any) => {
+    if (!excludeFields.includes(item.prop)) {
+      queryParams[item.prop] = ''
+      const obj = {
+        type: 'input',
+        prop: item.prop,
+        label: item.label,
+        placeholder: `请输入${item.label}`,
+      }
+      list.push(obj)
+    }
+  })
+  const arr = list.map((item: any) => {
+    return {
+      prop: item.prop,
+      label: item.label,
+    }
+  })
+  console.log(arr, 'arr-list')
+  moreFormOptions.value = list
+}
+
+moreFormOptionsInit()
+
+const moreConfirm = () =>{
+  moreDialog.value = false
+  handleQuery()
+}
+
+console.log(tableOptions.value, 'tableOptions.value')
+
 /** 初始化 **/
 onMounted(async () => {
   await getList()
@@ -545,3 +615,10 @@ onMounted(async () => {
   deptList.value = (await getDeptTree()).value
 })
 </script>
+<style lang="scss" scoped>
+.moreBtnList {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+</style>
