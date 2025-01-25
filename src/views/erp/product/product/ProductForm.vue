@@ -1,10 +1,14 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
+    <div class="editBtn" v-if="formDisabled">
+      <el-button type="primary"  @click="detailEdit">编辑</el-button>
+    </div>
     <el-form
       ref="formRef"
       :model="formData"
       :rules="formRules"
       label-width="140px"
+      :disabled="formDisabled"
       v-loading="formLoading"
     >
       <el-row :gutter="20">
@@ -158,7 +162,7 @@
             />
           </el-form-item>
         </el-col>
-        
+
         <el-col :span="12">
           <el-form-item label="包装长度（mm）" prop="packageLength">
             <el-input-number
@@ -327,7 +331,7 @@
       <!-- 额外字段 -->
       <component :is="productDetailForm" ref="productDetailFormRef" :datas="formData" />
     </el-form>
-    <template #footer>
+    <template v-if="!formDisabled" #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
@@ -411,6 +415,8 @@ const initFormData = () => {
 }
 formData.value = initFormData()
 
+const formDisabled = computed(() => formType.value === 'detail') // 表单是否禁用
+
 const formRules = reactive({
   name: [{ required: true, message: '产品名称不能为空', trigger: 'blur' }],
   categoryId: [{ required: true, message: '产品分类不能为空', trigger: 'blur' }],
@@ -430,7 +436,7 @@ const formRules = reactive({
   packageWeight: [{ required: true, message: '包装重量（kg）不能为空', trigger: 'blur' }],
   packageWidth: [{ required: true, message: '包装宽度（mm）不能为空', trigger: 'blur' }],
   packageLength: [{ required: true, message: '包装长度（mm不能为空', trigger: 'blur' }],
-  packageHeight: [{ required: true, message: '包装高度（mm）不能为空', trigger: 'blur' }],
+  packageHeight: [{ required: true, message: '包装高度（mm）不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
@@ -577,4 +583,16 @@ const resetForm = () => {
   formData.value = initFormData()
   formRef.value?.resetFields()
 }
+const detailEdit = () => {
+  const type = 'update'
+  formType.value = type
+  dialogTitle.value = t('action.' + type)
+}
 </script>
+<style lang="scss" scoped>
+.editBtn {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

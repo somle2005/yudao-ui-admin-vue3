@@ -230,8 +230,16 @@
         :formatter="dateFormatter"
         width="180px"
       />
-      <el-table-column fixed="right" label="操作" align="center" min-width="120px">
+      <el-table-column fixed="right" label="操作" align="center" width="150px">
         <template #default="scope">
+          <el-button
+            link
+            type="primary"
+            @click="openForm('detail', scope.row.id)"
+            v-hasPermi="['erp:product:update']"
+          >
+            查看
+          </el-button>
           <el-button
             link
             type="primary"
