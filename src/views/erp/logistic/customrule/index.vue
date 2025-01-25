@@ -25,13 +25,28 @@
       </el-form-item>
 
       <el-form-item label="sku（编码）" prop="barCode">
-        <el-input
+        <!-- <el-input
           v-model="queryParams.barCode"
           placeholder="请输入sku（编码）"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
-        />
+        /> -->
+        <el-select
+          v-model="queryParams.barCode"
+          clearable
+          filterable
+          placeholder="请选择SKU（编码）"
+          @keyup.enter="handleQuery"
+           class="!w-240px"
+        >
+          <el-option
+            v-for="item in productSkuList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
 
       <el-form-item label="hs编码" prop="hscode">
@@ -319,7 +334,10 @@ import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { getProductNameList } from '@/commonData'
 
+
+const {productSkuList} = getProductNameList()
 
 
 const { tableOptions,transformTableOptions} =  useTableData()

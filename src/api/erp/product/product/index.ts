@@ -49,6 +49,11 @@ export interface ProductVO {
    packageWidth: number
 }
 
+export interface ProductVOSelectItem extends ProductVO {
+  value: number
+  label: string
+}
+
 // ERP 产品 API
 export const ProductApi = {
   // 查询ERP 产品分页

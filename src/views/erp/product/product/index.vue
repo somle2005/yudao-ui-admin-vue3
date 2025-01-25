@@ -6,25 +6,57 @@
       :model="queryParams"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
     >
-      <el-form-item label="名称" prop="name">
-        <el-input
+      <el-form-item label="产品名称" prop="name">
+        <!-- <el-input
           v-model="queryParams.name"
-          placeholder="请输入名称"
+          placeholder="请输入产品名称"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
-        />
+        /> -->
+
+        <el-select
+          v-model="queryParams.name"
+          clearable
+          filterable
+          placeholder="请选择产品"
+          @keyup.enter="handleQuery"
+           class="!w-240px"
+        >
+          <el-option
+            v-for="item in productNameList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="编码" prop="code">
-        <el-input
+      <el-form-item label="SKU（编码）" prop="code">
+        <!-- <el-input
           v-model="queryParams.barCode"
-          placeholder="请输入编码"
+          placeholder="请输入SKU（编码）"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
-        />
+        /> -->
+        <el-select
+          v-model="queryParams.barCode"
+          clearable
+          filterable
+          placeholder="请选择SKU（编码）"
+          @keyup.enter="handleQuery"
+           class="!w-240px"
+        >
+          <el-option
+            v-for="item in productSkuList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+
       </el-form-item>
       <el-form-item label="分类" prop="categoryId">
         <el-tree-select
@@ -38,22 +70,56 @@
         />
       </el-form-item>
       <el-form-item label="品牌" prop="brand">
-        <el-input
+        <!-- <el-input
           v-model="queryParams.brand"
           placeholder="请输入品牌"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
-        />
+        /> -->
+
+        <el-select
+          v-model="queryParams.brand"
+          clearable
+          filterable
+          placeholder="请选择品牌"
+          @keyup.enter="handleQuery"
+           class="!w-240px"
+        >
+          <el-option
+            v-for="item in productBrandList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="系列" prop="series">
-        <el-input
+        <!-- <el-input
           v-model="queryParams.series"
           placeholder="请输入系列"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
-        />
+        /> -->
+
+        <el-select
+          v-model="queryParams.brand"
+          clearable
+          filterable
+          placeholder="请选择系列"
+          @keyup.enter="handleQuery"
+           class="!w-240px"
+        >
+          <el-option
+            v-for="item in productSeriesList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+
+
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select class="!w-240px" v-model="queryParams.status" clearable placeholder="请选择状态">
@@ -211,6 +277,9 @@ import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
 import { computeColumnMinWidth } from '@/utils/computeGeometry'
+import { getProductNameList } from '@/commonData'
+
+const {productNameList,productSkuList,productSeriesList,productBrandList} = getProductNameList()
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
