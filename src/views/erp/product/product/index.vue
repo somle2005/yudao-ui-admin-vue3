@@ -587,13 +587,6 @@ const moreFormOptionsInit = () => {
       list.push(obj)
     }
   })
-  const arr = list.map((item: any) => {
-    return {
-      prop: item.prop,
-      label: item.label,
-    }
-  })
-  console.log(arr, 'arr-list')
   moreFormOptions.value = list
 }
 
