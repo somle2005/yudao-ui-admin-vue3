@@ -23,7 +23,7 @@
           filterable
           placeholder="请选择产品"
           @keyup.enter="handleQuery"
-           class="!w-240px"
+          class="!w-240px"
         >
           <el-option
             v-for="item in productNameList"
@@ -47,7 +47,7 @@
           filterable
           placeholder="请选择SKU（编码）"
           @keyup.enter="handleQuery"
-           class="!w-240px"
+          class="!w-240px"
         >
           <el-option
             v-for="item in productSkuList"
@@ -56,7 +56,6 @@
             :value="item.value"
           />
         </el-select>
-
       </el-form-item>
       <el-form-item label="分类" prop="categoryId">
         <el-tree-select
@@ -84,7 +83,7 @@
           filterable
           placeholder="请选择品牌"
           @keyup.enter="handleQuery"
-           class="!w-240px"
+          class="!w-240px"
         >
           <el-option
             v-for="item in productBrandList"
@@ -109,7 +108,7 @@
           filterable
           placeholder="请选择系列"
           @keyup.enter="handleQuery"
-           class="!w-240px"
+          class="!w-240px"
         >
           <el-option
             v-for="item in productSeriesList"
@@ -118,8 +117,6 @@
             :value="item.value"
           />
         </el-select>
-
-
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select class="!w-240px" v-model="queryParams.status" clearable placeholder="请选择状态">
@@ -169,7 +166,7 @@
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
+  <!--  <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
       <el-table-column
         fixed="left"
@@ -259,13 +256,68 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页 -->
+    <!~~ 分页 ~~>
     <Pagination
       :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
     />
+  </ContentWrap>-->
+
+  <ContentWrap>
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
+      :total="total"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
+      @pagination="getList"
+    >
+      <template #primaryImageUrl="{ scope }">
+        <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+      </template>
+
+      <template #status="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
+      </template>
+
+      <!-- <template #guidePriceList="{ scope }">
+        <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
+          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="guidePrice.code || ''" />
+          <el-tag class="ml-5px">{{ guidePrice.price }}</el-tag>
+        </div>
+      </template> -->
+
+      <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['erp:product:update']"
+        >
+          查看
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:product:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['erp:product:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -280,14 +332,17 @@ import ProductForm from './ProductForm.vue'
 import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
 import { defaultProps, handleTree } from '@/utils/tree'
 import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
-import Pagination from '../../../../components/Pagination/index.vue'
+// import Pagination from '../../../../components/Pagination/index.vue'
 import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
-import { computeColumnMinWidth } from '@/utils/computeGeometry'
+import { computeColumnMinWidth, computeColumnWidthFor } from '@/utils/computeGeometry'
 import { getProductNameList } from '@/commonData'
+import { useTableData } from '@/components/SmTable/src/utils'
+import { wrap } from 'module'
 
-const {productNameList,productSkuList,productSeriesList,productBrandList} = getProductNameList()
+const { productNameList, productSkuList, productSeriesList, productBrandList } =
+  getProductNameList()
 
 /** ERP 产品 列表 */
 defineOptions({ name: 'ErpProduct' })
@@ -385,9 +440,102 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
+// deptName: '部门',   brand: '品牌',
+const {deptNameColumnWidth, brandColumnWidth} = computeColumnWidthFor(list, ['deptName','brand', ]) as any
 
-const columnMinWidth = computeColumnMinWidth(list, 'barCode')
+const { tableOptions, transformTableOptions } = useTableData()
 
+const fieldMap = {
+  primaryImageUrl: {
+    label: '主图',
+    fixed: 'left',
+    slot: 'primaryImageUrl'
+  },
+  barCode: {
+    label: 'SKU（编码）',
+    fixed: 'left',
+    width: '180px',
+    slot: 'barCode',
+    wrap: true
+  },
+  name: {
+    label: '产品名称',
+    width: '180px',
+    slot: 'name',
+    wrap: true
+  },
+  status: {
+    label: '状态',
+    slot: 'status'
+  },
+  deptName: {
+    label: '部门',
+    width: deptNameColumnWidth
+  }, 
+  brand: {
+    label: '品牌',
+    width: brandColumnWidth
+  },
+  categoryName: {
+    label: '分类',
+    slot: 'categoryName',
+    width: '180px',
+    wrap: true
+  },
+  series: {
+    label: '系列',
+    slot: 'series',
+    width: '180px',
+    wrap: true
+  },
+  model: {
+    label: '型号',
+    slot: 'model',
+    width: '180px',
+    wrap: true
+  },
+
+  packageLength: '包装长度',
+  packageWidth: '包装宽度',
+  packageHeight: '包装高度',
+  packageWeight: '包装重量',
+
+  length: '基础长度（mm）',
+  width: '基础宽度（mm）',
+  height: '基础高度（mm）',
+  weight: '基础重量（g）',
+
+  updateTime: {
+    label: '更新时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  updater: '更新人',
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  creator: '创建人',
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '180px'
+  }
+
+
+  // unitName: '单位',
+  // material: '材料',
+  // color: '颜色',
+  // productionNo: '生产编号',
+  // guidePrice: {
+  //   label: '指导价',
+  //   slot: 'guidePrice'
+  // },
+  // remark: '产品备注',
+}
+tableOptions.value = transformTableOptions(fieldMap)
 /** 初始化 **/
 onMounted(async () => {
   await getList()

@@ -7,7 +7,7 @@
 export const computeColumnMinWidth = (list: Ref<any>, type: string) => {
   return computed(() => {
     const fontSize = 14
-    const maxLength = 30
+    const maxLength = 100
     const minLength = 10
     if (!list?.value?.length) return `${minLength * fontSize}px`
     let count = 0
@@ -17,4 +17,13 @@ export const computeColumnMinWidth = (list: Ref<any>, type: string) => {
     count = Math.min(count, maxLength)
     return `${count * fontSize}px`
   })
+}
+
+
+export const computeColumnWidthFor = (list: Ref<any>, typeList: string[]) => {
+  const map = {}
+  typeList.forEach((type) => {
+    map[type + 'ColumnWidth'] = computeColumnMinWidth(list, type)
+  })
+  return map
 }

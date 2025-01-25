@@ -20,9 +20,15 @@
         v-bind="columnItem(item)"
       >
         <template v-if="item.slot" #default="scope">
+
           <template v-if="scope.row.rowEdit">
             <el-input v-model="scope.row[item.prop!]" size="small" />
           </template>
+
+          <template v-else-if="item.wrap">
+            <div :class="['slot-wrap', `slot-${item.prop}`]">{{ scope.row[item.prop!] }}</div>
+          </template>
+
           <template v-else>
             <template v-if="scope.$index + scope.column.id === currentEdit">
               <div style="display: flex">
@@ -247,5 +253,8 @@ const rowClick = (row: any, column: any) => {
   .close {
     color: green;
   }
+}
+.slot-wrap {
+  white-space: normal;
 }
 </style>

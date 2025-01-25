@@ -11,7 +11,8 @@ export const transformTableOptions = (fieldMap: { [key: string]: any }) => {
     const obj: TableOptions = {
       prop: key,
       label: fieldMap[key],
-      align: 'center'
+      align: 'center',
+      width: '100px',
     }
     if (fieldMap[key] instanceof Object) {
       Object.assign(obj, fieldMap[key])
@@ -31,8 +32,8 @@ export const dealTableField = (data,tableOptions) => {
       const obj = Object.assign(source, item)
       filterData.push(obj)
   })
-  console.log(data,'获取原先传递的数据格式-tableOptions数据', tableOptions)
-  console.log(filterData,'filterData')
+  // console.log(data,'获取原先传递的数据格式-tableOptions数据', tableOptions)
+  // console.log(filterData,'filterData')
   return filterData
 }
 

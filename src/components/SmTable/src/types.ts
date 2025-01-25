@@ -17,5 +17,7 @@ export interface TableOptions {
   editable?: boolean
   // 用来格式化内容
   formatter?: (row: any, column: any, cellValue: any, index: number) => VNode | string
+  // 文字是否换行 需要开启slot
+  wrap?: boolean
   [key: string]: any
 }
