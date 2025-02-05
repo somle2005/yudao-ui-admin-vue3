@@ -326,7 +326,7 @@
           @click="openForm('detail', scope.row.id)"
           v-hasPermi="['erp:product:update']"
         >
-          查看
+          详情
         </el-button>
         <el-button
           link
