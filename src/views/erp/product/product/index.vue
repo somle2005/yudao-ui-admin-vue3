@@ -68,15 +68,7 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="品牌" prop="brand">
-        <!-- <el-input
-          v-model="queryParams.brand"
-          placeholder="请输入品牌"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        /> -->
-
+      <!-- <el-form-item label="品牌" prop="brand">
         <el-select
           v-model="queryParams.brand"
           clearable
@@ -94,14 +86,6 @@
         </el-select>
       </el-form-item>
       <el-form-item label="系列" prop="series">
-        <!-- <el-input
-          v-model="queryParams.series"
-          placeholder="请输入系列"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        /> -->
-
         <el-select
           v-model="queryParams.series"
           clearable
@@ -117,7 +101,7 @@
             :value="item.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="状态" prop="status">
         <el-select class="!w-240px" v-model="queryParams.status" clearable placeholder="请选择状态">
           <el-option
