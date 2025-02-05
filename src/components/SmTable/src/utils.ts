@@ -6,9 +6,7 @@ export const toLine = (value: string) => {
 }
 
 export const transformTableOptions = (
-  fieldMap: { [key: string]: any },
-  config?: { [key: string]: any }
-) => {
+  fieldMap: { [key: string]: any }) => {
   const tableOption: Array<TableOptions> = []
 
   for (const key in fieldMap) {
@@ -18,13 +16,28 @@ export const transformTableOptions = (
       align: 'center',
       width: '100px'
     }
-    if (config?.noWidth) {
-      obj.width = undefined
-    }
     if (fieldMap[key] instanceof Object) {
       Object.assign(obj, fieldMap[key])
+      // 打赏自动设置宽度的标记
+      if(!fieldMap.width) {
+        obj.noWidth = true
+      }
     }
     tableOption.push(obj)
+  }
+  const totalWidth = tableOption.reduce((prev, cur) => {
+    let curWidth = 0
+    if(cur?.width) {
+      curWidth = Number(cur.width.replace('px', ''))
+    }
+    return prev + curWidth
+  },0)
+  if(window.innerWidth > totalWidth) { 
+    tableOption.forEach(item => {
+      if(!item.noWidth) {
+        item.width = undefined
+      }
+    })
   }
   return tableOption
 }

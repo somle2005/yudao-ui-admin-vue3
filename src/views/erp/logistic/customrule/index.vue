@@ -387,9 +387,7 @@ const fieldMap = {
     width: '180px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap,{noWidth:true})
-
-console.log( tableOptions.value,'tableOptions')
+tableOptions.value = transformTableOptions(fieldMap)
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })

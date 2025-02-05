@@ -4,9 +4,11 @@ export interface TableOptions {
   // 表头
   label: string
   // 对应列的宽度
-  width?: string | number
+  // width?: string | number
+  width?: string
   // 对应列的最小宽度
-  minWidth?: string | number
+  // minWidth?: string | number
+  minWidth?: string 
   // 对齐方式
   align?: 'left' | 'center' | 'right'
   // 自定义列模板的插槽名
