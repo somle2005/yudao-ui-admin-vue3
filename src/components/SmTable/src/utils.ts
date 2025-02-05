@@ -25,14 +25,15 @@ export const transformTableOptions = (
     }
     tableOption.push(obj)
   }
-  const totalWidth = tableOption.reduce((prev, cur) => {
-    let curWidth = 0
-    if(cur?.width) {
-      curWidth = Number(cur.width.replace('px', ''))
-    }
-    return prev + curWidth
-  },0)
-  if(window.innerWidth > totalWidth) { 
+  // 有些是计算属性computed 需要拿到接口后才能拿到 所以 暂定1200
+  // const totalWidth = tableOption.reduce((prev, cur) => {
+  //   let curWidth = 0
+  //   if(cur?.width) {
+  //     curWidth = Number(cur.width.replace('px', ''))
+  //   }
+  //   return prev + curWidth
+  // },0)
+  if(window.innerWidth > 1200) { 
     tableOption.forEach(item => {
       if(!item.noWidth) {
         item.width = undefined

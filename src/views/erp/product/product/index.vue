@@ -510,15 +510,15 @@ const fieldMap = {
     wrap: true
   },
 
-  packageLength: '包装长度',
-  packageWidth: '包装宽度',
-  packageHeight: '包装高度',
-  packageWeight: '包装重量',
+  packageLength: '包装长度（mm）',
+  packageWidth: '包装宽度（mm）',
+  packageHeight: '包装高度（mm）',
+  packageWeight: '包装重量（kg）',
 
   length: '基础长度（mm）',
   width: '基础宽度（mm）',
   height: '基础高度（mm）',
-  weight: '基础重量（g）',
+  weight: '基础重量（kg）',
 
   updateTime: {
     label: '更新时间',
