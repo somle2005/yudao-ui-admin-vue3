@@ -355,7 +355,7 @@ const fieldMap = {
     width: '180px'
   },
   'product-name': {
-    label: 'SKU（编码）',
+    label: '产品名称',
     width: '180px'
   },
   hscode: {
