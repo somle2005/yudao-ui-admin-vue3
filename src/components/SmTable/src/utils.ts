@@ -6,7 +6,9 @@ export const toLine = (value: string) => {
 }
 
 export const transformTableOptions = (
-  fieldMap: { [key: string]: any }) => {
+  fieldMap: { [key: string]: any },
+  config?: { [key: string]: any },
+) => {
   const tableOption: Array<TableOptions> = []
 
   for (const key in fieldMap) {
@@ -33,7 +35,7 @@ export const transformTableOptions = (
   //   }
   //   return prev + curWidth
   // },0)
-  if(window.innerWidth > 1200) { 
+  if(window.innerWidth > 1200 && config?.noWidth) { 
     tableOption.forEach(item => {
       if(!item.noWidth) {
         item.width = undefined
