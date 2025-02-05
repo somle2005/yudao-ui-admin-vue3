@@ -346,20 +346,32 @@ const fieldMap = {
   primaryImageUrl: {
      label:"图片",
      slot: 'primaryImageUrl',
+     width: '100px',
   },
-  'product-barCode': 'SKU（编码）',
+  'product-barCode': {
+    label: 'SKU（编码）',
+    width: '180px',
+  },
   countryCode:{
     label: '国家编码',
     slot: 'countryCode',
+    width: '180px',
   },
-  'product-name':'产品名称',
-  hscode:'hs编码',
+  'product-name': {
+    label: 'SKU（编码）',
+    width: '180px',
+  },
+  hscode: {
+    label: 'hs编码',
+    width: '180px',
+  },
   declaredTypeEn:'申报品名(英文)',
   declaredType:'申报品名',
   taxRate:'税率',
   logisticAttribute: {
     label: '物流属性',
     slot: 'logisticAttribute',
+    width: '180px',
   },
   fbaBarCode:'FBA条形码',
   createTime: {
@@ -375,7 +387,9 @@ const fieldMap = {
     width: '180px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap)
+tableOptions.value = transformTableOptions(fieldMap,{noWidth:true})
+
+console.log( tableOptions.value,'tableOptions')
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
