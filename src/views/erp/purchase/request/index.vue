@@ -1,5 +1,4 @@
 <template>
-
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
@@ -170,7 +169,7 @@
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
+  <!-- <ContentWrap>
     <el-table
       v-loading="loading"
       :data="list"
@@ -181,7 +180,7 @@
       <el-table-column width="30" label="选择" type="selection" />
       <el-table-column min-width="180" label="申请单号" align="center" prop="no" />
       <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
-      <!-- <el-table-column label="供应商" align="center" prop="supplierName" /> -->
+      <!~~ <el-table-column label="供应商" align="center" prop="supplierName" /> ~~>
       <el-table-column
         label="申请时间"
         align="center"
@@ -190,14 +189,14 @@
         width="120px"
       />
       <el-table-column label="申请人" align="center" prop="applicantName" />
-      <!-- <el-table-column label="创建人" align="center" prop="creatorName" /> -->
+      <!~~ <el-table-column label="创建人" align="center" prop="creatorName" /> ~~>
       <el-table-column
         label="总数量"
         align="center"
         prop="totalCount"
         :formatter="erpCountTableColumnFormatter"
       />
-      <!-- <el-table-column
+      <!~~ <el-table-column
         label="入库数量"
         align="center"
         prop="inCount"
@@ -226,7 +225,7 @@
         align="center"
         prop="depositPrice"
         :formatter="erpPriceTableColumnFormatter"
-      /> -->
+      /> ~~>
       <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status" />
@@ -279,13 +278,86 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页 -->
+    <!~~ 分页 ~~>
     <Pagination
       :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
     />
+  </ContentWrap>-->
+
+  <!-- 列表 -->
+  <ContentWrap>
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
+      :total="total"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
+      @pagination="getList"
+    >
+      <!-- <template #status="{ scope }"> -->
+      <template #status>
+        {{ '审核状态枚举' }}
+        <!-- <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode || ''" /> -->
+      </template>
+
+      <template #orderStatus>
+        {{ '订购状态枚举' }}
+      </template>
+
+      <template #offStatus>
+        {{ '关闭状态枚举' }}
+      </template>
+
+      <template #operate="{ scope }">
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['erp:purchase-request:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:purchase-request:update']"
+          :disabled="scope.row.status === 20"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="handleUpdateStatus(scope.row.id, 20)"
+          v-hasPermi="['erp:purchase-request:update-status']"
+          v-if="scope.row.status === 10"
+        >
+          审批
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleUpdateStatus(scope.row.id, 10)"
+          v-hasPermi="['erp:purchase-request:update-status']"
+          v-else
+        >
+          反审批
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete([scope.row.id])"
+          v-hasPermi="['erp:purchase-request:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -294,7 +366,7 @@
 
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { dateFormatter2 } from '@/utils/formatTime'
+import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/erp/purchase/request'
 import PurchaseRequestForm from './PurchaseRequestForm.vue'
@@ -302,7 +374,43 @@ import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
 import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
+import { useTableData } from '@/components/SmTable/src/utils'
+import { mergeItemsToList } from '@/utils/transformData'
 // import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+
+const { tableOptions, transformTableOptions } = useTableData()
+
+const fieldMap = {
+  requestTime: {
+    label: '创建时间',
+    formatter: dateFormatter, // 时间可能要转化
+    width: '180px'
+  },
+  no: '单据编号',
+  applicant: '申请人',
+  applicationDept: '申请部门',
+  status: {
+    label: '审核状态',
+    slot: 'status'
+  },
+  orderStatus: {
+    label: '订购状态',
+    slot: 'orderStatus'
+  },
+  offStatus: {
+    label: '关闭状态',
+    slot: 'offStatus'
+  },
+  count: '申请数量',
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    // action: true,
+    width: '180px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap)
 
 /** ERP 采购申请列表 */
 defineOptions({ name: 'ErpPurchaseRequest' })
@@ -338,7 +446,45 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-    list.value = data.list
+    // list.value = data.list
+    const testData = [
+      {
+        id: 32561,
+        no: 'string',
+        applicant: 'string',
+        applicantName: '芋道',
+        applicationDept: 'string',
+        requestTime: '2019-08-24T14:15:22.123Z',
+        status: 2,
+        offStatus: 1,
+        orderStatus: 1,
+        auditor: 'string',
+        auditTime: '2019-08-24T14:15:22.123Z',
+        creator: '制单人就是创建人',
+        createTime: '2019-08-24T14:15:22.123Z',
+        items: [
+          {
+            id: 11756,
+            warehouseId: 3113,
+            productId: 3113,
+            productPrice: 100,
+            count: 100,
+            remark: '随便'
+          },
+          {
+            id: 117561,
+            warehouseId: 31131,
+            productId: 31131,
+            productPrice: 1001,
+            count: 1001,
+            remark: '随便1'
+          }
+        ],
+        productNames: 'string',
+        totalCount: 100
+      }
+    ]
+    list.value = mergeItemsToList(testData)
     total.value = data.total
   } finally {
     loading.value = false
