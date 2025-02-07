@@ -65,10 +65,11 @@
           check-strictly
           default-expand-all
           placeholder="请输入分类"
+          clearable
           class="!w-240px"
         />
       </el-form-item>
-      <!-- <el-form-item label="品牌" prop="brand">
+      <el-form-item label="品牌" prop="brand">
         <el-select
           v-model="queryParams.brand"
           clearable
@@ -101,7 +102,7 @@
             :value="item.value"
           />
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select class="!w-240px" v-model="queryParams.status" clearable placeholder="请选择状态">
           <el-option
@@ -154,14 +155,15 @@
 
   <!-- 更多 -->
 
-  <Dialog title="更多" v-model="moreDialog" width="50%" >
+  <Dialog title="更多" v-model="moreDialog" width="1080px">
     <SmForm
       class="-mb-15px"
       ref="form"
       label-width="150px"
-      inline
+      isCol
       v-model="queryParams"
       :options="moreFormOptions"
+      :getModelValue="getModelValue"
     >
       <!-- <template #primaryImageUrl="{ scope, model }">
         <UploadImg v-model="model[scope.prop]" />
@@ -173,7 +175,7 @@
       </template> -->
     </SmForm>
     <div class="moreBtnList">
-        <el-button type="primary" @click="moreConfirm"> 确定</el-button>
+      <el-button type="primary" @click="moreConfirm"> 确定</el-button>
     </div>
   </Dialog>
 
@@ -349,7 +351,7 @@ import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
 import { computeColumnWidthFor } from '@/utils/computeGeometry'
-import { getProductNameList } from '@/commonData'
+import { getProductNameList, getUserList } from '@/commonData'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useFormData } from '@/components/SmForm/src/utils'
 
@@ -554,34 +556,114 @@ tableOptions.value = transformTableOptions(fieldMap)
 const { formOptions: moreFormOptions } = useFormData()
 
 const moreDialog = ref(false)
-const excludeFields = ['name', 'code', 'barCode', 'categoryName', 'brand', 'series','status', 'deptName', 'model', 'operate', 'primaryImageUrl']
+const excludeFields = [
+  'name',
+  'code',
+  'barCode',
+  'categoryName',
+  'brand',
+  'series',
+  'status',
+  'deptName',
+  'model',
+  'operate',
+  'primaryImageUrl'
+]
 
-
+const userList = getUserList()
 const moreFormOptionsInit = () => {
-  const list:any = []
+  const list: any = []
   tableOptions.value.forEach((item: any) => {
     if (!excludeFields.includes(item.prop)) {
       queryParams[item.prop] = ''
-      const obj = {
-        type: 'input',
-        prop: item.prop,
-        label: item.label,
-        placeholder: `请输入${item.label}`,
+
+      let obj = {}
+
+      if (item.prop === 'createTime') {
+        obj = {
+          type: 'date-picker',
+          placeholder: '请选择创建时间',
+          prop: 'createTime',
+          label: '创建时间',
+          attrs: {
+            clearable: true,
+            type: 'daterange',
+            'value-format': 'YYYY-MM-DD HH:mm:ss'
+          }
+        }
+      } else if (item.prop === 'updateTime') {
+        obj = {
+          type: 'date-picker',
+          placeholder: '请选择更新时间',
+          prop: 'updateTime',
+          label: '更新时间',
+          attrs: {
+            clearable: true,
+            type: 'daterange',
+            'value-format': 'YYYY-MM-DD HH:mm:ss'
+          }
+        }
+      } else if (item.prop === 'creator') {
+        obj = {
+          type: 'select',
+          placeholder: '请选择创建人',
+          prop: 'creator',
+          label: '创建人',
+          attrs: {
+            filterable: true,
+            clearable: true,
+            style: {
+              width: '100%'
+            }
+          },
+          children: userList
+        }
+      } else if (item.prop === 'updater') {
+        obj = {
+          type: 'select',
+          placeholder: '请选择更新人',
+          prop: 'updater',
+          label: '更新人',
+          attrs: {
+            filterable: true,
+            clearable: true,
+            style: {
+              width: '100%'
+            }
+          },
+          children: userList
+        }
+      } else {
+        obj = {
+          type: 'input',
+          prop: item.prop,
+          label: item.label,
+          placeholder: `请输入${item.label}`,
+          attrs: { clearable: true }
+        }
       }
       list.push(obj)
     }
   })
+  list.forEach((item) => {
+    item.colConfig = { span: 12 }
+  })
+  console.log(list, 'list-val')
   moreFormOptions.value = list
 }
 
 moreFormOptionsInit()
 
-const moreConfirm = () =>{
+const moreConfirm = () => {
   moreDialog.value = false
   handleQuery()
+  // 可以通过添加一个flag 来控制更多的formData数据是否重置
+  // console.log('确定事件早于关闭事件')
 }
 
-console.log(tableOptions.value, 'tableOptions.value')
+const getModelValue = () => {
+  return queryParams
+}
 
 /** 初始化 **/
 onMounted(async () => {

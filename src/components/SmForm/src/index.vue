@@ -1,6 +1,6 @@
 <template>
   <el-form
-    v-if="model"
+    v-if="model && !isCol"
     ref="form"
     :validate-on-rule-change="false"
     :model="model"
@@ -11,6 +11,7 @@
     <template v-for="(item, index) in options" :key="index">
       <el-form-item
         v-if="!item.children || !item.children!.length"
+        v-bind="item.formItemConfig"
         :prop="item.prop"
         :label="item.label"
       >
@@ -37,6 +38,7 @@
       </el-form-item>
       <el-form-item
         v-if="item.children && item.children.length"
+        v-bind="item.formItemConfig"
         :prop="item.prop"
         :label="item.label"
       >
@@ -56,6 +58,78 @@
         </component>
       </el-form-item>
     </template>
+    <el-form-item>
+      <slot name="action" :form="form" :model="model"></slot>
+    </el-form-item>
+  </el-form>
+
+  <el-form
+    v-if="model && isCol"
+    ref="form"
+    :validate-on-rule-change="false"
+    :model="model"
+    :rules="rules"
+    v-bind="$attrs"
+    @submit.prevent
+  >
+    <el-row :gutter="20">
+      <template v-for="(item, index) in options" :key="index">
+        <el-col v-if="!item.children || !item.children!.length" :span="item?.colConfig?.span || 8">
+          <el-form-item
+            v-if="!item.children || !item.children!.length"
+            v-bind="item.formItemConfig"
+            :prop="item.prop"
+            :label="item.label"
+          >
+            <component
+              v-if="showType(item)"
+              :is="`el-${item.type}`"
+              :placeholder="item.placeholder"
+              v-model="model[item.prop!]"
+              v-bind="item.attrs"
+              v-on="item.events || {}"
+              @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
+            />
+            <SmUpload
+              v-else-if="item.type === 'upload'"
+              :uploadItem="item"
+              v-bind="item.uploadAttrs"
+              @before-upload="beforeUpload"
+              @on-success="onSuccess"
+            />
+
+            <slot v-if="item.slot" :name="item.slot" :model="model" :scope="item"></slot>
+
+            <div v-else-if="item.type === 'editor'" id="editor"></div>
+          </el-form-item>
+        </el-col>
+
+        <el-col v-if="item.children && item.children.length" :span="item?.colConfig?.span || 8">
+          <el-form-item
+            v-if="item.children && item.children.length"
+            v-bind="item.formItemConfig"
+            :prop="item.prop"
+            :label="item.label"
+          >
+            <component
+              v-bind="item.attrs"
+              :is="`el-${item.type}`"
+              v-model="model[item.prop!]"
+              :placeholder="item.placeholder"
+            >
+              <component
+                :is="`el-${child.type}`"
+                v-for="(child, i) in item.children"
+                :key="i"
+                :label="child.label"
+                :value="child.value"
+              />
+            </component>
+          </el-form-item>
+        </el-col>
+      </template>
+    </el-row>
+
     <el-form-item>
       <slot name="action" :form="form" :model="model"></slot>
     </el-form-item>
@@ -89,6 +163,19 @@ const props = defineProps({
     type: Array as PropType<FormOptions[]>,
     required: true
   },
+  gutter: {
+    type: Number,
+    default: 20
+  },
+  isCol: {
+    type: Boolean,
+    default: false
+  },
+  // 是否是原始值-用于外部联动修改值-不使用adaptVal过滤后的值
+  isModelVal: {
+    type: Boolean,
+    default: false
+  },
   // 用户自定义上传方法
   // httpRequest: {
   //   type: Function as PropType<UploadRequestHandler>
@@ -100,6 +187,11 @@ const props = defineProps({
   modelValue: {
     type: Object,
     default: () => ({})
+  },
+  // 内部无法深度监听到外部reacitve对象变化
+  getModelValue: {
+    type: Function as PropType<() => any>,
+    default: () => () => ({})
   }
 })
 
@@ -110,14 +202,15 @@ const form = ref<FormInstance | null>()
 // 初始化表单
 const initForm = () => {
   if (props.options && props.options.length) {
-    let m: any = {}
+    // let m: any = {}
     let r: any = {}
     props.options.map((item: FormOptions) => {
-      m[item.prop!] = item.value
+      // m[item.prop!] = item.value
       r[item.prop!] = item.rules
       // initEditor(item)
     })
-    model.value = cloneDeep(m)
+    // model.value = cloneDeep(m)
+    model.value = cloneDeep(props.getModelValue())
     rules.value = cloneDeep(r)
   }
 }
@@ -191,16 +284,61 @@ watch(
      * 外部传入的modelValue值 pageNo: 1,pageSize: 10,这类值是外部动态变化的
      * 不改动外部变化的值 取options里面所有的key值才进行修改变化
      */
-    const modelVal = cloneDeep(val)
-    const adaptVal = cloneDeep(props.modelValue)
+    // if (props.isModelVal) {
+    //   const modelVal = cloneDeep(val)
+    //   console.log(modelVal, 'modelVal-发射原始值')
+    //   emits('update:modelValue', modelVal)
+    // } else {
+    //   const modelVal = cloneDeep(val)
+    //   const adaptVal = cloneDeep(props.modelValue)
+    //   props.options.forEach((item) => {
+    //     adaptVal[item.prop!] = modelVal[item.prop!]
+    //   })
+    //   console.log(adaptVal, 'adaptVal')
+    //   emits('update:modelValue', adaptVal)
+    // }
+
+    const modelVal = cloneDeep(val)  // 内部值
+    const adaptVal = cloneDeep(props.getModelValue()) // 外部值
+
+    // 取内部值 赋值给外部值
     props.options.forEach((item) => {
       adaptVal[item.prop!] = modelVal[item.prop!]
     })
+    const modelValue = props.getModelValue()
+    for(let key in adaptVal) {
+      modelValue[key] = adaptVal[key]
+    }
+
+    /**
+     * 比如有联动的值 产品 productId 带出 barCode 
+     * props.options项上面肯定不存在barCode
+     * 如果统一是 内部值model.value变化 操作 就会还需要出一个额外参数 ['barCode'] 用于联动
+     * 如果联动值是操作外部formData 就不需要额外参数 内部变化就会带上这个值
+     * 
+     * 约定俗成 不在props.options里面的值 统一由外部进行修改formData 通过props.getModelValue()进行合并
+     */
+  
     console.log(adaptVal, 'adaptVal')
-    emits('update:modelValue', adaptVal)
+    // emits('update:modelValue', reactive(adaptVal))
   },
   { deep: true }
 )
+
+// watch(
+//   () => props.modelValue,
+//   (val) => {
+//     console.log(val, 'modelValue变化')
+//     model.value = cloneDeep(val)
+//   },
+//   { deep: true,immediate:true }
+// )
+
+/**
+ * 因为是监听model.value进行触发emit 而不是通过change事件 所以v-model会死循环
+ * 通过change事件 就很难适配事件了。且不一定所有组件都有change事件
+   所以每次往外发射的时候都要 手动拿到外部的 modelValue值进行修改
+ */
 
 const beforeUpload = (rawFile: UploadRawFile, clickItem: any) => {
   emits('before-upload', rawFile, clickItem)

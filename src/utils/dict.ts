@@ -223,6 +223,8 @@ export enum DICT_TYPE {
   ERP_PATENT_TYPE = 'erp_patent_type',  //专利类型
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
+  SRP_ORDER_STATUS = 'srp_order_status', // 采购状态
+  ERP_OFF_STATUS = 'erp_off_status', // 开关状态
 
 
   // ========== AI - 人工智能模块  ==========
@@ -234,5 +236,6 @@ export enum DICT_TYPE {
   AI_WRITE_LENGTH = 'ai_write_length', // AI 写作长度
   AI_WRITE_FORMAT = 'ai_write_format', // AI 写作格式
   AI_WRITE_TONE = 'ai_write_tone', // AI 写作语气
-  AI_WRITE_LANGUAGE = 'ai_write_language' // AI 写作语言
+  AI_WRITE_LANGUAGE = 'ai_write_language', // AI 写作语言
+ 
 }

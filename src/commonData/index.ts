@@ -6,6 +6,13 @@ import { SupplierProductApi, SupplierProductVO } from "@/api/erp/purchase/produc
 import { WarehouseApi, WarehouseVO } from "@/api/erp/stock/warehouse"
 import { ProductApi, ProductVO, ProductVOSelectItem } from "@/api/erp/product/product"
 import { cloneDeep } from "lodash-es"
+import {getSimpleUserList,UserVO} from '@/api/system/user'
+
+interface SelectProp {
+  value: number
+  label: string
+  type: string
+}
 
 // 获取部门编号列表
 export const getDeptTree = () => {
@@ -37,7 +44,12 @@ export const getSupplierProductList =  () => {
   const supplierProductList = ref<SupplierProductVO[]>([]) // 账户列表
   // 加载账户列表
   SupplierProductApi.getSupplierProductSimpleList().then(res => {
-    supplierProductList.value = res
+    supplierProductList.value = res.map(item => {
+      item.label = item.code
+      item.value = item.id
+      item.type = 'option'
+      return item
+    })
   })
   return supplierProductList
 }
@@ -47,7 +59,12 @@ export const getWarehouseList =  () => {
   const warehouseList = ref<WarehouseVO[]>([]) // 账户列表
   // 加载账户列表
   WarehouseApi.getWarehouseSimpleList().then(res => {
-    warehouseList.value = res
+    warehouseList.value = res.map(item => {
+      item.label = item.name
+      item.value = item.id
+      item.type = 'option'
+      return item
+    })
   })
   return warehouseList
 }
@@ -57,6 +74,8 @@ export const getProductList =  () => {
   ProductApi.getProductSimpleList().then(res => {
     productList.value = res.map(item => {
       item.label = item.name + '  ' + item.barCode
+      item.value = item.id
+      item.type = 'option'
       return item
     })
   })
@@ -112,4 +131,19 @@ export const getProductNameList =  () => {
     })
   })
   return productMap
+}
+
+
+// 获取用户列表
+export const getUserList = () => {
+  const userList = ref<(UserVO & SelectProp)[]>([]) // 用户列表
+  getSimpleUserList().then((res:any) => {
+    userList.value = res.map(item => {
+      item.label = item.nickname
+      item.value = item.id
+      item.type = 'option'
+      return item
+    })
+  })
+  return userList
 }

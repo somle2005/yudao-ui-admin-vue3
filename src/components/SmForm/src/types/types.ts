@@ -79,7 +79,15 @@ export interface FormOptions {
     autoUpload?: boolean
     disabled?: boolean
     limit?: number
-  }
+  },
+  isCol?: boolean // 是否开启栅格化布局
+  colConfig?: {
+    [key: string]: any
+  },
+  // el-form-item的配置
+  formItemConfig?: {
+    [key: string]: any
+  },
 }
 
 export interface ValidateFieldCallback {
