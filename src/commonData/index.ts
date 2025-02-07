@@ -95,7 +95,7 @@ function getSelectItemList (list: Array<any>, key: string) {
     }
     return item
   })
-  return arr
+  return arr.filter(item => item.label)
 }
 // 搜索产品名称的数据
 export const getProductNameList =  () => {
