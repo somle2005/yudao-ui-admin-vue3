@@ -1,5 +1,6 @@
 import { PurchaseRequestApi } from '@/api/erp/purchase/request'
-import { getDeptTree, getProductList, getUserList,getSupplierProductList } from '@/commonData'
+import { getDeptTree, getProductList, getUserList, getSupplierProductList } from '@/commonData'
+import { cloneDeep } from 'lodash-es'
 
 /**
 
@@ -47,10 +48,19 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
 申请数量
  */
 
+const mergeDetail = (formData, detail,formType) => {
+  for (const key in detail) {
+    formData[key] = detail[key]
+  }
+  formData.items.forEach(item => {
+    if(formType === 'audit') {
+      item.approveCount = item.count
+    }
+    item.taxPercent = item.taxPercent * 100
+  })
+}
 
-
-
-export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCallback}) => {
+export const usePurchaseRequestForm = ({ getResetFormData, getFormData, successCallback }) => {
   const { t } = useI18n() // 国际化
   const message = useMessage() // 消息弹窗
 
@@ -62,7 +72,7 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
   // const productList1 = getProductList()
 
   const supplierProductList = getSupplierProductList()
- 
+
   // eslint-disable-next-line prefer-const
   // let formData = reactive({formData:{}})
   // const resetFormData = () => {
@@ -76,7 +86,6 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
   // }
 
   // formData.formData = resetFormData()
-  
 
   const smFormRef = ref()
 
@@ -84,58 +93,77 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
   const subTabsName = ref('item')
   const itemFormRef = ref()
 
-
   const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
   const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
 
-
-  const openForm = (type: string, id?: number) => {
+  const openForm = async (type: string, id?: number) => {
     getResetFormData()
     formType.value = type
     dialogTitle.value = t('action.' + type)
     dialogVisible.value = true
+
+    // 修改时，设置数据
+    if (id) {
+      formLoading.value = true
+      try {
+        const formData = getFormData()
+        const detailData = await PurchaseRequestApi.getPurchaseRequest(id)
+        mergeDetail(formData,detailData,formType.value)
+        console.log(formData, '修改时获取的数据')
+      } finally {
+        formLoading.value = false
+      }
+    }
   }
 
-
   const submitForm = async () => {
-
     // catch会拿到错误数据 没有进入catch说明校验通过了
     try {
       const valida1 = await itemFormRef.value.validate()
       const valiad2 = await smFormRef.value.validate()()
-      if(!(valida1 && valiad2)) return
-      
-      console.log(itemFormRef.value,'itemFormRef')
-      console.log(smFormRef.value,'smFormRef')
-     
+      if (!(valida1 && valiad2)) return
+
+      console.log(itemFormRef.value, 'itemFormRef')
+      console.log(smFormRef.value, 'smFormRef')
+
       console.log('拿到参数调用接口-注意重置 区分新增和编辑')
       // const formData = smFormRef.value.getFormData()
 
+      // 提交请求
+      formLoading.value = true
+
+      const data = cloneDeep(getFormData())
+      data.items.forEach((item) => {
+        item.taxPercent = item.taxPercent / 100
+        return item
+      })
+
+  
 
 
-        // 提交请求
-       formLoading.value = true
-
-      const data = getFormData()
+      // const data = getFormData()
       console.log(data, '点击确定的formData')
 
       if (formType.value === 'create') {
         await PurchaseRequestApi.createPurchaseRequest(data)
         message.success(t('common.createSuccess'))
-      } else {
+      } else if (formType.value === 'audit') {
+        await PurchaseRequestApi.updatePurchaseRequestAuditStatus( { requestId: data.id, reviewed: true, obj:data })
+        message.success(t('common.updateSuccess'))
+      }
+      else {
         await PurchaseRequestApi.updatePurchaseRequest(data)
         message.success(t('common.updateSuccess'))
       }
 
       dialogVisible.value = false
       // 拿到外部回调处理成功事件
-      successCallback()  //emit('success')
-    } catch(e) {
+      successCallback() //emit('success')
+    } catch (e) {
       console.log(e, '报错了')
     } finally {
       formLoading.value = false
     }
-  
   }
 
   const requestFormOptions = ref([
@@ -193,7 +221,7 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
         data: deptList,
         props: defaultProps,
         'check-strictly': true,
-        'node-key': 'id',
+        'node-key': 'id'
         // style: {
         //   width: '100%'
         // }
@@ -206,7 +234,6 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
         }
       ]
     },
-
 
     {
       type: 'select',
@@ -229,9 +256,6 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
       ],
       children: supplierProductList
     },
-
-
-
 
     // {
     //   type: 'select',
@@ -266,16 +290,17 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
     // },
 
     {
-      type: "input",
-      label: "收货地址",
-      prop: "deliveryDelivery",
-      placeholder: "请输入收货地址",
+      type: 'input',
+      label: '收货地址',
+      prop: 'deliveryDelivery',
+      placeholder: '请输入收货地址',
       attrs: {
-        style:{width: '100%'},
-        clearable: true,
-      },
+        style: { width: '100%' },
+        clearable: true
+      }
     },
-    { colConfig: {span:24},
+    {
+      colConfig: { span: 24 },
       slot: 'items',
       formItemConfig: {
         class: 'purchase-request-items'
@@ -293,6 +318,7 @@ export const usePurchaseRequestForm = ({getResetFormData,getFormData,successCall
     submitForm,
     subTabsName,
     itemFormRef,
-    formLoading
+    formLoading,
+    formType
   }
 }

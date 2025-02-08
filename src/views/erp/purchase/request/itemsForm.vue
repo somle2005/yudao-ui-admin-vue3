@@ -6,9 +6,9 @@
     v-loading="formLoading"
     label-width="0px"
     :inline-message="true"
-    :disabled="disabled"
   >
-    <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px">
+    <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
+    <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
       <el-table-column label="产品" min-width="180">
         <template #default="{ row, $index }">
@@ -19,6 +19,7 @@
               filterable
               @change="onChangeProduct($event, row)"
               placeholder="请选择产品"
+              :disabled="disabled"
             >
               <el-option
                 v-for="item in productList"
@@ -34,7 +35,13 @@
       <el-table-column label="仓库" min-width="125">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-            <el-select v-model="row.warehouseId" clearable filterable placeholder="请选择仓库">
+            <el-select
+              :disabled="disabled"
+              v-model="row.warehouseId"
+              clearable
+              filterable
+              placeholder="请选择仓库"
+            >
               <el-option
                 v-for="item in warehouseList"
                 :key="item.id"
@@ -70,25 +77,25 @@
       <el-table-column label="申请数量" prop="count" fixed="right" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
-            <!-- <el-input-number
-              v-model="row.count"
-              controls-position="right"
-              :min="0.001"
-              :precision="3"
-              class="!w-100%"
-            /> -->
+            <!-- @change="(val) => (row.approveCount = val)" -->
             <el-input-number
+              :disabled="disabled"
               v-model="row.count"
               controls-position="right"
               :min="1"
               class="!w-100%"
-              @change="(val) => (row.approveCount = val)"
             />
           </el-form-item>
         </template>
       </el-table-column>
 
-      <el-table-column label="批准数量" prop="approveCount" fixed="right" min-width="140">
+      <el-table-column
+        v-if="disabled"
+        label="批准数量"
+        prop="approveCount"
+        fixed="right"
+        min-width="140"
+      >
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.approveCount`" class="mb-0px!">
             <el-input-number
@@ -105,6 +112,7 @@
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
             <el-input-number
+              :disabled="disabled"
               v-model="row.actTaxPrice"
               controls-position="right"
               :min="0.01"
@@ -119,6 +127,7 @@
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
             <el-input-number
+              :disabled="disabled"
               v-model="row.referenceUnitPrice"
               controls-position="right"
               :min="0.01"
@@ -129,10 +138,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="税率" prop="taxPercent" fixed="right" min-width="140">
+      <el-table-column label="税率%" prop="taxPercent" fixed="right" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
             <el-input-number
+              :disabled="disabled"
               v-model="row.taxPercent"
               controls-position="right"
               :min="0"
@@ -171,7 +181,7 @@
           </el-form-item>
         </template>
       </el-table-column> -->
-      <el-table-column align="center" fixed="right" label="操作" width="60">
+      <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
           <el-button @click="handleDelete($index)" link>—</el-button>
         </template>
@@ -224,11 +234,17 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  disabled: {
-    type: Boolean,
-    default: false
+  // disabled: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  formType: {
+    type: String,
+    default: ''
   }
 })
+
+const disabled = computed(() => props.formType === 'audit')
 
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
@@ -269,13 +285,14 @@ watch(
 
     // 循环处理
     val.forEach((item) => {
-
       // 申请数量和税率都要有 才能计算出税额
-      if (item.taxPercent && item.count) {
+      if (item.taxPercent && item.count && item.actTaxPrice) {
         const taxPercent100 = item.taxPercent / 100.0
-        // item.taxPrice = item.actTaxPrice * (taxPercent100/(1+taxPercent100))
+        // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
         const scale = (taxPercent100 / (1 + taxPercent100)) * item.count
         item.taxPrice = erpPriceMultiply(item.actTaxPrice, scale)
+        // 价税合计 = 含税单价 * 申请数量。
+        item.allAmount = erpPriceMultiply(item.actTaxPrice, item.count)
       }
 
       // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
@@ -330,7 +347,7 @@ const handleAdd = () => {
     productId: undefined,
     count: undefined,
     warehouseId: undefined,
-    approveCount: undefined,
+    // approveCount: undefined,
     actTaxPrice: undefined,
     referenceUnitPrice: undefined,
     taxPrice: undefined,
@@ -391,8 +408,8 @@ defineExpose({ validate })
 onMounted(async () => {
   productList.value = await ProductApi.getProductSimpleList()
   // 默认添加一个
-  // if (formData.value.length === 0) {
-  //   handleAdd()
-  // }
+  if (formData.value.length === 0) {
+    handleAdd()
+  }
 })
 </script>

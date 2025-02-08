@@ -7,7 +7,7 @@
     v-bind="$attrs"
     @row-click="rowClick"
   >
-    <el-table-column v-if="isSelection" width="30" label="选择" type="selection" />
+    <el-table-column v-if="isSelection" fixed="left" width="30" label="选择" type="selection" />
     <template v-for="(item, index) in tableOption" :key="index">
       <el-table-column
         v-if="item.prop && !item.action"

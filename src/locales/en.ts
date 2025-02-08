@@ -308,7 +308,8 @@ export default {
     typeUpdate: 'Dict Type Eidt',
     dataCreate: 'Dict Data Create',
     dataUpdate: 'Dict Data Eidt',
-    fileUpload: 'File Upload'
+    fileUpload: 'File Upload',
+    audit:'Audit'
   },
   dialog: {
     dialog: 'Dialog',

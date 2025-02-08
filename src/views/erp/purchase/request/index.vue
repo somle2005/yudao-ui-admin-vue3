@@ -316,26 +316,81 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-
-      <template #status="{ scope }"> 
-        <!-- {{ '审核状态枚举' }} -->
+      <template #status="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
       </template>
 
       <template #orderStatus="{ scope }">
-        <!-- {{ '订购状态枚举' }} -->
         <dict-tag :type="DICT_TYPE.SRP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
       </template>
 
       <template #offStatus="{ scope }">
-        <!-- {{ '关闭状态枚举' }} -->
         <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
       </template>
 
       <template #operate="{ scope }">
         <!-- <el-button link @click="openForm('detail', scope.row.id)"> 详情 </el-button> -->
-        <el-button link type="primary" @click="openForm('update', scope.row.id)"> 编辑 </el-button>
-        <el-button link type="danger" @click="handleDelete([scope.row.id])"> 删除 </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+           v-hasPermi="['erp:purchase-request:update']"
+        >
+          编辑
+        </el-button>
+        
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete([scope.row.id])"
+          v-hasPermi="['erp:purchase-request:delete']"
+        >
+          删除
+        </el-button>
+
+        <el-button
+          link
+          type="primary"
+          @click="handleUpdateStatus(scope.row.id, 20,true)"
+          v-hasPermi="['erp:purchase-request:audit-status']"
+          v-if="![5,20].includes(scope.row.status)"
+        >
+          审核
+        </el-button>
+
+        <el-button
+          link
+          type="danger"
+          @click="handleUpdateStatus(scope.row.id,5,false)"
+          v-hasPermi="['erp:purchase-request:audit-status']"
+          v-if="scope.row.status === 20"
+        >
+          反审核
+        </el-button>
+
+
+
+        <el-button
+          link
+          type="primary"
+          @click="handleUpdateStatusEnable(scope.row.id, scope.row.purchaseOrderId, true)"
+          v-hasPermi="['erp:purchase-request:enable']"
+          v-if="scope.row.offStatus !== 1"
+        >
+          开启
+        </el-button>
+
+        <el-button
+          link
+          type="danger"
+          @click="handleUpdateStatusEnable(scope.row.id, scope.row.purchaseOrderId, false)"
+          v-hasPermi="['erp:purchase-request:enable']"
+           v-if="scope.row.offStatus === 1"
+        >
+          关闭
+        </el-button>
+
+
 
         <!-- <el-button
           link
@@ -353,6 +408,7 @@
         >
           编辑
         </el-button>
+
         <el-button
           link
           type="primary"
@@ -362,6 +418,7 @@
         >
           审批
         </el-button>
+
         <el-button
           link
           type="danger"
@@ -388,7 +445,7 @@
   <!-- v-model="formData" -->
   <!-- :modelValue="formData"
   @update:model-value="updateModelValue" -->
-  <Dialog width="1400" :title="dialogTitle" v-model="dialogVisible" >
+  <Dialog width="1400" :title="dialogTitle" v-model="dialogVisible">
     <SmForm
       class="-mb-15px"
       ref="smFormRef"
@@ -410,13 +467,12 @@
 
       <template #items="{ scope, model }">
         {{ console.log(scope, model, '打印scope-model') }}
-          <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%;">
-            <el-tab-pane label="申请产品清单" name="item">
-              <itemsForm ref="itemFormRef" :items="formData.items" :disabled="false"  />
-              <!-- <div class="tabs-product" @click="tabsClick(model)">点击测试</div> -->
-              <!-- <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" /> -->
-            </el-tab-pane>
-          </el-tabs>
+        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="申请产品清单" name="item">
+            <itemsForm ref="itemFormRef" :items="formData.items" :formType="formType"  />
+            <!-- <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" /> -->
+          </el-tab-pane>
+        </el-tabs>
       </template>
     </SmForm>
     <div class="moreBtnList">
@@ -531,7 +587,7 @@ const fieldMap = {
     slot: 'operate',
     fixed: 'right',
     // action: true,
-    width: '180px'
+    width: '250px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap)
@@ -570,8 +626,13 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-    list.value = data.list
-    total.value = data.total
+    // list.value = data.list
+    list.value = mergeItemsToList(data.list, {
+      id: 'purchaseOrderId',
+      orderStatus: 'rowOrderStatus'
+    })
+    // 后续需要补充itemsTotal
+    total.value = data.itemsTotal || data.total
   } finally {
     loading.value = false
 
@@ -654,14 +715,48 @@ const handleDelete = async (ids: number[]) => {
   } catch {}
 }
 
-/** 审批/反审批操作 */
-const handleUpdateStatus = async (id: number, status: number) => {
+
+/** 审核/反审核操作 */
+const handleUpdateStatus = async (requestId: number, status: number,reviewed: boolean) => {
+  /**
+    已审核 20
+    审核不通过 14
+    未审核 10
+    反审核 5
+    (只要不是已审核或者反审核)-10(出现审核)
+    已审核-20(出现反审核)
+   */
+  // 执行审核操作
+  if(reviewed) {
+    openForm('audit', requestId)
+    return
+  }
   try {
-    // 审批的二次确认
-    await message.confirm(`确定${status === 20 ? '审批' : '反审批'}该申请吗？`)
-    // 发起审批
-    await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
-    message.success(`${status === 20 ? '审批' : '反审批'}成功`)
+    // 审核的二次确认
+    await message.confirm(`确定${status === 20 ? '审核' : '反审核'}该申请吗？`)
+    // 发起审核
+    // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
+    await PurchaseRequestApi.updatePurchaseRequestAuditStatus({requestId, reviewed})
+    message.success(`${status === 20 ? '审核' : '反审核'}成功`)
+    // 刷新列表
+    await getList()
+  } catch {}
+}
+
+/** 关闭/启用申请单 */
+const handleUpdateStatusEnable =  async (requestId:number,itemId:number[],enable:boolean) => {
+  /**
+    手动关闭 3
+    已关闭 2
+    开启 1
+   */
+   try {
+    // 开启的二次确认
+    await message.confirm(`确定${enable ? '开启' : '关闭'}该申请吗？`)
+    // 发起开启
+    // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
+    await PurchaseRequestApi.updatePurchaseRequestStatusEnable({requestId, itemId ,enable})
+    message.success(`${enable ? '开启' : '关闭'}成功`)
     // 刷新列表
     await getList()
   } catch {}
@@ -722,19 +817,20 @@ const getFormData = () => {
   return formData
 }
 
+let {
+  dialogTitle,
+  dialogVisible,
+  openForm,
+  requestFormOptions,
+  smFormRef,
+  submitForm,
+  subTabsName,
+  itemFormRef,
+  formLoading,
+  formType
+} = usePurchaseRequestForm({ getResetFormData, getFormData, successCallback: getList })
 
 
-let { dialogTitle, dialogVisible, openForm, requestFormOptions, smFormRef, submitForm,subTabsName,itemFormRef, formLoading } =
-  usePurchaseRequestForm(
-    {getResetFormData,getFormData,successCallback:getList}
-  )
-
-
-
-const tabsClick = (model) => {
-  // model.items = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  console.log('tabsClick')
-}
 </script>
 <style lang="scss" scoped>
 .moreBtnList {
@@ -743,6 +839,6 @@ const tabsClick = (model) => {
   width: 100%;
 }
 :global(.purchase-request-items .el-form-item__content) {
-  margin-left: 0!important;
+  margin-left: 0 !important;
 }
 </style>
