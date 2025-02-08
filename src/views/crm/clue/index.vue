@@ -70,7 +70,7 @@
       <el-tab-pane label="我参与的" name="2" />
       <el-tab-pane label="下属负责的" name="3" />
     </el-tabs>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+    <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
       <el-table-column label="线索名称" align="center" prop="name" fixed="left" width="160">
         <template #default="scope">
           <el-link :underline="false" type="primary" @click="openDetail(scope.row.id)">
@@ -130,6 +130,35 @@
         width="180px"
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
+
+      <el-table-column align="center" label="公司名称" prop="companyName" width="200px" />
+      <el-table-column align="center" label="公司介绍" prop="creatorName" width="200px" />
+      <el-table-column align="center" label="官网" prop="creatorName" width="200px" />
+      <el-table-column align="center" label="客户标签" prop="labelIds" width="200px">
+        <template #default="scope">
+          <div v-if="scope.row?.labelIds?.length">
+            <dict-tag
+              v-for="item in scope.row.labelIds"
+              :key="item"
+              :type="DICT_TYPE.CRM_CLIENT_TAG"
+              :value="item"
+            />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="国家" prop="countryId" width="200px">
+        <template #default="scope">
+          <div v-if="scope.row?.countryId?.length">
+            <dict-tag
+              v-for="item in scope.row.countryId"
+              :key="item"
+              :type="DICT_TYPE.COUNTRY_CODE"
+              :value="item"
+            />
+          </div>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作" align="center" min-width="110" fixed="right">
         <template #default="scope">
           <el-button

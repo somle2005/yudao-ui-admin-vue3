@@ -137,6 +137,66 @@
           </el-form-item>
         </el-col>
       </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="公司名称" prop="companyName">
+            <el-input v-model="formData.companyName" placeholder="请输入公司名称" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="公司介绍" prop="companyIntroduce">
+            <el-input v-model="formData.companyIntroduce" placeholder="请输入公司介绍" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="官网" prop="companyWebsite">
+            <el-input v-model="formData.companyWebsite" placeholder="请输入官网" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="客户标签" prop="labelIds">
+            <el-select
+              multiple
+              v-model="formData.labelIds"
+              placeholder="请选择客户标签"
+              clearable
+              class="w-1/1"
+            >
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CLIENT_TAG)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="国家" prop="countryId">
+            <el-select
+              multiple
+              v-model="formData.countryId"
+              placeholder="请选择国家"
+              clearable
+              class="w-1/1"
+            >
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.COUNTRY_CODE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <template #footer>
       <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
@@ -176,7 +236,12 @@ const formData = ref({
   industryId: undefined,
   level: undefined,
   source: undefined,
-  remark: undefined
+  remark: undefined,
+  companyName: undefined,
+  companyIntroduce: undefined,
+  companyWebsite: undefined,
+  labelIds: undefined,
+  countryId: undefined
 })
 const formRules = reactive({
   name: [{ required: true, message: '线索名称不能为空', trigger: 'blur' }],
