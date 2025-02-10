@@ -330,3 +330,11 @@ export function getDateRange(
     dayjs(endDate).endOf('d').format('YYYY-MM-DD HH:mm:ss')
   ]
 }
+
+export function formatTime(
+  time: dayjs.ConfigType,
+  format: string = 'YYYY-MM-DD HH:mm:ss'
+): string {
+  if (time===null||time===undefined) return ''
+  return dayjs(time).format(format)
+}

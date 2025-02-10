@@ -1,6 +1,8 @@
 import { PurchaseRequestApi } from '@/api/erp/purchase/request'
 import { getDeptTree, getProductList, getUserList, getSupplierProductList } from '@/commonData'
 import { cloneDeep } from 'lodash-es'
+import { formatTime } from '@/utils/formatTime'
+import { defaultProps } from '@/utils/tree'
 
 /**
 
@@ -48,30 +50,51 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
 申请数量
  */
 
-const mergeDetail = (formData, detail,formType) => {
+
+
+const mergeDetail = (formData, detail, formType, smFormRef) => {
   for (const key in detail) {
     formData[key] = detail[key]
   }
-  formData.items.forEach(item => {
-    if(formType === 'audit') {
+  // formData.requestTime = "2025-02-01 00:00:00"
+  formData.requestTime = formatTime(formData.requestTime)
+  formData.items.forEach((item) => {
+    if (formType === 'audit') {
       item.approveCount = item.count
     }
     item.taxPercent = item.taxPercent * 100
   })
+
+  nextTick(() => {
+    const modelValue = smFormRef.value.getFormData()
+    for (const key in formData) {
+      modelValue[key] = formData[key]
+    }
+    console.log(modelValue, 'modelValue')
+  })
+
+  // modelValue = formData
+  // modelValue.deliveryDelivery = '112121212'
+  // modelValue.requestTime = dayjs(1739016534000).format('YYYY-MM-DD HH:mm:ss')
+  // modelValue.applicant = 50025
+  // modelValue.applicationDept = 50019
 }
 
-export const usePurchaseRequestForm = ({ getResetFormData, getFormData, successCallback }) => {
+export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) => {
   const { t } = useI18n() // 国际化
   const message = useMessage() // 消息弹窗
 
   const dialogTitle = ref('')
   const dialogVisible = ref(false)
 
-  const applicantList = getUserList()
-  const { deptList, defaultProps } = getDeptTree()
   // const productList1 = getProductList()
+  // const applicantList = getUserList()
+  // const { deptList, defaultProps } = getDeptTree()
+  // const supplierProductList = getSupplierProductList()
 
-  const supplierProductList = getSupplierProductList()
+  const applicantList = ref([])
+  const supplierProductList = ref([])
+  const deptList = ref([])
 
   // eslint-disable-next-line prefer-const
   // let formData = reactive({formData:{}})
@@ -96,11 +119,17 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, successC
   const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
   const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
 
+ 
+
   const openForm = async (type: string, id?: number) => {
     getResetFormData()
     formType.value = type
     dialogTitle.value = t('action.' + type)
     dialogVisible.value = true
+
+    getUserList(applicantList)
+    getSupplierProductList(supplierProductList)
+    getDeptTree(deptList)
 
     // 修改时，设置数据
     if (id) {
@@ -108,7 +137,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, successC
       try {
         const formData = getFormData()
         const detailData = await PurchaseRequestApi.getPurchaseRequest(id)
-        mergeDetail(formData,detailData,formType.value)
+        mergeDetail(formData, detailData, formType.value, smFormRef)
         console.log(formData, '修改时获取的数据')
       } finally {
         formLoading.value = false
@@ -138,9 +167,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, successC
         return item
       })
 
-  
-
-
       // const data = getFormData()
       console.log(data, '点击确定的formData')
 
@@ -148,17 +174,21 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, successC
         await PurchaseRequestApi.createPurchaseRequest(data)
         message.success(t('common.createSuccess'))
       } else if (formType.value === 'audit') {
-        await PurchaseRequestApi.updatePurchaseRequestAuditStatus( { requestId: data.id, reviewed: true, obj:data })
+        await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
+          requestId: data.id,
+          reviewed: true,
+          obj: data
+        })
         message.success(t('common.updateSuccess'))
-      }
-      else {
+      } else {
         await PurchaseRequestApi.updatePurchaseRequest(data)
         message.success(t('common.updateSuccess'))
       }
 
       dialogVisible.value = false
       // 拿到外部回调处理成功事件
-      successCallback() //emit('success')
+      // successCallback() 
+      emit('success')
     } catch (e) {
       console.log(e, '报错了')
     } finally {
@@ -319,6 +349,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, successC
     subTabsName,
     itemFormRef,
     formLoading,
-    formType
+    formType,
+    applicantList,
+    supplierProductList
   }
 }

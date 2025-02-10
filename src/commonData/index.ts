@@ -15,12 +15,15 @@ interface SelectProp {
 }
 
 // 获取部门编号列表
-export const getDeptTree = () => {
+export const getDeptTree = (data:any) => {
   const deptList = ref<Tree[]>([]) // 树形结构
   // 加载部门树
   // deptList.value = handleTree(await getSimpleDeptList())
   getSimpleDeptList().then(res => {
     deptList.value = handleTree(res)
+    if(data) {
+      data.value = deptList.value
+    }
   })
   return {
     deptList,
@@ -40,7 +43,7 @@ export const getAccountList =  () => {
 }
 
 // 供应商产品编号列表
-export const getSupplierProductList =  () => {
+export const getSupplierProductList =  (data:any) => {
   const supplierProductList = ref<SupplierProductVO[]>([]) // 账户列表
   // 加载账户列表
   SupplierProductApi.getSupplierProductSimpleList().then(res => {
@@ -50,6 +53,9 @@ export const getSupplierProductList =  () => {
       item.type = 'option'
       return item
     })
+    if(data) {
+      data.value = supplierProductList.value
+    }
   })
   return supplierProductList
 }
@@ -69,7 +75,7 @@ export const getWarehouseList =  () => {
   return warehouseList
 }
 // 获取产品列表
-export const getProductList =  () => {
+export const getProductList =  (data:any) => {
   const productList = ref<ProductVO[]>([]) // 产品列表
   ProductApi.getProductSimpleList().then(res => {
     productList.value = res.map(item => {
@@ -78,6 +84,9 @@ export const getProductList =  () => {
       item.type = 'option'
       return item
     })
+    if(data) {
+      data.value = productList.value
+    }
   })
   return productList
 }
@@ -135,7 +144,7 @@ export const getProductNameList =  () => {
 
 
 // 获取用户列表
-export const getUserList = () => {
+export const getUserList = (data: any) => {
   const userList = ref<(UserVO & SelectProp)[]>([]) // 用户列表
   getSimpleUserList().then((res:any) => {
     userList.value = res.map(item => {
@@ -144,6 +153,9 @@ export const getUserList = () => {
       item.type = 'option'
       return item
     })
+    if(data) {
+      data.value = userList.value
+    }
   })
   return userList
 }

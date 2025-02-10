@@ -1,5 +1,5 @@
 <template>
-  <!--  <ContentWrap>
+<!--  <ContentWrap>
     <!~~ 搜索工作栏 ~~>
     <el-form
       class="-mb-15px"
@@ -184,35 +184,25 @@
     </el-form>
   </ContentWrap>-->
 
+
   <ContentWrap>
-    <!-- 搜索工作栏 -->
-    <SmForm
+  <!-- 搜索工作栏 -->
+  <SmForm
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
       label-width="68px"
       v-model="queryParams"
-      :options="searchFormOptions"
-      :getModelValue="getSearchFormData"
+      :options="moreFormOptions"
+      :getModelValue="getModelValue"
     >
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button
-          type="primary"
-          plain
-          @click="openForm('create')"
-          v-hasPermi="['erp:purchase-request:create']"
-        >
+        <el-button type="primary" plain @click="openForm('create')">
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['erp:purchase-request:export']"
-        >
+        <el-button type="success" plain @click="handleExport" :loading="exportLoading">
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
       </template>
@@ -367,6 +357,7 @@
       <template #rowOrderStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.SRP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
       </template>
+      
 
       <template #operate="{ scope }">
         <!-- <el-button link @click="openForm('detail', scope.row.id)"> 详情 </el-button> -->
@@ -374,11 +365,11 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:purchase-request:update']"
+           v-hasPermi="['erp:purchase-request:update']"
         >
           编辑
         </el-button>
-
+        
         <el-button
           link
           type="danger"
@@ -391,9 +382,9 @@
         <el-button
           link
           type="primary"
-          @click="handleUpdateStatus(scope.row.id, 20, true)"
+          @click="handleUpdateStatus(scope.row.id, 20,true)"
           v-hasPermi="['erp:purchase-request:audit-status']"
-          v-if="![5, 20].includes(scope.row.status)"
+          v-if="![5,20].includes(scope.row.status)"
         >
           审核
         </el-button>
@@ -401,12 +392,14 @@
         <el-button
           link
           type="danger"
-          @click="handleUpdateStatus(scope.row.id, 5, false)"
+          @click="handleUpdateStatus(scope.row.id,5,false)"
           v-hasPermi="['erp:purchase-request:audit-status']"
           v-if="scope.row.status === 20"
         >
           反审核
         </el-button>
+
+
 
         <el-button
           link
@@ -423,10 +416,12 @@
           type="danger"
           @click="handleUpdateStatusEnable(scope.row.id, scope.row.purchaseOrderId, false)"
           v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.offStatus === 1"
+           v-if="scope.row.offStatus === 1"
         >
           关闭
         </el-button>
+
+
 
         <!-- <el-button
           link
@@ -476,15 +471,46 @@
     </SmTable>
   </ContentWrap>
 
-
-
+  <!-- 表单弹窗：添加/修改 -->
+  <PurchaseRequestForm ref="formRef" @success="getList" />
   <!-- v-model="formData" -->
   <!-- :modelValue="formData"
   @update:model-value="updateModelValue" -->
+  <Dialog width="1400" :title="dialogTitle" v-model="dialogVisible">
+    <SmForm
+      class="-mb-15px"
+      ref="smFormRef"
+      isCol
+      label-width="150px"
+      v-model="formData"
+      v-loading="formLoading"
+      :options="requestFormOptions"
+      :getModelValue="getFormData"
+    >
+      <!-- <template #primaryImageUrl="{ scope, model }">
+        <UploadImg v-model="model[scope.prop]" />
+      </template> -->
+      <!-- <template #action>
+        <div class="moreBtnList">
+          <el-button type="primary" @click="handleQuery"> 确定</el-button>
+        </div>
+      </template> -->
 
-
-  <!-- 表单弹窗：添加/修改 -->
-  <PurchaseRequestForm ref="formRef" @success="getList" />
+      <template #items="{ scope, model }">
+        {{ console.log(scope, model, '打印scope-model') }}
+        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="申请产品清单" name="item">
+            <itemsForm ref="itemFormRef" :items="formData.items" :formType="formType"  />
+            <!-- <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" /> -->
+          </el-tab-pane>
+        </el-tabs>
+      </template>
+    </SmForm>
+    <div class="moreBtnList">
+      <el-button @click="dialogVisible = false"> 取消</el-button>
+      <el-button type="primary" :disabled="formLoading" @click="submitForm"> 确定</el-button>
+    </div>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -501,7 +527,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { usePurchaseRequestForm } from './hooks'
 // import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
-
+import itemsForm from './itemsForm.vue'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -705,9 +731,9 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
-}
+// const openForm = (type: string, id?: number) => {
+//   formRef.value.open(type, id)
+// }
 
 /** 删除按钮操作 */
 const handleDelete = async (ids: number[]) => {
@@ -723,8 +749,9 @@ const handleDelete = async (ids: number[]) => {
   } catch {}
 }
 
+
 /** 审核/反审核操作 */
-const handleUpdateStatus = async (requestId: number, status: number, reviewed: boolean) => {
+const handleUpdateStatus = async (requestId: number, status: number,reviewed: boolean) => {
   /**
     已审核 20
     审核不通过 14
@@ -734,7 +761,7 @@ const handleUpdateStatus = async (requestId: number, status: number, reviewed: b
     已审核-20(出现反审核)
    */
   // 执行审核操作
-  if (reviewed) {
+  if(reviewed) {
     openForm('audit', requestId)
     return
   }
@@ -743,7 +770,7 @@ const handleUpdateStatus = async (requestId: number, status: number, reviewed: b
     await message.confirm(`确定${status === 20 ? '审核' : '反审核'}该申请吗？`)
     // 发起审核
     // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
-    await PurchaseRequestApi.updatePurchaseRequestAuditStatus({ requestId, reviewed })
+    await PurchaseRequestApi.updatePurchaseRequestAuditStatus({requestId, reviewed})
     message.success(`${status === 20 ? '审核' : '反审核'}成功`)
     // 刷新列表
     await getList()
@@ -751,18 +778,18 @@ const handleUpdateStatus = async (requestId: number, status: number, reviewed: b
 }
 
 /** 关闭/启用申请单 */
-const handleUpdateStatusEnable = async (requestId: number, itemId: number[], enable: boolean) => {
+const handleUpdateStatusEnable =  async (requestId:number,itemId:number[],enable:boolean) => {
   /**
     手动关闭 3
     已关闭 2
     开启 1
    */
-  try {
+   try {
     // 开启的二次确认
     await message.confirm(`确定${enable ? '开启' : '关闭'}该申请吗？`)
     // 发起开启
     // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
-    await PurchaseRequestApi.updatePurchaseRequestStatusEnable({ requestId, itemId, enable })
+    await PurchaseRequestApi.updatePurchaseRequestStatusEnable({requestId, itemId ,enable})
     message.success(`${enable ? '开启' : '关闭'}成功`)
     // 刷新列表
     await getList()
@@ -801,184 +828,51 @@ onMounted(async () => {
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印
 
+const resetFormData = () => {
+  return reactive({
+    requestTime: undefined,
+    applicant: undefined,
+    applicationDept: undefined,
+    supplierId: undefined,
+    deliveryDelivery: '',
+    items: [] as any
+    // productId: undefined,
+    // barCode: undefined
+  })
+}
+// eslint-disable-next-line prefer-const
+let formData = resetFormData()
 
-
-const getSearchFormData = () => {
-  return queryParams
+const getResetFormData = () => {
+  formData = resetFormData()
 }
 
-/**
-no-string-单据编号
-申请人-applicant-string 
-申请部门-applicationDept
-单据日期-requestTime
-status-状态
-auditor-审核者
- */
+const getFormData = () => {
+  return formData
+}
 
- const searchFormOptions = ref([
- {
-    type: 'input',
-    label: '单据编号',
-    prop: 'no',
-    placeholder: '请输入单据编号',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
- ])
-// const searchFormOptions = ref([
-//   {
-//     type: 'input',
-//     label: '单据编号',
-//     prop: 'no',
-//     placeholder: '请输入单据编号',
-//     attrs: {
-//       style: { width: '100%' },
-//       clearable: true
-//     }
-//   },
+let {
+  dialogTitle,
+  dialogVisible,
+  openForm,
+  requestFormOptions,
+  smFormRef,
+  submitForm,
+  subTabsName,
+  itemFormRef,
+  formLoading,
+  formType
+} = usePurchaseRequestForm({ getResetFormData, getFormData, successCallback: getList })
 
-//   {
-//     type: 'date-picker',
-//     placeholder: '请选择单据日期',
-//     prop: 'requestTime',
-//     label: '单据日期',
-//     attrs: {
-//       clearable: true,
-//       type: 'date',
-//       'value-format': 'YYYY-MM-DD HH:mm:ss',
-//       class: '!w-1/1',
-//       style: {
-//         width: '100%'
-//       }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '单据日期不能为空',
-//         trigger: 'change'
-//       }
-//     ]
-//   },
-//   {
-//     type: 'select',
-//     placeholder: '请选择申请人',
-//     prop: 'applicant',
-//     label: '申请人',
-//     attrs: {
-//       filterable: true,
-//       clearable: true,
-//       style: {
-//         width: '100%'
-//       }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '申请人不能为空',
-//         trigger: 'change'
-//       }
-//     ],
-//     children: applicantList
-//   },
-//   {
-//     type: 'tree-select',
-//     placeholder: '请选择申请部门',
-//     prop: 'applicationDept',
-//     label: '申请部门',
-//     attrs: {
-//       filterable: true,
-//       clearable: true,
-//       data: deptList,
-//       props: defaultProps,
-//       'check-strictly': true,
-//       'node-key': 'id'
-//       // style: {
-//       //   width: '100%'
-//       // }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '申请部门不能为空',
-//         trigger: 'change'
-//       }
-//     ]
-//   },
 
-//   {
-//     type: 'select',
-//     placeholder: '请选择供应商产品',
-//     prop: 'supplierId',
-//     label: '供应商产品',
-//     attrs: {
-//       filterable: true,
-//       clearable: true,
-//       style: {
-//         width: '100%'
-//       }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '供应商产品不能为空',
-//         trigger: 'change'
-//       }
-//     ],
-//     children: supplierProductList
-//   },
-
-//   // {
-//   //   type: 'select',
-//   //   value: '',
-//   //   placeholder: '请选择产品',
-//   //   prop: 'productId',
-//   //   label: '产品',
-//   //   attrs: {
-//   //     clearable: true,
-//   //     filterable: true,
-//   //     style: {
-//   //       width: '100%'
-//   //     },
-//   //     onChange: (value) => {
-//   //       const productItem = productList1.value.find((item: any) => item.value === value)
-//   //       if (productItem) {
-//   //         const formData = getFormData()
-//   //         formData.barCode = productItem.barCode
-//   //         // const modelVal = smFormRef.value.getFormData()
-//   //         // modelVal.barCode = productItem.barCode
-//   //       }
-//   //     }
-//   //   },
-//   //   rules: [
-//   //     {
-//   //       required: true,
-//   //       message: '产品不能为空',
-//   //       trigger: 'change'
-//   //     }
-//   //   ],
-//   //   children: productList1
-//   // },
-
-//   {
-//     type: 'input',
-//     label: '收货地址',
-//     prop: 'deliveryDelivery',
-//     placeholder: '请输入收货地址',
-//     attrs: {
-//       style: { width: '100%' },
-//       clearable: true
-//     }
-//   },
-//   {
-//     colConfig: { span: 24 },
-//     slot: 'items',
-//     formItemConfig: {
-//       class: 'purchase-request-items'
-//     }
-//   }
-// ])
 </script>
-
+<style lang="scss" scoped>
+.moreBtnList {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+:global(.purchase-request-items .el-form-item__content) {
+  margin-left: 0 !important;
+}
+</style>
