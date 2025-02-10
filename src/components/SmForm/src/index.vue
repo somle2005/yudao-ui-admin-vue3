@@ -120,6 +120,7 @@
               <component
                 :is="`el-${child.type}`"
                 v-for="(child, i) in item.children"
+                v-bind="child.attrs"
                 :key="i"
                 :label="child.label"
                 :value="child.value"

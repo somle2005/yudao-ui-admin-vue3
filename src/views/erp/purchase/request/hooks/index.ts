@@ -222,7 +222,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
     {
       type: 'select',
       placeholder: '请选择申请人',
-      prop: 'applicant',
+      prop: 'applicantId',
       label: '申请人',
       attrs: {
         filterable: true,
@@ -243,7 +243,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
     {
       type: 'tree-select',
       placeholder: '请选择申请部门',
-      prop: 'applicationDept',
+      prop: 'applicationDeptId',
       label: '申请部门',
       attrs: {
         filterable: true,

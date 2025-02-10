@@ -42,8 +42,10 @@ import ItemsForm from './components/ItemsForm.vue'
 const resetFormData = () => {
   return reactive({
     requestTime: undefined,
-    applicant: undefined,
-    applicationDept: undefined,
+    // applicant: undefined,
+    // applicationDept: undefined,
+    applicantId: undefined,
+    applicationDeptId: undefined,
     supplierId: undefined,
     deliveryDelivery: '',
     items: [] as any
@@ -75,14 +77,12 @@ let {
   itemFormRef,
   formLoading,
   formType
-} = usePurchaseRequestForm({ getResetFormData, getFormData,emit })
-
-
+} = usePurchaseRequestForm({ getResetFormData, getFormData, emit })
 
 // usePurchaseRequestForm({ getResetFormData, getFormData, successCallback: getList })
 onMounted(() => {})
 onUnmounted(() => {})
-defineExpose({ open:openForm }) // 提供 open 方法，用于打开弹窗
+defineExpose({ open: openForm }) // 提供 open 方法，用于打开弹窗
 </script>
 <style lang="scss" scoped>
 .moreBtnList {

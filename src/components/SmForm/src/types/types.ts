@@ -60,7 +60,8 @@ export interface FormOptions {
   //   disabled?: boolean,
   // },
   // 表单项的子元素
-  children?: FormOptions[]
+  // children?: FormOptions[]
+  children?: any
   // 处理上传组件的属性和方法
   uploadAttrs?: {
     action?: string

@@ -500,7 +500,9 @@ import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/ut
 import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { usePurchaseRequestForm } from './hooks'
+import { useSearchForm } from './hooks/search'
 // import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+
 
 
 const { tableOptions, transformTableOptions } = useTableData()
@@ -802,183 +804,10 @@ onMounted(async () => {
 // TODO 芋艿：可优化功能：详情界面，支持打印
 
 
-
 const getSearchFormData = () => {
   return queryParams
 }
 
-/**
-no-string-单据编号
-申请人-applicant-string 
-申请部门-applicationDept
-单据日期-requestTime
-status-状态
-auditor-审核者
- */
-
- const searchFormOptions = ref([
- {
-    type: 'input',
-    label: '单据编号',
-    prop: 'no',
-    placeholder: '请输入单据编号',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
- ])
-// const searchFormOptions = ref([
-//   {
-//     type: 'input',
-//     label: '单据编号',
-//     prop: 'no',
-//     placeholder: '请输入单据编号',
-//     attrs: {
-//       style: { width: '100%' },
-//       clearable: true
-//     }
-//   },
-
-//   {
-//     type: 'date-picker',
-//     placeholder: '请选择单据日期',
-//     prop: 'requestTime',
-//     label: '单据日期',
-//     attrs: {
-//       clearable: true,
-//       type: 'date',
-//       'value-format': 'YYYY-MM-DD HH:mm:ss',
-//       class: '!w-1/1',
-//       style: {
-//         width: '100%'
-//       }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '单据日期不能为空',
-//         trigger: 'change'
-//       }
-//     ]
-//   },
-//   {
-//     type: 'select',
-//     placeholder: '请选择申请人',
-//     prop: 'applicant',
-//     label: '申请人',
-//     attrs: {
-//       filterable: true,
-//       clearable: true,
-//       style: {
-//         width: '100%'
-//       }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '申请人不能为空',
-//         trigger: 'change'
-//       }
-//     ],
-//     children: applicantList
-//   },
-//   {
-//     type: 'tree-select',
-//     placeholder: '请选择申请部门',
-//     prop: 'applicationDept',
-//     label: '申请部门',
-//     attrs: {
-//       filterable: true,
-//       clearable: true,
-//       data: deptList,
-//       props: defaultProps,
-//       'check-strictly': true,
-//       'node-key': 'id'
-//       // style: {
-//       //   width: '100%'
-//       // }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '申请部门不能为空',
-//         trigger: 'change'
-//       }
-//     ]
-//   },
-
-//   {
-//     type: 'select',
-//     placeholder: '请选择供应商产品',
-//     prop: 'supplierId',
-//     label: '供应商产品',
-//     attrs: {
-//       filterable: true,
-//       clearable: true,
-//       style: {
-//         width: '100%'
-//       }
-//     },
-//     rules: [
-//       {
-//         required: true,
-//         message: '供应商产品不能为空',
-//         trigger: 'change'
-//       }
-//     ],
-//     children: supplierProductList
-//   },
-
-//   // {
-//   //   type: 'select',
-//   //   value: '',
-//   //   placeholder: '请选择产品',
-//   //   prop: 'productId',
-//   //   label: '产品',
-//   //   attrs: {
-//   //     clearable: true,
-//   //     filterable: true,
-//   //     style: {
-//   //       width: '100%'
-//   //     },
-//   //     onChange: (value) => {
-//   //       const productItem = productList1.value.find((item: any) => item.value === value)
-//   //       if (productItem) {
-//   //         const formData = getFormData()
-//   //         formData.barCode = productItem.barCode
-//   //         // const modelVal = smFormRef.value.getFormData()
-//   //         // modelVal.barCode = productItem.barCode
-//   //       }
-//   //     }
-//   //   },
-//   //   rules: [
-//   //     {
-//   //       required: true,
-//   //       message: '产品不能为空',
-//   //       trigger: 'change'
-//   //     }
-//   //   ],
-//   //   children: productList1
-//   // },
-
-//   {
-//     type: 'input',
-//     label: '收货地址',
-//     prop: 'deliveryDelivery',
-//     placeholder: '请输入收货地址',
-//     attrs: {
-//       style: { width: '100%' },
-//       clearable: true
-//     }
-//   },
-//   {
-//     colConfig: { span: 24 },
-//     slot: 'items',
-//     formItemConfig: {
-//       class: 'purchase-request-items'
-//     }
-//   }
-// ])
+const searchFormOptions =  useSearchForm(handleQuery)
 </script>
 
