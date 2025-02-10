@@ -816,7 +816,7 @@ const mergePurchase = async () => {
     await message.exportConfirm('是否确认合并采购申请单？')
     // 发起导出
     mergeLoading.value = true
-    await PurchaseRequestApi.mergePurchaseRequest(queryParams)
+    await PurchaseRequestApi.mergePurchaseRequest({ ids: selectionList.value.map((item) => item.id) })
     // download.excel(data, '采购申请.xls')
   } catch {
   } finally {

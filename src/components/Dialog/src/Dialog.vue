@@ -59,7 +59,6 @@ const dialogStyle = computed(() => {
 const emits = defineEmits(['closeDialog'])
 
 const closeDialog = () => {
-  console.log('关闭按钮 和 点击其他区域 关闭都会执行')
   emits('closeDialog')
 }
 
