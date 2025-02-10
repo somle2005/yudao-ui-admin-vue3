@@ -49,7 +49,11 @@ export const PurchaseRequestApi = {
   },
 
   // 审核/反审核采购订单
-  updatePurchaseRequestAuditStatus: async (params: { requestId: number; reviewed: boolean,obj?:any }) => {
+  updatePurchaseRequestAuditStatus: async (params: {
+    requestId: number
+    reviewed: boolean
+    obj?: any
+  }) => {
     return await request.put({
       url: `/erp/purchase-request/auditStatus`,
       params
@@ -81,5 +85,12 @@ export const PurchaseRequestApi = {
   // 导出ERP采购申请单 Excel
   exportPurchaseRequest: async (params) => {
     return await request.download({ url: `/erp/purchase-request/export-excel`, params })
-  }
+  },
+  // 合并ERP采购申请单 Excel
+  mergePurchaseRequest: async (params:{ids:number[]}) => {
+    return await request.put({
+      url: `/erp/purchase-request/merge`,
+      params,
+    })
+  },
 }

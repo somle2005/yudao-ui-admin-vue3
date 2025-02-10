@@ -215,6 +215,16 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+
+        <!-- v-hasPermi="['erp:purchase-request:merge']" -->
+        <el-button
+          type="primary"
+          plain
+          @click="mergePurchase"
+          :loading="mergeLoading"
+        >
+           合并
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -792,6 +802,28 @@ const handleSelectionChange = (rows: PurchaseRequestVO[]) => {
   selectionList.value = rows
 }
 
+
+const getSearchFormData = () => {
+  return queryParams
+}
+const searchFormOptions =  useSearchForm(handleQuery)
+
+
+const mergeLoading = ref(false)
+const mergePurchase = async () => {
+  try {
+    // 导出的二次确认
+    await message.exportConfirm('是否确认合并采购申请单？')
+    // 发起导出
+    mergeLoading.value = true
+    await PurchaseRequestApi.mergePurchaseRequest(queryParams)
+    // download.excel(data, '采购申请.xls')
+  } catch {
+  } finally {
+    mergeLoading.value = false
+  }
+}
+
 /** 初始化 **/
 onMounted(async () => {
   await getList()
@@ -802,12 +834,5 @@ onMounted(async () => {
 })
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印
-
-
-const getSearchFormData = () => {
-  return queryParams
-}
-
-const searchFormOptions =  useSearchForm(handleQuery)
 </script>
 
