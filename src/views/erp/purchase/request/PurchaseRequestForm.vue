@@ -23,7 +23,7 @@
         {{ console.log(scope, model, '打印scope-model') }}
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="申请产品清单" name="item">
-            <itemsForm ref="itemFormRef" :items="formData.items" :formType="formType" />
+            <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" />
             <!-- <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" /> -->
           </el-tab-pane>
         </el-tabs>
@@ -37,7 +37,7 @@
 </template>
 <script setup lang="ts">
 import { usePurchaseRequestForm } from './hooks'
-import itemsForm from './components/itemsForm.vue'
+import ItemsForm from './components/ItemsForm.vue'
 
 const resetFormData = () => {
   return reactive({
