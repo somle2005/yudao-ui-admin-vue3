@@ -16,13 +16,6 @@
         :formatter="dateFormatter"
         width="180px"
       />
-      <el-table-column
-        label="更新时间"
-        align="center"
-        prop="updateTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
     </el-table>
   </ContentWrap>
 </template>
