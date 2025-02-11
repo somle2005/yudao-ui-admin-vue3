@@ -35,6 +35,7 @@ const list = ref([]) // 列表的数据
 
 /** 查询列表 */
 const getList = async () => {
+  if (!props.categoryId) return
   loading.value = true
   try {
     list.value = await CustomRuleCategoryApi.getCustomRuleCategoryItemListByCategoryId(
@@ -60,8 +61,7 @@ watch(
   { immediate: true }
 )
 
-
-
+defineExpose({ getList })
 // /** 初始化 **/
 // onMounted(() => {
 //   getList()

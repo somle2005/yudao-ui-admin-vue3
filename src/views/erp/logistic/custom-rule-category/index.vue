@@ -155,11 +155,11 @@
 
   <el-tabs v-if="categoryId" model-value="customRuleCategoryItem">
     <el-tab-pane label="海关品类子表" name="customRuleCategoryItem">
-      <CustomRuleCategoryItemList :category-id="categoryId" />
+      <CustomRuleCategoryItemList ref="customRuleCategoryItemListRef" :category-id="categoryId" />
     </el-tab-pane>
   </el-tabs>
   <!-- 表单弹窗：添加/修改 -->
-  <CustomRuleCategoryForm ref="formRef" @success="getList" />
+  <CustomRuleCategoryForm ref="formRef" @success="refreshTable" />
 </template>
 
 <script setup lang="ts">
@@ -198,6 +198,7 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
+
 
 /** 查询列表 */
 const getList = async () => {
@@ -254,6 +255,14 @@ const handleExport = async () => {
   } catch {
   } finally {
     exportLoading.value = false
+  }
+}
+
+const customRuleCategoryItemListRef = ref()
+function refreshTable() {
+  getList()
+  if(customRuleCategoryItemListRef.value?.getList) {
+    customRuleCategoryItemListRef.value.getList()
   }
 }
 
