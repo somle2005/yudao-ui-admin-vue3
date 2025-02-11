@@ -1,78 +1,81 @@
 <template>
-  <el-table
-    v-loading="loading"
-    :stripe="stripe"
-    :showOverflowTooltip="showOverflowTooltip"
-    :data="tableData"
-    v-bind="$attrs"
-    @row-click="rowClick"
-  >
-    <el-table-column v-if="isSelection" fixed="left" width="30" label="选择" type="selection" />
-    <template v-for="(item, index) in tableOption" :key="index">
-      <el-table-column
-        v-if="item.prop && !item.action"
-        :label="item.label"
-        :prop="item.prop"
-        :width="item.width"
-        :align="item.align"
-        :formatter="item.formatter"
-        :min-width="item['min-width']"
-        v-bind="columnItem(item)"
-      >
-        <template v-if="item.slot" #default="scope">
+  <div id="SmTable">
+    <!-- v-bind="$attrs" style="height:calc(100vh - 285px)" -->
+    <el-table
+      v-loading="loading"
+      :stripe="stripe"
+      :showOverflowTooltip="showOverflowTooltip"
+      :data="tableData"
+      v-bind="TableAttrs()"
+      @row-click="rowClick"
+      class="SmTable-el-table"
+    >
+      <el-table-column v-if="isSelection" fixed="left" width="30" label="选择" type="selection" />
+      <template v-for="(item, index) in tableOption" :key="index">
+        <el-table-column
+          v-if="item.prop && !item.action"
+          :label="item.label"
+          :prop="item.prop"
+          :width="item.width"
+          :align="item.align"
+          :formatter="item.formatter"
+          :min-width="item['min-width']"
+          v-bind="columnItem(item)"
+        >
+          <template v-if="item.slot" #default="scope">
+            <template v-if="scope.row.rowEdit">
+              <el-input v-model="scope.row[item.prop!]" size="small" />
+            </template>
 
-          <template v-if="scope.row.rowEdit">
-            <el-input v-model="scope.row[item.prop!]" size="small" />
-          </template>
+            <template v-else-if="item.wrap">
+              <div :class="['slot-wrap', `slot-${item.prop}`]">{{ scope.row[item.prop!] }}</div>
+            </template>
 
-          <template v-else-if="item.wrap">
-            <div :class="['slot-wrap', `slot-${item.prop}`]">{{ scope.row[item.prop!] }}</div>
-          </template>
-
-          <template v-else>
-            <template v-if="scope.$index + scope.column.id === currentEdit">
-              <div style="display: flex">
-                <el-input v-model="scope.row[item.prop!]" size="small" />
-                <div>
-                  <slot v-if="$slots.cellEdit" name="cellEdit" :scope="scope"></slot>
-                  <div v-else class="action-icon">
-                    <el-icon-check class="check" @click.stop="check(scope)" />
-                    <el-icon-close class="close" @click.stop="close(scope)" />
+            <template v-else>
+              <template v-if="scope.$index + scope.column.id === currentEdit">
+                <div style="display: flex">
+                  <el-input v-model="scope.row[item.prop!]" size="small" />
+                  <div>
+                    <slot v-if="$slots.cellEdit" name="cellEdit" :scope="scope"></slot>
+                    <div v-else class="action-icon">
+                      <el-icon-check class="check" @click.stop="check(scope)" />
+                      <el-icon-close class="close" @click.stop="close(scope)" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </template>
-            <template v-else>
-              <slot v-if="item.slot" :name="item.slot" :scope="scope"></slot>
-              <!-- <span v-else>{{ scope.row[item.prop!] }}</span> -->
-              <component
-                :is="`el-icon-${toLine(editIcon)}`"
-                v-if="item.editable"
-                class="edit"
-                @click.stop="clickEditIcon(scope)"
-              />
+              </template>
+              <template v-else>
+                <slot v-if="item.slot" :name="item.slot" :scope="scope"></slot>
+                <!-- <span v-else>{{ scope.row[item.prop!] }}</span> -->
+                <component
+                  :is="`el-icon-${toLine(editIcon)}`"
+                  v-if="item.editable"
+                  class="edit"
+                  @click.stop="clickEditIcon(scope)"
+                />
+              </template>
             </template>
           </template>
+        </el-table-column>
+      </template>
+      <el-table-column
+        v-if="actionOption"
+        :label="actionOption.label"
+        :width="actionOption.width"
+        :align="actionOption.align"
+        :formatter="actionOption.formatter"
+        :min-width="actionOption['min-width']"
+        v-bind="columnItem(actionOption)"
+      >
+        <template #default="scope">
+          <slot v-if="scope.row.rowEdit" name="editRow" :scope="scope"></slot>
+          <slot v-else name="action" :scope="scope"></slot>
         </template>
       </el-table-column>
-    </template>
-    <el-table-column
-      v-if="actionOption"
-      :label="actionOption.label"
-      :width="actionOption.width"
-      :align="actionOption.align"
-      :formatter="actionOption.formatter"
-      :min-width="actionOption['min-width']"
-      v-bind="columnItem(actionOption)"
-    >
-      <template #default="scope">
-        <slot v-if="scope.row.rowEdit" name="editRow" :scope="scope"></slot>
-        <slot v-else name="action" :scope="scope"></slot>
-      </template>
-    </el-table-column>
-  </el-table>
+    </el-table>
 
-  <Pagination v-if="pagination && !loading" v-bind="pageAttrs()" />
+    <Pagination class="SmTable-Pagination" v-if="pagination && !loading" v-bind="pageAttrs()" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -85,10 +88,41 @@ import Pagination from './components/Pagination.vue'
 /** 基础列表 */
 defineOptions({ name: 'SmTable' })
 
+/** 分页参数需要手动添加和表格参数做区分 */
 const pageAttrs = () => {
   const pageAttrs = useAttrs() || {}
-  return Object.assign({ total: 0 }, pageAttrs)
+  const pageProps = [
+    'pageSize',
+    'currentPage',
+    'onPagination',
+    'onUpdate:currentPage',
+    'onUpdate:pageSize',
+    'pageSize',
+    'total'
+  ]
+  const obj: any = { total: 0 }
+  pageProps.forEach((item) => {
+    obj[item] = pageAttrs[item]
+  })
+  console.log(pageAttrs, 'useAttrs-useAttrs')
+  return obj
+  // return Object.assign({ total: 0 }, pageAttrs)
 }
+
+const TableAttrs = () => {
+  const attrs = useAttrs() || {}
+  const obj:any = {}
+  const filterAttrs = ['style']
+  for(let key in attrs) {
+    if (!filterAttrs.includes(key)) {
+      obj[key] = attrs[key]
+    }
+  }
+  return obj
+}
+
+
+
 const columnItem = (item) => {
   const list = ['label', 'prop', 'width', 'align', 'formatter']
   const filterItem = {}
@@ -256,5 +290,17 @@ const rowClick = (row: any, column: any) => {
 }
 .slot-wrap {
   white-space: normal;
+}
+#SmTable {
+  display: flex;
+  flex-direction: column;
+}
+.SmTable-el-table {
+  flex: 1;
+}
+.SmTable-Pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>
