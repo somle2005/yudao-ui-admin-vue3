@@ -191,24 +191,26 @@
       <el-table-column align="center" label="官网" prop="creatorName" width="200px" />
       <el-table-column align="center" label="客户标签" prop="labelIds" width="200px">
         <template #default="scope">
-          <div v-if="scope.row?.labelIds?.length">
+          <div v-if="scope.row?.labelIds?.length" style="white-space: normal">
             <dict-tag
               v-for="item in scope.row.labelIds"
               :key="item"
               :type="DICT_TYPE.CRM_CLIENT_TAG"
               :value="item"
+              style="margin-bottom: 5px"
             />
           </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="国家" prop="countryId" width="200px">
         <template #default="scope">
-          <div v-if="scope.row?.countryId?.length">
+          <div v-if="scope.row?.countryId?.length" style="white-space: normal">
             <dict-tag
               v-for="item in scope.row.countryId"
               :key="item"
               :type="DICT_TYPE.COUNTRY_CODE"
               :value="item"
+              style="margin-bottom: 5px"
             />
           </div>
         </template>

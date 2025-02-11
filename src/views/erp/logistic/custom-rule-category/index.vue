@@ -165,7 +165,7 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { CustomRuleCategoryApi, CustomRuleCategoryVO } from '@/api/erp/logistic/category'
+import { CustomRuleCategoryApi, CustomRuleCategoryVO } from '@/api/erp/logistic/custom-rule-category'
 import CustomRuleCategoryForm from './CustomRuleCategoryForm.vue'
 import CustomRuleCategoryItemList from './components/CustomRuleCategoryItemList.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
