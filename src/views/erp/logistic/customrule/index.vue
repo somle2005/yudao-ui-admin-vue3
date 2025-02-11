@@ -265,7 +265,7 @@
   </ContentWrap>-->
 
   <!-- isSelection -->
-  <ContentWrap>
+  <ContentWrap :bodyStyle="{ padding: '20px','padding-bottom':0 }">
     <SmTable
       border
       :loading="loading"

@@ -349,7 +349,7 @@
   </ContentWrap>-->
 
   <!-- 列表 -->
-  <ContentWrap>
+  <ContentWrap style="padding-bottom: 0;">
     <SmTable
       border
       isSelection
