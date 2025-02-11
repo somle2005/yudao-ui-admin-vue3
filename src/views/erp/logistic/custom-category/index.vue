@@ -60,7 +60,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:custom-rule-category:create']"
+          v-hasPermi="['erp:custom-category:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -69,7 +69,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:custom-rule-category:export']"
+          v-hasPermi="['erp:custom-category:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -97,21 +97,27 @@
           </el-tabs>
         </template>
       </el-table-column> -->
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="材质" align="center" prop="material">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.ERP_PRODUCT_MATERIAL" :value="scope.row.material" />
         </template>
       </el-table-column>
-      <el-table-column label="报关品名" align="center" prop="declaredType" />
+      <el-table-column
+        label="报关品名"
+        align="center"
+        prop="declaredType"
+        :style="{width: '500px'}"
+      />
       <el-table-column label="英文品名" align="center" prop="declaredTypeEn" />
+      <el-table-column
+        label="更新时间"
+        align="center"
+        prop="updateTime"
+        :formatter="dateFormatter"
+        width="180px"
+      />
+      <el-table-column label="更新人" align="center" prop="updater" />
       <el-table-column
         label="创建时间"
         align="center"
@@ -119,6 +125,7 @@
         :formatter="dateFormatter"
         width="180px"
       />
+      <el-table-column label="创建人" align="center" prop="creator" />
       <el-table-column label="操作" align="center" min-width="180px">
         <template #default="scope">
           <!-- <el-button link type="primary" @click="categoryDialog = true"> 详情 </el-button> -->
@@ -126,7 +133,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:custom-rule-category:update']"
+            v-hasPermi="['erp:custom-category:update']"
           >
             编辑
           </el-button>
@@ -134,7 +141,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:custom-rule-category:delete']"
+            v-hasPermi="['erp:custom-category:delete']"
           >
             删除
           </el-button>
@@ -165,7 +172,10 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { CustomRuleCategoryApi, CustomRuleCategoryVO } from '@/api/erp/logistic/custom-rule-category'
+import {
+  CustomRuleCategoryApi,
+  CustomRuleCategoryVO
+} from '@/api/erp/logistic/custom-category'
 import CustomRuleCategoryForm from './CustomRuleCategoryForm.vue'
 import CustomRuleCategoryItemList from './components/CustomRuleCategoryItemList.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
@@ -198,7 +208,6 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-
 
 /** 查询列表 */
 const getList = async () => {
@@ -261,7 +270,7 @@ const handleExport = async () => {
 const customRuleCategoryItemListRef = ref()
 function refreshTable() {
   getList()
-  if(customRuleCategoryItemListRef.value?.getList) {
+  if (customRuleCategoryItemListRef.value?.getList) {
     customRuleCategoryItemListRef.value.getList()
   }
 }

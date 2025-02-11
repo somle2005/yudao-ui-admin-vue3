@@ -65,7 +65,7 @@
   </el-row>
 </template>
 <script setup lang="ts">
-import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-rule-category'
+import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 const props = defineProps({

@@ -187,8 +187,8 @@
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
 
       <el-table-column align="center" label="公司名称" prop="companyName" width="200px" />
-      <el-table-column align="center" label="公司介绍" prop="creatorName" width="200px" />
-      <el-table-column align="center" label="官网" prop="creatorName" width="200px" />
+      <el-table-column align="center" label="公司介绍" prop="companyWebsite" width="200px" />
+      <el-table-column align="center" label="官网" prop="companyIntroduce" width="200px" />
       <el-table-column align="center" label="客户标签" prop="labelIds" width="200px">
         <template #default="scope">
           <div v-if="scope.row?.labelIds?.length" style="white-space: normal">

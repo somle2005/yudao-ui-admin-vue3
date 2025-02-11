@@ -63,38 +63,43 @@ export interface ErpCustomRuleCategoryItemSaveReqVO {
 export const CustomRuleCategoryApi = {
   // 查询海关品类分页
   getCustomRuleCategoryPage: async (params: any) => {
-    return await request.get({ url: `/erp/custom-rule-category/page`, params })
+    return await request.get({ url: `/erp/custom-category/page`, params })
   },
 
   // 查询海关品类详情
   getCustomRuleCategory: async (id: number) => {
-    return await request.get({ url: `/erp/custom-rule-category/get?id=` + id })
+    return await request.get({ url: `/erp/custom-category/get?id=` + id })
   },
 
   // 新增海关品类
   createCustomRuleCategory: async (data: CustomRuleCategoryVO) => {
-    return await request.post({ url: `/erp/custom-rule-category/create`, data })
+    return await request.post({ url: `/erp/custom-category/create`, data })
   },
 
   // 修改海关品类
   updateCustomRuleCategory: async (data: CustomRuleCategoryVO) => {
-    return await request.put({ url: `/erp/custom-rule-category/update`, data })
+    return await request.put({ url: `/erp/custom-category/update`, data })
   },
 
   // 删除海关品类
   deleteCustomRuleCategory: async (id: number) => {
-    return await request.delete({ url: `/erp/custom-rule-category/delete?id=` + id })
+    return await request.delete({ url: `/erp/custom-category/delete?id=` + id })
   },
 
   // 导出海关品类 Excel
   exportCustomRuleCategory: async (params) => {
-    return await request.download({ url: `/erp/custom-rule-category/export-excel`, params })
+    return await request.download({ url: `/erp/custom-category/export-excel`, params })
   },
 
 // ==================== 子表（海关品类子表） ====================
 
   // 获得海关品类子表列表
   getCustomRuleCategoryItemListByCategoryId: async (categoryId) => {
-    return await request.get({ url: `/erp/custom-rule-category/custom-rule-category-item/list-by-category-id?categoryId=` + categoryId })
+    return await request.get({ url: `/erp/custom-category/custom-category-item/list-by-category-id?categoryId=` + categoryId })
+  },
+
+  // 获得海关分类组合值精简列表
+  getCustomRuleCategorySimpleList: async () => {
+    return await request.get({ url: `/erp/custom-category/simple-list` })
   },
 }

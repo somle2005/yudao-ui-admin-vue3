@@ -7,6 +7,7 @@ import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
+import {CustomRuleCategoryApi} from '@/api/erp/logistic/custom-rule-category'
 
 interface SelectProp {
   value: number
@@ -156,4 +157,21 @@ export const getUserList = (data?: any) => {
     }
   })
   return userList
+}
+
+// 获得海关分类组合值精简列表
+export const getCustomRuleCategoryList = (data?: any) => {
+  const customRuleCategoryList = ref<any[]>([]) // 用户列表
+  CustomRuleCategoryApi.getCustomRuleCategorySimpleList().then((res: any) => {
+    customRuleCategoryList.value = res.map((item) => {
+      item.label = item.combinedValue
+      item.value = item.customCategoryId
+      item.type = 'option'
+      return item
+    })
+    if (data) {
+      data.value = customRuleCategoryList.value
+    }
+  })
+  return customRuleCategoryList
 }

@@ -10,18 +10,27 @@
       <el-table-column label="HS编码" align="center" prop="hsCode" />
       <el-table-column label="税率" align="center" prop="taxRate" />
       <el-table-column
+        label="更新时间"
+        align="center"
+        prop="updateTime"
+        :formatter="dateFormatter"
+        width="180px"
+      />
+      <el-table-column label="更新人" align="center" prop="updater" />
+      <el-table-column
         label="创建时间"
         align="center"
         prop="createTime"
         :formatter="dateFormatter"
         width="180px"
       />
+      <el-table-column label="创建人" align="center" prop="creator" />
     </el-table>
   </ContentWrap>
 </template>
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
-import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-rule-category'
+import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
 import { DICT_TYPE } from '@/utils/dict'
 
 const { t } = useI18n() // 国际化

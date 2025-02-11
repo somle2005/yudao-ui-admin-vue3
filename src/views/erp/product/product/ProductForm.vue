@@ -1,7 +1,7 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
     <div class="editBtn" v-if="formDisabled">
-      <el-button type="primary"  @click="detailEdit">编辑</el-button>
+      <el-button type="primary" @click="detailEdit">编辑</el-button>
     </div>
     <el-form
       ref="formRef"
@@ -204,6 +204,20 @@
             <el-input v-model="formData.brand" placeholder="请输入品牌" />
           </el-form-item>
         </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="产品材质" prop="customCategoryId">
+            <el-select v-model="formData.customCategoryId" clearable placeholder="请选择产品材质">
+              <el-option
+                v-for="dict in customRuleCategoryList"
+                :key="String(dict.value)"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
         <el-col :span="24">
           <ContentWrap>
             <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
@@ -361,6 +375,7 @@ import ProductBookcase from '@/views/erp/product/product/ProductBookcase.vue'
 import ProductIronFilingCabinet from '@/views/erp/product/product/ProductIronFilingCabinet.vue'
 import ProductDesktopStorageRack from '@/views/erp/product/product/ProductDesktopStorageRack.vue'
 import ProductKeyboardTray from '@/views/erp/product/product/ProductKeyboardTray.vue'
+import { getCustomRuleCategoryList } from '@/commonData/index'
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
@@ -410,7 +425,8 @@ const initFormData = () => {
     packageWeight: undefined,
     packageWidth: undefined,
     packageLength: undefined,
-    packageHeight: undefined
+    packageHeight: undefined,
+    customCategoryId:undefined
   }
 }
 formData.value = initFormData()
@@ -436,7 +452,8 @@ const formRules = reactive({
   packageWeight: [{ required: true, message: '包装重量（kg）不能为空', trigger: 'blur' }],
   packageWidth: [{ required: true, message: '包装宽度（mm）不能为空', trigger: 'blur' }],
   packageLength: [{ required: true, message: '包装长度（mm不能为空', trigger: 'blur' }],
-  packageHeight: [{ required: true, message: '包装高度（mm）不能为空', trigger: 'blur' }]
+  packageHeight: [{ required: true, message: '包装高度（mm）不能为空', trigger: 'blur' }],
+  customCategoryId: [{ required: true, message: '产品材质不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
@@ -444,6 +461,7 @@ const deptList = ref<Tree[]>([]) // 树形结构
 const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
 const isEditMode = ref(false) // 控制是否为编辑模式
+const customRuleCategoryList = ref([]) // 产品材质
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
@@ -497,6 +515,8 @@ const open = async (type: string, id?: number) => {
   } else {
     isEditMode.value = false // 设置为新增模式
   }
+  // 加载产品材质
+  getCustomRuleCategoryList(customRuleCategoryList)
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
   categoryList.value = handleTree(categoryData, 'id', 'parentId')
