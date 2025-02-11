@@ -7,7 +7,7 @@ import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
-import {CustomRuleCategoryApi} from '@/api/erp/logistic/custom-rule-category'
+import {CustomRuleCategoryApi} from '@/api/erp/logistic/custom-category'
 
 interface SelectProp {
   value: number
