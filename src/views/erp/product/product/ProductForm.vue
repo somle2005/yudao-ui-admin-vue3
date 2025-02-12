@@ -210,7 +210,7 @@
             <el-select v-model="formData.customCategoryId" clearable placeholder="请选择产品材质">
               <el-option
                 v-for="dict in customRuleCategoryList"
-                :key="String(dict.value)"
+                :key="dict.value"
                 :label="dict.label"
                 :value="dict.value"
               />
@@ -453,7 +453,6 @@ const formRules = reactive({
   packageWidth: [{ required: true, message: '包装宽度（mm）不能为空', trigger: 'blur' }],
   packageLength: [{ required: true, message: '包装长度（mm不能为空', trigger: 'blur' }],
   packageHeight: [{ required: true, message: '包装高度（mm）不能为空', trigger: 'blur' }],
-  customCategoryId: [{ required: true, message: '产品材质不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
@@ -461,7 +460,7 @@ const deptList = ref<Tree[]>([]) // 树形结构
 const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
 const isEditMode = ref(false) // 控制是否为编辑模式
-const customRuleCategoryList = ref([]) // 产品材质
+const customRuleCategoryList = ref<any[]>([]) // 产品材质
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
