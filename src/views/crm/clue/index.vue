@@ -134,11 +134,11 @@
       <el-table-column align="center" label="公司名称" prop="companyName" width="200px" />
       <el-table-column align="center" label="公司介绍" prop="companyWebsite" width="200px" />
       <el-table-column align="center" label="官网" prop="companyIntroduce" width="200px" />
-      <el-table-column align="center" label="客户标签" prop="labelIds" width="200px">
+      <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
         <template #default="scope">
-          <div v-if="scope.row?.labelIds?.length" style="white-space: normal">
+          <div v-if="scope.row?.labelCodes?.length" class="common-wrap">
             <dict-tag
-              v-for="item in scope.row.labelIds"
+              v-for="item in scope.row.labelCodes"
               :key="item"
               :type="DICT_TYPE.CRM_CLIENT_TAG"
               :value="item"
@@ -147,11 +147,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="国家" prop="countryId" width="200px">
+      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
         <template #default="scope">
-          <div v-if="scope.row?.countryId?.length" style="white-space: normal">
+          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
             <dict-tag
-              v-for="item in scope.row.countryId"
+              v-for="item in scope.row.countryCodes"
               :key="item"
               :type="DICT_TYPE.COUNTRY_CODE"
               :value="item"
@@ -299,3 +299,7 @@ onMounted(() => {
   getList()
 })
 </script>
+<style lang="scss" scoped>
+// @import '@/styles/common.scss'
+@use '../../../styles/comon.scss' as *;
+</style>

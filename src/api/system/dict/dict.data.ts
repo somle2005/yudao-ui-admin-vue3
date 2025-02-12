@@ -4,7 +4,7 @@ export type DictDataVO = {
   id: number | undefined
   sort: number | undefined
   label: string
-  value: string
+  value: string | number
   dictType: string
   status: number
   colorType: string

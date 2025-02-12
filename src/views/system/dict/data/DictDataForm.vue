@@ -18,7 +18,13 @@
         <el-input v-model="formData.label" placeholder="请输入数据标签" />
       </el-form-item>
       <el-form-item label="数据键值" prop="value">
-        <el-input v-model="formData.value" placeholder="请输入数据键值" />
+        <!-- <el-input v-model="formData.value" placeholder="请输入数据键值" /> -->
+        <el-input-number
+          v-model="formData.value"
+          placeholder="请输入数据键值"
+          controls-position="right"
+          :min="1"
+        />
       </el-form-item>
       <el-form-item label="显示排序" prop="sort">
         <el-input-number v-model="formData.sort" :min="0" controls-position="right" />
@@ -75,7 +81,7 @@ const formData = ref({
   id: undefined,
   sort: undefined,
   label: '',
-  value: '',
+  value: undefined,
   dictType: '',
   status: CommonStatusEnum.ENABLE,
   colorType: '',
@@ -171,7 +177,7 @@ const resetForm = () => {
     id: undefined,
     sort: undefined,
     label: '',
-    value: '',
+    value: undefined,
     dictType: '',
     status: CommonStatusEnum.ENABLE,
     colorType: '',

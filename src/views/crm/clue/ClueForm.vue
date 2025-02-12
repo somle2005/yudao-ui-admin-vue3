@@ -158,10 +158,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="客户标签" prop="labelIds">
+          <el-form-item label="客户标签" prop="labelCodes">
             <el-select
               multiple
-              v-model="formData.labelIds"
+              v-model="formData.labelCodes"
               placeholder="请选择客户标签"
               clearable
               class="w-1/1"
@@ -179,10 +179,10 @@
 
       <el-row>
         <el-col :span="12">
-          <el-form-item label="国家" prop="countryId">
+          <el-form-item label="国家" prop="countryCodes">
             <el-select
               multiple
-              v-model="formData.countryId"
+              v-model="formData.countryCodes"
               placeholder="请选择国家"
               clearable
               class="w-1/1"
@@ -221,7 +221,9 @@ const formLoading = ref(false) // 表单的加载中：1）修改时的数据加
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const areaList = ref([]) // 地区列表
 const userOptions = ref<UserApi.UserVO[]>([]) // 用户列表
-const formData = ref({
+const formData = ref()
+const initFormData = () => {
+  return {
   id: undefined,
   name: undefined,
   contactNextTime: undefined,
@@ -240,9 +242,11 @@ const formData = ref({
   companyName: undefined,
   companyIntroduce: undefined,
   companyWebsite: undefined,
-  labelIds: undefined,
+  labelCodes: undefined,
   countryId: undefined
-})
+}
+}
+formData.value = initFormData()
 const formRules = reactive({
   name: [{ required: true, message: '线索名称不能为空', trigger: 'blur' }],
   ownerUserId: [{ required: true, message: '负责人不能为空', trigger: 'blur' }]
@@ -303,23 +307,24 @@ const submitForm = async () => {
 
 /** 重置表单 */
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    name: undefined,
-    contactNextTime: undefined,
-    ownerUserId: 0,
-    mobile: undefined,
-    telephone: undefined,
-    qq: undefined,
-    wechat: undefined,
-    email: undefined,
-    areaId: undefined,
-    detailAddress: undefined,
-    industryId: undefined,
-    level: undefined,
-    source: undefined,
-    remark: undefined
-  }
+  // formData.value = {
+  //   id: undefined,
+  //   name: undefined,
+  //   contactNextTime: undefined,
+  //   ownerUserId: 0,
+  //   mobile: undefined,
+  //   telephone: undefined,
+  //   qq: undefined,
+  //   wechat: undefined,
+  //   email: undefined,
+  //   areaId: undefined,
+  //   detailAddress: undefined,
+  //   industryId: undefined,
+  //   level: undefined,
+  //   source: undefined,
+  //   remark: undefined
+  // }
+  formData.value = initFormData()
   formRef.value?.resetFields()
 }
 </script>
