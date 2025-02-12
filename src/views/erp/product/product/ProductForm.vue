@@ -1,5 +1,5 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" scroll max-height="800px">
+  <Dialog class="productForm-dialog" :title="dialogTitle" v-model="dialogVisible" scroll max-height="800px">
     <div class="editBtn" v-if="formDisabled">
       <el-button type="primary" @click="detailEdit">编辑</el-button>
     </div>
@@ -619,5 +619,10 @@ const detailEdit = () => {
   width: 100%;
   display: flex;
   justify-content: flex-end;
+}
+</style>
+<style>
+.productForm-dialog .el-scrollbar__bar.is-horizontal{
+  height: 0 !important;
 }
 </style>
