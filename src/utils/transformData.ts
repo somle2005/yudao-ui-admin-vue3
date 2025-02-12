@@ -14,13 +14,13 @@ export const mergeItemsToList = (list: any[], mapKey = {}) => {
       item.items.forEach((obj) => {
         const newItem = {
           ...obj,
-          ...item, // 会覆盖前面的id
+          ...item // 会覆盖前面的id
         }
-        for(const key in mapKey) {
+        for (const key in mapKey) {
           newItem[mapKey[key]] = obj[key]
         }
-        arr.push(newItem);
-      });
+        arr.push(newItem)
+      })
     } else {
       arr.push(item)
     }
@@ -30,5 +30,17 @@ export const mergeItemsToList = (list: any[], mapKey = {}) => {
   })
   return arr
 }
-
-
+/**
+ *
+ * @param formData 表单数据
+ * @param mapKeys 需要判空转化为空数组的属性
+ * 处理后端null值需要转化为空数组的属性
+ */
+export const nullToList = (formData: any, mapKeys: string[]) => {
+  mapKeys.forEach((key) => {
+    if (formData.value[key] == null) {
+      formData.value[key] = []
+    }
+  })
+  return formData
+}

@@ -211,6 +211,7 @@ import * as AreaApi from '@/api/system/area'
 import { defaultProps } from '@/utils/tree'
 import * as UserApi from '@/api/system/user'
 import { useUserStore } from '@/store/modules/user'
+import { nullToList } from '@/utils/transformData'
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -224,27 +225,27 @@ const userOptions = ref<UserApi.UserVO[]>([]) // 用户列表
 const formData = ref()
 const initFormData = () => {
   return {
-  id: undefined,
-  name: undefined,
-  contactNextTime: undefined,
-  ownerUserId: 0,
-  mobile: undefined,
-  telephone: undefined,
-  qq: undefined,
-  wechat: undefined,
-  email: undefined,
-  areaId: undefined,
-  detailAddress: undefined,
-  industryId: undefined,
-  level: undefined,
-  source: undefined,
-  remark: undefined,
-  companyName: undefined,
-  companyIntroduce: undefined,
-  companyWebsite: undefined,
-  labelCodes: undefined,
-  countryId: undefined
-}
+    id: undefined,
+    name: undefined,
+    contactNextTime: undefined,
+    ownerUserId: 0,
+    mobile: undefined,
+    telephone: undefined,
+    qq: undefined,
+    wechat: undefined,
+    email: undefined,
+    areaId: undefined,
+    detailAddress: undefined,
+    industryId: undefined,
+    level: undefined,
+    source: undefined,
+    remark: undefined,
+    companyName: undefined,
+    companyIntroduce: undefined,
+    companyWebsite: undefined,
+    labelCodes: [],
+    countryCodes: []
+  }
 }
 formData.value = initFormData()
 const formRules = reactive({
@@ -264,6 +265,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await ClueApi.getClue(id)
+      nullToList(formData, ['labelCodes', 'countryCodes'])
     } finally {
       formLoading.value = false
     }

@@ -1,5 +1,5 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible">
+  <Dialog :title="dialogTitle" v-model="dialogVisible" scroll max-height="800px">
     <div class="editBtn" v-if="formDisabled">
       <el-button type="primary" @click="detailEdit">编辑</el-button>
     </div>
