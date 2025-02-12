@@ -279,7 +279,7 @@
     />
   </ContentWrap>-->
 
-  <ContentWrap :bodyStyle="{ padding: '20px','padding-bottom':0 }">
+  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
       :loading="loading"
@@ -586,6 +586,8 @@ const moreFormOptionsInit = () => {
           prop: 'createTime',
           label: '创建时间',
           attrs: {
+            'start-placeholder': '开始日期',
+            'end-placeholder': '结束日期',
             clearable: true,
             type: 'daterange',
             'value-format': 'YYYY-MM-DD HH:mm:ss'
@@ -598,6 +600,8 @@ const moreFormOptionsInit = () => {
           prop: 'updateTime',
           label: '更新时间',
           attrs: {
+            'start-placeholder': '开始日期',
+            'end-placeholder': '结束日期',
             clearable: true,
             type: 'daterange',
             'value-format': 'YYYY-MM-DD HH:mm:ss'
