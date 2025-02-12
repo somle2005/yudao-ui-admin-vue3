@@ -49,7 +49,7 @@
           :placeholder="item.placeholder"
         >
           <component
-            :is="`el-${child.type}`"
+            :is="`el-${child.type || 'option'}`"
             v-for="(child, i) in item.children"
             :key="i"
             :label="child.label"

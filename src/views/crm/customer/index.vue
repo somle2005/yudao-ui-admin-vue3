@@ -2,8 +2,8 @@
   <!-- <doc-alert title="【客户】客户管理、公海客户" url="https://doc.iocoder.cn/crm/customer/" />
   <doc-alert title="【通用】数据权限" url="https://doc.iocoder.cn/crm/permission/" /> -->
 
-  <ContentWrap>
-    <!-- 搜索工作栏 -->
+<!--  <ContentWrap>
+    <!~~ 搜索工作栏 ~~>
     <el-form
       ref="queryFormRef"
       :inline="true"
@@ -103,6 +103,49 @@
         </el-button>
       </el-form-item>
     </el-form>
+  </ContentWrap>-->
+
+
+  <ContentWrap>
+    <!-- 搜索工作栏 -->
+    <SmForm
+      class="-mb-15px"
+      ref="queryFormRef"
+      :inline="true"
+      label-width="68px"
+      v-model="queryParams"
+      :options="searchFormOptions"
+      :getModelValue="getSearchFormData"
+    >
+      <template #action>
+        <el-button @click="handleQuery">
+          <Icon class="mr-5px" icon="ep:search" />
+          搜索
+        </el-button>
+        <el-button @click="resetQuery">
+          <Icon class="mr-5px" icon="ep:refresh" />
+          重置
+        </el-button>
+        <el-button v-hasPermi="['crm:customer:create']" type="primary" @click="openForm('create')">
+          <Icon class="mr-5px" icon="ep:plus" />
+          新增
+        </el-button>
+        <el-button v-hasPermi="['crm:customer:import']" plain type="warning" @click="handleImport">
+          <Icon icon="ep:upload" />
+          导入
+        </el-button>
+        <el-button
+          v-hasPermi="['crm:customer:export']"
+          :loading="exportLoading"
+          plain
+          type="success"
+          @click="handleExport"
+        >
+          <Icon class="mr-5px" icon="ep:download" />
+          导出
+        </el-button>
+      </template>
+    </SmForm>
   </ContentWrap>
 
   <!-- 列表 -->
@@ -259,6 +302,7 @@ import * as CustomerApi from '@/api/crm/customer'
 import CustomerForm from './CustomerForm.vue'
 import CustomerImportForm from './CustomerImportForm.vue'
 import { TabsPaneContext } from 'element-plus'
+import { useSearchForm } from './hooks/useSearchForm'
 
 defineOptions({ name: 'CrmCustomer' })
 
@@ -358,6 +402,9 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
+
+
+const { searchFormOptions, getSearchFormData } = useSearchForm(handleQuery, queryParams)
 
 /** 监听路由变化更新列表 */
 watch(

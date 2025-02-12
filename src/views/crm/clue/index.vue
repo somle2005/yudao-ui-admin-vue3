@@ -2,8 +2,8 @@
   <!-- <doc-alert title="【线索】线索管理" url="https://doc.iocoder.cn/crm/clue/" />
   <doc-alert title="【通用】数据权限" url="https://doc.iocoder.cn/crm/permission/" /> -->
 
-  <ContentWrap>
-    <!-- 搜索工作栏 -->
+  <!--<ContentWrap>
+    <!~~ 搜索工作栏 ~~>
     <el-form
       class="-mb-15px"
       :model="queryParams"
@@ -61,6 +61,36 @@
         </el-button>
       </el-form-item>
     </el-form>
+  </ContentWrap>-->
+
+  <ContentWrap>
+    <!-- 搜索工作栏 -->
+    <SmForm
+      class="-mb-15px"
+      ref="queryFormRef"
+      :inline="true"
+      label-width="68px"
+      v-model="queryParams"
+      :options="searchFormOptions"
+      :getModelValue="getSearchFormData"
+    >
+      <template #action>
+        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
+        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button type="primary" @click="openForm('create')" v-hasPermi="['crm:clue:create']">
+          <Icon icon="ep:plus" class="mr-5px" /> 新增
+        </el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['crm:clue:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
+      </template>
+    </SmForm>
   </ContentWrap>
 
   <!-- 列表 -->
@@ -202,6 +232,7 @@ import download from '@/utils/download'
 import * as ClueApi from '@/api/crm/clue'
 import ClueForm from './ClueForm.vue'
 import { TabsPaneContext } from 'element-plus'
+import { useSearchForm } from './hooks/useSearchForm'
 
 defineOptions({ name: 'CrmClue' })
 
@@ -293,6 +324,8 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
+
+const { searchFormOptions, getSearchFormData } = useSearchForm(handleQuery, queryParams)
 
 /** 初始化 **/
 onMounted(() => {

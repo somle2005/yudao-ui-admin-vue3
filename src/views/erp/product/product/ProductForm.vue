@@ -346,7 +346,7 @@
       <component :is="productDetailForm" ref="productDetailFormRef" :datas="formData" />
     </el-form>
     <template v-if="!formDisabled" #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
@@ -376,6 +376,7 @@ import ProductIronFilingCabinet from '@/views/erp/product/product/ProductIronFil
 import ProductDesktopStorageRack from '@/views/erp/product/product/ProductDesktopStorageRack.vue'
 import ProductKeyboardTray from '@/views/erp/product/product/ProductKeyboardTray.vue'
 import { getCustomRuleCategoryList } from '@/commonData/index'
+import { debounce } from 'lodash-es'
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
@@ -533,6 +534,7 @@ defineExpose({
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+
 const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
@@ -562,6 +564,10 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
+
+const submitFormDB = debounce(submitForm,1000)
+
+
 
 /** 重置表单 */
 const resetForm = () => {

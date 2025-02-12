@@ -71,7 +71,7 @@ service.interceptors.request.use(
     // get参数编码
     if (config.method?.toUpperCase() === 'GET' && params) {
       config.params = {}
-      const paramsStr = qs.stringify(params, { allowDots: true,  encoder: str => encodeURI(str), })
+      const paramsStr = qs.stringify(params, { allowDots: true, arrayFormat: 'repeat', encoder: str => encodeURI(str) })
       if (paramsStr) {
         config.url = config.url + '?' + paramsStr
       }
