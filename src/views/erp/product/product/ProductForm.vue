@@ -14,12 +14,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="主图" prop="primaryImageUrl">
-            <UploadImg v-model="formData.primaryImageUrl" />
+            <UploadImg :disabled="formDisabled" v-model="formData.primaryImageUrl" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="次图" prop="secondaryImageUrlList">
-            <UploadImgs v-model="formData.secondaryImageUrlList" />
+            <UploadImgs :disabled="formDisabled" v-model="formData.secondaryImageUrlList" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
