@@ -2,7 +2,7 @@
   <!-- <doc-alert title="【客户】客户管理、公海客户" url="https://doc.iocoder.cn/crm/customer/" />
   <doc-alert title="【通用】数据权限" url="https://doc.iocoder.cn/crm/permission/" /> -->
 
-<!--  <ContentWrap>
+  <!--  <ContentWrap>
     <!~~ 搜索工作栏 ~~>
     <el-form
       ref="queryFormRef"
@@ -105,7 +105,6 @@
     </el-form>
   </ContentWrap>-->
 
-
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
@@ -168,6 +167,37 @@
           <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_SOURCE" :value="scope.row.source" />
         </template>
       </el-table-column>
+
+      <el-table-column align="center" label="公司名称" prop="companyName" width="200px" />
+      <el-table-column align="center" label="公司介绍" prop="companyWebsite" width="200px" />
+      <el-table-column align="center" label="官网" prop="companyIntroduce" width="200px" />
+      <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
+        <template #default="scope">
+          <div v-if="scope.row?.labelCodes?.length" class="common-wrap">
+            <dict-tag
+              v-for="item in scope.row.labelCodes"
+              :key="item"
+              :type="DICT_TYPE.CRM_CLIENT_TAG"
+              :value="item"
+              style="margin-bottom: 5px"
+            />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
+        <template #default="scope">
+          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
+            <dict-tag
+              v-for="item in scope.row.countryCodes"
+              :key="item"
+              :type="DICT_TYPE.COUNTRY_CODE"
+              :value="item"
+              style="margin-bottom: 5px"
+            />
+          </div>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="手机" prop="mobile" width="120" />
       <el-table-column align="center" label="电话" prop="telephone" width="130" />
       <el-table-column align="center" label="邮箱" prop="email" width="180" />
@@ -207,7 +237,7 @@
         width="180px"
       />
       <el-table-column align="center" label="最后跟进记录" prop="contactLastContent" width="200" />
-      <el-table-column align="center" label="地址" prop="detailAddress" width="180" />
+      <!-- <el-table-column align="center" label="地址" prop="detailAddress" width="180" /> -->
       <el-table-column align="center" label="距离进入公海天数" prop="poolDay" width="140">
         <template #default="scope"> {{ scope.row.poolDay }} 天</template>
       </el-table-column>
@@ -228,36 +258,6 @@
         width="180px"
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
-
-      <!-- <el-table-column align="center" label="公司名称" prop="companyName" width="200px" />
-      <el-table-column align="center" label="公司介绍" prop="companyWebsite" width="200px" />
-      <el-table-column align="center" label="官网" prop="companyIntroduce" width="200px" />
-      <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
-        <template #default="scope">
-          <div v-if="scope.row?.labelCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.labelCodes"
-              :key="item"
-              :type="DICT_TYPE.CRM_CLIENT_TAG"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
-        <template #default="scope">
-          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.countryCodes"
-              :key="item"
-              :type="DICT_TYPE.COUNTRY_CODE"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column> -->
 
       <el-table-column align="center" fixed="right" label="操作" min-width="150">
         <template #default="scope">
@@ -402,7 +402,6 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
-
 
 const { searchFormOptions, getSearchFormData } = useSearchForm(handleQuery, queryParams)
 
