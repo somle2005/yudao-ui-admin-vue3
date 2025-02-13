@@ -200,7 +200,7 @@
       
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitFormDB">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
@@ -213,6 +213,7 @@ import { defaultProps } from '@/utils/tree'
 import * as UserApi from '@/api/system/user'
 import { useUserStore } from '@/store/modules/user'
 import { nullToList } from '@/utils/transformData'
+import { createDBFn } from '@/utils/decorate'
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -307,6 +308,8 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
+
+const submitFormDB = createDBFn(submitForm)
 
 /** 重置表单 */
 const resetForm = () => {
