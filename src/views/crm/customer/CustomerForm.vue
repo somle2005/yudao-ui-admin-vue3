@@ -138,7 +138,7 @@
         </el-col>
       </el-row>
 
-      <el-row>
+      <!-- <el-row>
         <el-col :span="12">
           <el-form-item label="公司名称" prop="companyName">
             <el-input v-model="formData.companyName" placeholder="请输入公司名称" />
@@ -196,7 +196,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
     </el-form>
     <template #footer>
       <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
