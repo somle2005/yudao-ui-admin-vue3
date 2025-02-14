@@ -13,9 +13,9 @@
             <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_SOURCE" :value="customer.source" />
           </el-descriptions-item>
 
-          <el-descriptions-item label="公司名称">
+          <!-- <el-descriptions-item label="公司名称">
             {{ customer.companyName }}
-          </el-descriptions-item>
+          </el-descriptions-item> -->
           <el-descriptions-item label="公司介绍">
             {{ customer.companyWebsite }}
           </el-descriptions-item>

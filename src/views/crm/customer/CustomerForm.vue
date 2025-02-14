@@ -25,21 +25,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
 
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="公司名称" prop="companyName">
-            <el-input v-model="formData.companyName" placeholder="请输入公司名称" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="公司介绍" prop="companyIntroduce">
-            <el-input v-model="formData.companyIntroduce" placeholder="请输入公司介绍" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="12">
           <el-form-item label="官网" prop="companyWebsite">
             <el-input v-model="formData.companyWebsite" placeholder="请输入官网" />
@@ -63,9 +49,18 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
 
-      <el-row>
+        <!-- <el-col :span="12">
+          <el-form-item label="公司名称" prop="companyName">
+            <el-input v-model="formData.companyName" placeholder="请输入公司名称" />
+          </el-form-item>
+        </el-col> -->
+        <el-col :span="12">
+          <el-form-item label="公司介绍" prop="companyIntroduce">
+            <el-input v-model="formData.companyIntroduce" placeholder="请输入公司介绍" />
+          </el-form-item>
+        </el-col>
+
         <el-col :span="12">
           <el-form-item label="手机" prop="mobile">
             <el-input v-model="formData.mobile" placeholder="请输入手机" />
@@ -87,8 +82,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="电话" prop="telephone">
             <el-input v-model="formData.telephone" placeholder="请输入电话" />
@@ -99,8 +93,7 @@
             <el-input v-model="formData.email" placeholder="请输入邮箱" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="微信" prop="wechat">
             <el-input v-model="formData.wechat" placeholder="请输入微信" />
@@ -111,8 +104,7 @@
             <el-input v-model="formData.qq" placeholder="请输入 QQ" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="客户行业" prop="industryId">
             <el-select v-model="formData.industryId" placeholder="请选择客户行业" class="w-1/1">
@@ -137,8 +129,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="国家" prop="countryCodes">
             <el-select
@@ -163,8 +154,7 @@
             <el-input v-model="formData.detailAddress" placeholder="请输入详细地址" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="下次联系时间" prop="contactNextTime">
             <el-date-picker
@@ -226,7 +216,7 @@ const initFormData = () => {
     level: undefined,
     source: undefined,
     remark: undefined,
-    companyName: undefined,
+    // companyName: undefined,
     companyIntroduce: undefined,
     companyWebsite: undefined,
     labelCodes: [],

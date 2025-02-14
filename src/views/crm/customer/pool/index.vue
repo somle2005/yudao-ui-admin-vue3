@@ -113,7 +113,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="公司名称" prop="companyName" width="200px" />
+      <!-- <el-table-column align="center" label="公司名称" prop="companyName" width="200px" /> -->
       <el-table-column align="center" label="公司介绍" prop="companyWebsite" width="200px" />
       <el-table-column align="center" label="官网" prop="companyIntroduce" width="200px" />
       <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
