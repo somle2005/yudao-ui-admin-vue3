@@ -1,5 +1,5 @@
 <template>
-  <div class="heatmap" style="width: 100%; height: 1200px">
+  <div class="heatmap" style="width: 100%; height: 1800px">
     <iframe
       width="100%"
       height="100%"
