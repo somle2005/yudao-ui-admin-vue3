@@ -32,10 +32,10 @@ const reload = () => {
 provide('reload', reload)
 //endregion
 
-import { useRoute } from 'vue-router';
+// import { useRoute } from 'vue-router';
 
-// Get the current route object
-const route = useRoute();
+// // Get the current route object
+// const currentRoute = useRoute();
 
 // // Create a computed property to reactively track the matched route configuration
 // const routeConfig = computed(() => route.matched);
