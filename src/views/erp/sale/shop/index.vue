@@ -1,6 +1,6 @@
 <template>
   <div class="platform-store">
-    <StoreList />
+    <StoreList @click-shop="clickShop" />
 
     <div class="platform-store-table">
       <ContentWrap>
@@ -44,7 +44,7 @@
           v-model:currentPage="queryParams.pageNo"
           v-model:pageSize="queryParams.pageSize"
           @pagination="getList"
-          style="height: calc(100vh - 230px);"
+          style="height: calc(100vh - 230px)"
         >
           <template #countryCode="{ scope }">
             <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode + '' || ''" />
@@ -59,14 +59,14 @@
           </template>
 
           <template #operate="{ scope }">
-            <el-button
+            <!-- <el-button
               link
               type="primary"
               @click="openForm('update', scope.row.id)"
               v-hasPermi="['erp:shop:update']"
             >
               编辑
-            </el-button>
+            </el-button> -->
             <el-button
               link
               type="danger"
@@ -94,15 +94,23 @@ import StoreList from './components/StoreList.vue'
 import { useSearchForm } from './hooks/search'
 import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { cloneDeep } from 'lodash-es'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   name: {
     label: '名称',
-    width: '180px'
+    width: '180px',
+    slot: 'name',
+    wrap: true
   },
-  code: '店铺代码',
+  code: {
+    label: '店铺代码',
+    width: '180px',
+    slot: 'code',
+    wrap: true
+  },
   platform: {
     label: '平台',
     width: '180px'
@@ -218,6 +226,19 @@ const handleExport = async () => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+const clickShop = async (item: any) => {
+  loading.value = true
+  try {
+    const query: any = cloneDeep(queryParams)
+    query.platform = item.platform
+    const data = await ShopApi.getShopPage(query)
+    list.value = data.list
+    // list.value = [...data.list,...data.list,...data.list]
+    total.value = data.total
+  } finally {
+    loading.value = false
+  }
+}
 
 /** 初始化 **/
 onMounted(() => {

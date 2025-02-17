@@ -28,9 +28,7 @@
 </template>
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
 import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
-import { CommonStatusEnum } from '@/utils/constants'
 
 /** ERP 平台店铺 */
 defineOptions({ name: 'ShopForm' })
@@ -236,11 +234,7 @@ const initFormData = () => {
 
 formData.value = initFormData()
 
-const formRules = reactive({
-  name: [{ required: true, message: '客户名称不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
-  sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }]
-})
+
 const formRef = ref() // 表单 Ref
 
 /** 打开弹窗 */
@@ -254,6 +248,9 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await ShopApi.getShop(id)
+      formRef.value.initForm()
+      //initForm
+      console.log(formData.value, 'formData.value')
     } finally {
       formLoading.value = false
     }

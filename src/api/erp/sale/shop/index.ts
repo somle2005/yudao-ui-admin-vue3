@@ -72,6 +72,10 @@ export const ShopApi = {
     return await request.delete({ url: `/erp/shop/delete?id=` + id })
   },
 
+  // 查询店铺清单
+  getShopList: async (params?: any) => {
+    return await request.get({ url: `/erp/shop/list`, params })
+  },
   // 导出平台店铺 Excel
   exportShop: async (params: any) => {
     return await request.download({ url: `/erp/sale-order/export-excel`, params })
