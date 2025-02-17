@@ -26,6 +26,7 @@ defineExpose({})
 </script>
 <style lang="scss" scoped>
 .storeList {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;

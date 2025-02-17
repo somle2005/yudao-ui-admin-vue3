@@ -5,116 +5,83 @@
     <div class="platform-store-table">
       <ContentWrap>
         <!-- 搜索工作栏 -->
-        <el-form
+        <SmForm
           class="-mb-15px"
-          :model="queryParams"
           ref="queryFormRef"
           :inline="true"
           label-width="68px"
+          v-model="queryParams"
+          :options="searchFormOptions"
+          :getModelValue="getSearchFormData"
         >
-          <el-form-item label="名称" prop="name">
-            <el-input
-              v-model="queryParams.name"
-              placeholder="请输入名称"
-              clearable
-              @keyup.enter="handleQuery"
-              class="!w-240px"
-            />
-          </el-form-item>
-          <el-form-item label="手机号码" prop="mobile">
-            <el-input
-              v-model="queryParams.mobile"
-              placeholder="请输入手机号码"
-              clearable
-              @keyup.enter="handleQuery"
-              class="!w-240px"
-            />
-          </el-form-item>
-          <el-form-item label="联系电话" prop="telephone">
-            <el-input
-              v-model="queryParams.telephone"
-              placeholder="请输入联系电话"
-              clearable
-              @keyup.enter="handleQuery"
-              class="!w-240px"
-            />
-          </el-form-item>
-          <el-form-item>
+          <template #action>
             <el-button @click="handleQuery"
               ><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button
             >
             <el-button @click="resetQuery"
               ><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button
             >
-            <el-button
+            <!-- <el-button
               type="primary"
               plain
               @click="openForm('create')"
-              v-hasPermi="['erp:customer:create']"
+              v-hasPermi="['erp:shop:create']"
             >
               <Icon icon="ep:plus" class="mr-5px" /> 新增
-            </el-button>
-            <el-button
-              type="success"
-              plain
-              @click="handleExport"
-              :loading="exportLoading"
-              v-hasPermi="['erp:customer:export']"
-            >
-              <Icon icon="ep:download" class="mr-5px" /> 导出
-            </el-button>
-          </el-form-item>
-        </el-form>
+            </el-button> -->
+          </template>
+        </SmForm>
       </ContentWrap>
 
       <!-- 列表 -->
-      <ContentWrap>
-        <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-          <el-table-column label="名称" align="center" prop="name" />
-          <el-table-column label="联系人" align="center" prop="contact" />
-          <el-table-column label="手机号码" align="center" prop="mobile" />
-          <el-table-column label="联系电话" align="center" prop="telephone" />
-          <el-table-column label="电子邮箱" align="center" prop="email" />
-          <el-table-column label="备注" align="center" prop="remark" />
-          <el-table-column label="排序" align="center" prop="sort" />
-          <el-table-column label="状态" align="center" prop="status">
-            <template #default="scope">
-              <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template #default="scope">
-              <el-button
-                link
-                type="primary"
-                @click="openForm('update', scope.row.id)"
-                v-hasPermi="['erp:customer:update']"
-              >
-                编辑
-              </el-button>
-              <el-button
-                link
-                type="danger"
-                @click="handleDelete(scope.row.id)"
-                v-hasPermi="['erp:customer:delete']"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <Pagination
+      <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+        <SmTable
+          border
+          :loading="loading"
+          :options="tableOptions"
+          :data="list"
           :total="total"
-          v-model:page="queryParams.pageNo"
-          v-model:limit="queryParams.pageSize"
+          v-model:currentPage="queryParams.pageNo"
+          v-model:pageSize="queryParams.pageSize"
           @pagination="getList"
-        />
+          style="height: calc(100vh - 230px);"
+        >
+          <template #countryCode="{ scope }">
+            <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode + '' || ''" />
+          </template>
+
+          <template #status="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.status + '' || ''" />
+          </template>
+
+          <template #type="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_SHOP_TYPE" :value="scope.row.type + '' || ''" />
+          </template>
+
+          <template #operate="{ scope }">
+            <el-button
+              link
+              type="primary"
+              @click="openForm('update', scope.row.id)"
+              v-hasPermi="['erp:shop:update']"
+            >
+              编辑
+            </el-button>
+            <el-button
+              link
+              type="danger"
+              @click="handleDelete(scope.row.id)"
+              v-hasPermi="['erp:shop:delete']"
+            >
+              删除
+            </el-button>
+          </template>
+        </SmTable>
       </ContentWrap>
     </div>
 
     <!-- 表单弹窗：添加/修改 -->
-    <PlatformStoreForm ref="formRef" @success="getList" />
+    <ShopForm ref="formRef" @success="getList" />
   </div>
 </template>
 
@@ -122,18 +89,64 @@
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
-import PlatformStoreForm from './PlatformStoreForm.vue'
+import ShopForm from './ShopForm.vue'
 import StoreList from './components/StoreList.vue'
+import { useSearchForm } from './hooks/search'
+import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
+import { useTableData } from '@/components/SmTable/src/utils'
 
-/** ERP 客户 列表 */
-defineOptions({ name: 'ErpCustomer' })
+const { tableOptions, transformTableOptions } = useTableData()
+
+const fieldMap = {
+  name: {
+    label: '名称',
+    width: '180px'
+  },
+  code: '店铺代码',
+  platform: {
+    label: '平台',
+    width: '180px'
+  },
+  account: '平台类型',
+  countryCode: {
+    label: '国家编码',
+    slot: 'countryCode',
+    width: '180px'
+  },
+  status: {
+    label: '状态',
+    slot: 'status',
+    width: '180px'
+  },
+  type: {
+    label: '类型',
+    slot: 'type',
+    width: '180px'
+  },
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  remark: '备注',
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    // action: true,
+    width: '180px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
+
+/** ERP 平台店铺 列表 */
+defineOptions({ name: 'ErpShop' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<CustomerVO[]>([]) // 列表的数据
+const list = ref<ShopVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
@@ -149,8 +162,9 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await CustomerApi.getCustomerPage(queryParams)
+    const data = await ShopApi.getShopPage(queryParams)
     list.value = data.list
+    // list.value = [...data.list,...data.list,...data.list]
     total.value = data.total
   } finally {
     loading.value = false
@@ -181,7 +195,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await CustomerApi.deleteCustomer(id)
+    await ShopApi.deleteShop(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -195,13 +209,15 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await CustomerApi.exportCustomer(queryParams)
+    const data = await ShopApi.exportShop(queryParams)
     download.excel(data, '客户.xls')
   } catch {
   } finally {
     exportLoading.value = false
   }
 }
+
+const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 /** 初始化 **/
 onMounted(() => {
@@ -210,11 +226,11 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .platform-store {
-  display: flex;  
+  display: flex;
+  height: calc(100vh - 120px);
 }
 .platform-store-table {
   margin-left: 10px;
   flex-grow: 1;
 }
 </style>
-
