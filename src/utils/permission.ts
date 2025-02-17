@@ -1,4 +1,8 @@
+// import { DictDataVO, getSimpleDictDataList } from '@/api/system/dict/dict.data'
+// const { wsCache } = useCache('sessionStorage')
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
+import { useDictStoreWithOut } from '@/store/modules/dict'
+
 
 const { t } = useI18n() // 国际化
 
@@ -42,4 +46,13 @@ export function checkRole(value: string[]) {
     console.error(t('permission.hasRole'))
     return false
   }
+}
+
+export async function resetDictCache(){
+  // sessionStorage.removeItem(CACHE_KEY.DICT_CACHE)
+  // wsCache.delete(CACHE_KEY.DICT_CACHE)
+  // window.wsCahce= wsCache
+  const dictStore = useDictStoreWithOut()
+  dictStore.resetDict()
+  console.log(dictStore,'dictStore-重置缓存')
 }

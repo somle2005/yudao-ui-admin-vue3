@@ -154,6 +154,7 @@ import * as authUtil from '@/utils/auth'
 import { usePermissionStore } from '@/store/modules/permission'
 import * as LoginApi from '@/api/login'
 import { LoginStateEnum, useFormValid, useLoginState } from './useLogin'
+import { resetDictCache } from '@/utils/permission'
 
 defineOptions({ name: 'LoginForm' })
 
@@ -275,6 +276,7 @@ const handleLogin = async (params) => {
     } else {
       push({ path: redirect.value || permissionStore.addRouters[0].path })
     }
+    resetDictCache()
   } finally {
     loginLoading.value = false
     loading.value.close()

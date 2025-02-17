@@ -207,8 +207,13 @@
         </el-col>
 
         <el-col :span="12">
-          <el-form-item label="产品材质" prop="customCategoryId">
-            <el-select v-model="formData.customCategoryId" clearable placeholder="请选择产品材质">
+          <el-form-item label="海关分类" prop="customCategoryId">
+            <el-select
+              v-model="formData.customCategoryId"
+              filterable
+              clearable
+              placeholder="请选择海关分类"
+            >
               <el-option
                 v-for="dict in customRuleCategoryList"
                 :key="dict.value"
@@ -428,7 +433,7 @@ const initFormData = () => {
     packageWidth: undefined,
     packageLength: undefined,
     packageHeight: undefined,
-    customCategoryId:undefined
+    customCategoryId: undefined
   }
 }
 formData.value = initFormData()
@@ -454,7 +459,7 @@ const formRules = reactive({
   packageWeight: [{ required: true, message: '包装重量（kg）不能为空', trigger: 'blur' }],
   packageWidth: [{ required: true, message: '包装宽度（mm）不能为空', trigger: 'blur' }],
   packageLength: [{ required: true, message: '包装长度（mm不能为空', trigger: 'blur' }],
-  packageHeight: [{ required: true, message: '包装高度（mm）不能为空', trigger: 'blur' }],
+  packageHeight: [{ required: true, message: '包装高度（mm）不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
@@ -462,7 +467,7 @@ const deptList = ref<Tree[]>([]) // 树形结构
 const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
 const isEditMode = ref(false) // 控制是否为编辑模式
-const customRuleCategoryList = ref<any[]>([]) // 产品材质
+const customRuleCategoryList = ref<any[]>([]) // 海关分类
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
@@ -516,7 +521,7 @@ const open = async (type: string, id?: number) => {
   } else {
     isEditMode.value = false // 设置为新增模式
   }
-  // 加载产品材质
+  // 加载海关分类
   getCustomRuleCategoryList(customRuleCategoryList)
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
@@ -566,9 +571,7 @@ const submitForm = async () => {
   }
 }
 
-const submitFormDB = debounce(submitForm,1000)
-
-
+const submitFormDB = debounce(submitForm, 1000)
 
 /** 重置表单 */
 const resetForm = () => {
@@ -623,7 +626,7 @@ const detailEdit = () => {
 }
 </style>
 <style>
-.productForm-dialog .el-scrollbar__bar.is-horizontal{
+.productForm-dialog .el-scrollbar__bar.is-horizontal {
   height: 0 !important;
 }
 </style>
