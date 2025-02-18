@@ -5,16 +5,25 @@ import { useTableData } from '@/components/SmTable/src/utils'
 
 export const useProductItemForm = () => {
   // eslint-disable-next-line prefer-const
-  let queryParams = reactive({
-    pageNo: 1,
-    pageSize: 10,
-    name: undefined,
-    barCode: undefined
-  })
+  let queryParams: any = reactive({})
+  const initQueryParams = (queryParams) => {
+    const initQueryParams = {
+      pageNo: 1,
+      pageSize: 10,
+      name: undefined,
+      barCode: undefined
+    }
+    for (const key in initQueryParams) {
+      queryParams[key] = initQueryParams[key]
+    }
+  }
+  initQueryParams(queryParams)
 
-  const productVisible = ref(false)
-  const selectProduct = () => {
-    productVisible.value = true
+  /** 选中操作 */
+  const selectionList = ref<any[]>([])
+  const handleSelectionChange = (rows: any[]) => {
+    selectionList.value = rows
+    console.log(rows, '选中的产品')
   }
 
   const loading = ref(false) // 列表的加载中
@@ -29,6 +38,28 @@ export const useProductItemForm = () => {
     } finally {
       loading.value = false
     }
+  }
+
+  const productVisible = ref(false)
+  const queryFormRef = ref() // 搜索的表单
+
+  const handleQuery = () => {
+    queryParams.pageNo = 1
+    getList()
+  }
+
+  /** 重置按钮操作 */
+  const resetQuery = () => {
+    nextTick(() => {
+      // queryFormRef.value.resetFields()
+      selectionList.value = []
+      initQueryParams(queryParams)
+      handleQuery()
+    })
+  }
+  const selectProduct = () => {
+    productVisible.value = true
+    resetQuery()
   }
 
   const { tableOptions, transformTableOptions } = useTableData()
@@ -58,13 +89,6 @@ export const useProductItemForm = () => {
 
   const { productNameList, productSkuList } = getProductNameList()
 
-  const handleQuery = () => {
-    queryParams.pageNo = 1
-    getList()
-  }
-
-
-
   return {
     selectProduct,
     getList,
@@ -77,5 +101,8 @@ export const useProductItemForm = () => {
     handleQuery,
     productNameList,
     productSkuList,
+    queryFormRef,
+    handleSelectionChange,
+    selectionList
   }
 }

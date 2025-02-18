@@ -1,15 +1,19 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <!-- <SmForm
-      class="-mb-15px"
-      ref="formRef"
-      isCol
-      label-width="150px"
-      v-model="formData"
-      v-loading="formLoading"
-      :options="requestFormOptions"
-      :getModelValue="getFormData"
-    /> -->
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="800px">
+    <el-form :disabled="disabled" :model="formData" :inline="true" label-width="100px">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="店铺sku" prop="name">
+            <el-input v-model="formData.shop.name" placeholder="请输入店铺sku" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="平台账号" prop="name">
+            <el-input v-model="formData.shop.account" placeholder="请输入平台账号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
 
     <el-button type="primary" @click="selectProduct" style="margin-bottom: 10px"
       >选择产品</el-button
@@ -65,7 +69,6 @@
         </el-select>
       </el-form-item>
     </el-form>
-
     <!-- <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     </ContentWrap> -->
     <SmTable
@@ -85,6 +88,11 @@
         <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
       </template>
     </SmTable>
+
+    <template #footer>
+      <el-button @click="confirmProduct" type="primary">确 定</el-button>
+      <el-button @click="productVisible = false">取 消</el-button>
+    </template>
   </Dialog>
 </template>
 <script setup lang="ts">
@@ -108,9 +116,10 @@ const {
   handleQuery,
   productNameList,
   productSkuList,
+  queryFormRef,
+  handleSelectionChange,
+  selectionList
 } = useProductItemForm()
-
- 
 
 const requestFormOptions = ref([
   {
@@ -278,27 +287,28 @@ const itemFormRef = ref()
 
 const initFormData = () => {
   return {
-    name: undefined,
-    code: undefined,
-    remark: undefined,
+    id:  undefined,
+    shopId:  undefined,
+    name:  undefined,
+    code:  undefined,
+    remark:  undefined,
     status: undefined,
-    sort: undefined,
-    createTime: undefined,
-    type: undefined,
-    platform: undefined,
-    account: undefined
+    createTime: 1739011592000,
+    url: undefined,
+    items: [
+      // {
+      //   id: undefined,
+      //   productId: undefined,
+      //   remark: '',
+      //   createTime: undefined
+      // },
+    ],
+    shop: {}
   }
 }
 
 formData.value = initFormData()
 const formRef = ref() // 表单 Ref
-
-
- /** 选中操作 */
- const handleSelectionChange = (rows: any[]) => {
-    formData.value.items = rows
-    console.log(rows,'选中的产品')
-  }
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -358,6 +368,25 @@ const resetForm = () => {
 const getFormData = () => {
   return formData.value
 }
+
+const confirmProduct = () => {
+  productVisible.value = false
+  const items = formData.value.items
+  const map = {}
+  items.forEach((item) => {
+    map[item.id] = 1
+  })
+  selectionList.value.forEach((item) => {
+    if (!map[item.id]) {
+      items.push(item)
+    }
+  })
+  formData.value.items = items
+  console.log(items, 'items')
+  console.log(selectionList.value, '点击确定拿到选中的数据')
+}
+
+const disabled = computed(() => formType.value === 'update')
 </script>
 <style>
 .productForm-dialog .el-scrollbar__bar.is-horizontal {
