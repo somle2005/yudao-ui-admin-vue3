@@ -1,7 +1,5 @@
 <template>
   <div class="platform-store">
-    <StoreList @click-shop="clickShop" />
-
     <div class="platform-store-table">
       <ContentWrap>
         <!-- 搜索工作栏 -->
@@ -46,16 +44,11 @@
           @pagination="getList"
           style="height: calc(100vh - 230px)"
         >
-          <template #countryCode="{ scope }">
-            <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode + '' || ''" />
+          <template #image="{ scope }">
+            <el-image :src="scope.row.image" class="w-64px h-64px" />
           </template>
-
           <template #status="{ scope }">
             <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.status + '' || ''" />
-          </template>
-
-          <template #type="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_SHOP_TYPE" :value="scope.row.type + '' || ''" />
           </template>
 
           <template #operate="{ scope }">
@@ -81,7 +74,7 @@
     </div>
 
     <!-- 表单弹窗：添加/修改 -->
-    <ShopForm ref="formRef" @success="getList" />
+    <ShopProductForm ref="formRef" @success="getList" />
   </div>
 </template>
 
@@ -89,46 +82,46 @@
 import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import ShopForm from './ShopForm.vue'
-import StoreList from './components/StoreList.vue'
+import ShopProductForm from './ShopProductForm.vue'
 import { useSearchForm } from './hooks/search'
-import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
+import { ShopProductApi, ShopProductVO } from '@/api/erp/sale/shop-product'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { cloneDeep } from 'lodash-es'
+import { wrap } from 'module'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
+  image: {
+    label: '产品图',
+    width: '100px',
+    // fixed: 'left',
+    slot: 'image'
+  },
   name: {
-    label: '名称',
+    label: '产品名称',
     width: '180px',
     slot: 'name',
     wrap: true
   },
-  // code: {
+  // shopCode: {
   //   label: '店铺代码',
   //   width: '180px',
-  //   slot: 'code',
+  //   slot: 'shopCode',
   //   wrap: true
   // },
-  platform: {
-    label: '平台',
+  shopPlatform: {
+    label: '店铺平台',
     width: '180px'
   },
-  account: '平台账户',
-  countryCode: {
-    label: '国家编码',
-    slot: 'countryCode',
-    width: '180px'
+  shopName: {
+    label: '店铺名称',
+    width: '180px',
+    slot: 'shopName',
+    wrap: true
   },
   status: {
     label: '状态',
     slot: 'status',
-    width: '180px'
-  },
-  type: {
-    label: '类型',
-    slot: 'type',
     width: '180px'
   },
   createTime: {
@@ -136,6 +129,7 @@ const fieldMap = {
     formatter: dateFormatter,
     width: '180px'
   },
+  currency: '币种',
   remark: '备注',
   operate: {
     label: '操作',
@@ -147,22 +141,21 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
 
-/** ERP 平台店铺 列表 */
-defineOptions({ name: 'ErpShop' })
+/** ERP 店铺产品 列表 */
+defineOptions({ name: 'ErpShopProduct' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<ShopVO[]>([]) // 列表的数据
+const list = ref<ShopProductVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
+  shopId: undefined,
   platform: undefined,
-  name: undefined,
-  status: undefined,
-  type: undefined
+  status: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -171,8 +164,12 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await ShopApi.getShopPage(queryParams)
-    list.value = data.list
+    const data = await ShopProductApi.getShopProductPage(queryParams)
+    list.value = data.list.map((item) => {
+      item.shopName = item.shop.name
+      item.shopPlatform = item.shop.platform
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false
@@ -203,7 +200,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await ShopApi.deleteShop(id)
+    await ShopProductApi.deleteShopProduct(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -217,7 +214,7 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await ShopApi.exportShop(queryParams)
+    const data = await ShopProductApi.exportShopProduct(queryParams)
     download.excel(data, '客户.xls')
   } catch {
   } finally {
@@ -226,19 +223,6 @@ const handleExport = async () => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
-const clickShop = async (item: any) => {
-  loading.value = true
-  try {
-    const query: any = cloneDeep(queryParams)
-    query.platform = item.platform
-    const data = await ShopApi.getShopPage(query)
-    list.value = data.list
-    // list.value = [...data.list,...data.list,...data.list]
-    total.value = data.total
-  } finally {
-    loading.value = false
-  }
-}
 
 /** 初始化 **/
 onMounted(() => {
@@ -247,7 +231,7 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .platform-store {
-  display: flex;
+  // display: flex;
   height: calc(100vh - 120px);
 }
 .platform-store-table {

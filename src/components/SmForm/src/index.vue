@@ -47,6 +47,7 @@
           :is="`el-${item.type}`"
           v-model="model[item.prop!]"
           :placeholder="item.placeholder"
+          class="!w-240px"
         >
           <component
             :is="`el-${child.type || 'option'}`"

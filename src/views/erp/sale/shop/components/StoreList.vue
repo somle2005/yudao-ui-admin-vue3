@@ -26,7 +26,6 @@ const value = ref('')
 
 const emits = defineEmits(['clickShop'])
 const clickShop = (item: any) => {
-  console.log(item, 'item')
   emits('clickShop', item)
 }
 const search = () => {
@@ -57,7 +56,6 @@ onMounted(() => {
     const list = Object.values(map)
     shopList.value = list
     allShopList.value = cloneDeep(list)
-    console.log(list, 'list')
   })
 })
 onUnmounted(() => {})

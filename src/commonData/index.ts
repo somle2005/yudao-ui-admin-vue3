@@ -8,6 +8,7 @@ import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/pr
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
 import {CustomRuleCategoryApi} from '@/api/erp/logistic/custom-category'
+import { ShopApi } from '@/api/erp/sale/shop'
 
 interface SelectProp {
   value: number
@@ -174,4 +175,21 @@ export const getCustomRuleCategoryList = (data?: any) => {
     }
   })
   return customRuleCategoryList
+}
+
+// 获得店铺清单列表
+export const getShopList = (data?: any) => {
+  const shopList = ref<any[]>([]) // 用户列表
+  ShopApi.getShopList().then((res: any) => {
+    shopList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      item.type = 'option'
+      return item
+    })
+    if (data) {
+      data.value = shopList.value
+    }
+  })
+  return shopList
 }
