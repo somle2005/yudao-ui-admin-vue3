@@ -23,7 +23,7 @@
               type="primary"
               plain
               @click="openForm('create')"
-              v-hasPermi="['erp:shop:create']"
+              v-hasPermi="['erp:shop-product:create']"
             >
               <Icon icon="ep:plus" class="mr-5px" /> 新增
             </el-button> -->
@@ -52,19 +52,19 @@
           </template>
 
           <template #operate="{ scope }">
-            <!-- <el-button
+            <el-button
               link
               type="primary"
               @click="openForm('update', scope.row.id)"
-              v-hasPermi="['erp:shop:update']"
+              v-hasPermi="['erp:shop-product:update']"
             >
               编辑
-            </el-button> -->
+            </el-button>
             <el-button
               link
               type="danger"
               @click="handleDelete(scope.row.id)"
-              v-hasPermi="['erp:shop:delete']"
+              v-hasPermi="['erp:shop-product:delete']"
             >
               删除
             </el-button>

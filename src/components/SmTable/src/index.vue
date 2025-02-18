@@ -10,7 +10,7 @@
       @row-click="rowClick"
       class="SmTable-el-table"
     >
-      <el-table-column v-if="isSelection" fixed="left" width="30" label="选择" type="selection" />
+      <el-table-column v-if="isSelection" fixed="left" width="40" label="选择" type="selection" />
       <template v-for="(item, index) in tableOption" :key="index">
         <el-table-column
           v-if="item.prop && !item.action"

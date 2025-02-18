@@ -1,6 +1,6 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <SmForm
+    <!-- <SmForm
       class="-mb-15px"
       ref="formRef"
       isCol
@@ -9,29 +9,108 @@
       v-loading="formLoading"
       :options="requestFormOptions"
       :getModelValue="getFormData"
+    /> -->
+
+    <el-button type="primary" @click="selectProduct" style="margin-bottom: 10px"
+      >选择产品</el-button
     >
-      <!-- <template #items="{ scope, model }">
-        {{ console.log(scope, model, '打印scope-model') }}
-        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="申请产品清单" name="item">
-            <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" />
-            <!~~ <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" /> ~~>
-          </el-tab-pane>
-        </el-tabs>
-      </template>-->
-    </SmForm>
+    <ContentWrap>
+      <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
+        <el-tab-pane label="产品" name="item">
+          <ProductItemForm ref="itemFormRef" :items="formData.items" />
+        </el-tab-pane>
+      </el-tabs>
+    </ContentWrap>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
+  </Dialog>
+  <Dialog class="productForm-dialog" title="编辑" v-model="productVisible" width="850px">
+    <el-form :model="queryParams" ref="queryFormRef" :inline="true" label-width="100px">
+      <el-form-item label="产品名称">
+        <el-select
+          v-model="queryParams.name"
+          clearable
+          filterable
+          placeholder="请选择产品"
+          @keyup.enter="handleQuery"
+          @change="handleQuery"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in productNameList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="SKU（编码）">
+        <el-select
+          v-model="queryParams.barCode"
+          clearable
+          filterable
+          placeholder="请选择SKU（编码）"
+          @keyup.enter="handleQuery"
+          @change="handleQuery"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in productSkuList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+    </el-form>
+
+    <!-- <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+    </ContentWrap> -->
+    <SmTable
+      border
+      isSelection
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
+      :total="total"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
+      @pagination="getList"
+      @selection-change="handleSelectionChange"
+      style="height: 500px"
+    >
+      <template #primaryImageUrl="{ scope }">
+        <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+      </template>
+    </SmTable>
   </Dialog>
 </template>
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
-
+import { ShopProductApi, ShopProductVO } from '@/api/erp/sale/shop-product'
+import { createDBFn } from '@/utils/decorate'
+import ProductItemForm from './components/ProductItemForm.vue'
+import { useProductItemForm } from './hooks/useProductItemForm'
 /** ERP 店铺产品 */
 defineOptions({ name: 'ShopProductForm' })
+
+const {
+  selectProduct,
+  getList,
+  tableOptions,
+  list,
+  total,
+  loading,
+  queryParams,
+  productVisible,
+  handleQuery,
+  productNameList,
+  productSkuList,
+} = useProductItemForm()
+
+ 
 
 const requestFormOptions = ref([
   {
@@ -193,6 +272,10 @@ const formLoading = ref(false) // 表单的加载中：1）修改时的数据加
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref()
 
+/** 子表的表单 */
+const subTabsName = ref('item')
+const itemFormRef = ref()
+
 const initFormData = () => {
   return {
     name: undefined,
@@ -208,9 +291,14 @@ const initFormData = () => {
 }
 
 formData.value = initFormData()
-
-
 const formRef = ref() // 表单 Ref
+
+
+ /** 选中操作 */
+ const handleSelectionChange = (rows: any[]) => {
+    formData.value.items = rows
+    console.log(rows,'选中的产品')
+  }
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -222,10 +310,13 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await ShopApi.getShop(id)
-      formRef.value.initForm()
-      //initForm
-      console.log(formData.value, 'formData.value')
+      getList()
+      formData.value = await ShopProductApi.getShopProduct(id)
+      // formRef.value.initForm()
+      // 检查 items 并赋值为默认值 []
+      if (formData.value.items == null) {
+        formData.value.items = []
+      }
     } finally {
       formLoading.value = false
     }
@@ -241,12 +332,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as ShopVO
+    const data = formData.value as unknown as ShopProductVO
     if (formType.value === 'create') {
-      await ShopApi.createShop(data)
+      await ShopProductApi.createShopProduct(data)
       message.success(t('common.createSuccess'))
     } else {
-      await ShopApi.updateShop(data)
+      await ShopProductApi.createShopProduct(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -256,7 +347,7 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
-
+const submitFormDB = createDBFn(submitForm)
 /** 重置表单 */
 const resetForm = () => {
   formData.value = initFormData()
@@ -268,3 +359,8 @@ const getFormData = () => {
   return formData.value
 }
 </script>
+<style>
+.productForm-dialog .el-scrollbar__bar.is-horizontal {
+  height: 0 !important;
+}
+</style>
