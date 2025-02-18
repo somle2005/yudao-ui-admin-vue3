@@ -1,6 +1,6 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible" width="800px">
-    <el-form :disabled="disabled" :model="formData" :inline="true" label-width="100px">
+    <el-form ref="formRef" :disabled="disabled" :model="formData" :inline="true" label-width="100px">
       <el-row>
         <el-col :span="12">
           <el-form-item label="店铺sku" prop="name">
@@ -339,6 +339,7 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
+  await itemFormRef.value.validate()
   // 提交请求
   formLoading.value = true
   try {
@@ -382,8 +383,6 @@ const confirmProduct = () => {
     }
   })
   formData.value.items = items
-  console.log(items, 'items')
-  console.log(selectionList.value, '点击确定拿到选中的数据')
 }
 
 const disabled = computed(() => formType.value === 'update')

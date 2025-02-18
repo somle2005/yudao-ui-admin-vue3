@@ -31,9 +31,9 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="数量" :rules="formRules.quantity" min-width="100">
+      <el-table-column align="center" label="数量" min-width="100">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.quantity`" class="mb-0px!">
+          <el-form-item :prop="`${$index}.quantity`" :rules="formRules.quantity" class="mb-0px!">
             <el-input-number
               v-model="row.quantity"
               placeholder="请输入数量"
@@ -57,7 +57,6 @@
 </template>
 <script setup lang="ts">
 import { ElForm } from 'element-plus'
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 const props = defineProps({
   items: {
