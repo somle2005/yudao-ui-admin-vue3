@@ -37,54 +37,19 @@ defineOptions({ name: 'ShopForm' })
 const requestFormOptions = ref([
   {
     type: 'input',
-    label: '店铺平台',
-    prop: 'platform',
-    placeholder: '请输入店铺平台',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      disabled: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '平台不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
-  {
-    type: 'input',
-    label: '平台账户',
+    // label: '平台账户',
+    label: '店铺名称',
     prop: 'account',
-    placeholder: '请输入平台账户',
+    // placeholder: '请输入平台账户',
+    placeholder: '请输入店铺名称',
     attrs: {
       style: { width: '100%' },
-      clearable: true,
+      clearable: true
     },
     rules: [
       {
         required: true,
         message: '平台账户不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
-
-  {
-    type: 'input',
-    label: '店铺名称',
-    prop: 'name',
-    placeholder: '请输入店铺名称',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      disabled: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '店铺名称不能为空',
         trigger: 'blur'
       }
     ]
@@ -107,61 +72,53 @@ const requestFormOptions = ref([
       }
     ]
   },
-  {
-    type: 'select',
-    placeholder: '请选择状态',
-    prop: 'status',
-    label: '状态',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      disabled: true,
-      style: {
-        width: '100%'
-      }
-    },
-    rules: [
-      {
-        required: true,
-        message: '状态不能为空',
-        trigger: 'blur'
-      }
-    ],
-    children: getIntDictOptions(DICT_TYPE.ERP_OFF_STATUS)
-  },
-  {
-    type: 'select',
-    placeholder: '请选择类型',
-    prop: 'type',
-    label: '类型',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      disabled: true,
-      style: {
-        width: '100%'
-      }
-    },
-    rules: [
-      {
-        required: true,
-        message: '类型不能为空',
-        trigger: 'blur'
-      }
-    ],
-    children: getIntDictOptions(DICT_TYPE.ERP_SHOP_TYPE)
-  },
 
   // {
-  //   type: 'date-picker',
-  //   placeholder: '请选择单据日期',
-  //   prop: 'requestTime',
-  //   label: '单据日期',
+  //   type: 'input',
+  //   label: '店铺平台',
+  //   prop: 'platform',
+  //   placeholder: '请输入店铺平台',
   //   attrs: {
+  //     style: { width: '100%' },
   //     clearable: true,
-  //     type: 'date',
-  //     'value-format': 'YYYY-MM-DD HH:mm:ss',
-  //     class: '!w-1/1',
+  //     disabled: true
+  //   },
+  //   rules: [
+  //     {
+  //       required: true,
+  //       message: '平台不能为空',
+  //       trigger: 'blur'
+  //     }
+  //   ]
+  // },
+  // {
+  //   type: 'input',
+  //   label: '店铺名称',
+  //   prop: 'name',
+  //   placeholder: '请输入店铺名称',
+  //   attrs: {
+  //     style: { width: '100%' },
+  //     clearable: true,
+  //     disabled: true
+  //   },
+  //   rules: [
+  //     {
+  //       required: true,
+  //       message: '店铺名称不能为空',
+  //       trigger: 'blur'
+  //     }
+  //   ]
+  // },
+
+  // {
+  //   type: 'select',
+  //   placeholder: '请选择状态',
+  //   prop: 'status',
+  //   label: '状态',
+  //   attrs: {
+  //     filterable: true,
+  //     clearable: true,
+  //     disabled: true,
   //     style: {
   //       width: '100%'
   //     }
@@ -169,52 +126,72 @@ const requestFormOptions = ref([
   //   rules: [
   //     {
   //       required: true,
-  //       message: '单据日期不能为空',
-  //       trigger: 'change'
+  //       message: '状态不能为空',
+  //       trigger: 'blur'
+  //     }
+  //   ],
+  //   children: getIntDictOptions(DICT_TYPE.ERP_OFF_STATUS)
+  // },
+  // {
+  //   type: 'select',
+  //   placeholder: '请选择类型',
+  //   prop: 'type',
+  //   label: '类型',
+  //   attrs: {
+  //     filterable: true,
+  //     clearable: true,
+  //     disabled: true,
+  //     style: {
+  //       width: '100%'
+  //     }
+  //   },
+  //   rules: [
+  //     {
+  //       required: true,
+  //       message: '类型不能为空',
+  //       trigger: 'blur'
+  //     }
+  //   ],
+  //   children: getIntDictOptions(DICT_TYPE.ERP_SHOP_TYPE)
+  // },
+  // {
+  //   type: 'input-number',
+  //   label: '排序',
+  //   prop: 'sort',
+  //   placeholder: '请输入排序',
+  //   attrs: {
+  //     style: { width: '100%' },
+  //     clearable: true,
+  //     disabled: true
+  //     // min: 0
+  //   },
+  //   rules: [
+  //     {
+  //       required: true,
+  //       message: '排序不能为空',
+  //       trigger: 'blur'
   //     }
   //   ]
-
+  // },
+  // // 备注放最后
+  // {
+  //   type: 'input',
+  //   label: '备注',
+  //   prop: 'remark',
+  //   placeholder: '请输入备注',
+  //   attrs: {
+  //     style: { width: '100%' },
+  //     clearable: true,
+  //     disabled: true
   //   },
-
-  {
-    type: 'input-number',
-    label: '排序',
-    prop: 'sort',
-    placeholder: '请输入排序',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      disabled: true,
-      // min: 0
-    },
-    rules: [
-      {
-        required: true,
-        message: '排序不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
-
-  // 备注放最后
-  {
-    type: 'input',
-    label: '备注',
-    prop: 'remark',
-    placeholder: '请输入备注',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      disabled: true,
-    },
-    rules: [
-      {
-        required: true,
-        message: '备注不能为空',
-        trigger: 'blur'
-      }
-    ]
-  }
+  //   rules: [
+  //     {
+  //       required: true,
+  //       message: '备注不能为空',
+  //       trigger: 'blur'
+  //     }
+  //   ]
+  // }
 ])
 
 const { t } = useI18n() // 国际化
@@ -241,7 +218,6 @@ const initFormData = () => {
 }
 
 formData.value = initFormData()
-
 
 const formRef = ref() // 表单 Ref
 

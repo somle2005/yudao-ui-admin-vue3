@@ -116,15 +116,21 @@ const fieldMap = {
   //   wrap: true
   // },
   shopPlatform: {
-    label: '店铺平台',
+    label: '平台',
     width: '180px'
   },
-  shopName: {
+  account: {
     label: '店铺名称',
     width: '180px',
-    slot: 'shopName',
+    slot: 'account',
     wrap: true
   },
+  // shopName: {
+  //   label: '店铺名称',
+  //   width: '180px',
+  //   slot: 'shopName',
+  //   wrap: true
+  // },
   status: {
     label: '状态',
     slot: 'status',
@@ -175,6 +181,7 @@ const getList = async () => {
     list.value = data.list.map((item) => {
       item.shopName = item.shop.name
       item.shopPlatform = item.shop.platform
+      item.account = item.shop.account
       return item
     })
     total.value = data.total

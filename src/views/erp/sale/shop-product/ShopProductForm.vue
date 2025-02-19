@@ -38,24 +38,6 @@
   </Dialog>
   <Dialog class="productForm-dialog" title="编辑" v-model="productVisible" width="850px">
     <el-form :model="queryParams" ref="queryFormRef" :inline="true" label-width="100px">
-      <el-form-item label="产品名称">
-        <el-select
-          v-model="queryParams.name"
-          clearable
-          filterable
-          placeholder="请选择产品名称"
-          @keyup.enter="handleQuery"
-          @change="handleQuery"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productNameList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
       <el-form-item label="SKU（编码）">
         <el-select
           v-model="queryParams.barCode"
@@ -68,6 +50,24 @@
         >
           <el-option
             v-for="item in productSkuList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="产品名称">
+        <el-select
+          v-model="queryParams.name"
+          clearable
+          filterable
+          placeholder="请选择产品名称"
+          @keyup.enter="handleQuery"
+          @change="handleQuery"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in productNameList"
             :key="item.value"
             :label="item.label"
             :value="item.value"

@@ -101,12 +101,12 @@ import { cloneDeep } from 'lodash-es'
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  name: {
-    label: '店铺名称',
-    width: '180px',
-    slot: 'name',
-    wrap: true
-  },
+  // name: {
+  //   label: '店铺名称',
+  //   width: '180px',
+  //   slot: 'name',
+  //   wrap: true
+  // },
   // code: {
   //   label: '店铺代码',
   //   width: '180px',
@@ -114,10 +114,11 @@ const fieldMap = {
   //   wrap: true
   // },
   platform: {
-    label: '店铺平台',
+    label: '平台',
     width: '180px'
   },
-  account: '平台账户',
+  // account: '平台账户',
+  account: '店铺名称',
   countryCode: {
     label: '国家编码',
     slot: 'countryCode',
@@ -133,12 +134,12 @@ const fieldMap = {
     slot: 'type',
     width: '180px'
   },
+  remark: '备注',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
     width: '180px'
   },
-  remark: '备注',
   operate: {
     label: '操作',
     slot: 'operate',

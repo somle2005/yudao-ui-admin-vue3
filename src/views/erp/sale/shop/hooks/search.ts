@@ -19,7 +19,8 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '店铺名称',
-      prop: 'name',
+      // prop: 'name',
+      prop: 'account',
       placeholder: '请输入店铺名称',
       attrs: {
         class: '!w-240px',
