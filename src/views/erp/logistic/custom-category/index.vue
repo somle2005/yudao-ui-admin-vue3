@@ -249,6 +249,7 @@ const handleDelete = async (id: number) => {
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
+    categoryId.value = undefined
   } catch {}
 }
 
