@@ -61,14 +61,14 @@
           </template>
 
           <template #operate="{ scope }">
-            <!-- <el-button
+            <el-button
               link
               type="primary"
               @click="openForm('update', scope.row.id)"
               v-hasPermi="['erp:shop:update']"
             >
               编辑
-            </el-button> -->
+            </el-button>
             <el-button
               link
               type="danger"

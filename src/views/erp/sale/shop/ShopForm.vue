@@ -21,7 +21,7 @@
       </template>-->
     </SmForm>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
+import { createDBFn } from '@/utils/decorate'
 
 /** ERP 平台店铺 */
 defineOptions({ name: 'ShopForm' })
@@ -36,12 +37,13 @@ defineOptions({ name: 'ShopForm' })
 const requestFormOptions = ref([
   {
     type: 'input',
-    label: '平台',
+    label: '店铺平台',
     prop: 'platform',
-    placeholder: '请输入平台',
+    placeholder: '请输入店铺平台',
     attrs: {
       style: { width: '100%' },
-      clearable: true
+      clearable: true,
+      disabled: true
     },
     rules: [
       {
@@ -58,7 +60,7 @@ const requestFormOptions = ref([
     placeholder: '请输入平台账户',
     attrs: {
       style: { width: '100%' },
-      clearable: true
+      clearable: true,
     },
     rules: [
       {
@@ -76,7 +78,8 @@ const requestFormOptions = ref([
     placeholder: '请输入店铺名称',
     attrs: {
       style: { width: '100%' },
-      clearable: true
+      clearable: true,
+      disabled: true
     },
     rules: [
       {
@@ -93,7 +96,8 @@ const requestFormOptions = ref([
     placeholder: '请输入店铺代码',
     attrs: {
       style: { width: '100%' },
-      clearable: true
+      clearable: true,
+      disabled: true
     },
     rules: [
       {
@@ -111,6 +115,7 @@ const requestFormOptions = ref([
     attrs: {
       filterable: true,
       clearable: true,
+      disabled: true,
       style: {
         width: '100%'
       }
@@ -132,6 +137,7 @@ const requestFormOptions = ref([
     attrs: {
       filterable: true,
       clearable: true,
+      disabled: true,
       style: {
         width: '100%'
       }
@@ -178,7 +184,8 @@ const requestFormOptions = ref([
     attrs: {
       style: { width: '100%' },
       clearable: true,
-      min: 0
+      disabled: true,
+      // min: 0
     },
     rules: [
       {
@@ -197,7 +204,8 @@ const requestFormOptions = ref([
     placeholder: '请输入备注',
     attrs: {
       style: { width: '100%' },
-      clearable: true
+      clearable: true,
+      disabled: true,
     },
     rules: [
       {
@@ -267,6 +275,7 @@ const submitForm = async () => {
   formLoading.value = true
   try {
     const data = formData.value as unknown as ShopVO
+    data.countryCode = undefined
     if (formType.value === 'create') {
       await ShopApi.createShop(data)
       message.success(t('common.createSuccess'))
@@ -281,6 +290,8 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
+
+const submitFormDB = createDBFn(submitForm)
 
 /** 重置表单 */
 const resetForm = () => {
