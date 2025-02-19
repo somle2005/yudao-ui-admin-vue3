@@ -47,7 +47,9 @@
           @pagination="getList"
         >
           <template #countryCode="{ scope }">
-            <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode + '' || ''" />
+            {{ scope.row.countryCode }}
+            <!-- <dict-tag :type="DICT_TYPE.COUNTRY_CODE" value="7" /> -->
+            <!-- <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode + '' || ''" /> -->
           </template>
 
           <template #status="{ scope }">
