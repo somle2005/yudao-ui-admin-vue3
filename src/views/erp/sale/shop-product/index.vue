@@ -41,7 +41,7 @@
           :total="total"
           v-model:currentPage="queryParams.pageNo"
           v-model:pageSize="queryParams.pageSize"
-          @pagination="getList" 
+          @pagination="getList"
         >
           <template #image="{ scope }">
             <el-image :src="scope.row.image" class="w-64px h-64px" />
@@ -52,11 +52,11 @@
 
           <template #name="{ scope }">
             <div class="slot-wrap">
-              <el-link :href="scope.row.url" target="_blank">{{ scope.row.name }}</el-link>
+              <el-link type="primary" :href="scope.row.url" target="_blank">{{
+                scope.row.name
+              }}</el-link>
             </div>
           </template>
-
-          
 
           <template #operate="{ scope }">
             <el-button
@@ -106,7 +106,7 @@ const fieldMap = {
   name: {
     label: '店铺SKU',
     width: '180px',
-    slot: 'name',
+    slot: 'name'
     // wrap: true
   },
   // shopCode: {
