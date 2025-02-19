@@ -106,7 +106,7 @@
               v-model="formData.weight"
               placeholder="请输入基础重量"
               controls-position="right"
-              :min="1"
+              :min="0.01"
               :step="0.01"
               :precision="2"
             />
@@ -118,7 +118,8 @@
               v-model="formData.width"
               placeholder="请输入基础宽度"
               controls-position="right"
-              :min="1"
+              :min="0.01"
+              :precision="2"
             />
           </el-form-item>
         </el-col>
@@ -128,7 +129,8 @@
               v-model="formData.length"
               placeholder="请输入基础长度"
               controls-position="right"
-              :min="1"
+              :min="0.01"
+              :precision="2"
             />
           </el-form-item>
         </el-col>
@@ -138,7 +140,8 @@
               v-model="formData.height"
               placeholder="请输入基础高度"
               controls-position="right"
-              :min="1"
+              :min="0.01"
+              :precision="2"
             />
           </el-form-item>
         </el-col>
@@ -149,7 +152,8 @@
               v-model="formData.packageWeight"
               placeholder="请输入包装重量"
               controls-position="right"
-              :min="1"
+              :min="0.01"
+              :precision="2"
             />
           </el-form-item>
         </el-col>
@@ -159,7 +163,8 @@
               v-model="formData.packageWidth"
               placeholder="请输入包装宽度"
               controls-position="right"
-              :min="1"
+              :min="0.01"
+              :precision="2"
             />
           </el-form-item>
         </el-col>
@@ -170,7 +175,8 @@
               v-model="formData.packageLength"
               placeholder="请输入包装长度"
               controls-position="right"
-              :min="1"
+              :min="0.01"
+              :precision="2"
             />
           </el-form-item>
         </el-col>
@@ -180,7 +186,8 @@
               v-model="formData.packageHeight"
               placeholder="请输入包装高度"
               controls-position="right"
-              :min="1"
+              :min="0.01"
+              :precision="2"
             />
           </el-form-item>
         </el-col>

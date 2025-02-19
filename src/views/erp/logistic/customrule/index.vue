@@ -24,7 +24,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="sku（编码）" prop="barCode">
+      <el-form-item label="SKU（编码）" prop="barCode">
         <!-- <el-input
           v-model="queryParams.barCode"
           placeholder="请输入sku（编码）"
