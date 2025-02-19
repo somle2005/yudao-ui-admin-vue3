@@ -102,7 +102,7 @@ const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   name: {
-    label: '名称',
+    label: '店铺名称',
     width: '180px',
     slot: 'name',
     wrap: true
@@ -114,7 +114,7 @@ const fieldMap = {
   //   wrap: true
   // },
   platform: {
-    label: '平台',
+    label: '店铺平台',
     width: '180px'
   },
   account: '平台账户',

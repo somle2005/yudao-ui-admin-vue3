@@ -50,6 +50,14 @@
             <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.status + '' || ''" />
           </template>
 
+          <template #name="{ scope }">
+            <div class="slot-wrap">
+              <el-link :href="scope.row.url" target="_blank">{{ scope.row.name }}</el-link>
+            </div>
+          </template>
+
+          
+
           <template #operate="{ scope }">
             <el-button
               link
@@ -96,10 +104,10 @@ const fieldMap = {
     slot: 'image'
   },
   name: {
-    label: '产品名称',
+    label: '店铺SKU',
     width: '180px',
     slot: 'name',
-    wrap: true
+    // wrap: true
   },
   // shopCode: {
   //   label: '店铺代码',
@@ -122,13 +130,14 @@ const fieldMap = {
     slot: 'status',
     width: '180px'
   },
+  price: '售价',
+  currency: '币种',
+  remark: '备注',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
     width: '180px'
   },
-  currency: '币种',
-  remark: '备注',
   operate: {
     label: '操作',
     slot: 'operate',
@@ -235,5 +244,8 @@ onMounted(() => {
 .platform-store-table {
   margin-left: 10px;
   flex-grow: 1;
+}
+.slot-wrap {
+  white-space: normal;
 }
 </style>

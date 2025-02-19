@@ -9,8 +9,8 @@
     >
       <el-row>
         <el-col :span="12">
-          <el-form-item label="店铺sku" prop="name">
-            <el-input v-model="formData.shop.name" placeholder="请输入店铺sku" />
+          <el-form-item label="店铺SKU" prop="name">
+            <el-input v-model="formData.name" placeholder="请输入店铺SKU" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -43,7 +43,7 @@
           v-model="queryParams.name"
           clearable
           filterable
-          placeholder="请选择产品"
+          placeholder="请选择产品名称"
           @keyup.enter="handleQuery"
           @change="handleQuery"
           class="!w-240px"
