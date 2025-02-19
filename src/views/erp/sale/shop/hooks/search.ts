@@ -5,17 +5,17 @@ import { getIntDictOptions } from '@/utils/dict'
 export const useSearchForm = (handleQuery, queryParams) => {
 
   const searchFormOptions = ref<Array<FormOptions>>([
-    {
-      type: 'input',
-      label: '平台',
-      prop: 'platform',
-      placeholder: '请输入平台',
-      attrs: {
-        class: '!w-240px',
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
+    // {
+    //   type: 'input',
+    //   label: '平台',
+    //   prop: 'platform',
+    //   placeholder: '请输入平台',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     style: { width: '100%' },
+    //     clearable: true
+    //   }
+    // },
     {
       type: 'input',
       label: '店铺名称',

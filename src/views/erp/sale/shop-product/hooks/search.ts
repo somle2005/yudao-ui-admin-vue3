@@ -18,9 +18,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      placeholder: '请选择店铺',
+      placeholder: '请选择店铺名称',
       prop: 'shopId',
-      label: '店铺',
+      label: '店铺名称',
       attrs: {
         class: '!w-240px',
         filterable: true,

@@ -3,8 +3,10 @@
     <div class="search">
       <el-input :suffix-icon="Search" v-model="value" @input="searchDB" @keyup.enter="search" />
     </div>
-    <el-scrollbar>
-      <div class="platform-list">
+    <!-- <el-scrollbar>
+      
+    </el-scrollbar> -->
+    <div class="platform-list">
         <div class="item" v-for="item in shopList" :key="item.id" @click="clickShop(item)">
           <div class="item-platform">
             {{ item.platform }}
@@ -12,7 +14,6 @@
           <div class="item-accountTotal"> 账号数:{{ item.accountTotal }} </div>
         </div>
       </div>
-    </el-scrollbar>
   </div>
 </template>
 <script setup lang="ts">

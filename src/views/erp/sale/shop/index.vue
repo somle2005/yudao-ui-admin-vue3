@@ -34,7 +34,8 @@
       </ContentWrap>
 
       <!-- 列表 -->
-      <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+      <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }" style="margin-bottom:0">
+        <!-- style="height: calc(100vh - 230px)" -->
         <SmTable
           border
           :loading="loading"
@@ -44,7 +45,6 @@
           v-model:currentPage="queryParams.pageNo"
           v-model:pageSize="queryParams.pageSize"
           @pagination="getList"
-          style="height: calc(100vh - 230px)"
         >
           <template #countryCode="{ scope }">
             <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode + '' || ''" />
@@ -248,7 +248,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .platform-store {
   display: flex;
-  height: calc(100vh - 120px);
+  // height: calc(100vh - 120px);
 }
 .platform-store-table {
   margin-left: 10px;

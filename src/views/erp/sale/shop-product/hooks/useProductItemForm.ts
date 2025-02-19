@@ -33,6 +33,10 @@ export const useProductItemForm = () => {
     loading.value = true
     try {
       const data = await ProductApi.getProductPage(queryParams)
+      data.list.forEach((item) => {
+        item.productId = item.id
+        item.id = undefined
+      })
       list.value = data.list
       total.value = data.total
     } finally {

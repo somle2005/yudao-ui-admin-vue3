@@ -31,7 +31,7 @@
         </SmForm>
       </ContentWrap>
 
-      <!-- 列表 -->
+      <!-- 列表  style="height: calc(100vh - 230px)" -->
       <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
         <SmTable
           border
@@ -41,8 +41,7 @@
           :total="total"
           v-model:currentPage="queryParams.pageNo"
           v-model:pageSize="queryParams.pageSize"
-          @pagination="getList"
-          style="height: calc(100vh - 230px)"
+          @pagination="getList" 
         >
           <template #image="{ scope }">
             <el-image :src="scope.row.image" class="w-64px h-64px" />
@@ -86,7 +85,6 @@ import ShopProductForm from './ShopProductForm.vue'
 import { useSearchForm } from './hooks/search'
 import { ShopProductApi, ShopProductVO } from '@/api/erp/sale/shop-product'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { wrap } from 'module'
 
 const { tableOptions, transformTableOptions } = useTableData()
 

@@ -7,9 +7,9 @@
     label-width="0px"
     :inline-message="true"
   >
-    <el-table :data="formData" class="-mt-10px" height="400px">
+     <!-- height="400px" -->
+    <el-table :data="formData" class="-mt-10px">
       <!-- <el-table-column label="序号" type="index" align="center" width="60" /> -->
-
       <el-table-column align="center" label="图片" min-width="60">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.primaryImageUrl`" class="mb-0px!">

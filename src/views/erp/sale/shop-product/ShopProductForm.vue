@@ -1,6 +1,12 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible" width="800px">
-    <el-form ref="formRef" :disabled="disabled" :model="formData" :inline="true" label-width="100px">
+    <el-form
+      ref="formRef"
+      :disabled="disabled"
+      :model="formData"
+      :inline="true"
+      label-width="100px"
+    >
       <el-row>
         <el-col :span="12">
           <el-form-item label="店铺sku" prop="name">
@@ -70,7 +76,7 @@
       </el-form-item>
     </el-form>
     <!-- <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
-    </ContentWrap> -->
+    </ContentWrap>   style="height: 500px" -->
     <SmTable
       border
       isSelection
@@ -82,7 +88,6 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
       @selection-change="handleSelectionChange"
-      style="height: 500px"
     >
       <template #primaryImageUrl="{ scope }">
         <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
@@ -101,6 +106,7 @@ import { ShopProductApi, ShopProductVO } from '@/api/erp/sale/shop-product'
 import { createDBFn } from '@/utils/decorate'
 import ProductItemForm from './components/ProductItemForm.vue'
 import { useProductItemForm } from './hooks/useProductItemForm'
+import { cloneDeep } from 'lodash-es'
 /** ERP 店铺产品 */
 defineOptions({ name: 'ShopProductForm' })
 
@@ -287,11 +293,11 @@ const itemFormRef = ref()
 
 const initFormData = () => {
   return {
-    id:  undefined,
-    shopId:  undefined,
-    name:  undefined,
-    code:  undefined,
-    remark:  undefined,
+    id: undefined,
+    shopId: undefined,
+    name: undefined,
+    code: undefined,
+    remark: undefined,
     status: undefined,
     createTime: 1739011592000,
     url: undefined,
@@ -302,7 +308,7 @@ const initFormData = () => {
       //   remark: '',
       //   createTime: undefined
       // },
-    ],
+    ] as any[],
     shop: {}
   }
 }
@@ -321,12 +327,22 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       getList()
-      formData.value = await ShopProductApi.getShopProduct(id)
+      const data = await ShopProductApi.getShopProduct(id)
       // formRef.value.initForm()
       // 检查 items 并赋值为默认值 []
-      if (formData.value.items == null) {
-        formData.value.items = []
+      if (data.items == null) {
+        data.items = []
       }
+      data.items.forEach(item => {
+        if(item.product) {
+          item.name = item.product.name
+          item.barCode = item.product.barCode
+          item.primaryImageUrl = item.product.primaryImageUrl
+        }
+      })
+
+
+      formData.value = data
     } finally {
       formLoading.value = false
     }
@@ -343,12 +359,26 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as ShopProductVO
+    const data = cloneDeep(formData.value) as unknown as ShopProductVO
+    // @ts-ignore
+    data.items = data.items.map((item) => {
+      const obj = {
+        shopProductId: data.id,
+        id: item.id,
+        productId: item.productId,
+        remark: item.remark,
+        createTime: item.createTime,
+        quantity: item.quantity
+      }
+      return obj
+    })
+    data.shop = undefined
+
     if (formType.value === 'create') {
       await ShopProductApi.createShopProduct(data)
       message.success(t('common.createSuccess'))
     } else {
-      await ShopProductApi.createShopProduct(data)
+      await ShopProductApi.updateShopProduct(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -375,13 +405,14 @@ const confirmProduct = () => {
   const items = formData.value.items
   const map = {}
   items.forEach((item) => {
-    map[item.id] = 1
+    map[item.productId] = 1
   })
   selectionList.value.forEach((item) => {
-    if (!map[item.id]) {
+    if (!map[item.productId]) {
       items.push(item)
     }
   })
+  console.log(items, 'confirmProduct')
   formData.value.items = items
 }
 
