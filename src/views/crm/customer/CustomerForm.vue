@@ -35,6 +35,7 @@
           <el-form-item label="客户标签" prop="labelCodes">
             <el-select
               multiple
+              :multiple-limit="1"
               v-model="formData.labelCodes"
               placeholder="请选择客户标签"
               clearable
