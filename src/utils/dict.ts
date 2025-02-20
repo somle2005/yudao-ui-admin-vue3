@@ -228,7 +228,8 @@ export enum DICT_TYPE {
   ERP_OFF_STATUS = 'erp_off_status', // 开关状态
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
   ERP_SHOP_TYPE = 'erp_shop_type', // EPR店铺状态
-
+  ERP_PRODUCT_LISTING_STATUS = 'erp_product_listing_status', // 商品上下架状态
+  
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台

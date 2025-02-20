@@ -47,7 +47,7 @@
             <el-image :src="scope.row.image" class="w-64px h-64px" />
           </template>
           <template #status="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.status + '' || ''" />
+            <dict-tag :type="DICT_TYPE.ERP_PRODUCT_LISTING_STATUS" :value="scope.row.status + '' || ''" />
           </template>
 
           <template #name="{ scope }">
