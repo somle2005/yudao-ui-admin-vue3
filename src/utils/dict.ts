@@ -227,7 +227,8 @@ export enum DICT_TYPE {
   SRP_ORDER_STATUS = 'srp_order_status', // 采购状态
   ERP_OFF_STATUS = 'erp_off_status', // 开关状态
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
-
+  REPORT_MAP = 'report_map', // 报表地图
+  
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台
