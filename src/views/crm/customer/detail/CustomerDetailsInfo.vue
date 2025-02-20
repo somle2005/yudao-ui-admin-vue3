@@ -17,10 +17,10 @@
             {{ customer.companyName }}
           </el-descriptions-item> -->
           <el-descriptions-item label="公司介绍">
-            {{ customer.companyWebsite }}
+            {{ customer.companyIntroduction }}
           </el-descriptions-item>
           <el-descriptions-item label="官网">
-            {{ customer.companyIntroduce }}
+            {{ customer.companyWebsite }}
           </el-descriptions-item>
           <el-descriptions-item label="客户标签">
             <template v-if="customer?.labelCodes?.length" >

@@ -56,8 +56,8 @@
           </el-form-item>
         </el-col> -->
         <el-col :span="12">
-          <el-form-item label="公司介绍" prop="companyIntroduce">
-            <el-input v-model="formData.companyIntroduce" placeholder="请输入公司介绍" />
+          <el-form-item label="公司介绍" prop="companyIntroduction">
+            <el-input v-model="formData.companyIntroduction" placeholder="请输入公司介绍" />
           </el-form-item>
         </el-col>
 
@@ -217,7 +217,7 @@ const initFormData = () => {
     source: undefined,
     remark: undefined,
     // companyName: undefined,
-    companyIntroduce: undefined,
+    companyIntroduction: undefined,
     companyWebsite: undefined,
     labelCodes: [],
     countryCodes: []

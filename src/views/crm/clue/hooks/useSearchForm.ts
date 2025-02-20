@@ -73,7 +73,7 @@ export const useSearchForm = (handleQuery,queryParams) => {
     {
       type: 'input',
       label: '公司介绍',
-      prop: 'companyIntroduce',
+      prop: 'companyIntroduction',
       placeholder: '请输入公司介绍',
       attrs: {
         class: '!w-240px',

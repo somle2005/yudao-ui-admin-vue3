@@ -32,7 +32,7 @@ export interface CustomerVO {
   /**
    * 公司介绍
    */
-  companyIntroduce?: string
+  companyIntroduction?: string
   /**
    * 公司名称
    */
