@@ -33,7 +33,7 @@
           class="!w-240px"
         /> -->
         <el-select
-          v-model="queryParams.barCode"
+          v-model.trim="queryParams.barCode"
           clearable
           filterable
           placeholder="请选择SKU（编码）"

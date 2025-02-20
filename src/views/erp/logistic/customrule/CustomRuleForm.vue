@@ -82,13 +82,13 @@
       </el-form-item>
 
       <el-form-item label="hs编码" prop="hscode">
-        <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
+        <el-input v-model.trim="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
       <el-form-item label="申报品名(英文)" prop="declaredTypeEn">
-        <el-input v-model="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
+        <el-input v-model.trim="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
       </el-form-item>
       <el-form-item label="申报品名" prop="declaredType">
-        <el-input v-model="formData.declaredType" placeholder="请输入申报品名" />
+        <el-input v-model.trim="formData.declaredType" placeholder="请输入申报品名" />
       </el-form-item>
 
       <el-form-item label="申报金额" prop="declaredValue">
@@ -128,7 +128,7 @@
         <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item> -->
       <el-form-item label="FBA条形码" prop="fbaBarCode">
-        <el-input v-model="formData.fbaBarCode" placeholder="请输入FBA条形码" />
+        <el-input v-model.trim="formData.fbaBarCode" placeholder="请输入FBA条形码" />
       </el-form-item>
       <el-form-item label="物流属性" prop="logisticAttribute">
         <el-select
