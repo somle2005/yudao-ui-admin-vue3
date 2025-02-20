@@ -181,12 +181,23 @@ export const getCustomRuleCategoryList = (data?: any) => {
 export const getShopList = (data?: any) => {
   const shopList = ref<any[]>([]) // 用户列表
   ShopApi.getShopList().then((res: any) => {
-    shopList.value = res.map((item) => {
-      item.label = item.name
-      item.value = item.id
-      item.type = 'option'
+    const map = {}
+    const arr:any = []
+    // 去重account
+    res.map(item => {
+      const account = item.account 
+      if(account && !map[account]) {
+        map[account] = 1
+        arr.push(item)
+      }
+    })
+    // 使用acount模糊搜索
+    shopList.value = arr.map((item) => {
+      item.label = item.account
+      item.value = item.account
       return item
     })
+    console.log('店铺数据', res)
     if (data) {
       data.value = shopList.value
     }
