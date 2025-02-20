@@ -1,5 +1,5 @@
 <template>
-  <div class="finance-operate" style="width: 100%; height: 1200px">
+  <div class="finance-operate" :style="mapStyle">
     <iframe
       width="100%"
       height="100%"
@@ -12,6 +12,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { createMapStyle } from '../utils'
+
+const mapStyle = createMapStyle('财务经营报表高度')
 </script>
-<style lang="scss" scoped>
-</style>
+
+<style lang="scss" scoped></style>
