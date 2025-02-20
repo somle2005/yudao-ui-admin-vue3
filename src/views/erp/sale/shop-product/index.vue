@@ -47,7 +47,10 @@
             <el-image :src="scope.row.image" class="w-64px h-64px" />
           </template>
           <template #status="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_PRODUCT_LISTING_STATUS" :value="scope.row.status + '' || ''" />
+            <dict-tag
+              :type="DICT_TYPE.ERP_PRODUCT_LISTING_STATUS"
+              :value="scope.row.status + '' || ''"
+            />
           </template>
 
           <template #name="{ scope }">
@@ -55,6 +58,12 @@
               <el-link type="primary" :href="scope.row.url" target="_blank">{{
                 scope.row.name
               }}</el-link>
+            </div>
+          </template>
+
+          <template #SKUQuantity="{ scope }">
+            <div :key="item" v-for="item in scope.row.SKUQuantity" class="slot-wrap">
+              {{ item }}
             </div>
           </template>
 
@@ -125,6 +134,11 @@ const fieldMap = {
     slot: 'account',
     wrap: true
   },
+  SKUQuantity: {
+    label: 'SKU * 数量',
+    width: '250px',
+    slot: 'SKUQuantity'
+  },
   // shopName: {
   //   label: '店铺名称',
   //   width: '180px',
@@ -178,12 +192,27 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await ShopProductApi.getShopProductPage(queryParams)
-    list.value = data.list.map((item) => {
-      item.shopName = item.shop.name
-      item.shopPlatform = item.shop.platform
-      item.account = item.shop.account
-      return item
-    })
+    
+    try {
+      list.value = data.list.map((item) => {
+        item.shopName = item.shop.name
+        item.shopPlatform = item.shop.platform
+        item.account = item.shop.account
+
+        item.SKUQuantity = []
+        if (item?.items?.length) {
+          item.items.forEach((a) => {
+            const product = a.product
+            if (product) {
+              item.SKUQuantity.push(`${product.barCode} * ${a.quantity}`)
+            }
+          })
+        }
+        return item
+      })
+    } catch (e) {
+      console.log(e, '处理列表数据报错')
+    }
     total.value = data.total
   } finally {
     loading.value = false
