@@ -1,4 +1,4 @@
-@use '~element-ui/packages/theme-chalk/src/index' as *;
+// @use '~element-ui/packages/theme-chalk/src/index' as *;
 
 /* 改变主题色变量 */
 $--color-primary: #1890ff;
@@ -8,6 +8,7 @@ $--color-danger: #ff4d4f;
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
 
+@use '~element-ui/packages/theme-chalk/src/index';
 
 .el-table td,
 .el-table th {

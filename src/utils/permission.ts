@@ -2,6 +2,7 @@
 // const { wsCache } = useCache('sessionStorage')
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { useDictStoreWithOut } from '@/store/modules/dict'
+import {hasPermission} from "@/directives/permission/hasPermi";
 
 
 const { t } = useI18n() // 国际化
@@ -11,20 +12,8 @@ const { t } = useI18n() // 国际化
  * @param {Array} value 校验值
  * @returns {Boolean}
  */
-export function checkPermi(value: string[]) {
-  if (value && value instanceof Array && value.length > 0) {
-    const { wsCache } = useCache()
-    const permissionDatas = value
-    const all_permission = '*:*:*'
-    const permissions = wsCache.get(CACHE_KEY.USER).permissions
-    const hasPermission = permissions.some((permission) => {
-      return all_permission === permission || permissionDatas.includes(permission)
-    })
-    return !!hasPermission
-  } else {
-    console.error(t('permission.hasPermission'))
-    return false
-  }
+export function checkPermi(permission: string[]) {
+  return hasPermission(permission)
 }
 
 /**
@@ -36,9 +25,10 @@ export function checkRole(value: string[]) {
   if (value && value instanceof Array && value.length > 0) {
     const { wsCache } = useCache()
     const permissionRoles = value
-    const super_admin = 'admin'
-    const roles = wsCache.get(CACHE_KEY.USER).roles
-    const hasRole = roles.some((role) => {
+    const super_admin = 'super_admin'
+    const userInfo = wsCache.get(CACHE_KEY.USER)
+    const roles = userInfo?.roles || []
+    const hasRole = roles.some((role: string) => {
       return super_admin === role || permissionRoles.includes(role)
     })
     return !!hasRole
