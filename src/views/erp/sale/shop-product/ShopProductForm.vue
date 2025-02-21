@@ -1,21 +1,34 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible" width="800px">
-    <el-form
-      ref="formRef"
-      :disabled="disabled"
-      :model="formData"
-      :inline="true"
-      label-width="100px"
-    >
+    <el-form ref="formRef" :model="formData" :inline="true" label-width="100px">
       <el-row>
         <el-col :span="12">
           <el-form-item label="店铺SKU" prop="name">
-            <el-input v-model="formData.name" placeholder="请输入店铺SKU" />
+            <el-input :disabled="disabled" v-model="formData.name" placeholder="请输入店铺SKU" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="平台账号" prop="name">
-            <el-input v-model="formData.shop.account" placeholder="请输入平台账号" />
+            <el-input
+              :disabled="disabled"
+              v-model="formData.shop.account"
+              placeholder="请输入平台账号"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="部门" prop="deptId">
+            <el-tree-select
+              class="!w-198.67px"
+              v-model="formData.deptId"
+              :data="deptList"
+              :props="defaultProps"
+              check-strictly
+              node-key="id"
+              placeholder="请选择部门"
+              clearable
+              filterable
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -107,9 +120,11 @@ import { createDBFn } from '@/utils/decorate'
 import ProductItemForm from './components/ProductItemForm.vue'
 import { useProductItemForm } from './hooks/useProductItemForm'
 import { cloneDeep } from 'lodash-es'
+import { getDeptTree } from '@/commonData'
 /** ERP 店铺产品 */
 defineOptions({ name: 'ShopProductForm' })
 
+const { deptList, defaultProps } = getDeptTree()
 const {
   selectProduct,
   getList,
@@ -309,7 +324,8 @@ const initFormData = () => {
       //   createTime: undefined
       // },
     ] as any[],
-    shop: {}
+    shop: {},
+    deptId: undefined
   }
 }
 

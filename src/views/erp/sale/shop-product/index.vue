@@ -134,6 +134,12 @@ const fieldMap = {
     slot: 'account',
     wrap: true
   },
+  deptName: {
+    label: '部门名称',
+    width: '180px',
+    slot: 'deptName',
+    wrap: true
+  },
   SKUQuantity: {
     label: 'SKU * 数量',
     width: '250px',
