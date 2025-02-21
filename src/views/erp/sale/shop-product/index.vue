@@ -135,7 +135,7 @@ const fieldMap = {
     wrap: true
   },
   deptName: {
-    label: '部门名称',
+    label: '部门',
     width: '180px',
     slot: 'deptName',
     wrap: true
