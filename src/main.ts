@@ -41,7 +41,7 @@ import '@/plugins/tongji' // 百度统计
 import Logger from '@/utils/Logger'
 
 import VueDOMPurifyHTML from 'vue-dompurify-html' // 解决v-html 的安全隐患
-
+console.log('2025-2.21合并')
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
