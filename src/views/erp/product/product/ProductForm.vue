@@ -389,7 +389,8 @@ import ProductIronFilingCabinet from '@/views/erp/product/product/ProductIronFil
 import ProductDesktopStorageRack from '@/views/erp/product/product/ProductDesktopStorageRack.vue'
 import ProductKeyboardTray from '@/views/erp/product/product/ProductKeyboardTray.vue'
 import { getCustomRuleCategoryList } from '@/commonData/index'
-import { debounce } from 'lodash-es'
+import { createDBFn } from '@/utils/decorate'
+
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
@@ -578,7 +579,9 @@ const submitForm = async () => {
   }
 }
 
-const submitFormDB = debounce(submitForm, 1000)
+const submitFormDB = createDBFn(submitForm)
+
+
 
 /** 重置表单 */
 const resetForm = () => {

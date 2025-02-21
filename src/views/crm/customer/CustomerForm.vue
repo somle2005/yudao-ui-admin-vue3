@@ -25,8 +25,43 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
+        <el-col :span="12">
+          <el-form-item label="官网" prop="companyWebsite">
+            <el-input v-model="formData.companyWebsite" placeholder="请输入官网" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="客户标签" prop="labelCodes">
+            <el-select
+              multiple
+              :multiple-limit="1"
+              v-model="formData.labelCodes"
+              placeholder="请选择客户标签"
+              clearable
+              class="w-1/1"
+            >
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CLIENT_TAG)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <!-- <el-col :span="12">
+          <el-form-item label="公司名称" prop="companyName">
+            <el-input v-model="formData.companyName" placeholder="请输入公司名称" />
+          </el-form-item>
+        </el-col> -->
+        <el-col :span="12">
+          <el-form-item label="公司介绍" prop="companyIntroduction">
+            <el-input v-model="formData.companyIntroduction" placeholder="请输入公司介绍" />
+          </el-form-item>
+        </el-col>
+
         <el-col :span="12">
           <el-form-item label="手机" prop="mobile">
             <el-input v-model="formData.mobile" placeholder="请输入手机" />
@@ -48,8 +83,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="电话" prop="telephone">
             <el-input v-model="formData.telephone" placeholder="请输入电话" />
@@ -60,8 +94,7 @@
             <el-input v-model="formData.email" placeholder="请输入邮箱" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="微信" prop="wechat">
             <el-input v-model="formData.wechat" placeholder="请输入微信" />
@@ -72,8 +105,7 @@
             <el-input v-model="formData.qq" placeholder="请输入 QQ" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+
         <el-col :span="12">
           <el-form-item label="客户行业" prop="industryId">
             <el-select v-model="formData.industryId" placeholder="请选择客户行业" class="w-1/1">
@@ -98,86 +130,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="地址" prop="areaId">
-            <el-cascader
-              v-model="formData.areaId"
-              :options="areaList"
-              :props="defaultProps"
-              class="w-1/1"
-              clearable
-              filterable
-              placeholder="请选择城市"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="详细地址" prop="detailAddress">
-            <el-input v-model="formData.detailAddress" placeholder="请输入详细地址" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="下次联系时间" prop="contactNextTime">
-            <el-date-picker
-              v-model="formData.contactNextTime"
-              placeholder="选择下次联系时间"
-              type="datetime"
-              value-format="x"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" v-model="formData.remark" placeholder="请输入备注" />
-          </el-form-item>
-        </el-col>
-      </el-row>
 
-      <!-- <el-row>
-        <el-col :span="12">
-          <el-form-item label="公司名称" prop="companyName">
-            <el-input v-model="formData.companyName" placeholder="请输入公司名称" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="公司介绍" prop="companyIntroduce">
-            <el-input v-model="formData.companyIntroduce" placeholder="请输入公司介绍" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="官网" prop="companyWebsite">
-            <el-input v-model="formData.companyWebsite" placeholder="请输入官网" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="客户标签" prop="labelCodes">
-            <el-select
-              multiple
-              v-model="formData.labelCodes"
-              placeholder="请选择客户标签"
-              clearable
-              class="w-1/1"
-            >
-              <el-option
-                v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CLIENT_TAG)"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-row>
         <el-col :span="12">
           <el-form-item label="国家" prop="countryCodes">
             <el-select
@@ -196,10 +149,33 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row> -->
+
+        <el-col :span="12">
+          <el-form-item label="详细地址" prop="detailAddress">
+            <el-input v-model="formData.detailAddress" placeholder="请输入详细地址" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="下次联系时间" prop="contactNextTime">
+            <el-date-picker
+              v-model="formData.contactNextTime"
+              placeholder="选择下次联系时间"
+              type="datetime"
+              value-format="x"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="备注" prop="remark">
+            <el-input type="textarea" v-model="formData.remark" placeholder="请输入备注" />
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
+      <el-button :disabled="formLoading" type="primary" @click="submitFormDB">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
@@ -212,6 +188,7 @@ import { defaultProps } from '@/utils/tree'
 import * as UserApi from '@/api/system/user'
 import { useUserStore } from '@/store/modules/user'
 import { nullToList } from '@/utils/transformData'
+import { createDBFn } from '@/utils/decorate'
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -240,8 +217,8 @@ const initFormData = () => {
     level: undefined,
     source: undefined,
     remark: undefined,
-    companyName: undefined,
-    companyIntroduce: undefined,
+    // companyName: undefined,
+    companyIntroduction: undefined,
     companyWebsite: undefined,
     labelCodes: [],
     countryCodes: []
@@ -306,7 +283,7 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
-
+const submitFormDB = createDBFn(submitForm)
 /** 重置表单 */
 const resetForm = () => {
   // formData.value = {

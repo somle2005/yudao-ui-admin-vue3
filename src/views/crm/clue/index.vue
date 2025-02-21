@@ -113,10 +113,41 @@
           <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_SOURCE" :value="scope.row.source" />
         </template>
       </el-table-column>
+
+      <!-- <el-table-column align="center" label="公司名称" prop="companyName" width="200px" /> -->
+      <el-table-column align="center" label="公司介绍" prop="companyIntroduction" width="200px" />
+      <el-table-column align="center" label="官网" prop="companyWebsite" width="200px" />
+      <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
+        <template #default="scope">
+          <div v-if="scope.row?.labelCodes?.length" class="common-wrap">
+            <dict-tag
+              v-for="item in scope.row.labelCodes"
+              :key="item"
+              :type="DICT_TYPE.CRM_CLIENT_TAG"
+              :value="item"
+              style="margin-bottom: 5px"
+            />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
+        <template #default="scope">
+          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
+            <dict-tag
+              v-for="item in scope.row.countryCodes"
+              :key="item"
+              :type="DICT_TYPE.COUNTRY_CODE"
+              :value="item"
+              style="margin-bottom: 5px"
+            />
+          </div>
+        </template>
+      </el-table-column>
+
       <el-table-column label="手机" align="center" prop="mobile" width="120" />
       <el-table-column label="电话" align="center" prop="telephone" width="130" />
       <el-table-column label="邮箱" align="center" prop="email" width="180" />
-      <el-table-column label="地址" align="center" prop="detailAddress" width="180" />
+      <!-- <el-table-column label="地址" align="center" prop="detailAddress" width="180" /> -->
       <el-table-column align="center" label="客户行业" prop="industryId" width="100">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_INDUSTRY" :value="scope.row.industryId" />
@@ -160,36 +191,6 @@
         width="180px"
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
-
-      <!-- <el-table-column align="center" label="公司名称" prop="companyName" width="200px" />
-      <el-table-column align="center" label="公司介绍" prop="companyWebsite" width="200px" />
-      <el-table-column align="center" label="官网" prop="companyIntroduce" width="200px" />
-      <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
-        <template #default="scope">
-          <div v-if="scope.row?.labelCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.labelCodes"
-              :key="item"
-              :type="DICT_TYPE.CRM_CLIENT_TAG"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
-        <template #default="scope">
-          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.countryCodes"
-              :key="item"
-              :type="DICT_TYPE.COUNTRY_CODE"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column> -->
 
       <el-table-column label="操作" align="center" min-width="110" fixed="right">
         <template #default="scope">
