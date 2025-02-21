@@ -59,7 +59,13 @@
               </el-checkbox>
             </el-col>
             <el-col :offset="6" :span="12">
-              <el-link style="float: right" type="primary">{{ t('login.forgetPassword') }}</el-link>
+              <el-link
+                style="float: right"
+                type="primary"
+                @click="setLoginState(LoginStateEnum.RESET_PASSWORD)"
+              >
+                {{ t('login.forgetPassword') }}
+              </el-link>
             </el-col>
           </el-row>
         </el-form-item>
@@ -76,6 +82,7 @@
         </el-form-item>
       </el-col>
       <Verify
+        v-if="loginData.captchaEnable === 'true'"
         ref="verify"
         :captchaType="captchaType"
         :imgSize="{ width: '400px', height: '200px' }"
@@ -154,6 +161,7 @@ import * as authUtil from '@/utils/auth'
 import { usePermissionStore } from '@/store/modules/permission'
 import * as LoginApi from '@/api/login'
 import { LoginStateEnum, useFormValid, useLoginState } from './useLogin'
+import { resetDictCache } from '@/utils/permission'
 
 defineOptions({ name: 'LoginForm' })
 
@@ -241,7 +249,7 @@ const getTenantByWebsite = async () => {
 }
 const loading = ref() // ElLoading.service 返回的实例
 // 登录
-const handleLogin = async (params) => {
+const handleLogin = async (params: any) => {
   loginLoading.value = true
   try {
     await getTenantId()
@@ -273,8 +281,9 @@ const handleLogin = async (params) => {
     if (redirect.value.indexOf('sso') !== -1) {
       window.location.href = window.location.href.replace('/login?redirect=', '')
     } else {
-      push({ path: redirect.value || permissionStore.addRouters[0].path })
+      await push({ path: redirect.value || permissionStore.addRouters[0].path })
     }
+    resetDictCache()
   } finally {
     loginLoading.value = false
     loading.value.close()
@@ -313,8 +322,7 @@ const doSocialLogin = async (type: number) => {
       encodeURIComponent(`type=${type}&redirect=${redirect.value || '/'}`)
 
     // 进行跳转
-    const res = await LoginApi.socialAuthRedirect(type, encodeURIComponent(redirectUri))
-    window.location.href = res
+    window.location.href = await LoginApi.socialAuthRedirect(type, encodeURIComponent(redirectUri))
   }
 }
 watch(

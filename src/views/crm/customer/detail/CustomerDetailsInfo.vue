@@ -12,6 +12,40 @@
           <el-descriptions-item label="客户来源">
             <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_SOURCE" :value="customer.source" />
           </el-descriptions-item>
+
+          <!-- <el-descriptions-item label="公司名称">
+            {{ customer.companyName }}
+          </el-descriptions-item> -->
+          <el-descriptions-item label="公司介绍">
+            {{ customer.companyIntroduction }}
+          </el-descriptions-item>
+          <el-descriptions-item label="官网">
+            {{ customer.companyWebsite }}
+          </el-descriptions-item>
+          <el-descriptions-item label="客户标签">
+            <template v-if="customer?.labelCodes?.length" >
+              <dict-tag
+                v-for="item in customer.labelCodes"
+                :key="item"
+                :type="DICT_TYPE.CRM_CLIENT_TAG"
+                :value="item"
+                style="margin-right: 5px"
+              />
+            </template>
+          </el-descriptions-item>
+          <el-descriptions-item label="国家">
+            <template v-if="customer?.countryCodes?.length" >
+              <dict-tag
+                v-for="item in customer.countryCodes"
+                :key="item"
+                :type="DICT_TYPE.COUNTRY_CODE"
+                :value="item"
+                style="margin-right: 5px"
+              />
+            </template>
+          </el-descriptions-item>
+
+
           <el-descriptions-item label="手机">{{ customer.mobile }}</el-descriptions-item>
           <el-descriptions-item label="电话">{{ customer.telephone }}</el-descriptions-item>
           <el-descriptions-item label="邮箱">{{ customer.email }}</el-descriptions-item>
@@ -69,4 +103,3 @@ const { customer } = defineProps<{
 
 const activeNames = ref(['basicInfo', 'systemInfo']) // 展示的折叠面板
 </script>
-<style lang="scss" scoped></style>

@@ -28,8 +28,8 @@ import '@/plugins/animate.css'
 // 路由
 import router, { setupRouter } from '@/router'
 
-// 权限
-import { setupAuth } from '@/directives'
+// 指令
+import { setupAuth, setupMountedFocus } from '@/directives'
 
 import { createApp } from 'vue'
 
@@ -41,7 +41,7 @@ import '@/plugins/tongji' // 百度统计
 import Logger from '@/utils/Logger'
 
 import VueDOMPurifyHTML from 'vue-dompurify-html' // 解决v-html 的安全隐患
-
+console.log('2025-2.21合并')
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
@@ -58,7 +58,9 @@ const setupAll = async () => {
 
   setupRouter(app)
 
+  // directives 指令
   setupAuth(app)
+  setupMountedFocus(app)
 
   await router.isReady()
 
