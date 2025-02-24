@@ -1,5 +1,5 @@
 import { createDBFn } from '@/utils/decorate'
-export const pushSearchVal = (data:any) => {
+export const insertSearchVal = (data:any) => {
 
   const inputSearch = (e) => {
     const val = e.target.value
