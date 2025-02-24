@@ -1,10 +1,10 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible">
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="800px">
     <SmForm
       class="-mb-15px"
       ref="formRef"
       isCol
-      label-width="150px"
+      label-width="100px"
       v-model="formData"
       v-loading="formLoading"
       :options="requestFormOptions"
@@ -34,6 +34,35 @@ import { createDBFn } from '@/utils/decorate'
 /** ERP 平台店铺 */
 defineOptions({ name: 'ShopForm' })
 
+
+
+const { t } = useI18n() // 国际化
+const message = useMessage() // 消息弹窗
+
+const dialogVisible = ref(false) // 弹窗的是否展示
+const dialogTitle = ref('') // 弹窗的标题
+const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
+const formType = ref('') // 表单的类型：create - 新增；update - 修改
+const formData = ref()
+
+const initFormData = () => {
+  return {
+    name: undefined,
+    code: undefined,
+    remark: undefined,
+    status: 1,
+    sort: undefined,
+    createTime: undefined,
+    type: 1, //0线上1线下
+    platform: undefined,
+    account: undefined
+  }
+}
+
+formData.value = initFormData()
+
+const online = computed(() => formData.value.type === 0)
+
 const requestFormOptions = ref<any[]>([])
 
 const initRequestFormOptions = () => {
@@ -46,6 +75,8 @@ const initRequestFormOptions = () => {
       attrs: {
         filterable: true,
         clearable: true,
+        disabled: online,
+        class: '!w-240px',
         style: {
           width: '100%'
         }
@@ -70,8 +101,9 @@ const initRequestFormOptions = () => {
       // placeholder: '请输入平台账户',
       placeholder: '请输入店铺名称',
       attrs: {
+        class: '!w-240px',
         style: { width: '100%' },
-        clearable: true
+        clearable: true,
       },
       rules: [
         {
@@ -87,6 +119,7 @@ const initRequestFormOptions = () => {
       prop: 'code',
       placeholder: '请输入店铺代码',
       attrs: {
+        class: '!w-240px',
         style: { width: '100%' },
         clearable: true,
         disabled: true
@@ -221,31 +254,6 @@ const initRequestFormOptions = () => {
     // }
   ]
 }
-
-const { t } = useI18n() // 国际化
-const message = useMessage() // 消息弹窗
-
-const dialogVisible = ref(false) // 弹窗的是否展示
-const dialogTitle = ref('') // 弹窗的标题
-const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
-const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref()
-
-const initFormData = () => {
-  return {
-    name: undefined,
-    code: undefined,
-    remark: undefined,
-    status: 1,
-    sort: undefined,
-    createTime: undefined,
-    type: 1, //0线上1线下
-    platform: undefined,
-    account: undefined
-  }
-}
-
-formData.value = initFormData()
 
 const formRef = ref() // 表单 Ref
 
