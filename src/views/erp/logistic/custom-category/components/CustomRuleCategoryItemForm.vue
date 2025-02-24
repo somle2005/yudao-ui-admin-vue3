@@ -32,10 +32,10 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="HS编码" min-width="150">
+      <el-table-column label="hs编码" min-width="150">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.hsCode`" :rules="formRules.hsCode" class="mb-0px!">
-            <el-input v-model="row.hsCode" placeholder="请输入HS编码" />
+          <el-form-item :prop="`${$index}.hscode`" :rules="formRules.hscode" class="mb-0px!">
+            <el-input v-model="row.hscode" placeholder="请输入hs编码" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -80,7 +80,7 @@ const formData: any = ref([])
 const formRules = reactive({
   categoryId: [{ required: true, message: '分类表id不能为空', trigger: 'blur' }],
   countryCode: [{ required: true, message: '国家-字典不能为空', trigger: 'blur' }],
-  hsCode: [{ required: true, message: 'HS编码不能为空', trigger: 'blur' }],
+  hscode: [{ required: true, message: 'hs编码不能为空', trigger: 'blur' }],
   taxRate: [{ required: true, message: '税率不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref

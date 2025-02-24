@@ -46,7 +46,7 @@ export interface ErpCustomRuleCategoryItemSaveReqVO {
   /**
    * HS编码
    */
-  hsCode: string;
+  hscode: string;
   /**
    * 编号
    */

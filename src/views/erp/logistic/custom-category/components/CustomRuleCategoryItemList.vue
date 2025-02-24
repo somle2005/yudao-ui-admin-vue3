@@ -7,7 +7,7 @@
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
         </template>
       </el-table-column>
-      <el-table-column label="HS编码" align="center" prop="hsCode" />
+      <el-table-column label="hs编码" align="center" prop="hscode" />
       <el-table-column label="税率" align="center" prop="taxRate" />
       <el-table-column
         label="更新时间"
