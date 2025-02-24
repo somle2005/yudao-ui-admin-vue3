@@ -59,21 +59,21 @@ export const useSearchForm = (handleQuery,queryParams) => {
         clearable: true
       }
     },
-    {
-      type: 'input',
-      label: '公司名称',
-      prop: 'companyName',
-      placeholder: '请输入公司名称',
-      attrs: {
-        class: '!w-240px',
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
+    // {
+    //   type: 'input',
+    //   label: '公司名称',
+    //   prop: 'companyName',
+    //   placeholder: '请输入公司名称',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     style: { width: '100%' },
+    //     clearable: true
+    //   }
+    // },
     {
       type: 'input',
       label: '公司介绍',
-      prop: 'companyIntroduce',
+      prop: 'companyIntroduction',
       placeholder: '请输入公司介绍',
       attrs: {
         class: '!w-240px',

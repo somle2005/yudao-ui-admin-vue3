@@ -3,7 +3,6 @@
     <!-- 流程设计器，负责绘制流程等 -->
     <MyProcessDesigner
       key="designer"
-      v-if="xmlString !== undefined"
       v-model="xmlString"
       :value="xmlString"
       v-bind="controlForm"
@@ -11,12 +10,16 @@
       ref="processDesigner"
       @init-finished="initModeler"
       :additionalModel="controlForm.additionalModel"
+      :model="model"
       @save="save"
+      :process-id="modelKey"
+      :process-name="modelName"
     />
     <!-- 流程属性器，负责编辑每个流程节点的属性 -->
     <MyProcessPenal
+      v-if="modeler"
       key="penal"
-      :bpmnModeler="modeler as any"
+      :bpmnModeler="modeler"
       :prefix="controlForm.prefix"
       class="process-panel"
       :model="model"
@@ -34,12 +37,29 @@ import * as ModelApi from '@/api/bpm/model'
 
 defineOptions({ name: 'BpmModelEditor' })
 
-const router = useRouter() // 路由
-const { query } = useRoute() // 路由的查询
+const props = defineProps<{
+  modelId?: string
+  modelKey: string
+  modelName: string
+  value?: string
+}>()
+
+const emit = defineEmits(['success', 'init-finished'])
 const message = useMessage() // 国际化
 
-const xmlString = ref(undefined) // BPMN XML
-const modeler = ref(null) // BPMN Modeler
+// 表单信息
+const formFields = ref<string[]>([])
+const formType = ref(20)
+provide('formFields', formFields)
+provide('formType', formType)
+
+// 注入流程数据
+const xmlString = inject('processData') as Ref
+// 注入模型数据
+const modelData = inject('modelData') as Ref
+
+const modeler = shallowRef() // BPMN Modeler
+const processDesigner = ref()
 const controlForm = ref({
   simulation: true,
   labelEditing: false,
@@ -51,65 +71,37 @@ const controlForm = ref({
 const model = ref<ModelApi.ModelVO>() // 流程模型的信息
 
 /** 初始化 modeler */
-const initModeler = (item) => {
-  setTimeout(() => {
-    modeler.value = item
-  }, 10)
+const initModeler = async (item: any) => {
+  //先初始化模型数据
+  model.value = modelData.value
+  modeler.value = item
 }
 
 /** 添加/修改模型 */
-const save = async (bpmnXml) => {
-  const data = {
-    ...model.value,
-    bpmnXml: bpmnXml // bpmnXml 只是初始化流程图，后续修改无法通过它获得
-  } as unknown as ModelApi.ModelVO
-  // 提交
-  if (data.id) {
-    await ModelApi.updateModel(data)
-    message.success('修改成功')
-  } else {
-    await ModelApi.createModel(data)
-    message.success('新增成功')
+const save = async (bpmnXml: string) => {
+  try {
+    xmlString.value = bpmnXml
+    emit('success', bpmnXml)
+  } catch (error) {
+    console.error('保存失败:', error)
+    message.error('保存失败')
   }
-  // 跳转回去
-  close()
 }
 
-/** 关闭按钮 */
-const close = () => {
-  router.push({ path: '/bpm/manager/model' })
-}
-
-/** 初始化 */
-onMounted(async () => {
-  const modelId = query.modelId as unknown as number
-  if (!modelId) {
-    message.error('缺少模型 modelId 编号')
-    return
+// 在组件卸载时清理
+onBeforeUnmount(() => {
+  modeler.value = null
+  // 清理全局实例
+  const w = window as any
+  if (w.bpmnInstances) {
+    w.bpmnInstances = null
   }
-  // 查询模型
-  const data = await ModelApi.getModel(modelId)
-  if (!data.bpmnXml) {
-    // 首次创建的 Model 模型，它是没有 bpmnXml，此时需要给它一个默认的
-    data.bpmnXml = ` <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.activiti.org/processdef">
-  <process id="${data.key}" name="${data.name}" isExecutable="true" />
-  <bpmndi:BPMNDiagram id="BPMNDiagram">
-    <bpmndi:BPMNPlane id="${data.key}_di" bpmnElement="${data.key}" />
-  </bpmndi:BPMNDiagram>
-</definitions>`
-  }
-  model.value = {
-    ...data,
-    bpmnXml: undefined // 清空 bpmnXml 属性
-  }
-  xmlString.value = data.bpmnXml
 })
 </script>
 <style lang="scss">
 .process-panel__container {
   position: absolute;
-  top: 90px;
-  right: 60px;
+  top: 172px;
+  right: 70px;
 }
 </style>

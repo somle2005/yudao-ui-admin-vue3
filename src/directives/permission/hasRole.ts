@@ -7,9 +7,12 @@ export function hasRole(app: App<Element>) {
   app.directive('hasRole', (el, binding) => {
     const { wsCache } = useCache()
     const { value } = binding
-    const super_admin = 'admin'
+    // const super_admin = 'admin'
+    // const roles = wsCache.get(CACHE_KEY.USER).roles
     // 获取用户拥有的角色
-    const roles = wsCache.get(CACHE_KEY.USER).roles
+    const super_admin = 'super_admin'
+    const userInfo = wsCache.get(CACHE_KEY.USER)
+    const roles = userInfo?.roles || []
 
     if (value && value instanceof Array && value.length > 0) {
       // 权限所需的角色

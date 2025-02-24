@@ -19,7 +19,7 @@
           v-if="showType(item)"
           :is="`el-${item.type}`"
           :placeholder="item.placeholder"
-          v-model="model[item.prop!]"
+          v-model.trim="model[item.prop!]"
           v-bind="item.attrs"
           v-on="item.events || {}"
           @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
@@ -85,7 +85,7 @@
               v-if="showType(item)"
               :is="`el-${item.type}`"
               :placeholder="item.placeholder"
-              v-model="model[item.prop!]"
+              v-model.trim="model[item.prop!]"
               v-bind="item.attrs"
               v-on="item.events || {}"
               @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
@@ -118,7 +118,7 @@
               :placeholder="item.placeholder"
             >
               <component
-                :is="`el-${child.type}`"
+                :is="`el-${child.type || 'option'}`"
                 v-for="(child, i) in item.children"
                 v-bind="child.attrs"
                 :key="i"

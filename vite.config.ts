@@ -43,9 +43,12 @@ export default ({command, mode}: ConfigEnv): UserConfig => {
         css: {
             preprocessorOptions: {
                 scss: {
-                    api: 'modern-compiler',
-                    additionalData: '@use "@/styles/variables.scss" as *;\n',
-                    javascriptEnabled: true
+                    // api: 'modern-compiler',
+                    // additionalData: '@use "@/styles/variables.scss" as *;\n',
+                    // javascriptEnabled: true
+                    additionalData: '@use "@/styles/variables.scss" as *;',
+                    javascriptEnabled: true,
+                    silenceDeprecations: ["legacy-js-api"], // 参考自 https://stackoverflow.com/questions/78997907/the-legacy-js-api-is-deprecated-and-will-be-removed-in-dart-sass-2-0-0
                 }
             }
         },

@@ -29,6 +29,26 @@ export interface CustomerVO {
   creatorName?: string // 创建人名称
   createTime: Date // 创建时间
   updateTime: Date // 更新时间
+  /**
+   * 公司介绍
+   */
+  companyIntroduction?: string
+  /**
+   * 公司名称
+   */
+  companyName?: string
+  /**
+   * 官网
+   */
+  companyWebsite?: string
+   /**
+   * 国家
+   */
+  countryCodes?: number[]
+  /**
+   * 客户标签
+   */
+  labelCodes?: number[]
 }
 
 // 查询客户列表

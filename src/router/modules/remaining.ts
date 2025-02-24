@@ -267,9 +267,9 @@ const remainingRouter: AppRouteRecordRaw[] = [
         }
       },
       {
-        path: 'manager/simple/workflow/model/edit',
-        component: () => import('@/views/bpm/simpleWorkflow/index.vue'),
-        name: 'SimpleWorkflowDesignEditor',
+        path: 'manager/simple/model',
+        component: () => import('@/views/bpm/simple/SimpleModelDesign.vue'),
+        name: 'SimpleModelDesign',
         meta: {
           noCache: true,
           hidden: true,
@@ -300,6 +300,23 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           title: '流程详情',
           activeMenu: '/bpm/task/my'
+        },
+        props: (route) => ({
+          id: route.query.id,
+          taskId: route.query.taskId,
+          activityId: route.query.activityId
+        })
+      },
+      {
+        path: 'process-instance/report',
+        component: () => import('@/views/bpm/processInstance/report/index.vue'),
+        name: 'BpmProcessInstanceReport',
+        meta: {
+          noCache: true,
+          hidden: true,
+          canTo: true,
+          title: '数据报表',
+          activeMenu: '/bpm/manager/model'
         }
       },
       {
@@ -324,6 +341,31 @@ const remainingRouter: AppRouteRecordRaw[] = [
           canTo: true,
           title: '查看 OA 请假',
           activeMenu: '/bpm/oa/leave'
+        }
+      },
+      {
+        path: 'manager/model/create',
+        component: () => import('@/views/bpm/model/form/index.vue'),
+        name: 'BpmModelCreate',
+        meta: {
+          noCache: true,
+          hidden: true,
+          canTo: true,
+          title: '创建流程',
+          activeMenu: '/bpm/manager/model'
+        }
+      },
+      {
+        // TODO @zws：1）建议，在加一个路由。然后标题是“复制流程”，这样体验会好点；2）复制出来的数据，在名字前面，加“副本 ”，和钉钉保持一致！
+        path: 'manager/model/:type/:id',
+        component: () => import('@/views/bpm/model/form/index.vue'),
+        name: 'BpmModelUpdate',
+        meta: {
+          noCache: true,
+          hidden: true,
+          canTo: true,
+          title: '修改流程',
+          activeMenu: '/bpm/manager/model'
         }
       }
     ]
@@ -603,6 +645,38 @@ const remainingRouter: AppRouteRecordRaw[] = [
       hidden: true,
       breadcrumb: false
     }
+  },
+  {
+    path: '/iot',
+    component: Layout,
+    name: 'IOT',
+    meta: {
+      hidden: true
+    },
+    children: [
+      {
+        path: 'product/detail/:id',
+        name: 'IoTProductDetail',
+        meta: {
+          title: '产品详情',
+          noCache: true,
+          hidden: true,
+          activeMenu: '/iot/product'
+        },
+        component: () => import('@/views/iot/product/detail/index.vue')
+      },
+      {
+        path: 'device/detail/:id',
+        name: 'IoTDeviceDetail',
+        meta: {
+          title: '设备详情',
+          noCache: true,
+          hidden: true,
+          activeMenu: '/iot/device'
+        },
+        component: () => import('@/views/iot/device/detail/index.vue')
+      }
+    ]
   }
 ]
 
