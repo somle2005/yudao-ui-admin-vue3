@@ -203,7 +203,7 @@
       <el-table-column fixed="right" label="操作" width="250">
         <template #default="scope">
           <el-button
-            v-if="scope.row.auditStatus === 0"
+            v-if="scope.row.auditStatus === 0 || scope.row.auditStatus === 30"
             v-hasPermi="['crm:contract:update']"
             link
             type="primary"
@@ -212,7 +212,7 @@
             编辑
           </el-button>
           <el-button
-            v-if="scope.row.auditStatus === 0"
+            v-if="scope.row.auditStatus === 0 || scope.row.auditStatus === 30"
             v-hasPermi="['crm:contract:update']"
             link
             type="primary"
@@ -220,15 +220,35 @@
           >
             提交审核
           </el-button>
+<!--          <el-button-->
+<!--            v-else-->
+<!--            link-->
+<!--            v-hasPermi="['crm:contract:update']"-->
+<!--            type="primary"-->
+<!--            @click="handleProcessDetail(scope.row)"-->
+<!--          >-->
+<!--            查看审批-->
+<!--          </el-button>-->
           <el-button
-            v-else
             link
-            v-hasPermi="['crm:contract:update']"
+            v-if="scope.row.auditStatus === 10"
+            v-hasPermi="['crm:contract:approve']"
             type="primary"
-            @click="handleProcessDetail(scope.row)"
+            @click="approveContract(scope.row)"
           >
-            查看审批
+            审批合同
           </el-button>
+
+          <el-button
+            link
+            v-if="scope.row.auditStatus === 20"
+            v-hasPermi="['crm:contract:approve']"
+            type="primary"
+            @click="cancelApproveContract(scope.row)"
+          >
+            退回审批
+          </el-button>
+
           <el-button
             v-hasPermi="['crm:contract:query']"
             link
@@ -238,6 +258,7 @@
             详情
           </el-button>
           <el-button
+            v-if="scope.row.auditStatus === 0 || scope.row.auditStatus === 30"
             v-hasPermi="['crm:contract:delete']"
             link
             type="danger"
@@ -268,7 +289,7 @@ import ContractForm from './ContractForm.vue'
 import { DICT_TYPE } from '@/utils/dict'
 import { erpPriceInputFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import * as CustomerApi from '@/api/crm/customer'
-import { TabsPaneContext } from 'element-plus'
+import { TabsPaneContext, ElMessageBox } from 'element-plus'
 
 defineOptions({ name: 'CrmContract' })
 
@@ -363,6 +384,42 @@ const handleSubmit = async (row: ContractApi.ContractVO) => {
   message.success('提交审核成功！')
   await getList()
 }
+
+/** 审批合同 **/
+const approveContract = async (row: ContractApi.ContractVO) => {
+  try {
+    const confirmed = await ElMessageBox.confirm(
+      `您确定审批通过【${row.name}】合同吗？`,
+      '系统提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '拒绝', // 将“取消”改为“拒绝”
+        type: 'warning'
+      }
+    );
+
+    if (confirmed === 'confirm') {
+      await ContractApi.approveContract(row.id);
+      message.success('合同审批成功！');
+    }
+  } catch (error) {
+    // 捕获 ElMessageBox.confirm 的取消操作或其他异常
+    await ContractApi.cancelApproveContract(row.id);
+    message.error('合同审批已拒绝！');
+  } finally {
+    await getList();
+  }
+}
+
+
+/** 审批合同 **/
+const cancelApproveContract = async (row: ContractApi.ContractVO) => {
+  await message.confirm(`您确定取消【${row.name}】的审批吗？`)
+  await ContractApi.cancelApproveContract(row.id)
+  message.success('合同审批取消成功！')
+  await getList()
+}
+
 
 /** 查看审批 */
 const handleProcessDetail = (row: ContractApi.ContractVO) => {

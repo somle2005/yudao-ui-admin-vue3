@@ -11,6 +11,7 @@ export interface ProductVO {
   categoryName?: string
   description: string
   ownerUserId: number
+  barCode: string
 }
 
 // 查询产品列表

@@ -67,6 +67,17 @@ export const submitReceivable = async (id: number) => {
   return await request.put({ url: `/crm/receivable/submit?id=${id}` })
 }
 
+// 提交审核
+export const approveReceivable = async (id: number) => {
+  return await request.put({ url: `/crm/receivable/approve?id=${id}` })
+}
+// 取消回款审核
+export const cancelApproveReceivable = async (id: number) => {
+  return await request.put({ url: `/crm/receivable/cancelApprove?id=${id}` })
+}
+
+
+
 // 获得待审核回款数量
 export const getAuditReceivableCount = async () => {
   return await request.get({ url: '/crm/receivable/audit-count' })

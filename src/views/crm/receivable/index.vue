@@ -156,6 +156,7 @@
       <el-table-column align="center" fixed="right" label="操作" width="180px">
         <template #default="scope">
           <el-button
+            v-if="scope.row.auditStatus === 0 || scope.row.auditStatus === 30"
             v-hasPermi="['crm:receivable:update']"
             link
             type="primary"
@@ -164,7 +165,7 @@
             编辑
           </el-button>
           <el-button
-            v-if="scope.row.auditStatus === 0"
+            v-if="scope.row.auditStatus === 0 || scope.row.auditStatus === 30"
             v-hasPermi="['crm:receivable:update']"
             link
             type="primary"
@@ -172,16 +173,40 @@
           >
             提交审核
           </el-button>
+<!--          <el-button-->
+<!--            v-else-->
+<!--            v-hasPermi="['crm:receivable:update']"-->
+<!--            link-->
+<!--            type="primary"-->
+<!--            @click="handleProcessDetail(scope.row)"-->
+<!--          >-->
+<!--            查看审批-->
+<!--          </el-button>-->
+
           <el-button
-            v-else
-            v-hasPermi="['crm:receivable:update']"
             link
+            v-if="scope.row.auditStatus === 10"
+            v-hasPermi="['crm:receivable:approve']"
             type="primary"
-            @click="handleProcessDetail(scope.row)"
+            @click="approveReceivable(scope.row)"
           >
-            查看审批
+            审批回款
           </el-button>
+
+
           <el-button
+            link
+            v-if="scope.row.auditStatus === 20"
+            v-hasPermi="['crm:receivable:approve']"
+            type="primary"
+            @click="cancelApproveReceivable(scope.row)"
+          >
+            取消审批
+          </el-button>
+
+
+          <el-button
+            v-if="scope.row.auditStatus === 0 || scope.row.auditStatus === 30"
             v-hasPermi="['crm:receivable:delete']"
             link
             type="danger"
@@ -211,8 +236,9 @@ import download from '@/utils/download'
 import * as ReceivableApi from '@/api/crm/receivable'
 import ReceivableForm from './ReceivableForm.vue'
 import * as CustomerApi from '@/api/crm/customer'
-import { TabsPaneContext } from 'element-plus'
+import {ElMessageBox, TabsPaneContext} from 'element-plus'
 import { erpPriceTableColumnFormatter } from '@/utils'
+import * as ContractApi from "@/api/crm/contract";
 
 defineOptions({ name: 'Receivable' })
 
@@ -289,6 +315,44 @@ const handleSubmit = async (row: ReceivableApi.ReceivableVO) => {
   message.success('提交审核成功！')
   await getList()
 }
+
+/** 审批回款 **/
+const approveReceivable = async (row: ContractApi.ContractVO) => {
+  try {
+    const confirmed = await ElMessageBox.confirm(
+      `您确定审批通过【${row.no}】的回款吗？`,
+      '系统提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '拒绝', // 将“取消”改为“拒绝”
+        type: 'warning'
+      }
+    );
+
+    if (confirmed === 'confirm') {
+      await ReceivableApi.approveReceivable(row.id)
+      message.success('回款审批成功！');
+    }
+  } catch (error) {
+    // 捕获 ElMessageBox.confirm 的取消操作或其他异常
+    await ReceivableApi.cancelApproveReceivable(row.id);
+    message.error('回款审批已拒绝！');
+  } finally {
+    await getList();
+  }
+}
+
+
+
+/** 取消审批 **/
+const cancelApproveReceivable = async (row: ReceivableApi.ReceivableVO) => {
+  await message.confirm(`您确定取消【${row.no}】的审批回款吗？`)
+  await ReceivableApi.cancelApproveReceivable(row.id)
+  message.success('取消审批成功！')
+  await getList()
+}
+
+
 
 /** 查看审批 */
 const handleProcessDetail = (row: ReceivableApi.ReceivableVO) => {
