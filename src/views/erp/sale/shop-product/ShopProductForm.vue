@@ -139,7 +139,7 @@ import { getDeptTree, getShopList } from '@/commonData'
 /** ERP 店铺产品 */
 defineOptions({ name: 'ShopProductForm' })
 
-const shopList = getShopList()
+const shopList = ref([])
 
 const { deptList, defaultProps } = getDeptTree()
 const {
@@ -355,6 +355,7 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+  getShopList(shopList)
   // 修改时，设置数据
   if (id) {
     formLoading.value = true

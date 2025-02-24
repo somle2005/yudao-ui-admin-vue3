@@ -7,32 +7,34 @@ interface Callback {
   (isValid?: boolean, invalidFields?: ValidateFieldsError): void
 }
 
+type FormCmponentType =  | 'cascader'
+| 'checkbox'
+| 'checkbox-group'
+| 'checkbox-button'
+| 'color-picker'
+| 'date-picker'
+| 'input'
+| 'input-number'
+| 'radio'
+| 'radio-group'
+| 'radio-button'
+| 'rate'
+| 'select'
+| 'option'
+| 'slider'
+| 'switch'
+| 'time-picker'
+| 'time-select'
+| 'transfer'
+| 'upload'
+| 'editor'
+| 'tree-select'
+
 // 表单每一项的配置选项
 export interface FormOptions {
+  componentType?: FormCmponentType
   // 表单项显示的元素
-  type?:
-    | 'cascader'
-    | 'checkbox'
-    | 'checkbox-group'
-    | 'checkbox-button'
-    | 'color-picker'
-    | 'date-picker'
-    | 'input'
-    | 'input-number'
-    | 'radio'
-    | 'radio-group'
-    | 'radio-button'
-    | 'rate'
-    | 'select'
-    | 'option'
-    | 'slider'
-    | 'switch'
-    | 'time-picker'
-    | 'time-select'
-    | 'transfer'
-    | 'upload'
-    | 'editor'
-    | 'tree-select'
+  type?: FormCmponentType
   // 表单项的值
   value?: any
   // 表单项label

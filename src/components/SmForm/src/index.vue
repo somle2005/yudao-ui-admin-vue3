@@ -50,7 +50,7 @@
           class="!w-240px"
         >
           <component
-            :is="`el-${child.type || 'option'}`"
+            :is="`el-${child.componentType || 'option'}`"
             v-for="(child, i) in item.children"
             :key="i"
             :label="child.label"
@@ -119,7 +119,7 @@
               :placeholder="item.placeholder"
             >
               <component
-                :is="`el-${child.type || 'option'}`"
+                :is="`el-${child.componentType || 'option'}`"
                 v-for="(child, i) in item.children"
                 v-bind="child.attrs"
                 :key="i"
