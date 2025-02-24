@@ -10,6 +10,7 @@
       <el-form-item label="国家编码" prop="countryCode">
         <el-select
           v-model="formData.countryCode"
+          multiple
           placeholder="请选择国家编码"
           clearable
           class="!w-240px"
@@ -81,7 +82,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="hs编码" prop="hscode">
+      <!-- <el-form-item label="hs编码" prop="hscode">
         <el-input v-model.trim="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
       <el-form-item label="申报品名(英文)" prop="declaredTypeEn">
@@ -89,7 +90,7 @@
       </el-form-item>
       <el-form-item label="申报品名" prop="declaredType">
         <el-input v-model.trim="formData.declaredType" placeholder="请输入申报品名" />
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="申报金额" prop="declaredValue">
         <el-input-number
@@ -115,7 +116,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="税率" prop="taxRate">
+      <!-- <el-form-item label="税率" prop="taxRate">
         <el-input-number
           v-model="formData.taxRate"
           placeholder="请输入税率"
@@ -123,7 +124,7 @@
           :precision="1"
           class="!w-1/1"
         />
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="hs编码" prop="hscode">
         <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item> -->
@@ -182,12 +183,12 @@ const initFormData = () => {
     productId: undefined,
     declaredValue: undefined,
     declaredValueCurrencyCode: undefined,
-    taxRate: undefined,
     logisticAttribute: undefined,
     fbaBarCode: undefined,
-    hscode: undefined,
-    declaredTypeEn: undefined,
-    declaredType: undefined
+    // taxRate: undefined,
+    // hscode: undefined,
+    // declaredTypeEn: undefined,
+    // declaredType: undefined
   }
 }
 formData.value = initFormData()
@@ -272,7 +273,7 @@ watch(
   () => formData.value.productId,
   (val) => {
     if (val) {
-      changeProduct(val)
+      // changeProduct(val)
     }
   }
 )
