@@ -236,10 +236,10 @@ const initFormData = () => {
     name: undefined,
     code: undefined,
     remark: undefined,
-    status: undefined,
+    status: 1,
     sort: undefined,
     createTime: undefined,
-    type: undefined,
+    type: 1, //0线上1线下
     platform: undefined,
     account: undefined
   }
@@ -289,6 +289,8 @@ const submitForm = async () => {
     const data = formData.value as unknown as ShopVO
     data.countryCode = undefined
     if (formType.value === 'create') {
+      data.code = data.account
+      data.name = data.account
       await ShopApi.createShop(data)
       message.success(t('common.createSuccess'))
     } else {

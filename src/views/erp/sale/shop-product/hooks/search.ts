@@ -1,8 +1,9 @@
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions } from '@/utils/dict'
-import { getShopList } from '@/commonData/index'
+import { getShopList, getDeptTree } from '@/commonData/index'
 
 export const useSearchForm = (handleQuery, queryParams) => {
+  const { deptList, defaultProps } = getDeptTree()
   const shopList = getShopList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -42,6 +43,24 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: shopList
+    },
+    {
+      type: 'tree-select',
+      placeholder: '请选择部门',
+      prop: 'deptId',
+      label: '部门',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        data: deptList,
+        props: defaultProps,
+        'check-strictly': true,
+        'node-key': 'id'
+        // style: {
+        //   width: '100%'
+        // }
+      }
     },
     // {
     //   type: 'input',

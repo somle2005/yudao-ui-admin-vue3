@@ -19,14 +19,14 @@
             <el-button @click="resetQuery"
               ><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button
             >
-            <!-- <el-button
+            <el-button
               type="primary"
               plain
               @click="openForm('create')"
               v-hasPermi="['erp:shop-product:create']"
             >
               <Icon icon="ep:plus" class="mr-5px" /> 新增
-            </el-button> -->
+            </el-button>
           </template>
         </SmForm>
       </ContentWrap>
@@ -159,8 +159,15 @@ const fieldMap = {
   price: '售价',
   currency: '币种',
   remark: '备注',
+  creator: '创建人',
   createTime: {
     label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  updater: '更新人',
+  updateTime: {
+    label: '更新时间',
     formatter: dateFormatter,
     width: '180px'
   },
@@ -172,7 +179,7 @@ const fieldMap = {
     width: '180px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
+tableOptions.value = transformTableOptions(fieldMap)
 
 /** ERP 店铺产品 列表 */
 defineOptions({ name: 'ErpShopProduct' })

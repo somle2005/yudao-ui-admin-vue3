@@ -4,22 +4,37 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="店铺SKU" prop="name">
-            <el-input :disabled="disabled" v-model="formData.name" placeholder="请输入店铺SKU" />
+            <el-input class="!w-240px"  v-model="formData.name" placeholder="请输入店铺SKU" :disabled="disabled" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="平台账号" prop="name">
-            <el-input
+          <el-form-item label="店铺名称">
+            <!-- <el-input
               :disabled="disabled"
               v-model="formData.shop.account"
-              placeholder="请输入平台账号"
-            />
+              placeholder="请输入店铺名称"
+            /> -->
+            <el-select
+              v-model="formData.shop.id"
+              :disabled="disabled"
+              clearable
+              filterable
+              class="!w-240px"
+              @change="shopChange"
+            >
+              <el-option
+                v-for="item in shopList"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="部门" prop="deptId">
             <el-tree-select
-              class="!w-198.67px"
+              class="!w-240px"
               v-model="formData.deptId"
               :data="deptList"
               :props="defaultProps"
@@ -120,9 +135,11 @@ import { createDBFn } from '@/utils/decorate'
 import ProductItemForm from './components/ProductItemForm.vue'
 import { useProductItemForm } from './hooks/useProductItemForm'
 import { cloneDeep } from 'lodash-es'
-import { getDeptTree } from '@/commonData'
+import { getDeptTree, getShopList } from '@/commonData'
 /** ERP 店铺产品 */
 defineOptions({ name: 'ShopProductForm' })
+
+const shopList = getShopList()
 
 const { deptList, defaultProps } = getDeptTree()
 const {
@@ -313,8 +330,8 @@ const initFormData = () => {
     name: undefined,
     code: undefined,
     remark: undefined,
-    status: undefined,
-    createTime: 1739011592000,
+    status: 1,
+    createTime: undefined,
     url: undefined,
     items: [
       // {
@@ -349,14 +366,13 @@ const open = async (type: string, id?: number) => {
       if (data.items == null) {
         data.items = []
       }
-      data.items.forEach(item => {
-        if(item.product) {
+      data.items.forEach((item) => {
+        if (item.product) {
           item.name = item.product.name
           item.barCode = item.product.barCode
           item.primaryImageUrl = item.product.primaryImageUrl
         }
       })
-
 
       formData.value = data
     } finally {
@@ -379,6 +395,7 @@ const submitForm = async () => {
     // @ts-ignore
     data.items = data.items.map((item) => {
       const obj = {
+        // ...item,
         shopProductId: data.id,
         id: item.id,
         productId: item.productId,
@@ -388,6 +405,8 @@ const submitForm = async () => {
       }
       return obj
     })
+    // data.account = data.shop.account
+    data.shopId = formData.value.shop.id
     data.shop = undefined
 
     if (formType.value === 'create') {
@@ -431,8 +450,12 @@ const confirmProduct = () => {
   console.log(items, 'confirmProduct')
   formData.value.items = items
 }
-
-const disabled = computed(() => formType.value === 'update')
+const shopChange = (val) => {
+  const item = shopList.value.find((item) => item.id === val)
+  formData.value.code = item.code
+  console.log(item,'shop-item')
+}
+const disabled = computed(() => formData.value.shop.type === 0)
 </script>
 <style>
 .productForm-dialog .el-scrollbar__bar.is-horizontal {

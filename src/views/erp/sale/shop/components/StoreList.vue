@@ -7,13 +7,13 @@
       
     </el-scrollbar> -->
     <div class="platform-list">
-        <div class="item" v-for="item in shopList" :key="item.id" @click="clickShop(item)">
-          <div class="item-platform">
-            {{ item.platform }}
-          </div>
-          <div class="item-accountTotal"> 店铺数:{{ item.accountTotal }} </div>
+      <div class="item" v-for="item in shopList" :key="item.id" @click="clickShop(item)">
+        <div class="item-platform">
+          {{ item.platform }}
         </div>
+        <div class="item-accountTotal"> 店铺数:{{ item.accountTotal }} </div>
       </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -40,24 +40,45 @@ const search = () => {
   }
 }
 const searchDB = debounce(search, 500)
-onMounted(() => {
+const getList = () => {
+  shopList.value = []
   ShopApi.getShopList().then((res) => {
     const map = {}
     res.forEach((item) => {
-      if (map[item.platform]) {
-        map[item.platform].accountTotal += 1
-      } else {
-        map[item.platform] = {
-          platform: item.platform,
-          accountTotal: 1,
-          id: item.id,
-          type: item.type
+      const typeMap = {
+        // '线上',
+        0: () => {
+          if (map[item.platform]) {
+            map[item.platform].accountTotal += 1
+          } else {
+            map[item.platform] = {
+              platform: item.platform,
+              accountTotal: 1,
+              id: item.id,
+              type: item.type
+            }
+          }
+        },
+        // '线下'
+        1: () => {
+          const platform = '线下'
+          if (map[platform]) {
+            map[platform].accountTotal += 1
+          } else {
+            map[platform] = {
+              platform: platform,
+              accountTotal: 1,
+              id: item.id,
+              type: item.type
+            }
+          }
         }
       }
+      typeMap[item.type]()
     })
     const list = Object.values(map)
-    const hasOnline = list.some((item:any) => item.type === 1)
-    if(!hasOnline){
+    const hasOnline = list.some((item: any) => item.type === 1)
+    if (!hasOnline) {
       list.push({
         platform: '线下',
         accountTotal: 0,
@@ -65,13 +86,26 @@ onMounted(() => {
         type: 1
       })
     }
-    console.log(list,'list')
+
+    // 线下的排在最后面
+    const offlineIndex = list.findIndex((item: any) => item.type === 1)
+    const item = list[offlineIndex]
+    list.splice(offlineIndex, 1)
+    list.push(item)
+
+    console.log(list, 'list')
     shopList.value = list
     allShopList.value = cloneDeep(list)
   })
+}
+
+onMounted(() => {
+  getList()
 })
 onUnmounted(() => {})
-defineExpose({})
+defineExpose({
+  getList
+})
 </script>
 <style lang="scss" scoped>
 .storeList {

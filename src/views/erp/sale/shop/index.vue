@@ -1,6 +1,6 @@
 <template>
   <div class="platform-store">
-    <StoreList @click-shop="clickShop" />
+    <StoreList ref="storeListRef" @click-shop="clickShop" />
 
     <div class="platform-store-table">
       <ContentWrap>
@@ -35,7 +35,7 @@
       </ContentWrap>
 
       <!-- 列表 -->
-      <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }" style="margin-bottom:0">
+      <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }" style="margin-bottom: 0">
         <!-- style="height: calc(100vh - 230px)" -->
         <SmTable
           border
@@ -84,7 +84,7 @@
     </div>
 
     <!-- 表单弹窗：添加/修改 -->
-    <ShopForm ref="formRef" @success="getList" />
+    <ShopForm ref="formRef" @success="refresh" />
   </div>
 </template>
 
@@ -231,20 +231,32 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-const clickShopItem:any = ref({})
+const clickShopItem: any = ref({})
 const clickShop = async (item: any) => {
   clickShopItem.value = item
   loading.value = true
   try {
     const query: any = cloneDeep(queryParams)
-    query.platform = item.platform
+    // 线下不查platforem
+    if (item.type === 1) {
+      query.platform = undefined
+      query.type = 1
+    } else {
+      query.platform = item.platform
+    }
+
     const data = await ShopApi.getShopPage(query)
     list.value = data.list
-    // list.value = [...data.list,...data.list,...data.list]
     total.value = data.total
   } finally {
     loading.value = false
   }
+}
+const storeListRef = ref()
+const refresh = () => {
+  getList()
+  storeListRef.value.getList()
+  console.log('刷新了')
 }
 
 /** 初始化 **/
