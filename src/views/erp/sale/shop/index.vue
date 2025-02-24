@@ -21,14 +21,15 @@
             <el-button @click="resetQuery"
               ><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button
             >
-            <!-- <el-button
+            <el-button
               type="primary"
               plain
               @click="openForm('create')"
+              v-if="clickShopItem.type === 1"
               v-hasPermi="['erp:shop:create']"
             >
               <Icon icon="ep:plus" class="mr-5px" /> 新增
-            </el-button> -->
+            </el-button>
           </template>
         </SmForm>
       </ContentWrap>
@@ -119,11 +120,11 @@ const fieldMap = {
   },
   // account: '平台账户',
   account: '店铺名称',
-  countryCode: {
-    label: '国家编码',
-    slot: 'countryCode',
-    width: '180px'
-  },
+  // countryCode: {
+  //   label: '国家编码',
+  //   slot: 'countryCode',
+  //   width: '180px'
+  // },
   status: {
     label: '状态',
     slot: 'status',
@@ -229,7 +230,10 @@ const handleExport = async () => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const clickShopItem:any = ref({})
 const clickShop = async (item: any) => {
+  clickShopItem.value = item
   loading.value = true
   try {
     const query: any = cloneDeep(queryParams)

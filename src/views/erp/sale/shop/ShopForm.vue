@@ -34,165 +34,193 @@ import { createDBFn } from '@/utils/decorate'
 /** ERP 平台店铺 */
 defineOptions({ name: 'ShopForm' })
 
-const requestFormOptions = ref([
-  {
-    type: 'input',
-    // label: '平台账户',
-    label: '店铺名称',
-    prop: 'account',
-    // placeholder: '请输入平台账户',
-    placeholder: '请输入店铺名称',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '平台账户不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
-  {
-    type: 'input',
-    label: '店铺代码',
-    prop: 'code',
-    placeholder: '请输入店铺代码',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      disabled: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '店铺代码不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
+const requestFormOptions = ref<any[]>([])
 
-  // {
-  //   type: 'input',
-  //   label: '店铺平台',
-  //   prop: 'platform',
-  //   placeholder: '请输入店铺平台',
-  //   attrs: {
-  //     style: { width: '100%' },
-  //     clearable: true,
-  //     disabled: true
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '平台不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // },
-  // {
-  //   type: 'input',
-  //   label: '店铺名称',
-  //   prop: 'name',
-  //   placeholder: '请输入店铺名称',
-  //   attrs: {
-  //     style: { width: '100%' },
-  //     clearable: true,
-  //     disabled: true
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '店铺名称不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // },
+const initRequestFormOptions = () => {
+  return [
+    {
+      type: 'select',
+      placeholder: '请选择平台',
+      prop: 'platform',
+      label: '平台',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      rules: [
+        {
+          required: true,
+          message: '平台不能为空',
+          trigger: 'blur'
+        }
+      ],
+      children: getIntDictOptions(DICT_TYPE.ERP_SALES_PLATFORM).map((item: any) => {
+        item.value = item.label
+        return item
+      })
+    },
+    {
+      type: 'input',
+      // label: '平台账户',
+      label: '店铺名称',
+      prop: 'account',
+      // placeholder: '请输入平台账户',
+      placeholder: '请输入店铺名称',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      },
+      rules: [
+        {
+          required: true,
+          message: '平台账户不能为空',
+          trigger: 'blur'
+        }
+      ]
+    },
+    {
+      type: 'input',
+      label: '店铺代码',
+      prop: 'code',
+      placeholder: '请输入店铺代码',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      },
+      rules: [
+        {
+          required: true,
+          message: '店铺代码不能为空',
+          trigger: 'blur'
+        }
+      ]
+    }
 
-  // {
-  //   type: 'select',
-  //   placeholder: '请选择状态',
-  //   prop: 'status',
-  //   label: '状态',
-  //   attrs: {
-  //     filterable: true,
-  //     clearable: true,
-  //     disabled: true,
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '状态不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ],
-  //   children: getIntDictOptions(DICT_TYPE.ERP_OFF_STATUS)
-  // },
-  // {
-  //   type: 'select',
-  //   placeholder: '请选择类型',
-  //   prop: 'type',
-  //   label: '类型',
-  //   attrs: {
-  //     filterable: true,
-  //     clearable: true,
-  //     disabled: true,
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '类型不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ],
-  //   children: getIntDictOptions(DICT_TYPE.ERP_SHOP_TYPE)
-  // },
-  // {
-  //   type: 'input-number',
-  //   label: '排序',
-  //   prop: 'sort',
-  //   placeholder: '请输入排序',
-  //   attrs: {
-  //     style: { width: '100%' },
-  //     clearable: true,
-  //     disabled: true
-  //     // min: 0
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '排序不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // },
-  // // 备注放最后
-  // {
-  //   type: 'input',
-  //   label: '备注',
-  //   prop: 'remark',
-  //   placeholder: '请输入备注',
-  //   attrs: {
-  //     style: { width: '100%' },
-  //     clearable: true,
-  //     disabled: true
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '备注不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // }
-])
+    // {
+    //   type: 'input',
+    //   label: '店铺平台',
+    //   prop: 'platform',
+    //   placeholder: '请输入店铺平台',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true,
+    //     disabled: true
+    //   },
+    //   rules: [
+    //     {
+    //       required: true,
+    //       message: '平台不能为空',
+    //       trigger: 'blur'
+    //     }
+    //   ]
+    // },
+    // {
+    //   type: 'input',
+    //   label: '店铺名称',
+    //   prop: 'name',
+    //   placeholder: '请输入店铺名称',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true,
+    //     disabled: true
+    //   },
+    //   rules: [
+    //     {
+    //       required: true,
+    //       message: '店铺名称不能为空',
+    //       trigger: 'blur'
+    //     }
+    //   ]
+    // },
+
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择状态',
+    //   prop: 'status',
+    //   label: '状态',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     disabled: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   rules: [
+    //     {
+    //       required: true,
+    //       message: '状态不能为空',
+    //       trigger: 'blur'
+    //     }
+    //   ],
+    //   children: getIntDictOptions(DICT_TYPE.ERP_OFF_STATUS)
+    // },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择类型',
+    //   prop: 'type',
+    //   label: '类型',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     disabled: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   rules: [
+    //     {
+    //       required: true,
+    //       message: '类型不能为空',
+    //       trigger: 'blur'
+    //     }
+    //   ],
+    //   children: getIntDictOptions(DICT_TYPE.ERP_SHOP_TYPE)
+    // },
+    // {
+    //   type: 'input-number',
+    //   label: '排序',
+    //   prop: 'sort',
+    //   placeholder: '请输入排序',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true,
+    //     disabled: true
+    //     // min: 0
+    //   },
+    //   rules: [
+    //     {
+    //       required: true,
+    //       message: '排序不能为空',
+    //       trigger: 'blur'
+    //     }
+    //   ]
+    // },
+    // // 备注放最后
+    // {
+    //   type: 'input',
+    //   label: '备注',
+    //   prop: 'remark',
+    //   placeholder: '请输入备注',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true,
+    //     disabled: true
+    //   },
+    //   rules: [
+    //     {
+    //       required: true,
+    //       message: '备注不能为空',
+    //       trigger: 'blur'
+    //     }
+    //   ]
+    // }
+  ]
+}
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -226,6 +254,14 @@ const open = async (type: string, id?: number) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
+  requestFormOptions.value = initRequestFormOptions()
+  if (type !== 'update') {
+    requestFormOptions.value.splice(
+      requestFormOptions.value.findIndex((item) => item.prop === 'code'),
+      1
+    )
+  }
+
   resetForm()
   // 修改时，设置数据
   if (id) {

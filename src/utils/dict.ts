@@ -230,6 +230,7 @@ export enum DICT_TYPE {
   ERP_SHOP_TYPE = 'erp_shop_type', // EPR店铺状态
   ERP_PRODUCT_LISTING_STATUS = 'erp_product_listing_status', // 商品上下架状态
   REPORT_MAP = 'report_map', // 报表地图
+  ERP_SALES_PLATFORM = 'erp_sales_platform', // 销售平台
   
 
   // ========== AI - 人工智能模块  ==========

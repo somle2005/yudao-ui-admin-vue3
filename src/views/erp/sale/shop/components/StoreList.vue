@@ -11,7 +11,7 @@
           <div class="item-platform">
             {{ item.platform }}
           </div>
-          <div class="item-accountTotal"> 账号数:{{ item.accountTotal }} </div>
+          <div class="item-accountTotal"> 店铺数:{{ item.accountTotal }} </div>
         </div>
       </div>
   </div>
@@ -50,11 +50,22 @@ onMounted(() => {
         map[item.platform] = {
           platform: item.platform,
           accountTotal: 1,
-          id: item.id
+          id: item.id,
+          type: item.type
         }
       }
     })
     const list = Object.values(map)
+    const hasOnline = list.some((item:any) => item.type === 1)
+    if(!hasOnline){
+      list.push({
+        platform: '线下',
+        accountTotal: 0,
+        id: Math.random(),
+        type: 1
+      })
+    }
+    console.log(list,'list')
     shopList.value = list
     allShopList.value = cloneDeep(list)
   })
