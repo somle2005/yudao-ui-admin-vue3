@@ -11,6 +11,7 @@
         <el-select
           v-model="formData.countryCode"
           multiple
+          :multiple-limit="multipleLimit"
           placeholder="请选择国家编码"
           clearable
           class="!w-240px"
@@ -74,7 +75,7 @@
             <template #default>
               <div class="product-option">
                 <div class="item">{{ item.barCode }} </div>
-                <div class="item-span w-4em" ></div>
+                <div class="item-span w-4em"></div>
                 <div class="item">{{ item.name }}</div>
               </div>
             </template>
@@ -184,7 +185,7 @@ const initFormData = () => {
     declaredValue: undefined,
     declaredValueCurrencyCode: undefined,
     logisticAttribute: undefined,
-    fbaBarCode: undefined,
+    fbaBarCode: undefined
     // taxRate: undefined,
     // hscode: undefined,
     // declaredTypeEn: undefined,
@@ -215,6 +216,12 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await CustomRuleApi.getCustomRule(id)
+      const countryCode = formData.value.countryCode
+      if (countryCode !== null && countryCode !== undefined) {
+        formData.value.countryCode = [countryCode]
+      } else {
+        formData.value.countryCode = []
+      }
     } finally {
       formLoading.value = false
     }
@@ -293,6 +300,9 @@ const changeProduct = (val: any) => {
       console.log(e, '报错了')
     })
 }
+const multipleLimit = computed(() => {
+  return formType.value === 'create' ? 0 : 1
+})
 </script>
 <style lang="scss" scoped>
 .product-option {
