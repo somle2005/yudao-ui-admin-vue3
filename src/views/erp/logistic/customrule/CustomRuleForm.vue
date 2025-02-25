@@ -215,7 +215,9 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await CustomRuleApi.getCustomRule(id)
+      const data = await CustomRuleApi.getCustomRule(id)
+      if (!data) return
+      formData.value = data
       const countryCode = formData.value.countryCode
       if (countryCode !== null && countryCode !== undefined) {
         formData.value.countryCode = [countryCode]
