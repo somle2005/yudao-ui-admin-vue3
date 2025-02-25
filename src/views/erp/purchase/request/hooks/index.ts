@@ -50,8 +50,6 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
 申请数量
  */
 
-
-
 const mergeDetail = (formData, detail, formType, smFormRef) => {
   for (const key in detail) {
     formData[key] = detail[key]
@@ -80,7 +78,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
   // modelValue.applicationDept = 50019
 }
 
-export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) => {
+export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) => {
   const { t } = useI18n() // 国际化
   const message = useMessage() // 消息弹窗
 
@@ -118,8 +116,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
 
   const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
   const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
-
- 
 
   const openForm = async (type: string, id?: number) => {
     getResetFormData()
@@ -187,7 +183,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
 
       dialogVisible.value = false
       // 拿到外部回调处理成功事件
-      // successCallback() 
+      // successCallback()
       emit('success')
     } catch (e) {
       console.log(e, '报错了')
@@ -205,7 +201,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
       attrs: {
         clearable: true,
         type: 'date',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        // 'value-format': 'YYYY-MM-DD HH:mm:ss',
+        'value-format': 'x',
         class: '!w-1/1',
         style: {
           width: '100%'

@@ -9,6 +9,7 @@
       v-loading="formLoading"
       :options="requestFormOptions"
       :getModelValue="getFormData"
+      :disabled="formType === 'audit'"
     >
       <!-- <template #primaryImageUrl="{ scope, model }">
       <UploadImg v-model="model[scope.prop]" />
