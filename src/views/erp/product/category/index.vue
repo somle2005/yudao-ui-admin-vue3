@@ -81,9 +81,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="默认hs编码" align="center" prop="defaultHsCode" />
+      <!-- <el-table-column label="默认hs编码" align="center" prop="defaultHsCode" />
       <el-table-column label="默认申报品名(英文)" align="center" prop="defaultDeclaredTypeEn" />
-      <el-table-column label="默认申报品名" align="center" prop="defaultDeclaredType" />
+      <el-table-column label="默认申报品名" align="center" prop="defaultDeclaredType" /> -->
 
       <el-table-column
         label="创建时间"
