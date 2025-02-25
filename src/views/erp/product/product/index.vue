@@ -47,6 +47,7 @@
           filterable
           placeholder="请选择SKU（编码）"
           @keyup.enter="handleQuery"
+          @input="insertBarcode"
           class="!w-240px"
         >
           <el-option
@@ -354,6 +355,8 @@ import { computeColumnWidthFor } from '@/utils/computeGeometry'
 import { getProductNameList, getUserList } from '@/commonData'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useFormData } from '@/components/SmForm/src/utils'
+import { insertSearchVal } from '@/utils/high'
+
 
 const { productNameList, productSkuList, productSeriesList, productBrandList } =
   getProductNameList()
@@ -652,7 +655,6 @@ const moreFormOptionsInit = () => {
   list.forEach((item) => {
     item.colConfig = { span: 12 }
   })
-  console.log(list, 'list-val')
   moreFormOptions.value = list
 }
 
@@ -668,6 +670,8 @@ const moreConfirm = () => {
 const getModelValue = () => {
   return queryParams
 }
+
+const insertBarcode = insertSearchVal(productSkuList)
 
 /** 初始化 **/
 onMounted(async () => {

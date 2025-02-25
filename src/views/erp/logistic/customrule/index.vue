@@ -38,6 +38,7 @@
           filterable
           placeholder="请选择SKU（编码）"
           @keyup.enter="handleQuery"
+          @input="insertBarcode"
           class="!w-240px"
         >
           <el-option
@@ -334,6 +335,7 @@ import { DictTag } from '@/components/DictTag'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { getProductNameList } from '@/commonData'
+import { insertSearchVal } from '@/utils/high'
 
 const { productSkuList } = getProductNameList()
 
@@ -488,9 +490,9 @@ const copyForm = (id?: number) => {
 }
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
+const insertBarcode = insertSearchVal(productSkuList)
 
 const createTimeChange = (val: any) => {
-  console.log(val, '时间选择')
   queryParams.createTime = val
   handleQuery()
 }
