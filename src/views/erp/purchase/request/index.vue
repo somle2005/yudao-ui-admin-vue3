@@ -222,6 +222,7 @@
           plain
           @click="mergePurchase"
           :loading="mergeLoading"
+          v-hasPermi="['erp:purchase-request:merge']"
         >
            合并
         </el-button>
@@ -402,7 +403,7 @@
           link
           type="primary"
           @click="handleUpdateStatus(scope.row.id, 20, true)"
-          v-hasPermi="['erp:purchase-request:audit-status']"
+          v-hasPermi="['erp:purchase-request:review']"
           v-if="![5, 20].includes(scope.row.status)"
         >
           审核
@@ -412,7 +413,7 @@
           link
           type="danger"
           @click="handleUpdateStatus(scope.row.id, 5, false)"
-          v-hasPermi="['erp:purchase-request:audit-status']"
+          v-hasPermi="['erp:purchase-request:review']"
           v-if="scope.row.status === 20"
         >
           反审核
