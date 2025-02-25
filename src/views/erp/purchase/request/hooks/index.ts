@@ -215,7 +215,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
         {
           required: true,
           message: '单据日期不能为空',
-          trigger: 'change'
+          trigger: 'blur'
         }
       ]
     },
@@ -235,7 +235,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
         {
           required: true,
           message: '申请人不能为空',
-          trigger: 'change'
+          trigger: 'blur'
         }
       ],
       children: applicantList
@@ -260,7 +260,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
         {
           required: true,
           message: '申请部门不能为空',
-          trigger: 'change'
+          trigger: 'blur'
         }
       ]
     },
@@ -277,13 +277,13 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
           width: '100%'
         }
       },
-      rules: [
-        {
-          required: true,
-          message: '供应商产品不能为空',
-          trigger: 'change'
-        }
-      ],
+      // rules: [
+      //   {
+      //     required: true,
+      //     message: '供应商产品不能为空',
+      //     trigger: 'blur'
+      //   }
+      // ],
       children: supplierProductList
     },
 
@@ -313,7 +313,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData,emit }) =
     //     {
     //       required: true,
     //       message: '产品不能为空',
-    //       trigger: 'change'
+    //       trigger: 'blur'
     //     }
     //   ],
     //   children: productList1
