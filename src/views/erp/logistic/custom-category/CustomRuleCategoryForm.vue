@@ -31,7 +31,7 @@
     </el-form>
     <!-- 子表的表单 -->
     <el-tabs v-model="subTabsName">
-      <el-tab-pane label="海关品类子表" name="customRuleCategoryItem">
+      <el-tab-pane label="海关分类子表" name="customRuleCategoryItem">
         <CustomRuleCategoryItemForm ref="customRuleCategoryItemFormRef" :category-id="formData.id" />
       </el-tab-pane>
     </el-tabs>

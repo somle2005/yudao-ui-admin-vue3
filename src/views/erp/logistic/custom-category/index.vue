@@ -91,7 +91,7 @@
       <!-- <el-table-column type="expand">
         <template #default="scope">
           <el-tabs model-value="customRuleCategoryItem">
-            <el-tab-pane label="海关品类子表" name="customRuleCategoryItem">
+            <el-tab-pane label="海关分类子表" name="customRuleCategoryItem">
               <CustomRuleCategoryItemList :category-id="scope.row.id" />
             </el-tab-pane>
           </el-tabs>
@@ -156,12 +156,12 @@
       @pagination="getList"
     />
   </ContentWrap>
-  <!-- <Dialog width="1400" title="海关品类子表" v-model="categoryDialog">
+  <!-- <Dialog width="1400" title="海关分类子表" v-model="categoryDialog">
     <CustomRuleCategoryItemList :category-id="categoryId" />
   </Dialog> -->
 
   <el-tabs v-if="categoryId" model-value="customRuleCategoryItem">
-    <el-tab-pane label="海关品类子表" name="customRuleCategoryItem">
+    <el-tab-pane label="海关分类子表" name="customRuleCategoryItem">
       <CustomRuleCategoryItemList ref="customRuleCategoryItemListRef" :category-id="categoryId" />
     </el-tab-pane>
   </el-tabs>

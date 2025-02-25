@@ -13,7 +13,7 @@ import request from '@/config/axios'
 // 海关品类 VO
 export interface CustomRuleCategoryVO {
   /**
-   * 海关品类子表列表
+   * 海关分类子表列表
    */
   customRuleCategoryItems?: ErpCustomRuleCategoryItemSaveReqVO[];
   /**
@@ -91,9 +91,9 @@ export const CustomRuleCategoryApi = {
     return await request.download({ url: `/erp/custom-category/export-excel`, params })
   },
 
-// ==================== 子表（海关品类子表） ====================
+// ==================== 子表（海关分类子表） ====================
 
-  // 获得海关品类子表列表
+  // 获得海关分类子表列表
   getCustomRuleCategoryItemListByCategoryId: async (categoryId) => {
     return await request.get({ url: `/erp/custom-category/custom-category-item/list-by-category-id?categoryId=` + categoryId })
   },
