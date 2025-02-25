@@ -404,7 +404,7 @@
           type="primary"
           @click="handleUpdateStatus(scope.row.id, 20, true)"
           v-hasPermi="['erp:purchase-request:review']"
-          v-if="![5, 20].includes(scope.row.status)"
+          v-if="![20].includes(scope.row.status)"
         >
           审核
         </el-button>
@@ -743,7 +743,7 @@ const handleUpdateStatus = async (requestId: number, status: number, reviewed: b
     审核不通过 14
     未审核 10
     反审核 5
-    (只要不是已审核或者反审核)-10(出现审核)
+    (只要不是已审核)-10(出现审核)
     已审核-20(出现反审核)
    */
   // 执行审核操作
