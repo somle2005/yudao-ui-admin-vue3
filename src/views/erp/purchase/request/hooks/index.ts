@@ -173,7 +173,12 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
           requestId: data.id,
           reviewed: true,
-          obj: data
+          items: data.items.map(item => {
+            return {
+              id: item.id,
+              approveCount: item.approveCount
+            }
+          })
         })
         message.success(t('common.updateSuccess'))
       } else {

@@ -49,14 +49,14 @@ export const PurchaseRequestApi = {
   },
 
   // 审核/反审核采购订单
-  updatePurchaseRequestAuditStatus: async (params: {
+  updatePurchaseRequestAuditStatus: async (data: {
     requestId: number
     reviewed: boolean
-    obj?: any
+    items?: any
   }) => {
     return await request.put({
       url: `/erp/purchase-request/auditStatus`,
-      params
+      data
     })
   },
 
@@ -67,7 +67,7 @@ export const PurchaseRequestApi = {
     enable: boolean
   }) => {
     return await request.put({
-      url: `/erp/purchase-request/status`,
+      url: `/erp/purchase-request/enableStatus`,
       params
     })
   },

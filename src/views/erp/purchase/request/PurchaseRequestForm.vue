@@ -20,8 +20,9 @@
       </div>
     </template> -->
 
-      <template #items="{ scope, model }">
-        {{ console.log(scope, model, '打印scope-model') }}
+      <!-- <template #items="{ scope, model }"> -->
+      <!-- {{ console.log(scope, model, '打印scope-model') }} -->
+      <template #items>
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="申请产品清单" name="item">
             <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" />
