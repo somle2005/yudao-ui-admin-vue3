@@ -190,7 +190,6 @@
   </el-form>
   <el-row justify="center" class="mt-3" v-if="!disabled">
     <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
-    <!-- <el-button @click="submitForm">测试校验功能</el-button> -->
   </el-row>
 </template>
 <script setup lang="ts">
@@ -389,16 +388,7 @@ const validate = () => {
   return formRef.value.validate()
 }
 
-const submitForm = async () => {
-  console.log('进来了')
-  await formRef.value.validate((valid, fields) => {
-    if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
-}
+
 
 const warehouseList = getWarehouseList()
 

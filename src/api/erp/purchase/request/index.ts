@@ -40,7 +40,7 @@ export const PurchaseRequestApi = {
   // 更新采购订单的状态
   updatePurchaseRequestStatus: async (id: number, status: number) => {
     return await request.put({
-      url: `/erp/purchase-order/update-status`,
+      url: `/erp/purchase-request/update-status`,
       params: {
         id,
         status
@@ -75,7 +75,7 @@ export const PurchaseRequestApi = {
   // 删除采购订单
   deletePurchaseRequest: async (ids: number[]) => {
     return await request.delete({
-      url: `/erp/purchase-order/delete`,
+      url: `/erp/purchase-request/delete`,
       params: {
         ids: ids.join(',')
       }
@@ -86,11 +86,19 @@ export const PurchaseRequestApi = {
   exportPurchaseRequest: async (params) => {
     return await request.download({ url: `/erp/purchase-request/export-excel`, params })
   },
-  // 合并ERP采购申请单 Excel
-  mergePurchaseRequest: async (params:{ids:number[]}) => {
+  // 合并ERP采购申请单 批量
+  mergePurchaseRequest: async (data: { ids: number[] }) => {
     return await request.put({
       url: `/erp/purchase-request/merge`,
-      params,
+      data
     })
   },
+
+  // 合并ERP采购申请单 单个
+  mergePurchaseRequestOne: async (params: { requestId: number }) => {
+    return await request.get({
+      url: `/erp/purchase-request/procurement`,
+      params
+    })
+  }
 }

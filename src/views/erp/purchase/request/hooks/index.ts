@@ -54,7 +54,6 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
   for (const key in detail) {
     formData[key] = detail[key]
   }
-  // formData.requestTime = "2025-02-01 00:00:00"
   formData.requestTime = formatTime(formData.requestTime)
   formData.items.forEach((item) => {
     if (formType === 'audit') {
@@ -68,14 +67,8 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
     for (const key in formData) {
       modelValue[key] = formData[key]
     }
-    console.log(modelValue, 'modelValue')
   })
-
-  // modelValue = formData
-  // modelValue.deliveryDelivery = '112121212'
   // modelValue.requestTime = dayjs(1739016534000).format('YYYY-MM-DD HH:mm:ss')
-  // modelValue.applicant = 50025
-  // modelValue.applicationDept = 50019
 }
 
 export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) => {
@@ -85,28 +78,12 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const dialogTitle = ref('')
   const dialogVisible = ref(false)
 
-  // const productList1 = getProductList()
-  // const applicantList = getUserList()
-  // const { deptList, defaultProps } = getDeptTree()
-  // const supplierProductList = getSupplierProductList()
+
 
   const applicantList = ref([])
   const supplierProductList = ref([])
   const deptList = ref([])
 
-  // eslint-disable-next-line prefer-const
-  // let formData = reactive({formData:{}})
-  // const resetFormData = () => {
-  //   return reactive({
-  //     requestTime: undefined,
-  //     applicant: undefined,
-  //     applicationDept: undefined,
-  //     productId: undefined,
-  //     barCode: undefined
-  //   })
-  // }
-
-  // formData.formData = resetFormData()
 
   const smFormRef = ref()
 
@@ -148,23 +125,19 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       const valiad2 = await smFormRef.value.validate()()
       if (!(valida1 && valiad2)) return
 
-      console.log(itemFormRef.value, 'itemFormRef')
-      console.log(smFormRef.value, 'smFormRef')
 
-      console.log('拿到参数调用接口-注意重置 区分新增和编辑')
-      // const formData = smFormRef.value.getFormData()
 
       // 提交请求
       formLoading.value = true
 
+      // 税率拿到提交数据进行转换处理
       const data = cloneDeep(getFormData())
       data.items.forEach((item) => {
         item.taxPercent = item.taxPercent / 100
         return item
       })
 
-      // const data = getFormData()
-      console.log(data, '点击确定的formData')
+
 
       if (formType.value === 'create') {
         await PurchaseRequestApi.createPurchaseRequest(data)
@@ -187,8 +160,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       }
 
       dialogVisible.value = false
-      // 拿到外部回调处理成功事件
-      // successCallback()
+
       emit('success')
     } catch (e) {
       console.log(e, '报错了')
@@ -279,13 +251,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           width: '100%'
         }
       },
-      // rules: [
-      //   {
-      //     required: true,
-      //     message: '供应商产品不能为空',
-      //     trigger: 'blur'
-      //   }
-      // ],
       children: supplierProductList
     },
 
@@ -346,7 +311,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     openForm,
     requestFormOptions,
     smFormRef,
-    // formData:formData.formData,
     submitForm,
     subTabsName,
     itemFormRef,

@@ -224,7 +224,7 @@
           :loading="mergeLoading"
           v-hasPermi="['erp:purchase-request:merge']"
         >
-           合并
+          合并采购
         </el-button>
       </template>
     </SmForm>
@@ -350,7 +350,7 @@
   </ContentWrap>-->
 
   <!-- 列表 -->
-  <ContentWrap style="padding-bottom: 0;">
+  <ContentWrap style="padding-bottom: 0">
     <SmTable
       border
       isSelection
@@ -368,7 +368,7 @@
       </template>
 
       <template #orderStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.SRP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
+        <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
       </template>
 
       <template #offStatus="{ scope }">
@@ -376,7 +376,7 @@
       </template>
 
       <template #rowOrderStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.SRP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
+        <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
       </template>
 
       <template #operate="{ scope }">
@@ -438,6 +438,15 @@
         >
           关闭
         </el-button>
+        <el-button
+          type="primary"
+          link
+          @click="mergePurchaseOne(scope.row)"
+          v-hasPermi="['erp:purchase-request:merge']"
+          v-if="scope.row.orderStatus !== 1"
+        >
+          采购
+        </el-button>
 
         <!-- <el-button
           link
@@ -487,12 +496,9 @@
     </SmTable>
   </ContentWrap>
 
-
-
   <!-- v-model="formData" -->
   <!-- :modelValue="formData"
   @update:model-value="updateModelValue" -->
-
 
   <!-- 表单弹窗：添加/修改 -->
   <PurchaseRequestForm ref="formRef" @success="getList" />
@@ -513,8 +519,6 @@ import { mergeItemsToList } from '@/utils/transformData'
 import { usePurchaseRequestForm } from './hooks'
 import { useSearchForm } from './hooks/search'
 // import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
-
-
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -546,6 +550,13 @@ const { tableOptions, transformTableOptions } = useTableData()
 24-审核人-auditor
 25-审核时间-auditTime
  */
+
+/**
+未订购-4
+订购失败-3
+部分订购-2
+已完整订购-1
+  */
 
 const fieldMap = {
   requestTime: {
@@ -608,7 +619,7 @@ const fieldMap = {
     slot: 'operate',
     fixed: 'right',
     // action: true,
-    width: '250px'
+    width: '300px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap)
@@ -656,51 +667,6 @@ const getList = async () => {
     total.value = data.itemsTotal || data.total
   } finally {
     loading.value = false
-
-    // var testData = [
-    //   {
-    //     id: 32561,
-    //     no: 'string',
-    //     applicant: 'string',
-    //     applicantName: '芋道',
-    //     applicationDept: 'string',
-    //     requestTime: '2019-08-24T14:15:22.123Z',
-    //     status: 2,
-    //     offStatus: 1,
-    //     orderStatus: 1,
-    //     auditor: 'string',
-    //     auditTime: '2019-08-24T14:15:22.123Z',
-    //     createTime: '2019-08-24T14:15:22.123Z',
-    //     items: [
-    //       {
-    //         id: 11756,
-    //         warehouseId: 3113,
-    //         productId: 3113,
-    //         productPrice: 100,
-    //         count: 100,
-    //         remark: '随便',
-    //         orderStatus: '行状态成功'
-    //       },
-    //       {
-    //         id: 117561,
-    //         warehouseId: 31131,
-    //         productId: 31131,
-    //         productPrice: 1001,
-    //         count: 1001,
-    //         remark: '随便1',
-    //         orderStatus: '行状态失败'
-    //       }
-    //     ],
-    //     productNames: 'string',
-    //     totalCount: 100
-    //   }
-    // ]
-    // list.value = mergeItemsToList(testData, {
-    //   id: 'purchaseOrderId',
-    //   orderStatus: 'rowOrderStatus'
-    // })
-    // total.value = 2
-    // console.log('list.value', list.value)
   }
 }
 
@@ -803,12 +769,10 @@ const handleSelectionChange = (rows: PurchaseRequestVO[]) => {
   selectionList.value = rows
 }
 
-
 const getSearchFormData = () => {
   return queryParams
 }
-const searchFormOptions =  useSearchForm(handleQuery)
-
+const searchFormOptions = useSearchForm(handleQuery)
 
 const mergeLoading = ref(false)
 const mergePurchase = async () => {
@@ -817,11 +781,33 @@ const mergePurchase = async () => {
     await message.exportConfirm('是否确认合并采购申请单？')
     // 发起导出
     mergeLoading.value = true
-    await PurchaseRequestApi.mergePurchaseRequest({ ids: selectionList.value.map((item) => item.id) })
+    const ids = selectionList.value.map((item) => item.id)
+    await PurchaseRequestApi.mergePurchaseRequest({
+      ids
+    })
+    message.success(t('合并成功'))
+    // 刷新列表
+    await getList()
+    selectionList.value = selectionList.value.filter((item) => !ids.includes(item.id))
     // download.excel(data, '采购申请.xls')
   } catch {
   } finally {
     mergeLoading.value = false
+  }
+}
+
+const mergePurchaseOne = async (item: any) => {
+  try {
+    // 导出的二次确认
+    await message.exportConfirm('是否确认采购申请单？')
+    // 发起导出
+    await PurchaseRequestApi.mergePurchaseRequestOne({ requestId: item.id })
+    // download.excel(data, '采购申请.xls')
+    message.success(t('合并成功'))
+    // 刷新列表
+    await getList()
+  } catch (e) {
+    console.log('单个合并报错', e)
   }
 }
 
@@ -836,4 +822,3 @@ onMounted(async () => {
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印
 </script>
-

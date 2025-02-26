@@ -224,7 +224,7 @@ export enum DICT_TYPE {
   ERP_PATENT_TYPE = 'erp_patent_type',  //专利类型
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
-  SRP_ORDER_STATUS = 'srp_order_status', // 采购状态
+  ERP_ORDER_STATUS = 'erp_order_status', // 采购状态
   ERP_OFF_STATUS = 'erp_off_status', // 开关状态
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
   REPORT_MAP = 'report_map', // 报表地图
