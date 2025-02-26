@@ -505,7 +505,7 @@
 </template>
 
 <script setup lang="ts">
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/erp/purchase/request'
@@ -516,7 +516,6 @@ import * as UserApi from '@/api/system/user'
 import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
-import { usePurchaseRequestForm } from './hooks'
 import { useSearchForm } from './hooks/search'
 // import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 
