@@ -9,6 +9,14 @@
       label-width="100px"
     >
       <el-form-item label="产品名称" prop="name">
+        <!-- <el-input
+          v-model="queryParams.name"
+          placeholder="请输入产品名称"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        /> -->
+
         <el-select
           v-model="queryParams.name"
           clearable
@@ -26,6 +34,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="SKU（编码）" prop="code">
+        <!-- <el-input
+          v-model="queryParams.barCode"
+          placeholder="请输入SKU（编码）"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        /> -->
         <el-select
           v-model="queryParams.barCode"
           clearable
@@ -165,6 +180,105 @@
     </div>
   </Dialog>
 
+  <!-- 列表 -->
+  <!--  <ContentWrap>
+    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+      <el-table-column
+        fixed="left"
+        label="主图"
+        align="center"
+        prop="primaryImageUrl"
+        width="110px"
+      >
+        <template #default="scope">
+          <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="left"
+        label="SKU（编码）"
+        align="center"
+        prop="barCode"
+        :min-width="columnMinWidth"
+      />
+      <el-table-column label="产品名称" align="center" prop="name" />
+      <el-table-column label="产品分类" align="center" prop="categoryName" />
+      <el-table-column label="部门" align="center" prop="deptName" />
+      <el-table-column label="单位" align="center" prop="unitName" />
+      <el-table-column label="材料" align="center" prop="material" />
+      <el-table-column label="状态" align="center" prop="status">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
+        </template>
+      </el-table-column>
+      <el-table-column label="品牌" align="center" prop="brand" />
+      <el-table-column label="系列" align="center" prop="series" />
+      <el-table-column label="颜色" align="center" prop="color" />
+      <el-table-column label="型号" align="center" prop="model" />
+      <el-table-column label="生产编号" align="center" prop="productionNo" />
+
+      <el-table-column label="包装高度" align="center" prop="packageHeight" />
+      <el-table-column label="包装长度" align="center" prop="packageLength" />
+      <el-table-column label="包装重量" align="center" prop="packageWeight" />
+      <el-table-column label="包装宽度" align="center" prop="packageWidth" />
+
+      <el-table-column label="基础宽度（mm）" align="center" prop="width" />
+      <el-table-column label="基础长度（mm）" align="center" prop="length" />
+      <el-table-column label="基础高度（mm）" align="center" prop="height" />
+      <el-table-column label="基础重量（kg）" align="center" prop="weight" />
+      <el-table-column label="指导价" align="center" prop="guidePriceList">
+        <template #default="scope">
+          <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
+            <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="guidePrice.code" />
+            <el-tag class="ml-5px">{{ guidePrice.price }}</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="产品备注" align="center" prop="remark" />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        :formatter="dateFormatter"
+        width="180px"
+      />
+      <el-table-column fixed="right" label="操作" align="center" width="150px">
+        <template #default="scope">
+          <el-button
+            link
+            type="primary"
+            @click="openForm('detail', scope.row.id)"
+            v-hasPermi="['erp:product:update']"
+          >
+            查看
+          </el-button>
+          <el-button
+            link
+            type="primary"
+            @click="openForm('update', scope.row.id)"
+            v-hasPermi="['erp:product:update']"
+          >
+            编辑
+          </el-button>
+          <el-button
+            link
+            type="danger"
+            @click="handleDelete(scope.row.id)"
+            v-hasPermi="['erp:product:delete']"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!~~ 分页 ~~>
+    <Pagination
+      :total="total"
+      v-model:page="queryParams.pageNo"
+      v-model:limit="queryParams.pageSize"
+      @pagination="getList"
+    />
+  </ContentWrap>-->
 
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
@@ -233,6 +347,7 @@ import ProductForm from './ProductForm.vue'
 import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
 import { defaultProps, handleTree } from '@/utils/tree'
 import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
+// import Pagination from '../../../../components/Pagination/index.vue'
 import { DictTag } from '../../../../components/DictTag'
 import { ContentWrap } from '../../../../components/ContentWrap'
 import { getDeptTree } from './data/index'
