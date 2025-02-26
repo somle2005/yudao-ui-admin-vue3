@@ -10,6 +10,8 @@
       <el-form-item label="国家编码" prop="countryCode">
         <el-select
           v-model="formData.countryCode"
+          multiple
+          :multiple-limit="multipleLimit"
           placeholder="请选择国家编码"
           clearable
           class="!w-240px"
@@ -73,7 +75,7 @@
             <template #default>
               <div class="product-option">
                 <div class="item">{{ item.barCode }} </div>
-                <div class="item-span w-4em" ></div>
+                <div class="item-span w-4em"></div>
                 <div class="item">{{ item.name }}</div>
               </div>
             </template>
@@ -81,14 +83,14 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="hs编码" prop="hscode">
-        <el-input v-model.trim="formData.hscode" placeholder="请输入hs编码" />
+      <el-form-item v-if="multipleLimit" label="hs编码" prop="hscode">
+        <el-input disabled v-model.trim="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
-      <el-form-item label="申报品名(英文)" prop="declaredTypeEn">
-        <el-input v-model.trim="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
+      <el-form-item v-if="multipleLimit" label="申报品名(英文)" prop="declaredTypeEn">
+        <el-input disabled v-model.trim="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
       </el-form-item>
-      <el-form-item label="申报品名" prop="declaredType">
-        <el-input v-model.trim="formData.declaredType" placeholder="请输入申报品名" />
+      <el-form-item v-if="multipleLimit" label="申报品名" prop="declaredType">
+        <el-input disabled v-model.trim="formData.declaredType" placeholder="请输入申报品名" />
       </el-form-item>
 
       <el-form-item label="申报金额" prop="declaredValue">
@@ -115,7 +117,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="税率" prop="taxRate">
+      <!-- <el-form-item label="税率" prop="taxRate">
         <el-input-number
           v-model="formData.taxRate"
           placeholder="请输入税率"
@@ -123,7 +125,7 @@
           :precision="1"
           class="!w-1/1"
         />
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="hs编码" prop="hscode">
         <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item> -->
@@ -182,12 +184,12 @@ const initFormData = () => {
     productId: undefined,
     declaredValue: undefined,
     declaredValueCurrencyCode: undefined,
-    taxRate: undefined,
     logisticAttribute: undefined,
-    fbaBarCode: undefined,
-    hscode: undefined,
-    declaredTypeEn: undefined,
-    declaredType: undefined
+    fbaBarCode: undefined
+    // taxRate: undefined,
+    // hscode: undefined,
+    // declaredTypeEn: undefined,
+    // declaredType: undefined
   }
 }
 formData.value = initFormData()
@@ -213,7 +215,15 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await CustomRuleApi.getCustomRule(id)
+      const data = await CustomRuleApi.getCustomRule(id)
+      if (!data) return
+      formData.value = data
+      const countryCode = formData.value.countryCode
+      if (countryCode !== null && countryCode !== undefined) {
+        formData.value.countryCode = [countryCode]
+      } else {
+        formData.value.countryCode = []
+      }
     } finally {
       formLoading.value = false
     }
@@ -272,7 +282,7 @@ watch(
   () => formData.value.productId,
   (val) => {
     if (val) {
-      changeProduct(val)
+      // changeProduct(val)
     }
   }
 )
@@ -292,6 +302,9 @@ const changeProduct = (val: any) => {
       console.log(e, '报错了')
     })
 }
+const multipleLimit = computed(() => {
+  return formType.value === 'create' ? 0 : 1
+})
 </script>
 <style lang="scss" scoped>
 .product-option {
