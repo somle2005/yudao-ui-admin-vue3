@@ -1,6 +1,5 @@
 import { ProductVO } from '@/api/crm/product'
 import { ProductApi } from '@/api/erp/product/product'
-import { getProductNameList } from '@/commonData'
 import { useTableData } from '@/components/SmTable/src/utils'
 
 export const useProductItemForm = () => {
@@ -91,7 +90,6 @@ export const useProductItemForm = () => {
   }
   tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
 
-  const { productNameList, productSkuList } = getProductNameList()
 
   return {
     selectProduct,
@@ -103,8 +101,6 @@ export const useProductItemForm = () => {
     queryParams,
     productVisible,
     handleQuery,
-    productNameList,
-    productSkuList,
     queryFormRef,
     handleSelectionChange,
     selectionList

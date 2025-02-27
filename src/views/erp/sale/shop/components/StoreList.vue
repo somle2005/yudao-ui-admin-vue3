@@ -3,17 +3,16 @@
     <div class="search">
       <el-input :suffix-icon="Search" v-model="value" @input="searchDB" @keyup.enter="search" />
     </div>
-    <!-- <el-scrollbar>
-      
-    </el-scrollbar> -->
-    <div class="platform-list">
-      <div class="item" v-for="item in shopList" :key="item.id" @click="clickShop(item)">
-        <div class="item-platform">
-          {{ item.platform }}
+    <el-scrollbar>
+      <div class="platform-list">
+        <div class="item" v-for="item in shopList" :key="item.id" @click="clickShop(item)">
+          <div class="item-platform">
+            {{ item.platform }}
+          </div>
+          <div class="item-accountTotal"> 店铺数:{{ item.accountTotal }} </div>
         </div>
-        <div class="item-accountTotal"> 店铺数:{{ item.accountTotal }} </div>
       </div>
-    </div>
+    </el-scrollbar>
   </div>
 </template>
 <script setup lang="ts">
@@ -93,7 +92,6 @@ const getList = () => {
     list.splice(offlineIndex, 1)
     list.push(item)
 
-    console.log(list, 'list')
     shopList.value = list
     allShopList.value = cloneDeep(list)
   })
@@ -125,7 +123,8 @@ defineExpose({
   }
   .platform-list {
     padding: 0 10px;
-    overflow: auto;
+    // height: 1000px;
+    // overflow: auto;
     box-sizing: border-box;
   }
   .item {

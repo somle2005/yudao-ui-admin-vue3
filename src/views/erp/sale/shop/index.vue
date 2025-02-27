@@ -145,7 +145,6 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    // action: true,
     width: '180px'
   }
 }
@@ -256,7 +255,6 @@ const storeListRef = ref()
 const refresh = () => {
   getList()
   storeListRef.value.getList()
-  console.log('刷新了')
 }
 
 /** 初始化 **/

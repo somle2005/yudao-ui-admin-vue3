@@ -9,17 +9,7 @@
       v-loading="formLoading"
       :options="requestFormOptions"
       :getModelValue="getFormData"
-    >
-      <!-- <template #items="{ scope, model }">
-        {{ console.log(scope, model, '打印scope-model') }}
-        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="申请产品清单" name="item">
-            <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" />
-            <!~~ <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" /> ~~>
-          </el-tab-pane>
-        </el-tabs>
-      </template>-->
-    </SmForm>
+    />
     <template #footer>
       <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -33,8 +23,6 @@ import { createDBFn } from '@/utils/decorate'
 
 /** ERP 平台店铺 */
 defineOptions({ name: 'ShopForm' })
-
-
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -66,6 +54,10 @@ const online = computed(() => formData.value.type === 0)
 const requestFormOptions = ref<any[]>([])
 
 const initRequestFormOptions = () => {
+  const platformList = getIntDictOptions(DICT_TYPE.ERP_SALES_PLATFORM).map((item: any) => {
+    item.value = item.label
+    return item
+  })
   return [
     {
       type: 'select',
@@ -88,10 +80,7 @@ const initRequestFormOptions = () => {
           trigger: 'blur'
         }
       ],
-      children: getIntDictOptions(DICT_TYPE.ERP_SALES_PLATFORM).map((item: any) => {
-        item.value = item.label
-        return item
-      })
+      children: platformList
     },
     {
       type: 'input',
@@ -103,7 +92,7 @@ const initRequestFormOptions = () => {
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
-        clearable: true,
+        clearable: true
       },
       rules: [
         {
@@ -277,8 +266,6 @@ const open = async (type: string, id?: number) => {
     try {
       formData.value = await ShopApi.getShop(id)
       formRef.value.initForm()
-      //initForm
-      console.log(formData.value, 'formData.value')
     } finally {
       formLoading.value = false
     }

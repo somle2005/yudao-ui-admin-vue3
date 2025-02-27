@@ -4,7 +4,12 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="店铺SKU" prop="name">
-            <el-input class="!w-240px"  v-model="formData.name" placeholder="请输入店铺SKU" :disabled="disabled" />
+            <el-input
+              class="!w-240px"
+              v-model="formData.name"
+              placeholder="请输入店铺SKU"
+              :disabled="disabled"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -129,19 +134,20 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+// import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { ShopProductApi, ShopProductVO } from '@/api/erp/sale/shop-product'
 import { createDBFn } from '@/utils/decorate'
 import ProductItemForm from './components/ProductItemForm.vue'
 import { useProductItemForm } from './hooks/useProductItemForm'
 import { cloneDeep } from 'lodash-es'
-import { getDeptTree, getShopList } from '@/commonData'
+import { getDeptTree, getProductNameList, getShopList } from '@/commonData'
+import { defaultProps } from '@/utils/tree'
 /** ERP 店铺产品 */
 defineOptions({ name: 'ShopProductForm' })
 
-const shopList = ref([])
+const shopList = ref<any[]>([])
+const deptList = ref<any[]>([])
 
-const { deptList, defaultProps } = getDeptTree()
 const {
   selectProduct,
   getList,
@@ -152,163 +158,164 @@ const {
   queryParams,
   productVisible,
   handleQuery,
-  productNameList,
-  productSkuList,
   queryFormRef,
   handleSelectionChange,
   selectionList
 } = useProductItemForm()
 
-const requestFormOptions = ref([
-  {
-    type: 'input',
-    label: '平台',
-    prop: 'platform',
-    placeholder: '请输入平台',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '平台不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
-  {
-    type: 'input',
-    label: '平台账户',
-    prop: 'account',
-    placeholder: '请输入平台账户',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '平台账户不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
+const productNameList = ref<any[]>([])
+const productSkuList = ref<any[]>([])
 
-  {
-    type: 'input',
-    label: '店铺名称',
-    prop: 'name',
-    placeholder: '请输入店铺名称',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '店铺名称不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
-  {
-    type: 'input',
-    label: '店铺代码',
-    prop: 'code',
-    placeholder: '请输入店铺代码',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '店铺代码不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
-  {
-    type: 'select',
-    placeholder: '请选择状态',
-    prop: 'status',
-    label: '状态',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    rules: [
-      {
-        required: true,
-        message: '状态不能为空',
-        trigger: 'blur'
-      }
-    ],
-    children: getIntDictOptions(DICT_TYPE.ERP_OFF_STATUS)
-  },
-  {
-    type: 'select',
-    placeholder: '请选择类型',
-    prop: 'type',
-    label: '类型',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    rules: [
-      {
-        required: true,
-        message: '类型不能为空',
-        trigger: 'blur'
-      }
-    ],
-    children: getIntDictOptions(DICT_TYPE.ERP_SHOP_TYPE)
-  },
-  {
-    type: 'input-number',
-    label: '排序',
-    prop: 'sort',
-    placeholder: '请输入排序',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      min: 0
-    },
-    rules: [
-      {
-        required: true,
-        message: '排序不能为空',
-        trigger: 'blur'
-      }
-    ]
-  },
+// const requestFormOptions = ref([
+//   {
+//     type: 'input',
+//     label: '平台',
+//     prop: 'platform',
+//     placeholder: '请输入平台',
+//     attrs: {
+//       style: { width: '100%' },
+//       clearable: true
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '平台不能为空',
+//         trigger: 'blur'
+//       }
+//     ]
+//   },
+//   {
+//     type: 'input',
+//     label: '平台账户',
+//     prop: 'account',
+//     placeholder: '请输入平台账户',
+//     attrs: {
+//       style: { width: '100%' },
+//       clearable: true
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '平台账户不能为空',
+//         trigger: 'blur'
+//       }
+//     ]
+//   },
 
-  // 备注放最后
-  {
-    type: 'input',
-    label: '备注',
-    prop: 'remark',
-    placeholder: '请输入备注',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    },
-    rules: [
-      {
-        required: true,
-        message: '备注不能为空',
-        trigger: 'blur'
-      }
-    ]
-  }
-])
+//   {
+//     type: 'input',
+//     label: '店铺名称',
+//     prop: 'name',
+//     placeholder: '请输入店铺名称',
+//     attrs: {
+//       style: { width: '100%' },
+//       clearable: true
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '店铺名称不能为空',
+//         trigger: 'blur'
+//       }
+//     ]
+//   },
+//   {
+//     type: 'input',
+//     label: '店铺代码',
+//     prop: 'code',
+//     placeholder: '请输入店铺代码',
+//     attrs: {
+//       style: { width: '100%' },
+//       clearable: true
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '店铺代码不能为空',
+//         trigger: 'blur'
+//       }
+//     ]
+//   },
+//   {
+//     type: 'select',
+//     placeholder: '请选择状态',
+//     prop: 'status',
+//     label: '状态',
+//     attrs: {
+//       filterable: true,
+//       clearable: true,
+//       style: {
+//         width: '100%'
+//       }
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '状态不能为空',
+//         trigger: 'blur'
+//       }
+//     ],
+//     children: getIntDictOptions(DICT_TYPE.ERP_OFF_STATUS)
+//   },
+//   {
+//     type: 'select',
+//     placeholder: '请选择类型',
+//     prop: 'type',
+//     label: '类型',
+//     attrs: {
+//       filterable: true,
+//       clearable: true,
+//       style: {
+//         width: '100%'
+//       }
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '类型不能为空',
+//         trigger: 'blur'
+//       }
+//     ],
+//     children: getIntDictOptions(DICT_TYPE.ERP_SHOP_TYPE)
+//   },
+//   {
+//     type: 'input-number',
+//     label: '排序',
+//     prop: 'sort',
+//     placeholder: '请输入排序',
+//     attrs: {
+//       style: { width: '100%' },
+//       clearable: true,
+//       min: 0
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '排序不能为空',
+//         trigger: 'blur'
+//       }
+//     ]
+//   },
+
+//   // 备注放最后
+//   {
+//     type: 'input',
+//     label: '备注',
+//     prop: 'remark',
+//     placeholder: '请输入备注',
+//     attrs: {
+//       style: { width: '100%' },
+//       clearable: true
+//     },
+//     rules: [
+//       {
+//         required: true,
+//         message: '备注不能为空',
+//         trigger: 'blur'
+//       }
+//     ]
+//   }
+// ])
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -356,6 +363,12 @@ const open = async (type: string, id?: number) => {
   formType.value = type
   resetForm()
   getShopList(shopList)
+  getDeptTree(deptList)
+  getProductNameList({
+    dataList: [productNameList, productSkuList],
+    sortList: ['productNameList', 'productSkuList']
+  })
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -454,7 +467,6 @@ const confirmProduct = () => {
 const shopChange = (val) => {
   const item = shopList.value.find((item) => item.id === val)
   formData.value.code = item.code
-  console.log(item,'shop-item')
 }
 const disabled = computed(() => formData.value.shop.type === 0)
 </script>

@@ -1,10 +1,14 @@
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions } from '@/utils/dict'
 import { getShopList, getDeptTree } from '@/commonData/index'
+import { defaultProps } from '@/utils/tree'
 
 export const useSearchForm = (handleQuery, queryParams) => {
-  const { deptList, defaultProps } = getDeptTree()
-  const shopList = getShopList()
+  // const { deptList, defaultProps } = getDeptTree()
+  const shopList = ref([])
+  const deptList = ref([])
+  getShopList(shopList)
+  getDeptTree(deptList)
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',

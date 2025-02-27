@@ -7,7 +7,7 @@ import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
-import {CustomRuleCategoryApi} from '@/api/erp/logistic/custom-category'
+import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
 import { ShopApi } from '@/api/erp/sale/shop'
 
 interface SelectProp {
@@ -108,7 +108,8 @@ function getSelectItemList(list: Array<any>, key: string) {
   return arr.filter((item) => item.label)
 }
 // 搜索产品名称的数据
-export const getProductNameList = () => {
+export const getProductNameList = (data?: { dataList: any[]; sortList: string[] }) => {
+  const { dataList = [], sortList = [] } = data
   const productMap = {
     productNameList: ref<ProductVOSelectItem[]>([]), // 产品列表
     productSkuList: ref<ProductVOSelectItem[]>([]), // 产品sku列表
@@ -116,7 +117,7 @@ export const getProductNameList = () => {
     productBrandList: ref<ProductVOSelectItem[]>([]) // 产品品牌列表
   }
 
-  const tempList = [
+  let tempList = [
     {
       productMapKey: 'productNameList',
       key: 'name'
@@ -134,10 +135,29 @@ export const getProductNameList = () => {
       key: 'brand'
     }
   ]
+
+  // 如果有排序字段就删除tempList中不需要的字段
+  if (sortList?.length) {
+    const list = tempList.filter((item) => sortList.includes(item.productMapKey))
+    const arr: any = []
+    // 排序tempList
+    sortList.forEach((item) => {
+      const target = list.find((i) => i.productMapKey === item)
+      if (target) {
+        arr.push(target)
+      }
+    })
+    tempList = arr
+  }
+  console.log('tempList', tempList)
+
   ProductApi.getProductSimpleList().then((res) => {
-    tempList.forEach((item) => {
+    tempList.forEach((item, index) => {
       const arr = getSelectItemList(cloneDeep(res), item.key)
       productMap[item.productMapKey].value = arr
+      if (dataList?.length) {
+        dataList[index].value = arr
+      }
     })
   })
   return productMap
@@ -182,11 +202,11 @@ export const getShopList = (data?: any) => {
   const shopList = ref<any[]>([]) // 用户列表
   ShopApi.getShopList().then((res: any) => {
     const map = {}
-    const arr:any = []
+    const arr: any = []
     // 去重account
-    res.map(item => {
-      const account = item.account 
-      if(account && !map[account]) {
+    res.map((item) => {
+      const account = item.account
+      if (account && !map[account]) {
         map[account] = 1
         arr.push(item)
       }
@@ -197,7 +217,6 @@ export const getShopList = (data?: any) => {
       item.value = item.account
       return item
     })
-    console.log('店铺数据', res)
     if (data) {
       data.value = shopList.value
     }
