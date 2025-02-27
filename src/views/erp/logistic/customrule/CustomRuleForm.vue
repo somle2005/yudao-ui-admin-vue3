@@ -87,7 +87,11 @@
         <el-input disabled v-model.trim="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
       <el-form-item v-if="multipleLimit" label="申报品名(英文)" prop="declaredTypeEn">
-        <el-input disabled v-model.trim="formData.declaredTypeEn" placeholder="请输入申报品名（英文）" />
+        <el-input
+          disabled
+          v-model.trim="formData.declaredTypeEn"
+          placeholder="请输入申报品名（英文）"
+        />
       </el-form-item>
       <el-form-item v-if="multipleLimit" label="申报品名" prop="declaredType">
         <el-input disabled v-model.trim="formData.declaredType" placeholder="请输入申报品名" />
@@ -149,7 +153,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
@@ -161,6 +165,8 @@ import { getProductList } from '@/commonData'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 // import { type } from '../constant/index'
 import { ProductCategoryApi } from '@/api/erp/product/category'
+import { cloneDeep } from 'lodash-es'
+import { createDBFn } from '@/utils/decorate'
 
 const productList: any = getProductList()
 
@@ -240,7 +246,11 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as CustomRuleVO
+    const data: any = cloneDeep(formData.value) as unknown as CustomRuleVO
+    if (data.fbaBarCode === '') {
+      data.fbaBarCode = undefined
+    }
+    data.product = undefined
     if (formType.value === 'create') {
       data.id = undefined
       await CustomRuleApi.createCustomRule(data)
@@ -256,24 +266,9 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
-
+const submitFormDB = createDBFn(submitForm)
 /** 重置表单 */
 const resetForm = () => {
-  // formData.value = {
-  //   id: undefined,
-  //   countryCode: undefined,
-  //   // type: undefined,
-  //   // supplierProductId: undefined,
-  //   productId: undefined,
-  //   declaredTypeEn: undefined,
-  //   declaredType: undefined,
-  //   // declaredValue: undefined,
-  //   // declaredValueCurrencyCode: undefined,
-  //   taxRate: undefined,
-  //   hscode: undefined,
-  //   logisticAttribute: undefined,
-  //   fbaBarCode: undefined
-  // }
   formData.value = initFormData()
   formRef.value?.resetFields()
 }
