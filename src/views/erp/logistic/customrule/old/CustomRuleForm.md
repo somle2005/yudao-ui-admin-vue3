@@ -48,6 +48,33 @@
           />
         </el-select>
       </el-form-item>
+      <!-- <el-form-item label="类型" prop="type">
+        <el-select v-model="formData.type" placeholder="请选择类型">
+          <el-option
+            v-for="item in type"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item> -->
+      <!-- <el-form-item label="供应商产品" prop="supplierProductId">
+        <el-select
+          v-model="formData.supplierProductId"
+          clearable
+          filterable
+          placeholder="请选择供应商产品"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in supplierProductList"
+            :key="item.id"
+            :label="item.code"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item> -->
+
       <el-form-item v-if="multipleLimit" label="hs编码" prop="hscode">
         <el-input disabled v-model.trim="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
@@ -63,7 +90,7 @@
       </el-form-item>
 
       <el-form-item label="申报金额" prop="declaredValue">
-        <el-input-number 
+        <el-input-number
           v-model="formData.declaredValue"
           placeholder="请输入申报金额"
           :min="0"
@@ -86,6 +113,18 @@
           />
         </el-select>
       </el-form-item>
+      <!-- <el-form-item label="税率" prop="taxRate">
+        <el-input-number
+          v-model="formData.taxRate"
+          placeholder="请输入税率"
+          :min="0"
+          :precision="1"
+          class="!w-1/1"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="hs编码" prop="hscode">
+        <el-input v-model="formData.hscode" placeholder="请输入hs编码" />
+      </el-form-item> -->
       <el-form-item label="FBA条形码" prop="fbaBarCode">
         <el-input v-model.trim="formData.fbaBarCode" placeholder="请输入FBA条形码" />
       </el-form-item>
@@ -113,14 +152,15 @@
 </template>
 <script setup lang="ts">
 import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
-// import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import { getProductList } from '@/commonData'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+// import { type } from '../constant/index'
 import { ProductCategoryApi } from '@/api/erp/product/category'
 import { cloneDeep } from 'lodash-es'
 import { createDBFn } from '@/utils/decorate'
 
-
+const productList: any = getProductList()
 
 /** ERP 海关规则 表单 */
 defineOptions({ name: 'CustomRuleForm' })
@@ -137,23 +177,31 @@ const initFormData = () => {
   return {
     id: undefined,
     countryCode: undefined,
+    // type: undefined,
+    // supplierProductId: undefined,
     productId: undefined,
     declaredValue: undefined,
     declaredValueCurrencyCode: undefined,
     logisticAttribute: undefined,
     fbaBarCode: undefined
+    // taxRate: undefined,
+    // hscode: undefined,
+    // declaredTypeEn: undefined,
+    // declaredType: undefined
   }
 }
 formData.value = initFormData()
 const formRules = reactive({
   countryCode: [{ required: true, message: '国家编码不能为空', trigger: 'blur' }],
+  // type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
   productId: [{ required: true, message: '产品编号不能为空', trigger: 'blur' }],
+  //supplierProductId: [{ required: true, message: '供应商产品编号不能为空', trigger: 'blur' }],
   declaredValue: [{ required: true, message: '申报金额不能为空', trigger: 'change' }],
   declaredValueCurrencyCode: [{ required: true, message: '申报币种不能为空', trigger: 'blur' }]
+  // declaredTypeEn: [{ required: true, message: '申报品名（英文）不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
-// const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
-const productList: any = ref([])
+const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -161,7 +209,6 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  getProductList(productList)
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -179,7 +226,7 @@ const open = async (type: string, id?: number) => {
       formLoading.value = false
     }
   }
-  // supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
+  supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 

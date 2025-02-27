@@ -25,6 +25,13 @@
       </el-form-item>
 
       <el-form-item label="SKU（编码）" prop="barCode">
+        <!-- <el-input
+          v-model="queryParams.barCode"
+          placeholder="请输入sku（编码）"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        /> -->
         <el-select
           v-model.trim="queryParams.barCode"
           clearable
@@ -109,6 +116,32 @@
           />
         </el-select>
       </el-form-item>
+      <!-- <el-form-item label="供应商产品" prop="supplierProductId">
+        <el-select
+          v-model="queryParams.supplierProductId"
+          clearable
+          filterable
+          placeholder="请选择供应商产品"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in supplierProductList"
+            :key="item.id"
+            :label="item.code"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item> -->
+      <!-- <el-form-item label="类型" prop="type">
+        <el-select class="!w-240px" v-model="queryParams.type" placeholder="请选择类型">
+          <el-option
+            v-for="item in type"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item> -->
       <el-form-item class="ml-70px">
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -133,8 +166,104 @@
     </el-form>
   </ContentWrap>
 
-  
-  
+  <!-- 列表 -->
+  <!--  <ContentWrap>
+    <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+
+      <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
+      <el-table-column label="国家编码" align="center" prop="countryCode">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
+        </template>
+      </el-table-column>
+      <el-table-column label="产品名称" align="center" prop="product-name" />
+      
+      
+      <el-table-column
+        label="图片"
+        align="center"
+        prop="primaryImageUrl"
+        width="110px"
+      >
+        <template #default="scope">
+          <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
+        </template>
+      </el-table-column>
+      <el-table-column label="材料" align="center" prop="material" />
+
+      <!~~ <el-table-column
+        label="供应商产品编码"
+        align="center"
+        prop="supplierProductCode"
+        :min-width="columnMinWidth"
+      /> ~~>
+
+    
+      <!~~ <el-table-column label="类型" align="center" prop="type" /> ~~>
+
+      <!~~ <el-table-column label="申报金额" align="center" prop="declaredValue" />
+      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
+        </template>
+      </el-table-column> ~~>
+
+      <el-table-column label="hs编码" align="center" prop="hscode" />
+      <el-table-column label="申报品名(英文)" align="center" prop="declaredTypeEn" />
+      <el-table-column label="申报品名" align="center" prop="declaredType" />
+
+      <el-table-column label="税率" align="center" prop="taxRate" />
+      <el-table-column label="物流属性" align="center" prop="logisticAttribute">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
+        </template>
+      </el-table-column>
+      <el-table-column label="FBA条形码" align="center" prop="fbaBarCode" />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        :formatter="dateFormatter"
+        width="180px"
+      />
+    
+      <el-table-column label="操作" align="center" min-width="180px">
+        <template #default="scope">
+          <el-button
+            link
+            type="primary"
+            @click="copyForm(scope.row.id)"
+            v-hasPermi="['erp:custom-rule:create']"
+          >
+            复制
+          </el-button>
+          <el-button
+            link
+            type="primary"
+            @click="openForm('update', scope.row.id)"
+            v-hasPermi="['erp:custom-rule:update']"
+          >
+            编辑
+          </el-button>
+          <el-button
+            link
+            type="danger"
+            @click="handleDelete(scope.row.id)"
+            v-hasPermi="['erp:custom-rule:delete']"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!~~ 分页 ~~>
+    <Pagination
+      :total="total"
+      v-model:page="queryParams.pageNo"
+      v-model:limit="queryParams.pageSize"
+      @pagination="getList"
+    />
+  </ContentWrap>-->
 
   <!-- isSelection -->
   <ContentWrap :bodyStyle="{ padding: '20px','padding-bottom':0 }">
