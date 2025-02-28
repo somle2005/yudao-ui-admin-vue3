@@ -185,12 +185,7 @@
         <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
       </template>
 
-      <!-- <template #guidePriceList="{ scope }">
-        <div v-for="(guidePrice, index) in scope.row.guidePriceList" :key="index">
-          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="guidePrice.code || ''" />
-          <el-tag class="ml-5px">{{ guidePrice.price }}</el-tag>
-        </div>
-      </template> -->
+
 
       <template #operate="{ scope }">
         <el-button
@@ -428,16 +423,6 @@ const fieldMap = {
     fixed: 'right',
     width: '180px'
   }
-
-  // unitName: '单位',
-  // material: '材料',
-  // color: '颜色',
-  // productionNo: '生产编号',
-  // guidePrice: {
-  //   label: '指导价',
-  //   slot: 'guidePrice'
-  // },
-  // remark: '产品备注',
 }
 tableOptions.value = transformTableOptions(fieldMap)
 
@@ -548,8 +533,6 @@ moreFormOptionsInit()
 const moreConfirm = () => {
   moreDialog.value = false
   handleQuery()
-  // 可以通过添加一个flag 来控制更多的formData数据是否重置
-  // console.log('确定事件早于关闭事件')
 }
 
 const getModelValue = () => {
