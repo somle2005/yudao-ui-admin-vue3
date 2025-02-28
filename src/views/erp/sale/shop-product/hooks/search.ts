@@ -4,7 +4,6 @@ import { getShopList, getDeptTree } from '@/commonData/index'
 import { defaultProps } from '@/utils/tree'
 
 export const useSearchForm = (handleQuery, queryParams) => {
-  // const { deptList, defaultProps } = getDeptTree()
   const shopList = ref([])
   const deptList = ref([])
   getShopList(shopList)

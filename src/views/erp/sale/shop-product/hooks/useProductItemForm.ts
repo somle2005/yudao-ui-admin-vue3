@@ -22,7 +22,6 @@ export const useProductItemForm = () => {
   const selectionList = ref<any[]>([])
   const handleSelectionChange = (rows: any[]) => {
     selectionList.value = rows
-    console.log(rows, '选中的产品')
   }
 
   const loading = ref(false) // 列表的加载中
@@ -73,7 +72,6 @@ export const useProductItemForm = () => {
       label: '图片',
       // fixed: 'left',
       slot: 'primaryImageUrl'
-      // width: '20%'
     },
     barCode: {
       label: 'SKU（编码）',
