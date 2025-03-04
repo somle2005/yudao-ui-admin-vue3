@@ -13,6 +13,7 @@
           v-model="queryParams.countryCode"
           placeholder="请选择国家编码"
           clearable
+          filterable
           class="!w-240px"
         >
           <el-option

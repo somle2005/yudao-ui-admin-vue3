@@ -138,6 +138,7 @@
               v-model="formData.countryCodes"
               placeholder="请选择国家"
               clearable
+              filterable
               class="w-1/1"
             >
               <el-option

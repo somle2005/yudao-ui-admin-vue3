@@ -20,6 +20,7 @@
               v-model="row.countryCode"
               placeholder="请选择国家"
               clearable
+              filterable
               class="!w-240px"
             >
               <el-option
