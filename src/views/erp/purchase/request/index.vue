@@ -588,7 +588,7 @@ const mergePurchaseOne = async (item: any) => {
 const handleSubmitAudit = async (ids: number[]) => {
   try {
     await message.exportConfirm('是否确认提交审核？')
-    await PurchaseRequestApi.submitPurchaseAudit({ ids })
+    await PurchaseRequestApi.submitPurchaseAudit(ids)
     message.success(t('提交审核成功'))
     // 刷新列表
     await getList()
