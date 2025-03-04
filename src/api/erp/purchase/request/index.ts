@@ -104,7 +104,7 @@ export const PurchaseRequestApi = {
   },
 
   // 提交审核
-  submitPurchaseAudit: async (data: { ids: number[] }) => {
+  submitPurchaseAudit: async (data: number[]) => {
     return await request.put({
       url: `/erp/purchase-request/submitAudit`,
       data
