@@ -209,70 +209,41 @@
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
-    <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="创建人" align="center" prop="creator" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="更新人" align="center" prop="updater" />
-      <el-table-column
-        label="更新时间"
-        align="center"
-        prop="updateTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="主体名称" align="center" prop="name" />
-      <el-table-column label="联系人" align="center" prop="contact" />
-      <el-table-column label="手机号码" align="center" prop="mobile" />
-      <el-table-column label="联系电话" align="center" prop="telephone" />
-      <el-table-column label="电子邮箱" align="center" prop="email" />
-      <el-table-column label="传真" align="center" prop="fax" />
-      <el-table-column label="送达地址" align="center" prop="deliveryAddress" />
-      <el-table-column label="公司地址" align="center" prop="companyAddress" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="开启状态" align="center" prop="status">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="纳税人识别号" align="center" prop="taxNo" />
-      <el-table-column label="开户行" align="center" prop="bankName" />
-      <el-table-column label="开户账号" align="center" prop="bankAccount" />
-      <el-table-column label="开户地址" align="center" prop="bankAddress" />
-      <el-table-column label="操作" align="center" min-width="120px">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:finance-subject:update']"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:finance-subject:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页 -->
-    <Pagination
+  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
       :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
-    />
+    >
+
+      <template #status="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
+      </template>
+
+      <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:finance-subject:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['erp:finance-subject:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -285,6 +256,55 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
 import FinanceSubjectForm from './FinanceSubjectForm.vue'
+import { useTableData } from '@/components/SmTable/src/utils'
+
+const { tableOptions, transformTableOptions } = useTableData()
+
+// DICT_TYPE.COMMON_BOOLEAN_STATUS 开启状态是用这个吗 到时候再问问
+
+//  创建人创建时间放最后面 备注 ===
+const fieldMap = {
+  name: '主体名称',
+  status: {
+    label: '开启状态',
+    slot: 'status',
+    width: '180px'
+  },
+  contact: '联系人',
+  mobile: '手机号码',
+  telephone: '联系电话',
+  email: '电子邮箱',
+  fax: '传真',
+  deliveryAddress: '送达地址',
+  companyAddress: '公司地址',
+
+  taxNo: '纳税人识别号',
+  bankName: '开户行',
+  bankAccount: '开户账号',
+  bankAddress: '开户地址',
+
+  creator: '创建人',
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  updater: '更新人',
+  updateTime: {
+    label: '更新时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  remark: '备注',
+
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '180px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap)
 
 /** Erp财务主体 列表 */
 defineOptions({ name: 'ErpFinanceSubject' })
