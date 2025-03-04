@@ -3,6 +3,7 @@ import { getDeptTree, getProductList, getUserList, getSupplierProductList } from
 import { cloneDeep } from 'lodash-es'
 import { formatTime } from '@/utils/formatTime'
 import { defaultProps } from '@/utils/tree'
+import { FormOptions } from '@/components/SmForm/src/types/types'
 
 /**
 
@@ -54,7 +55,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
   for (const key in detail) {
     formData[key] = detail[key]
   }
-  formData.requestTime = formatTime(formData.requestTime)
+  // formData.requestTime = formatTime(formData.requestTime)
   formData.items.forEach((item) => {
     if (formType === 'audit') {
       item.approveCount = item.count
@@ -78,12 +79,9 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const dialogTitle = ref('')
   const dialogVisible = ref(false)
 
-
-
   const applicantList = ref([])
   const supplierProductList = ref([])
   const deptList = ref([])
-
 
   const smFormRef = ref()
 
@@ -94,82 +92,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
   const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
 
-  const openForm = async (type: string, id?: number) => {
-    getResetFormData()
-    formType.value = type
-    dialogTitle.value = t('action.' + type)
-    dialogVisible.value = true
-
-    getUserList(applicantList)
-    getSupplierProductList(supplierProductList)
-    getDeptTree(deptList)
-
-    // 修改时，设置数据
-    if (id) {
-      formLoading.value = true
-      try {
-        const formData = getFormData()
-        const detailData = await PurchaseRequestApi.getPurchaseRequest(id)
-        mergeDetail(formData, detailData, formType.value, smFormRef)
-        console.log(formData, '修改时获取的数据')
-      } finally {
-        formLoading.value = false
-      }
-    }
-  }
-
-  const submitForm = async () => {
-    // catch会拿到错误数据 没有进入catch说明校验通过了
-    try {
-      const valida1 = await itemFormRef.value.validate()
-      const valiad2 = await smFormRef.value.validate()()
-      if (!(valida1 && valiad2)) return
-
-
-
-      // 提交请求
-      formLoading.value = true
-
-      // 税率拿到提交数据进行转换处理
-      const data = cloneDeep(getFormData())
-      data.items.forEach((item) => {
-        item.taxPercent = item.taxPercent / 100
-        return item
-      })
-
-
-
-      if (formType.value === 'create') {
-        await PurchaseRequestApi.createPurchaseRequest(data)
-        message.success(t('common.createSuccess'))
-      } else if (formType.value === 'audit') {
-        await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
-          requestId: data.id,
-          reviewed: true,
-          items: data.items.map(item => {
-            return {
-              id: item.id,
-              approveCount: item.approveCount
-            }
-          })
-        })
-        message.success(t('common.updateSuccess'))
-      } else {
-        await PurchaseRequestApi.updatePurchaseRequest(data)
-        message.success(t('common.updateSuccess'))
-      }
-
-      dialogVisible.value = false
-
-      emit('success')
-    } catch (e) {
-      console.log(e, '报错了')
-    } finally {
-      formLoading.value = false
-    }
-  }
-
-  const requestFormOptions = ref([
+  const requestFormOptions = ref<FormOptions[]>([
     {
       type: 'date-picker',
       placeholder: '请选择单据日期',
@@ -304,6 +227,111 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       }
     }
   ])
+
+  const auditType = computed(() => formType.value === 'audit')
+  const auditFormOptions = ref<FormOptions[]>([])
+  const createAuditFormOptions = (requestFormOptions) => {
+    const index = requestFormOptions.value.length - 1
+    const obj: any = {
+      type: 'input',
+      label: '审核意见',
+      prop: 'reviewComment',
+      placeholder: '请输入审核意见',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    }
+    requestFormOptions.value.splice(index, 0, obj)
+    requestFormOptions.value.forEach((item) => {
+      if (item.prop && item.prop !== 'reviewComment') {
+        item.attrs!.disabled = auditType
+      }
+    })
+    return requestFormOptions.value
+  }
+  auditFormOptions.value = createAuditFormOptions(cloneDeep(requestFormOptions))
+
+  // 处理audit的逻辑
+  const operateAudit = () => {
+    if (formType.value === 'audit') {
+      requestFormOptions.value = auditFormOptions.value
+    }
+  }
+
+  const openForm = async (type: string, id?: number) => {
+    getResetFormData()
+    formType.value = type
+    dialogTitle.value = t('action.' + type)
+    dialogVisible.value = true
+
+    getUserList(applicantList)
+    getSupplierProductList(supplierProductList)
+    getDeptTree(deptList)
+
+    operateAudit()
+
+    // 修改时，设置数据
+    if (id) {
+      formLoading.value = true
+      try {
+        const formData = getFormData()
+        const detailData = await PurchaseRequestApi.getPurchaseRequest(id)
+        mergeDetail(formData, detailData, formType.value, smFormRef)
+        console.log(formData, '修改时获取的数据')
+      } finally {
+        formLoading.value = false
+      }
+    }
+  }
+
+  const submitForm = async () => {
+    // catch会拿到错误数据 没有进入catch说明校验通过了
+    try {
+      const valida1 = await itemFormRef.value.validate()
+      const valiad2 = await smFormRef.value.validate()()
+      if (!(valida1 && valiad2)) return
+
+      // 提交请求
+      formLoading.value = true
+
+      // 税率拿到提交数据进行转换处理
+      const data = cloneDeep(getFormData())
+      data.items.forEach((item) => {
+        item.taxPercent = item.taxPercent / 100
+        return item
+      })
+
+      if (formType.value === 'create') {
+        await PurchaseRequestApi.createPurchaseRequest(data)
+        message.success(t('common.createSuccess'))
+      } else if (formType.value === 'audit') {
+        await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
+          requestId: data.id,
+          reviewed: true,
+          items: data.items.map((item) => {
+            return {
+              id: item.id,
+              approveCount: item.approveCount
+            }
+          }),
+          reviewComment: data.reviewComment
+        })
+        message.success(t('common.updateSuccess'))
+      } else {
+        await PurchaseRequestApi.updatePurchaseRequest(data)
+        message.success(t('common.updateSuccess'))
+      }
+
+      dialogVisible.value = false
+
+      emit('success')
+    } catch (e) {
+      console.log(e, '报错了')
+    } finally {
+      formLoading.value = false
+    }
+  }
 
   return {
     dialogTitle,

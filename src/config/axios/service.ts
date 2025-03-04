@@ -75,7 +75,18 @@ service.interceptors.request.use(
       if (paramsStr) {
         config.url = config.url + '?' + paramsStr
       }
-    } // 自定义参数序列化函数
+    } else if (config.method?.toUpperCase() === 'PUT' && params) {
+      config.params = {}
+      const paramsStr = qs.stringify(params, {
+        allowDots: true,
+        arrayFormat: 'repeat',
+        encoder: (str) => encodeURI(str)
+      })
+      if (paramsStr) {
+        config.url = config.url + '?' + paramsStr
+      }
+    }
+    // 自定义参数序列化函数
     else if (method === 'POST') {
       const contentType = config.headers['Content-Type'] || config.headers['content-type']
       if (contentType === 'application/x-www-form-urlencoded') {

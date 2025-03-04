@@ -37,38 +37,39 @@ export const PurchaseRequestApi = {
     return await request.put({ url: `/erp/purchase-request/update`, data })
   },
 
-  // 更新采购订单的状态
-  updatePurchaseRequestStatus: async (id: number, status: number) => {
-    return await request.put({
-      url: `/erp/purchase-request/update-status`,
-      params: {
-        id,
-        status
-      }
-    })
-  },
+  // // 更新采购订单的状态
+  // updatePurchaseRequestStatus: async (id: number, status: number) => {
+  //   return await request.put({
+  //     url: `/erp/purchase-request/update-status`,
+  //     params: {
+  //       id,
+  //       status
+  //     }
+  //   })
+  // },
 
   // 审核/反审核采购订单
   updatePurchaseRequestAuditStatus: async (data: {
     requestId: number
     reviewed: boolean
     items?: any
+    reviewComment?: string
   }) => {
-    return await request.put({
+    return await request.post({
       url: `/erp/purchase-request/auditStatus`,
       data
     })
   },
 
   // 关闭/启用申请单
-  updatePurchaseRequestStatusEnable: async (params: {
+  updatePurchaseRequestStatusEnable: async (data: {
     requestId: number
     itemId: number[]
     enable: boolean
   }) => {
     return await request.put({
       url: `/erp/purchase-request/enableStatus`,
-      params
+      data
     })
   },
 
@@ -87,18 +88,26 @@ export const PurchaseRequestApi = {
     return await request.download({ url: `/erp/purchase-request/export-excel`, params })
   },
   // 合并ERP采购申请单 批量
-  mergePurchaseRequest: async (data: { ids: number[] }) => {
-    return await request.put({
+  mergePurchaseRequest: async (data: { itemIds: number[] }) => {
+    return await request.post({
       url: `/erp/purchase-request/merge`,
       data
     })
   },
 
   // 合并ERP采购申请单 单个
-  mergePurchaseRequestOne: async (params: { requestId: number }) => {
-    return await request.get({
+  mergePurchaseRequestOne: async (data: { requestId: number }) => {
+    return await request.post({
       url: `/erp/purchase-request/procurement`,
-      params
+      data
+    })
+  },
+
+  // 提交审核
+  submitPurchaseAudit: async (data: { ids: number[] }) => {
+    return await request.put({
+      url: `/erp/purchase-request/submitAudit`,
+      data
     })
   }
 }

@@ -101,7 +101,7 @@
             <el-input-number
               v-model="row.approveCount"
               controls-position="right"
-              :min="1"
+              :min="0"
               class="!w-100%"
             />
           </el-form-item>

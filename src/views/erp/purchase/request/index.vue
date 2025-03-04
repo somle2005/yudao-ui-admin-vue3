@@ -1,189 +1,4 @@
 <template>
-  <!--  <ContentWrap>
-    <!~~ 搜索工作栏 ~~>
-    <el-form
-      class="-mb-15px"
-      :model="queryParams"
-      ref="queryFormRef"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="单据编号" prop="no">
-        <el-input
-          v-model="queryParams.no"
-          placeholder="请输入单据编号"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="产品" prop="productId">
-        <el-select
-          v-model="queryParams.productId"
-          clearable
-          filterable
-          placeholder="请选择产品"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="申请时间" prop="requestTime">
-        <el-date-picker
-          v-model="queryParams.requestTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <!~~ <el-form-item label="供应商" prop="supplierId">
-        <el-select
-          v-model="queryParams.supplierId"
-          clearable
-          filterable
-          placeholder="请选择供供应商"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in supplierList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item> ~~>
-      <el-form-item label="申请人" prop="creator">
-        <el-select
-          v-model="queryParams.applicant"
-          clearable
-          filterable
-          placeholder="请选择申请人"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in userList"
-            :key="item.id"
-            :label="item.nickname"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <!~~ <el-form-item label="创建人" prop="creator">
-        <el-select
-          v-model="queryParams.creator"
-          clearable
-          filterable
-          placeholder="请选择创建人"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in userList"
-            :key="item.id"
-            :label="item.nickname"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item> ~~>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <!~~ <el-form-item label="备注" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item> ~~>
-      <!~~ <el-form-item label="入库数量" prop="inStatus">
-        <el-select
-          v-model="queryParams.inStatus"
-          placeholder="请选择入库数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未入库" value="0" />
-          <el-option label="部分入库" value="1" />
-          <el-option label="全部入库" value="2" />
-        </el-select>
-      </el-form-item> ~~>
-      <!~~ <el-form-item label="退货数量" prop="returnStatus">
-        <el-select
-          v-model="queryParams.returnStatus"
-          placeholder="请选择退货数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未退货" value="0" />
-          <el-option label="部分退货" value="1" />
-          <el-option label="全部退货" value="2" />
-        </el-select>
-      </el-form-item> ~~>
-      <el-form-item>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button type="primary" plain @click="openForm('create')">
-          <Icon icon="ep:plus" class="mr-5px" /> 新增
-        </el-button>
-        <el-button type="success" plain @click="handleExport" :loading="exportLoading">
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
-
-        <!~~ <el-button
-          type="danger"
-          plain
-          @click="handleDelete(selectionList.map((item) => item.id))"
-          :disabled="selectionList.length === 0"
-        >
-          <Icon icon="ep:delete" class="mr-5px" /> 删除
-        </el-button> ~~>
-
-        <!~~ <el-button
-          type="primary"
-          plain
-          @click="openForm('create')"
-          v-hasPermi="['erp:purchase-request:create']"
-        >
-          <Icon icon="ep:plus" class="mr-5px" /> 新增
-        </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['erp:purchase-request:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
-        <el-button
-          type="danger"
-          plain
-          @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['erp:purchase-request:delete']"
-          :disabled="selectionList.length === 0"
-        >
-          <Icon icon="ep:delete" class="mr-5px" /> 删除
-        </el-button> ~~>
-      </el-form-item>
-    </el-form>
-  </ContentWrap>-->
-
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
@@ -226,128 +41,16 @@
         >
           合并采购
         </el-button>
+
+        <el-switch
+          v-model="wholeOrderEnable"
+          active-text="整单"
+          class="ml-10px"
+          @change="handleWholeOrderEnable"
+        />
       </template>
     </SmForm>
   </ContentWrap>
-
-  <!-- 列表 -->
-  <!-- <ContentWrap>
-    <el-table
-      v-loading="loading"
-      :data="list"
-      :stripe="true"
-      :show-overflow-tooltip="true"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column width="30" label="选择" type="selection" />
-      <el-table-column min-width="180" label="申请单号" align="center" prop="no" />
-      <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
-      <!~~ <el-table-column label="供应商" align="center" prop="supplierName" /> ~~>
-      <el-table-column
-        label="申请时间"
-        align="center"
-        prop="requestTime"
-        :formatter="dateFormatter2"
-        width="120px"
-      />
-      <el-table-column label="申请人" align="center" prop="applicantName" />
-      <!~~ <el-table-column label="创建人" align="center" prop="creatorName" /> ~~>
-      <el-table-column
-        label="总数量"
-        align="center"
-        prop="totalCount"
-        :formatter="erpCountTableColumnFormatter"
-      />
-      <!~~ <el-table-column
-        label="入库数量"
-        align="center"
-        prop="inCount"
-        :formatter="erpCountTableColumnFormatter"
-      />
-      <el-table-column
-        label="退货数量"
-        align="center"
-        prop="returnCount"
-        :formatter="erpCountTableColumnFormatter"
-      />
-      <el-table-column
-        label="金额合计"
-        align="center"
-        prop="totalProductPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column
-        label="含税金额"
-        align="center"
-        prop="totalPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column
-        label="支付订金"
-        align="center"
-        prop="depositPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      /> ~~>
-      <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="220">
-        <template #default="scope">
-          <el-button
-            link
-            @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['erp:purchase-request:query']"
-          >
-            详情
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:purchase-request:update']"
-            :disabled="scope.row.status === 20"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="handleUpdateStatus(scope.row.id, 20)"
-            v-hasPermi="['erp:purchase-request:update-status']"
-            v-if="scope.row.status === 10"
-          >
-            审批
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleUpdateStatus(scope.row.id, 10)"
-            v-hasPermi="['erp:purchase-request:update-status']"
-            v-else
-          >
-            反审批
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete([scope.row.id])"
-            v-hasPermi="['erp:purchase-request:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!~~ 分页 ~~>
-    <Pagination
-      :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
-  </ContentWrap>-->
 
   <!-- 列表 -->
   <ContentWrap style="padding-bottom: 0">
@@ -379,6 +82,10 @@
         <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
       </template>
 
+      <template #rowOffStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+      </template>
+
       <template #operate="{ scope }">
         <!-- <el-button link @click="openForm('detail', scope.row.id)"> 详情 </el-button> -->
         <el-button
@@ -402,9 +109,18 @@
         <el-button
           link
           type="primary"
+          @click="handleSubmitAudit([scope.row.id])"
+          v-hasPermi="['erp:purchase-request:audit']"
+        >
+          提交审核
+        </el-button>
+
+        <el-button
+          link
+          type="primary"
           @click="handleUpdateStatus(scope.row.id, 20, true)"
           v-hasPermi="['erp:purchase-request:audit']"
-          v-if="![20].includes(scope.row.status)"
+          v-if="![5].includes(scope.row.status)"
         >
           审核
         </el-button>
@@ -414,7 +130,7 @@
           type="danger"
           @click="handleUpdateStatus(scope.row.id, 5, false)"
           v-hasPermi="['erp:purchase-request:audit']"
-          v-if="scope.row.status === 20"
+          v-if="scope.row.status === 5"
         >
           反审核
         </el-button>
@@ -517,6 +233,7 @@ import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/ut
 import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
+import { cloneDeep } from 'lodash-es'
 // import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 
 const { tableOptions, transformTableOptions } = useTableData()
@@ -590,6 +307,11 @@ const fieldMap = {
     label: '行采购状态',
     slot: 'rowOrderStatus'
   },
+  // 改造别名
+  rowOffStatus: {
+    label: '行关闭状态',
+    slot: 'rowOffStatus'
+  },
   barCode: '商品编码',
   productName: '商品名称',
   productUnitName: '单位',
@@ -618,10 +340,38 @@ const fieldMap = {
     slot: 'operate',
     fixed: 'right',
     // action: true,
-    width: '300px'
+    width: '320px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap)
+const branchOptions = transformTableOptions(fieldMap)
+tableOptions.value = cloneDeep(branchOptions)
+
+const createWholeOrder = (branchOptions) => {
+  const map = {
+    requestTime: '单据日期',
+    no: '单据编号',
+    applicant: '申请人',
+    applicationDept: '申请部门',
+    status: '审核状态',
+    orderStatus: '订购状态',
+    offStatus: '关闭状态',
+    unOrderCount: '未订购数量',
+    orderCount: '已订购数量',
+    inQty: '已入库数量',
+    count: '申请数量',
+    approveCount: '批准数量',
+    taxPrice: '税额',
+    allAmount: '价税合计',
+    operate: '操作'
+  }
+  const arr: any = []
+  branchOptions.forEach((item) => {
+    if (item.prop && map[item.prop]) {
+      arr.push(item)
+    }
+  })
+  return arr
+}
 
 /** ERP 采购申请列表 */
 defineOptions({ name: 'ErpPurchaseRequest' })
@@ -631,7 +381,11 @@ const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
 const list = ref<PurchaseRequestVO[]>([]) // 列表的数据
+const itemsList = ref<PurchaseRequestVO[]>([])
+const wholeOrderList = ref<PurchaseRequestVO[]>([])
 const total = ref(0) // 列表的总页数
+const itemsTotal = ref(0) // 分行的总页数
+const wholeOrderTotal = ref(0) // 整单总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -657,15 +411,42 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-    // list.value = data.list
-    list.value = mergeItemsToList(data.list, {
+    wholeOrderList.value = cloneDeep(data.list)
+    itemsList.value = mergeItemsToList(data.list, {
       id: 'purchaseOrderId',
-      orderStatus: 'rowOrderStatus'
+      status: 'rowStatus',
+      orderStatus: 'rowOrderStatus',
+      offStatus: 'rowOffStatus'
     })
+    list.value = itemsList.value
     // 后续需要补充itemsTotal
     total.value = data.itemsTotal || data.total
+    itemsTotal.value = data.itemsTotal || data.total
+    wholeOrderTotal.value = data.total
   } finally {
     loading.value = false
+  }
+}
+
+const wholeOrderEnable = ref(false)
+const handleWholeOrderEnable = (val) => {
+  if (val) {
+    // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
+    const options = createWholeOrder(cloneDeep(branchOptions))
+    const len = options.length - 1
+    const limit = len - 4
+
+    for (let i = limit; i < len; i++) {
+      options[i].width = undefined
+    }
+
+    tableOptions.value = options
+    list.value = wholeOrderList.value
+    total.value = wholeOrderTotal.value
+  } else {
+    tableOptions.value = cloneDeep(branchOptions)
+    list.value = itemsList.value
+    total.value = itemsTotal.value
   }
 }
 
@@ -704,12 +485,9 @@ const handleDelete = async (ids: number[]) => {
 /** 审核/反审核操作 */
 const handleUpdateStatus = async (requestId: number, status: number, reviewed: boolean) => {
   /**
-    已审核 20
-    审核不通过 14
-    未审核 10
-    反审核 5
-    (只要不是已审核)-10(出现审核)
-    已审核-20(出现反审核)
+      1、提交审核状态太多-直接出现
+      2、很多情况都会出现 审核按钮 只要不是已审核就出现
+      3、已审核状态 出现 反审核按钮
    */
   // 执行审核操作
   if (reviewed) {
@@ -780,14 +558,14 @@ const mergePurchase = async () => {
     await message.exportConfirm('是否确认合并采购申请单？')
     // 发起导出
     mergeLoading.value = true
-    const ids = selectionList.value.map((item) => item.id)
+    const itemIds = selectionList.value.map((item) => item.id)
     await PurchaseRequestApi.mergePurchaseRequest({
-      ids
+      itemIds
     })
     message.success(t('合并成功'))
     // 刷新列表
     await getList()
-    selectionList.value = selectionList.value.filter((item) => !ids.includes(item.id))
+    selectionList.value = selectionList.value.filter((item) => !itemIds.includes(item.id))
     // download.excel(data, '采购申请.xls')
   } catch {
   } finally {
@@ -797,16 +575,25 @@ const mergePurchase = async () => {
 
 const mergePurchaseOne = async (item: any) => {
   try {
-    // 导出的二次确认
     await message.exportConfirm('是否确认采购申请单？')
-    // 发起导出
     await PurchaseRequestApi.mergePurchaseRequestOne({ requestId: item.id })
-    // download.excel(data, '采购申请.xls')
     message.success(t('合并成功'))
     // 刷新列表
     await getList()
   } catch (e) {
     console.log('单个合并报错', e)
+  }
+}
+
+const handleSubmitAudit = async (ids: number[]) => {
+  try {
+    await message.exportConfirm('是否确认提交审核？')
+    await PurchaseRequestApi.submitPurchaseAudit({ ids })
+    message.success(t('提交审核成功'))
+    // 刷新列表
+    await getList()
+  } catch (e) {
+    console.log('提交审核报错', e)
   }
 }
 
