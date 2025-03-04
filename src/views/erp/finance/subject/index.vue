@@ -305,6 +305,13 @@ const fieldMap = {
   }
 }
 tableOptions.value = transformTableOptions(fieldMap)
+tableOptions.value.forEach(item => {
+  if(item.width === '100px') {
+    item.width = '200px'
+  }
+})
+
+console.log(tableOptions.value,'tableOptions.value')
 
 /** Erp财务主体 列表 */
 defineOptions({ name: 'ErpFinanceSubject' })
