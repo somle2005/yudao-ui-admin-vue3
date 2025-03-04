@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash-es'
 import { formatTime } from '@/utils/formatTime'
 import { defaultProps } from '@/utils/tree'
 import { FormOptions } from '@/components/SmForm/src/types/types'
+import { AUDIT_TYPE } from '../constants'
 
 /**
 
@@ -259,6 +260,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     }
   }
 
+  const auditBtnType = ref(AUDIT_TYPE.reject)
+
   const openForm = async (type: string, id?: number) => {
     getResetFormData()
     formType.value = type
@@ -308,7 +311,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       } else if (formType.value === 'audit') {
         await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
           requestId: data.id,
-          reviewed: true,
+          reviewed: true,   
+          pass: auditBtnType.value === AUDIT_TYPE.agree,
           items: data.items.map((item) => {
             return {
               id: item.id,
@@ -345,6 +349,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     formLoading,
     formType,
     applicantList,
-    supplierProductList
+    supplierProductList,
+    auditBtnType,
+    auditType
   }
 }

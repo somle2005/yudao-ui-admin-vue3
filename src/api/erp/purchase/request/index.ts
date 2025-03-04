@@ -52,6 +52,7 @@ export const PurchaseRequestApi = {
   updatePurchaseRequestAuditStatus: async (data: {
     requestId: number
     reviewed: boolean
+    pass: boolean
     items?: any
     reviewComment?: string
   }) => {
@@ -63,8 +64,8 @@ export const PurchaseRequestApi = {
 
   // 关闭/启用申请单
   updatePurchaseRequestStatusEnable: async (data: {
-    requestId: number
-    itemId: number[]
+    requestId?: number
+    itemIds: number[]
     enable: boolean
   }) => {
     return await request.put({

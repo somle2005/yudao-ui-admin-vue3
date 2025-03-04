@@ -42,6 +42,15 @@
           合并采购
         </el-button>
 
+        <el-button
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['erp:purchase-request:audit']"
+        >
+          提交审核
+        </el-button>
+
         <el-switch
           v-model="wholeOrderEnable"
           active-text="整单"
@@ -106,19 +115,19 @@
           删除
         </el-button>
 
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="handleSubmitAudit([scope.row.id])"
           v-hasPermi="['erp:purchase-request:audit']"
         >
           提交审核
-        </el-button>
+        </el-button> -->
 
         <el-button
           link
           type="primary"
-          @click="handleUpdateStatus(scope.row.id, 20, true)"
+          @click="handleUpdateStatus(scope.row, true)"
           v-hasPermi="['erp:purchase-request:audit']"
           v-if="![5].includes(scope.row.status)"
         >
@@ -128,7 +137,7 @@
         <el-button
           link
           type="danger"
-          @click="handleUpdateStatus(scope.row.id, 5, false)"
+          @click="handleUpdateStatus(scope.row, false)"
           v-hasPermi="['erp:purchase-request:audit']"
           v-if="scope.row.status === 5"
         >
@@ -138,9 +147,9 @@
         <el-button
           link
           type="primary"
-          @click="handleUpdateStatusEnable(scope.row.id, scope.row.purchaseOrderId, true)"
+          @click="handleUpdateStatusEnable(scope.row, true)"
           v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.offStatus !== 1"
+          v-if="scope.row.rowOrderStatus !== 1"
         >
           开启
         </el-button>
@@ -148,9 +157,9 @@
         <el-button
           link
           type="danger"
-          @click="handleUpdateStatusEnable(scope.row.id, scope.row.purchaseOrderId, false)"
+          @click="handleUpdateStatusEnable(scope.row, false)"
           v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.offStatus === 1"
+          v-if="scope.row.rowOrderStatus === 1"
         >
           关闭
         </el-button>
@@ -234,6 +243,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { cloneDeep } from 'lodash-es'
+import { it } from 'node:test'
 // import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 
 const { tableOptions, transformTableOptions } = useTableData()
@@ -448,6 +458,7 @@ const handleWholeOrderEnable = (val) => {
     list.value = itemsList.value
     total.value = itemsTotal.value
   }
+  selectionList.value = []
 }
 
 /** 搜索按钮操作 */
@@ -483,7 +494,8 @@ const handleDelete = async (ids: number[]) => {
 }
 
 /** 审核/反审核操作 */
-const handleUpdateStatus = async (requestId: number, status: number, reviewed: boolean) => {
+const handleUpdateStatus = async (row: any, reviewed: boolean) => {
+  const { id: requestId, items = [] } = row
   /**
       1、提交审核状态太多-直接出现
       2、很多情况都会出现 审核按钮 只要不是已审核就出现
@@ -496,29 +508,47 @@ const handleUpdateStatus = async (requestId: number, status: number, reviewed: b
   }
   try {
     // 审核的二次确认
-    await message.confirm(`确定${status === 20 ? '审核' : '反审核'}该申请吗？`)
+    await message.confirm(`确定反审核该申请吗？`)
     // 发起审核
     // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
-    await PurchaseRequestApi.updatePurchaseRequestAuditStatus({ requestId, reviewed })
-    message.success(`${status === 20 ? '审核' : '反审核'}成功`)
+    await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
+      requestId,
+      reviewed,
+      pass: true,
+      items: items.map((item) => {
+        return {
+          id: item.id,
+          pass: item.approveCount
+        }
+      })
+    })
+    message.success('反审核成功')
     // 刷新列表
     await getList()
   } catch {}
 }
 
 /** 关闭/启用申请单 */
-const handleUpdateStatusEnable = async (requestId: number, itemId: number[], enable: boolean) => {
+const handleUpdateStatusEnable = async (row: any, enable: boolean) => {
   /**
     手动关闭 3
     已关闭 2
     开启 1
    */
   try {
+    let itemIds: any = []
+    const { items = [], purchaseOrderId } = row
+    if (wholeOrderEnable.value) {
+      itemIds = items.map((item) => item.id)
+    } else {
+      itemIds = [purchaseOrderId]
+    }
+
     // 开启的二次确认
     await message.confirm(`确定${enable ? '开启' : '关闭'}该申请吗？`)
     // 发起开启
     // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
-    await PurchaseRequestApi.updatePurchaseRequestStatusEnable({ requestId, itemId, enable })
+    await PurchaseRequestApi.updatePurchaseRequestStatusEnable({ itemIds, enable })
     message.success(`${enable ? '开启' : '关闭'}成功`)
     // 刷新列表
     await getList()
@@ -553,6 +583,14 @@ const searchFormOptions = useSearchForm(handleQuery)
 
 const mergeLoading = ref(false)
 const mergePurchase = async () => {
+  // 5已审核
+  const hasAudit = selectionList.value.some((item: any) => item.status === 5)
+  if (!hasAudit) {
+    message.error('选中行未包含审核单据，请检查')
+    return
+  }
+  
+
   try {
     // 导出的二次确认
     await message.exportConfirm('是否确认合并采购申请单？')
@@ -590,6 +628,38 @@ const handleSubmitAudit = async (ids: number[]) => {
     await message.exportConfirm('是否确认提交审核？')
     await PurchaseRequestApi.submitPurchaseAudit(ids)
     message.success(t('提交审核成功'))
+    // 刷新列表
+    await getList()
+  } catch (e) {
+    console.log('提交审核报错', e)
+  }
+}
+
+const handleSubmitAuditBatch = async () => {
+  try {
+    await message.exportConfirm('是否确认提交审核？')
+
+    const selectList: any = selectionList.value
+    let ids: any = []
+    // 整单的时候用id做标记取出items里面所有的id
+    if (wholeOrderEnable.value) {
+      selectList.forEach((item) => {
+        if (!item?.items?.length) return
+        item.items.forEach((item) => {
+          ids.push(item.id)
+        })
+      })
+    } else {
+      // 分行的时候用purchaseOrderId做标记取出id
+      selectList.forEach((item) => {
+        ids.push(item.purchaseOrderId)
+      })
+    }
+
+    await PurchaseRequestApi.submitPurchaseAudit(ids)
+    message.success(t('提交审核成功'))
+
+    selectionList.value = []
     // 刷新列表
     await getList()
   } catch (e) {

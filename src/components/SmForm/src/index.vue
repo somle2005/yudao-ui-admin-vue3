@@ -359,4 +359,8 @@ const onSuccess = (
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// .\!w-240px {
+//   width: 240px !important;
+// }
+</style>

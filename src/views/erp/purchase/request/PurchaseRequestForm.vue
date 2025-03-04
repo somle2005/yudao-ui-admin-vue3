@@ -32,13 +32,23 @@
     </SmForm>
     <div class="moreBtnList">
       <el-button @click="dialogVisible = false"> 取消</el-button>
-      <el-button type="primary" :disabled="formLoading" @click="submitForm"> 确定</el-button>
+      <el-button
+        v-if="auditType"
+        type="danger"
+        :disabled="formLoading"
+        @click="submitFormDB(AUDIT_TYPE.reject)"
+      >
+        不同意</el-button
+      >
+      <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)"> 确定</el-button>
     </div>
   </Dialog>
 </template>
 <script setup lang="ts">
 import { usePurchaseRequestForm } from './hooks'
 import ItemsForm from './components/ItemsForm.vue'
+import { createDBFn } from '@/utils/decorate'
+import { AUDIT_TYPE } from './constants'
 
 const resetFormData = () => {
   return reactive({
@@ -77,9 +87,17 @@ let {
   subTabsName,
   itemFormRef,
   formLoading,
-  formType
+  formType,
+  auditBtnType,
+  auditType
 } = usePurchaseRequestForm({ getResetFormData, getFormData, emit })
 
+const changeAuditBtnType = (type) => {
+  auditBtnType.value = type
+  submitForm()
+  console.log('handleQuery')
+}
+const submitFormDB = createDBFn(changeAuditBtnType)
 onMounted(() => {})
 onUnmounted(() => {})
 defineExpose({ open: openForm }) // 提供 open 方法，用于打开弹窗
