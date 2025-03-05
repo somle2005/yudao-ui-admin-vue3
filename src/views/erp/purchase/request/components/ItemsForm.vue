@@ -32,13 +32,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="产品名称" min-width="180">
+      <el-table-column label="产品名称" min-width="120">
         <template #default="{ row }">
           <el-text>{{ row.productName }}</el-text>
         </template>
       </el-table-column>
 
-      <el-table-column label="仓库" min-width="125">
+      <el-table-column label="仓库" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
             <el-select
@@ -68,7 +68,21 @@
       </el-table-column>
     -->
 
-      <el-table-column v-if="mergeDisabled" label="下单数量" prop="orderQuantity" min-width="140">
+      <el-table-column label="期望到货日期" min-width="150">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
+            <el-date-picker
+              v-model="row.expectArrivalDate"
+              type="date"
+              value-format="x"
+              placeholder="选择预计成交日期"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="mergeDisabled" label="下单数量" prop="orderQuantity" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.orderQuantity`"
@@ -87,7 +101,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="申请数量" prop="count" min-width="140">
+      <el-table-column label="申请数量" prop="count" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
             <!-- @change="(val) => (row.approveCount = val)" -->
@@ -102,7 +116,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="showAudit" label="批准数量" prop="approveCount" min-width="140">
+      <el-table-column v-if="showAudit" label="批准数量" prop="approveCount" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.approveCount`" class="mb-0px!">
             <el-input-number
@@ -367,7 +381,8 @@ const handleAdd = () => {
     taxPrice: undefined,
     taxPercent: undefined,
     allAmount: undefined,
-    orderQuantity: undefined // 下单数量
+    orderQuantity: undefined, // 下单数量
+    expectArrivalDate: undefined
     // remark: '',
   }
   formData.value.push(row)
@@ -380,8 +395,7 @@ const handleDelete = (index: number) => {
 
 /** 处理产品变更 */
 const onChangeProduct = (productId, row) => {
-  const product:any = productList.value.find((item) => item.id === productId)
-  console.log(product,'选中的产品')
+  const product: any = productList.value.find((item) => item.id === productId)
   if (product) {
     row.productName = product.name
     // row.productUnitName = product.unitName

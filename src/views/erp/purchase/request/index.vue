@@ -31,7 +31,6 @@
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
 
-        <!-- v-hasPermi="['erp:purchase-request:merge']" -->
         <el-button
           :disabled="disabledBtn"
           type="primary"
@@ -193,58 +192,9 @@
         >
           采购
         </el-button> -->
-
-        <!-- <el-button
-          link
-          @click="openForm('detail', scope.row.id)"
-          v-hasPermi="['erp:purchase-request:query']"
-        >
-          详情
-        </el-button>
-        <el-button
-          link
-          type="primary"
-          @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:purchase-request:update']"
-          :disabled="scope.row.status === 20"
-        >
-          编辑
-        </el-button>
-
-        <el-button
-          link
-          type="primary"
-          @click="handleUpdateStatus(scope.row.id, 20)"
-          v-hasPermi="['erp:purchase-request:update-status']"
-          v-if="scope.row.status === 10"
-        >
-          审批
-        </el-button>
-
-        <el-button
-          link
-          type="danger"
-          @click="handleUpdateStatus(scope.row.id, 10)"
-          v-hasPermi="['erp:purchase-request:update-status']"
-          v-else
-        >
-          反审批
-        </el-button>
-        <el-button
-          link
-          type="danger"
-          @click="handleDelete([scope.row.id])"
-          v-hasPermi="['erp:purchase-request:delete']"
-        >
-          删除
-        </el-button> -->
       </template>
     </SmTable>
   </ContentWrap>
-
-  <!-- v-model="formData" -->
-  <!-- :modelValue="formData"
-  @update:model-value="updateModelValue" -->
 
   <!-- 表单弹窗：添加/修改 -->
   <PurchaseRequestForm ref="formRef" @success="getList" />
@@ -259,51 +209,13 @@ import PurchaseRequestForm from './PurchaseRequestForm.vue'
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
-import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { cloneDeep } from 'lodash-es'
-import { it } from 'node:test'
-// import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
-/**
-1-单据日期-有-requestTime
-2-单据编号-有-no
-3-申请人-有-applicant
-4-申请部门-有-applicationDept
-5-审核状态-有-status
-6-订购状态-有-orderStatus
-7-关闭状态-有-offStatus
-
-8-未订购数量-有-(在items里面-unOrderCount)
-9-已订购数量-有-(在items里面-orderCount)
-10-已入库数量-有-(在items里面-inQty)
-11-行采购状态-(文档无描述)-(在items里面-行采购状态-orderStatus)
-// 12-行关闭状态-(文档无描述)-完全没有-后端说不要
-13-商品编码-无-完全没有-后端barCode
-14-商品名称-有-(在items里面-productName)
-15-单位。-有-(在items里面-productUnitName)
-16-申请数量-有-(在items里面-后端无返回-count)
-17-批准数量-有-(在items里面-approveCount)
-18-参考单价-(文档无描述)-(在items里面-referenceUnitPrice)
-19-含税单价-有-(在items里面-actTaxPrice)
-20-税额-(文档无描述)-(在items里面-taxPrice)
-21-价税合计-有-(在items里面-allAmount)
-22-制单人-creator
-23-制单时间-createTime
-24-审核人-auditor
-25-审核时间-auditTime
- */
-
-/**
-未订购-4
-订购失败-3
-部分订购-2
-已完整订购-1
-  */
 
 const fieldMap = {
   requestTime: {
@@ -366,16 +278,20 @@ const fieldMap = {
   creator: '制单人',
   createTime: {
     label: '制单时间',
-    formatter: dateFormatter, // 时间可能要转化
+    formatter: dateFormatter,
     width: '180px'
   },
   auditor: '审核人',
   auditTime: {
     label: '审核时间',
-    formatter: dateFormatter, // 时间可能要转化
+    formatter: dateFormatter,
     width: '180px'
   },
-
+  expectArrivalDate: {
+    label: '期望到货日期',
+    formatter: dateFormatter,
+    width: '180px'
+  },
   operate: {
     label: '操作',
     slot: 'operate',
@@ -472,7 +388,24 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-    wholeOrderList.value = cloneDeep(data.list)
+
+    const computeSum = (items: any[], key: string) => {
+      if (!items?.length) return
+      return items.reduce((prev, cur) => {
+        if (cur[key]) {
+          return cur[key] + prev
+        }
+        return prev
+      }, 0)
+    }
+    wholeOrderList.value = cloneDeep(data.list).map((item) => {
+      const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
+      keyList.forEach((key) => {
+        item[key] = computeSum(item.items, key)
+      })
+      return item
+    })
+
     itemsList.value = mergeItemsToList(data.list, {
       id: 'purchaseOrderId',
       status: 'rowStatus',
@@ -647,51 +580,24 @@ const mergePurchase = async () => {
   if (wholeOrderEnable.value) {
     selectList.forEach((item) => {
       if (!item?.items?.length) return
-      item.items.forEach((item) => {
-        items.push(item)
-      })
+      items.push(...item.items)
     })
   }
   // 分行数据 需要去重行id相同的
   else {
-    const map = {}
     selectList.forEach((item) => {
       if (!item?.items?.length) return
-      item.items.forEach((item) => {
-        if (!map[item.id]) {
-          map[item.id] = item
-        }
-      })
+      const purchaseOrderId = item.purchaseOrderId
+      const target = item.items.find((a) => a.id === purchaseOrderId)
+      if (target) {
+        items.push(target)
+      }
     })
-    for (let key in map) {
-      items.push(map[key])
-    }
   }
 
   const data = { items }
-
   openForm('merge', 1, data)
-
-  // 成功之后注意刷新列表弹窗成功-清空选中数据
-
-  // try {
-  //   // 导出的二次确认
-  //   await message.exportConfirm('是否确认合并采购申请单？')
-  //   // 发起导出
-  //   mergeLoading.value = true
-  //   const itemIds = selectionList.value.map((item) => item.id)
-  //   await PurchaseRequestApi.mergePurchaseRequest({
-  //     itemIds
-  //   })
-  //   message.success(t('合并成功'))
-  //   // 刷新列表
-  //   await getList()
-  //   selectionList.value = selectionList.value.filter((item) => !itemIds.includes(item.id))
-  //   // download.excel(data, '采购申请.xls')
-  // } catch {
-  // } finally {
-  //   mergeLoading.value = false
-  // }
+  // mergeLoading.value = false
 }
 
 const mergePurchaseOne = async (item: any) => {

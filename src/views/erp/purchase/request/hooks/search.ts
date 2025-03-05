@@ -4,27 +4,6 @@ import { getDictOptions } from '@/utils/dict'
 
 
 export const useSearchForm = (handleQuery) => {
-  /**
-  no-string-单据编号
-  申请人-applicant-string 
-  申请部门-applicationDept
-  单据日期-requestTime
-  status-状态
-  auditor-审核者
-  */
-
-  //  const searchFormOptions = ref([
-  //  {
-  //     type: 'input',
-  //     label: '单据编号',
-  //     prop: 'no',
-  //     placeholder: '请输入单据编号',
-  //     attrs: {
-  //       style: { width: '100%' },
-  //       clearable: true
-  //     }
-  //   },
-  //  ])
 
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()

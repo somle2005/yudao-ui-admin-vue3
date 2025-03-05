@@ -1,11 +1,5 @@
 import { PurchaseRequestApi } from '@/api/erp/purchase/request'
-import {
-  getDeptTree,
-  getProductList,
-  getUserList,
-  getSupplierProductList,
-  getSupplierList
-} from '@/commonData'
+import { getDeptTree, getProductList, getUserList, getSupplierList } from '@/commonData'
 import { cloneDeep } from 'lodash-es'
 import { formatTime } from '@/utils/formatTime'
 import { defaultProps } from '@/utils/tree'
@@ -207,28 +201,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
 
       // {
       //   type: 'select',
-      //   placeholder: '请选择供应商产品',
-      //   prop: 'supplierId',
-      //   label: '供应商产品',
-      //   attrs: {
-      //     filterable: true,
-      //     clearable: true,
-      //     style: {
-      //       width: '100%'
-      //     }
-      //   },
-      //   rules: [
-      //     {
-      //       required: true,
-      //       message: '供应商产品不能为空',
-      //       trigger: 'blur'
-      //     }
-      //   ],
-      //   children: supplierProductList
-      // },
-
-      // {
-      //   type: 'select',
       //   value: '',
       //   placeholder: '请选择产品',
       //   prop: 'productId',
@@ -376,6 +348,10 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   // 处理audit的逻辑
   const operateAudit = (type) => {
     const map = {
+      create: () => {
+        console.log('新增create')
+        requestFormOptions.value = createRequestFormOptions()
+      },
       audit: () => {
         requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
       },
@@ -391,14 +367,11 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       fn()
       return
     }
-
-    requestFormOptions.value = createRequestFormOptions()
   }
 
   const auditBtnType = ref(AUDIT_TYPE.reject)
 
   const getSelectData = (type) => {
-    // getSupplierProductList(supplierProductList)
     getSupplierList(supplierList)
     if (type !== 'merge') {
       getUserList(applicantList)
@@ -457,10 +430,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       if (formType.value === 'create') {
         await PurchaseRequestApi.createPurchaseRequest(data)
         message.success(t('common.createSuccess'))
-
-        return
-      }
-      if (formType.value === 'audit') {
+      } else if (formType.value === 'audit') {
         await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
           requestId: data.id,
           reviewed: true,
@@ -474,11 +444,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           reviewComment: data.reviewComment
         })
         message.success(t('common.updateSuccess'))
-
-        return
-      }
-
-      if (formType.value === 'merge') {
+      } else if (formType.value === 'merge') {
         const { orderTime, supplierId, items } = data
         await PurchaseRequestApi.mergePurchaseRequest({
           orderTime,
@@ -491,11 +457,10 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           })
         })
         message.success('合并采购成功')
-
-        return
+      } else if (formType.value === 'update') {
+        await PurchaseRequestApi.updatePurchaseRequest(data)
+        message.success(t('common.updateSuccess'))
       }
-      await PurchaseRequestApi.updatePurchaseRequest(data)
-      message.success(t('common.updateSuccess'))
 
       dialogVisible.value = false
       emit('success')
