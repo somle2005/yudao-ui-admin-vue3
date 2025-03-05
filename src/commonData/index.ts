@@ -7,7 +7,8 @@ import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
-import {CustomRuleCategoryApi} from '@/api/erp/logistic/custom-category'
+import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
+import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 
 interface SelectProp {
   value: number
@@ -44,13 +45,12 @@ export const getAccountList = () => {
 
 // 供应商产品编号列表
 export const getSupplierProductList = (data?: any) => {
-  const supplierProductList = ref<SupplierProductVO[]>([]) // 账户列表
-  // 加载账户列表
+  const supplierProductList = ref<(SupplierProductVO & SelectProp)[]>([]) // 账户列表
+  // 加载商产品编号列表
   SupplierProductApi.getSupplierProductSimpleList().then((res) => {
     supplierProductList.value = res.map((item) => {
       item.label = item.code
       item.value = item.id
-      item.type = 'option'
       return item
     })
     if (data) {
@@ -58,6 +58,23 @@ export const getSupplierProductList = (data?: any) => {
     }
   })
   return supplierProductList
+}
+
+// 供应商列表
+export const getSupplierList = (data?: any) => {
+  const supplierList = ref<(SupplierVO & SelectProp)[]>([]) // 供应商列表
+  // 加载供应商列表
+  SupplierApi.getSupplierSimpleList().then((res) => {
+    supplierList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = supplierList.value
+    }
+  })
+  return supplierList
 }
 
 // 获取仓库下拉列表
@@ -68,7 +85,7 @@ export const getWarehouseList = () => {
     warehouseList.value = res.map((item) => {
       item.label = item.name
       item.value = item.id
-      item.type = 'option'
+
       return item
     })
   })
@@ -81,7 +98,6 @@ export const getProductList = (data?: any) => {
     productList.value = res.map((item) => {
       item.label = item.name + '  ' + item.barCode
       item.value = item.id
-      item.type = 'option'
       return item
     })
     if (data) {
@@ -149,7 +165,6 @@ export const getUserList = (data?: any) => {
     userList.value = res.map((item) => {
       item.label = item.nickname
       item.value = item.id
-      item.type = 'option'
       return item
     })
     if (data) {
@@ -166,7 +181,6 @@ export const getCustomRuleCategoryList = (data?: any) => {
     customRuleCategoryList.value = res.map((item) => {
       item.label = item.combinedValue
       item.value = item.customCategoryId
-      item.type = 'option'
       return item
     })
     if (data) {

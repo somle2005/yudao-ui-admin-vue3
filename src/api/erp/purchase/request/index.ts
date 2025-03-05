@@ -15,6 +15,32 @@ export interface PurchaseRequestVO {
   auditTime: Date // 审核时间
 }
 
+interface MergeItems {
+  /**
+   * 项目ID
+   * 申请单项ID
+   */
+  id: number
+  /**
+   * 下单数量
+   */
+  orderQuantity: number
+}
+interface PurchaseRequestMergeVO {
+  /**
+   * 项目列表
+   */
+  items: MergeItems[]
+  /**
+   * 期望采购时间
+   */
+  orderTime: string
+  /**
+   * 供应商编号
+   */
+  supplierId: number
+}
+
 // ERP采购申请单 API
 export const PurchaseRequestApi = {
   // 查询ERP采购申请单分页
@@ -89,7 +115,7 @@ export const PurchaseRequestApi = {
     return await request.download({ url: `/erp/purchase-request/export-excel`, params })
   },
   // 合并ERP采购申请单 批量
-  mergePurchaseRequest: async (data: { itemIds: number[] }) => {
+  mergePurchaseRequest: async (data: PurchaseRequestMergeVO) => {
     return await request.post({
       url: `/erp/purchase-request/merge`,
       data
