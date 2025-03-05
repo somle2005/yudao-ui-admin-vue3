@@ -292,21 +292,26 @@ const fieldMap = {
   },
   no: {
     label: '单据编号',
-    width: '200px'
+    width: '200px',
+    slot: 'no',
+    wrap: true
   },
   applicant: '申请人',
   applicationDept: '申请部门',
   status: {
     label: '审核状态',
-    slot: 'status'
+    slot: 'status',
+    width: '120px'
   },
   orderStatus: {
     label: '订购状态',
-    slot: 'orderStatus'
+    slot: 'orderStatus',
+    width: '120px'
   },
   offStatus: {
     label: '关闭状态',
-    slot: 'offStatus'
+    slot: 'offStatus',
+    width: '120px'
   },
 
   unOrderCount: '未订购数量',
@@ -323,7 +328,12 @@ const fieldMap = {
     slot: 'rowOffStatus'
   },
   barCode: '商品编码',
-  productName: '商品名称',
+  productName: {
+    label: '商品名称',
+    slot: 'productName',
+    width: '200px',
+    wrap: true
+  },
   productUnitName: '单位',
   count: '申请数量',
   approveCount: '批准数量',
@@ -389,6 +399,8 @@ defineOptions({ name: 'ErpPurchaseRequest' })
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
+
+const wholeOrderEnable = ref(false)
 const loading = ref(true) // 列表的加载中
 const list = ref<PurchaseRequestVO[]>([]) // 列表的数据
 const itemsList = ref<PurchaseRequestVO[]>([])
@@ -416,8 +428,11 @@ const productList = ref<ProductVO[]>([]) // 产品列表
 // const supplierList = ref<SupplierVO[]>([]) // 供应商列表
 const userList = ref<UserVO[]>([]) // 用户列表
 
+
+
 /** 查询列表 */
 const getList = async () => {
+  selectionList.value = []
   loading.value = true
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
@@ -428,17 +443,18 @@ const getList = async () => {
       orderStatus: 'rowOrderStatus',
       offStatus: 'rowOffStatus'
     })
-    list.value = itemsList.value
     // 后续需要补充itemsTotal
-    total.value = data.itemsTotal || data.total
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
+
+    list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
+    total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
   } finally {
     loading.value = false
   }
 }
 
-const wholeOrderEnable = ref(false)
+
 const handleWholeOrderEnable = (val) => {
   if (val) {
     // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
@@ -698,8 +714,6 @@ const handleSubmitAuditBatch = async () => {
 
     await PurchaseRequestApi.submitPurchaseAudit(ids)
     message.success(t('提交审核成功'))
-
-    selectionList.value = []
     // 刷新列表
     await getList()
   } catch (e) {
