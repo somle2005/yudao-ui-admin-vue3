@@ -51,6 +51,25 @@
           提交审核
         </el-button>
 
+        <el-button
+          :disabled="enableBtnDisabled"
+          type="primary"
+          plain
+          @click="handleUpdateStatusEnableBatch(true)"
+          v-hasPermi="['erp:purchase-request:enable']"
+        >
+          开启
+        </el-button>
+
+        <el-button
+          :disabled="closeBtnDisabled"
+          plain
+          @click="handleUpdateStatusEnableBatch(false)"
+          v-hasPermi="['erp:purchase-request:enable']"
+        >
+          关闭
+        </el-button>
+
         <el-switch
           v-model="wholeOrderEnable"
           active-text="整单"
@@ -144,7 +163,7 @@
           反审核
         </el-button>
 
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="handleUpdateStatusEnable(scope.row, true)"
@@ -162,7 +181,7 @@
           v-if="scope.row.rowOffStatus * 1 === 1"
         >
           关闭
-        </el-button>
+        </el-button> -->
         <!-- <el-button
           type="primary"
           link
@@ -399,7 +418,6 @@ defineOptions({ name: 'ErpPurchaseRequest' })
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
-
 const wholeOrderEnable = ref(false)
 const loading = ref(true) // 列表的加载中
 const list = ref<PurchaseRequestVO[]>([]) // 列表的数据
@@ -430,6 +448,21 @@ const userList = ref<UserVO[]>([]) // 用户列表
 /** 选中操作 */
 const selectionList = ref<PurchaseRequestVO[]>([])
 
+// 对整单和分行的items-id获取做了处理
+const getItemsId = () => {
+  let ids: any = []
+  if (wholeOrderEnable.value) {
+    selectionList.value.forEach((item: any) => {
+      if (!item?.items?.length) return
+      item.items.forEach((item) => {
+        ids.push(item.id)
+      })
+    })
+  } else {
+    ids = selectionList.value.map((item: any) => item.purchaseOrderId)
+  }
+  return ids
+}
 
 /** 查询列表 */
 const getList = async () => {
@@ -454,7 +487,6 @@ const getList = async () => {
     loading.value = false
   }
 }
-
 
 const handleWholeOrderEnable = (val) => {
   if (val) {
@@ -587,7 +619,6 @@ const handleExport = async () => {
   }
 }
 
-
 const handleSelectionChange = (rows: PurchaseRequestVO[]) => {
   selectionList.value = rows
 }
@@ -665,7 +696,7 @@ const mergePurchaseOne = async (item: any) => {
   try {
     await message.exportConfirm('是否确认采购申请单？')
     await PurchaseRequestApi.mergePurchaseRequestOne({ requestId: item.id })
-    message.success(t('合并成功'))
+    message.success('合并成功')
     // 刷新列表
     await getList()
   } catch (e) {
@@ -677,7 +708,7 @@ const handleSubmitAudit = async (ids: number[]) => {
   try {
     await message.exportConfirm('是否确认提交审核？')
     await PurchaseRequestApi.submitPurchaseAudit(ids)
-    message.success(t('提交审核成功'))
+    message.success('提交审核成功')
     // 刷新列表
     await getList()
   } catch (e) {
@@ -689,13 +720,8 @@ const handleSubmitAuditBatch = async () => {
   try {
     await message.exportConfirm('是否确认提交审核？')
 
-    /**
-     * 整单和分行都统一做去重处理
-     */
-    const selectList: any = selectionList.value
-    let ids: any = Array.from(new Set(selectList.map((item) => item.id)))
-
-    console.log(selectList, 'selectList')
+    // 整单和分行都统一做去重处理 都是取申请单id
+    let ids: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
 
     // // 整单的时候用id做标记取出items里面所有的id
     // if (wholeOrderEnable.value) {
@@ -713,13 +739,54 @@ const handleSubmitAuditBatch = async () => {
     // }
 
     await PurchaseRequestApi.submitPurchaseAudit(ids)
-    message.success(t('提交审核成功'))
+    message.success('提交审核成功')
     // 刷新列表
     await getList()
   } catch (e) {
     console.log('提交审核报错', e)
   }
 }
+
+const handleUpdateStatusEnableBatch = async (enable: boolean) => {
+  // wholeOrderEnable.value selectionList.value
+  /**
+      1、开启关闭 前置校验
+      2、关闭前置校验
+      3、刷新后筛选项清空
+   */
+  // 前端无法穷尽所有情况，所以取后端校验作为告警信息
+
+  try {
+    const text = enable ? '开启' : '关闭'
+    await message.exportConfirm('是否确认' + text)
+    const itemIds = getItemsId()
+
+    await PurchaseRequestApi.updatePurchaseRequestStatusEnable({ itemIds, enable })
+    message.success(text + '成功')
+    // 刷新列表
+    await getList()
+  } catch (e) {
+    console.log('开启关闭报错', e)
+  }
+}
+
+const enableBtnDisabled = computed(() => {
+  if (!selectionList.value?.length) return true
+  if (wholeOrderEnable.value) {
+    return selectionList.value.every((item: any) => item.offStatus * 1 === 1)
+  } else {
+    return selectionList.value.every((item: any) => item.rowOffStatus * 1 === 1)
+  }
+})
+
+const closeBtnDisabled = computed(() => {
+  if (!selectionList.value?.length) return true
+  if (wholeOrderEnable.value) {
+    return selectionList.value.every((item: any) => item.offStatus * 1 !== 1)
+  } else {
+    return selectionList.value.every((item: any) => item.rowOffStatus * 1 !== 1)
+  }
+})
 
 /** 初始化 **/
 onMounted(async () => {
