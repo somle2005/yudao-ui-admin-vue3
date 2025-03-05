@@ -427,7 +427,8 @@ const exportLoading = ref(false) // 导出的加载中
 const productList = ref<ProductVO[]>([]) // 产品列表
 // const supplierList = ref<SupplierVO[]>([]) // 供应商列表
 const userList = ref<UserVO[]>([]) // 用户列表
-
+/** 选中操作 */
+const selectionList = ref<PurchaseRequestVO[]>([])
 
 
 /** 查询列表 */
@@ -586,8 +587,7 @@ const handleExport = async () => {
   }
 }
 
-/** 选中操作 */
-const selectionList = ref<PurchaseRequestVO[]>([])
+
 const handleSelectionChange = (rows: PurchaseRequestVO[]) => {
   selectionList.value = rows
 }
