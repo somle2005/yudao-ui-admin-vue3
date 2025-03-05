@@ -53,16 +53,19 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
  */
 
 const mergeDetail = (formData, detail, formType, smFormRef) => {
-  for (const key in detail) {
-    formData[key] = detail[key]
-  }
+
   // formData.requestTime = formatTime(formData.requestTime)
   formData.items.forEach((item) => {
+    // 批准数量默认值取申请数量
     if (formType === 'audit') {
       item.approveCount = item.count
     }
     item.taxPercent = item.taxPercent * 100
   })
+
+  for (const key in detail) {
+    formData[key] = detail[key]
+  }
 
   nextTick(() => {
     const modelValue = smFormRef.value.getFormData()
@@ -71,6 +74,20 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
     }
   })
   // modelValue.requestTime = dayjs(1739016534000).format('YYYY-MM-DD HH:mm:ss')
+}
+
+// 合并 合并采购时列表勾选中传递的items数据
+const mergeSelectItemsData = (formData,data, smFormRef) => {
+
+  data.items.forEach((item) => {
+    item.taxPercent = item.taxPercent * 100
+  })
+  formData.items = data.items
+  
+  // nextTick(() => {
+  //   const modelValue = smFormRef.value.getFormData()
+  //   modelValue.items = formData.items
+  // })
 }
 
 export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) => {
@@ -93,146 +110,156 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
   const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
 
-  const requestFormOptions = ref<FormOptions[]>([
-    {
-      type: 'date-picker',
-      placeholder: '请选择单据日期',
-      prop: 'requestTime',
-      label: '单据日期',
-      attrs: {
-        clearable: true,
-        type: 'date',
-        // 'value-format': 'YYYY-MM-DD HH:mm:ss',
-        'value-format': 'x',
-        class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
+  const requestFormOptions = ref<FormOptions[]>([])
+  const createRequestFormOptions = () => {
+    return [
+      {
+        type: 'date-picker',
+        placeholder: '请选择单据日期',
+        prop: 'requestTime',
+        label: '单据日期',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          // 'value-format': 'YYYY-MM-DD HH:mm:ss',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        },
+        rules: [
+          {
+            required: true,
+            message: '单据日期不能为空',
+            trigger: 'blur'
+          }
+        ]
       },
-      rules: [
-        {
-          required: true,
-          message: '单据日期不能为空',
-          trigger: 'blur'
-        }
-      ]
-    },
-    {
-      type: 'select',
-      placeholder: '请选择申请人',
-      prop: 'applicantId',
-      label: '申请人',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
+      {
+        type: 'select',
+        placeholder: '请选择申请人',
+        prop: 'applicantId',
+        label: '申请人',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        rules: [
+          {
+            required: true,
+            message: '申请人不能为空',
+            trigger: 'blur'
+          }
+        ],
+        children: applicantList
       },
-      rules: [
-        {
-          required: true,
-          message: '申请人不能为空',
-          trigger: 'blur'
-        }
-      ],
-      children: applicantList
-    },
-    {
-      type: 'tree-select',
-      placeholder: '请选择申请部门',
-      prop: 'applicationDeptId',
-      label: '申请部门',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        data: deptList,
-        props: defaultProps,
-        'check-strictly': true,
-        'node-key': 'id'
-        // style: {
-        //   width: '100%'
-        // }
+      {
+        type: 'tree-select',
+        placeholder: '请选择申请部门',
+        prop: 'applicationDeptId',
+        label: '申请部门',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          data: deptList,
+          props: defaultProps,
+          'check-strictly': true,
+          'node-key': 'id'
+          // style: {
+          //   width: '100%'
+          // }
+        },
+        rules: [
+          {
+            required: true,
+            message: '申请部门不能为空',
+            trigger: 'blur'
+          }
+        ]
       },
-      rules: [
-        {
-          required: true,
-          message: '申请部门不能为空',
-          trigger: 'blur'
-        }
-      ]
-    },
 
-    {
-      type: 'select',
-      placeholder: '请选择供应商产品',
-      prop: 'supplierId',
-      label: '供应商产品',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
+      {
+        type: 'select',
+        placeholder: '请选择供应商产品',
+        prop: 'supplierId',
+        label: '供应商产品',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        rules: [
+          {
+            required: true,
+            message: '供应商产品不能为空',
+            trigger: 'blur'
+          }
+        ],
+        children: supplierProductList
+      },
+
+      // {
+      //   type: 'select',
+      //   value: '',
+      //   placeholder: '请选择产品',
+      //   prop: 'productId',
+      //   label: '产品',
+      //   attrs: {
+      //     clearable: true,
+      //     filterable: true,
+      //     style: {
+      //       width: '100%'
+      //     },
+      //     onChange: (value) => {
+      //       const productItem = productList1.value.find((item: any) => item.value === value)
+      //       if (productItem) {
+      //         const formData = getFormData()
+      //         formData.barCode = productItem.barCode
+      //         // const modelVal = smFormRef.value.getFormData()
+      //         // modelVal.barCode = productItem.barCode
+      //       }
+      //     }
+      //   },
+      //   rules: [
+      //     {
+      //       required: true,
+      //       message: '产品不能为空',
+      //       trigger: 'blur'
+      //     }
+      //   ],
+      //   children: productList1
+      // },
+
+      {
+        type: 'input',
+        label: '收货地址',
+        prop: 'deliveryDelivery',
+        placeholder: '请输入收货地址',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
         }
       },
-      children: supplierProductList
-    },
-
-    // {
-    //   type: 'select',
-    //   value: '',
-    //   placeholder: '请选择产品',
-    //   prop: 'productId',
-    //   label: '产品',
-    //   attrs: {
-    //     clearable: true,
-    //     filterable: true,
-    //     style: {
-    //       width: '100%'
-    //     },
-    //     onChange: (value) => {
-    //       const productItem = productList1.value.find((item: any) => item.value === value)
-    //       if (productItem) {
-    //         const formData = getFormData()
-    //         formData.barCode = productItem.barCode
-    //         // const modelVal = smFormRef.value.getFormData()
-    //         // modelVal.barCode = productItem.barCode
-    //       }
-    //     }
-    //   },
-    //   rules: [
-    //     {
-    //       required: true,
-    //       message: '产品不能为空',
-    //       trigger: 'blur'
-    //     }
-    //   ],
-    //   children: productList1
-    // },
-
-    {
-      type: 'input',
-      label: '收货地址',
-      prop: 'deliveryDelivery',
-      placeholder: '请输入收货地址',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
+      {
+        colConfig: { span: 24 },
+        slot: 'items',
+        formItemConfig: {
+          class: 'purchase-request-items'
+        }
       }
-    },
-    {
-      colConfig: { span: 24 },
-      slot: 'items',
-      formItemConfig: {
-        class: 'purchase-request-items'
-      }
-    }
-  ])
+    ] as FormOptions[]
+  }
+  requestFormOptions.value = createRequestFormOptions()
 
   const auditType = computed(() => formType.value === 'audit')
-  const auditFormOptions = ref<FormOptions[]>([])
-  const createAuditFormOptions = (requestFormOptions) => {
-    const index = requestFormOptions.value.length - 1
+  const createAuditFormOptions = (requestFormOptions, auditType) => {
+    const index = requestFormOptions.length - 1
     const obj: any = {
       type: 'input',
       label: '审核意见',
@@ -243,27 +270,87 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         clearable: true
       }
     }
-    requestFormOptions.value.splice(index, 0, obj)
-    requestFormOptions.value.forEach((item) => {
+    requestFormOptions.splice(index, 0, obj)
+    requestFormOptions.forEach((item) => {
       if (item.prop && item.prop !== 'reviewComment') {
         item.attrs!.disabled = auditType
       }
     })
-    return requestFormOptions.value
+    return requestFormOptions
   }
-  auditFormOptions.value = createAuditFormOptions(cloneDeep(requestFormOptions))
+
+  const createMergeFormOptions = () => {
+    return [
+      {
+        type: 'date-picker',
+        placeholder: '请选择期望采购时间',
+        prop: 'orderTime',
+        label: '期望采购时间',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        },
+        rules: [
+          {
+            required: true,
+            message: '期望采购时间不能为空',
+            trigger: 'blur'
+          }
+        ]
+      },
+      {
+        type: 'select',
+        placeholder: '请选择供应商',
+        prop: 'supplierId',
+        label: '供应商',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        rules: [
+          {
+            required: true,
+            message: '供应商不能为空',
+            trigger: 'blur'
+          }
+        ],
+        children: supplierProductList
+      },
+      {
+        colConfig: { span: 24 },
+        slot: 'items',
+        formItemConfig: {
+          class: 'purchase-request-items'
+        }
+      }
+    ] as FormOptions[]
+  }
 
   // 处理audit的逻辑
-  const operateAudit = () => {
-    if (formType.value === 'audit') {
-      requestFormOptions.value = auditFormOptions.value
+  const operateAudit = (type) => {
+    if (type === 'audit') {
+      requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
+    } else if (type === 'merge') {
+      requestFormOptions.value = createMergeFormOptions()
+    } else {
+      requestFormOptions.value = createRequestFormOptions()
     }
   }
 
   const auditBtnType = ref(AUDIT_TYPE.reject)
 
-  const openForm = async (type: string, id?: number) => {
+  const openForm = async (type: string, id?: number, data?: any) => {
     getResetFormData()
+    operateAudit(type)
+
     formType.value = type
     dialogTitle.value = t('action.' + type)
     dialogVisible.value = true
@@ -272,7 +359,14 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     getSupplierProductList(supplierProductList)
     getDeptTree(deptList)
 
-    operateAudit()
+    
+
+    if (type === 'merge') {
+      dialogTitle.value = '合并采购'
+      const formData = getFormData()
+      mergeSelectItemsData(formData,data, smFormRef)
+      return
+    }
 
     // 修改时，设置数据
     if (id) {
@@ -311,7 +405,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       } else if (formType.value === 'audit') {
         await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
           requestId: data.id,
-          reviewed: true,   
+          reviewed: true,
           pass: auditBtnType.value === AUDIT_TYPE.agree,
           items: data.items.map((item) => {
             return {

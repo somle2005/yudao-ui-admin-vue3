@@ -90,7 +90,7 @@
       </el-table-column>
 
       <el-table-column
-        v-if="disabled"
+        v-if="showAudit"
         label="批准数量"
         prop="approveCount"
         fixed="right"
@@ -99,6 +99,7 @@
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.approveCount`" class="mb-0px!">
             <el-input-number
+              :disabled="mergeDisabled"
               v-model="row.approveCount"
               controls-position="right"
               :min="0"
@@ -243,7 +244,10 @@ const props = defineProps({
   }
 })
 
-const disabled = computed(() => props.formType === 'audit')
+const disabled = computed(() => props.formType === 'audit' || props.formType === 'merge')
+// 批准数量在merge下要禁用
+const mergeDisabled = computed(() => props.formType === 'merge')
+const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')
 
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
@@ -344,9 +348,9 @@ const handleAdd = () => {
   const row = {
     id: undefined,
     productId: undefined,
-    count: undefined,
+    count: undefined, // 申请数量
+    approveCount: undefined, // 批准数量
     warehouseId: undefined,
-    // approveCount: undefined,
     actTaxPrice: undefined,
     referenceUnitPrice: undefined,
     taxPrice: undefined,
@@ -387,8 +391,6 @@ const setStockCount = async (row: any) => {
 const validate = () => {
   return formRef.value.validate()
 }
-
-
 
 const warehouseList = getWarehouseList()
 

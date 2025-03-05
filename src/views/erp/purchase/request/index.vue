@@ -149,7 +149,7 @@
           type="primary"
           @click="handleUpdateStatusEnable(scope.row, true)"
           v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.rowOrderStatus !== 1"
+          v-if="scope.row.rowOffStatus !== 1"
         >
           开启
         </el-button>
@@ -159,7 +159,7 @@
           type="danger"
           @click="handleUpdateStatusEnable(scope.row, false)"
           v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.rowOrderStatus === 1"
+          v-if="scope.row.rowOffStatus === 1"
         >
           关闭
         </el-button>
@@ -168,7 +168,7 @@
           link
           @click="mergePurchaseOne(scope.row)"
           v-hasPermi="['erp:purchase-request:merge']"
-          v-if="scope.row.orderStatus !== 1"
+          v-if="scope.row.rowOrderStatus !== 1"
         >
           采购
         </el-button>
@@ -475,8 +475,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, data?: any) => {
+  formRef.value.open(type, id, data)
 }
 
 /** 删除按钮操作 */
@@ -584,31 +584,65 @@ const searchFormOptions = useSearchForm(handleQuery)
 const mergeLoading = ref(false)
 const mergePurchase = async () => {
   // 5已审核
-  const hasAudit = selectionList.value.some((item: any) => item.status === 5)
+  const auditType = 5
+  const hasAudit = selectionList.value.some((item: any) => item.status === auditType)
   if (!hasAudit) {
     message.error('选中行未包含审核单据，请检查')
     return
   }
-  
 
-  try {
-    // 导出的二次确认
-    await message.exportConfirm('是否确认合并采购申请单？')
-    // 发起导出
-    mergeLoading.value = true
-    const itemIds = selectionList.value.map((item) => item.id)
-    await PurchaseRequestApi.mergePurchaseRequest({
-      itemIds
+  let items: any = []
+  // 如果不是审核状态的要进行剔除
+  const selectList: any = selectionList.value.filter((item: any) => item.status === auditType)
+  // 整单数据
+  if (wholeOrderEnable.value) {
+    selectList.forEach((item) => {
+      if (!item?.items?.length) return
+      item.items.forEach((item) => {
+        items.push(item)
+      })
     })
-    message.success(t('合并成功'))
-    // 刷新列表
-    await getList()
-    selectionList.value = selectionList.value.filter((item) => !itemIds.includes(item.id))
-    // download.excel(data, '采购申请.xls')
-  } catch {
-  } finally {
-    mergeLoading.value = false
   }
+  // 分行数据 需要去重行id相同的
+  else {
+    const map = {}
+    selectList.forEach((item) => {
+      if (!item?.items?.length) return
+      item.items.forEach((item) => {
+        if (!map[item.id]) {
+          map[item.id] = item
+        }
+      })
+    })
+    for (let key in map) {
+      items.push(map[key])
+    }
+  }
+ 
+  const data = { items }
+
+  openForm('merge', 1, data)
+
+  // 成功之后注意刷新列表弹窗成功-清空选中数据
+
+  // try {
+  //   // 导出的二次确认
+  //   await message.exportConfirm('是否确认合并采购申请单？')
+  //   // 发起导出
+  //   mergeLoading.value = true
+  //   const itemIds = selectionList.value.map((item) => item.id)
+  //   await PurchaseRequestApi.mergePurchaseRequest({
+  //     itemIds
+  //   })
+  //   message.success(t('合并成功'))
+  //   // 刷新列表
+  //   await getList()
+  //   selectionList.value = selectionList.value.filter((item) => !itemIds.includes(item.id))
+  //   // download.excel(data, '采购申请.xls')
+  // } catch {
+  // } finally {
+  //   mergeLoading.value = false
+  // }
 }
 
 const mergePurchaseOne = async (item: any) => {
@@ -639,22 +673,28 @@ const handleSubmitAuditBatch = async () => {
   try {
     await message.exportConfirm('是否确认提交审核？')
 
+    /**
+     * 整单和分行都统一做去重处理
+     */
     const selectList: any = selectionList.value
-    let ids: any = []
-    // 整单的时候用id做标记取出items里面所有的id
-    if (wholeOrderEnable.value) {
-      selectList.forEach((item) => {
-        if (!item?.items?.length) return
-        item.items.forEach((item) => {
-          ids.push(item.id)
-        })
-      })
-    } else {
-      // 分行的时候用purchaseOrderId做标记取出id
-      selectList.forEach((item) => {
-        ids.push(item.purchaseOrderId)
-      })
-    }
+    let ids: any = Array.from(new Set(selectList.map((item) => item.id)))
+
+    console.log(selectList, 'selectList')
+
+    // // 整单的时候用id做标记取出items里面所有的id
+    // if (wholeOrderEnable.value) {
+    //   selectList.forEach((item) => {
+    //     if (!item?.items?.length) return
+    //     item.items.forEach((item) => {
+    //       ids.push(item.id)
+    //     })
+    //   })
+    // } else {
+    //   // 分行的时候用purchaseOrderId做标记取出id
+    //   selectList.forEach((item) => {
+    //     ids.push(item.purchaseOrderId)
+    //   })
+    // }
 
     await PurchaseRequestApi.submitPurchaseAudit(ids)
     message.success(t('提交审核成功'))

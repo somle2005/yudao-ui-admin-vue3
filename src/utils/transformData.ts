@@ -25,9 +25,9 @@ export const mergeItemsToList = (list: any[], mapKey = {}) => {
       arr.push(item)
     }
   })
-  arr.forEach((item: any) => {
-    item.items = undefined
-  })
+  // arr.forEach((item: any) => {
+  //   item.items = undefined
+  // })
   return arr
 }
 /**
