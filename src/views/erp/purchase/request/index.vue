@@ -33,6 +33,7 @@
 
         <!-- v-hasPermi="['erp:purchase-request:merge']" -->
         <el-button
+          :disabled="disabledBtn"
           type="primary"
           plain
           @click="mergePurchase"
@@ -43,6 +44,7 @@
         </el-button>
 
         <el-button
+          :disabled="disabledBtn"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -52,7 +54,7 @@
         </el-button>
 
         <el-button
-          :disabled="enableBtnDisabled"
+          :disabled="disabledBtn"
           type="primary"
           plain
           @click="handleUpdateStatusEnableBatch(true)"
@@ -62,7 +64,7 @@
         </el-button>
 
         <el-button
-          :disabled="closeBtnDisabled"
+          :disabled="disabledBtn"
           plain
           @click="handleUpdateStatusEnableBatch(false)"
           v-hasPermi="['erp:purchase-request:enable']"
@@ -748,14 +750,7 @@ const handleSubmitAuditBatch = async () => {
 }
 
 const handleUpdateStatusEnableBatch = async (enable: boolean) => {
-  // wholeOrderEnable.value selectionList.value
-  /**
-      1、开启关闭 前置校验
-      2、关闭前置校验
-      3、刷新后筛选项清空
-   */
   // 前端无法穷尽所有情况，所以取后端校验作为告警信息
-
   try {
     const text = enable ? '开启' : '关闭'
     await message.exportConfirm('是否确认' + text)
@@ -770,24 +765,25 @@ const handleUpdateStatusEnableBatch = async (enable: boolean) => {
   }
 }
 
-const enableBtnDisabled = computed(() => {
-  if (!selectionList.value?.length) return true
-  if (wholeOrderEnable.value) {
-    return selectionList.value.every((item: any) => item.offStatus * 1 === 1)
-  } else {
-    return selectionList.value.every((item: any) => item.rowOffStatus * 1 === 1)
-  }
-})
+// const enableBtnDisabled = computed(() => {
+//   if (!selectionList.value?.length) return true
+//   if (wholeOrderEnable.value) {
+//     return selectionList.value.every((item: any) => item.offStatus * 1 === 1)
+//   } else {
+//     return selectionList.value.every((item: any) => item.rowOffStatus * 1 === 1)
+//   }
+// })
 
-const closeBtnDisabled = computed(() => {
-  if (!selectionList.value?.length) return true
-  if (wholeOrderEnable.value) {
-    return selectionList.value.every((item: any) => item.offStatus * 1 !== 1)
-  } else {
-    return selectionList.value.every((item: any) => item.rowOffStatus * 1 !== 1)
-  }
-})
+// const closeBtnDisabled = computed(() => {
+//   if (!selectionList.value?.length) return true
+//   if (wholeOrderEnable.value) {
+//     return selectionList.value.every((item: any) => item.offStatus * 1 !== 1)
+//   } else {
+//     return selectionList.value.every((item: any) => item.rowOffStatus * 1 !== 1)
+//   }
+// })
 
+const disabledBtn = computed(() => selectionList.value.length === 0)
 /** 初始化 **/
 onMounted(async () => {
   await getList()

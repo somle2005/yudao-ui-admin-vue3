@@ -60,21 +60,28 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="条码" min-width="150">
-        <template #default="{ row }">
-          <el-form-item class="mb-0px!">
-            <el-input disabled v-model="row.productBarCode" />
+    -->
+
+      <el-table-column v-if="mergeDisabled" label="下单数量" prop="orderQuantity" min-width="140">
+        <template #default="{ row, $index }">
+          <el-form-item
+            :prop="`${$index}.orderQuantity`"
+            :rules="formRules.orderQuantity"
+            class="mb-0px!"
+          >
+            <el-input-number
+              v-model="row.orderQuantity"
+              controls-position="right"
+              :min="0"
+              :max="row.approveCount"
+              class="!w-100%"
+              @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
+            />
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="单位" min-width="80">
-        <template #default="{ row }">
-          <el-form-item class="mb-0px!">
-            <el-input disabled v-model="row.productUnitName" />
-          </el-form-item>
-        </template>
-      </el-table-column> -->
-      <el-table-column label="申请数量" prop="count" fixed="right" min-width="140">
+
+      <el-table-column label="申请数量" prop="count" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
             <!-- @change="(val) => (row.approveCount = val)" -->
@@ -89,27 +96,23 @@
         </template>
       </el-table-column>
 
-      <el-table-column
-        v-if="showAudit"
-        label="批准数量"
-        prop="approveCount"
-        fixed="right"
-        min-width="140"
-      >
+      <el-table-column v-if="showAudit" label="批准数量" prop="approveCount" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.approveCount`" class="mb-0px!">
             <el-input-number
               :disabled="mergeDisabled"
               v-model="row.approveCount"
               controls-position="right"
-              :min="0"
+              :min="1"
+              :max="row.count"
               class="!w-100%"
+              @change="(val) => changeValLimit(row, 'approveCount', 1, val)"
             />
           </el-form-item>
         </template>
       </el-table-column>
 
-      <el-table-column label="含税单价" prop="actTaxPrice" fixed="right" min-width="140">
+      <el-table-column label="含税单价" prop="actTaxPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
             <el-input-number
@@ -124,7 +127,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="参考单价" prop="referenceUnitPrice" fixed="right" min-width="140">
+      <el-table-column label="参考单价" prop="referenceUnitPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
             <el-input-number
@@ -139,7 +142,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="税率%" prop="taxPercent" fixed="right" min-width="140">
+      <el-table-column label="税率%" prop="taxPercent" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
             <el-input-number
@@ -154,7 +157,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="税额" prop="taxPrice" fixed="right" min-width="140">
+      <el-table-column label="税额" prop="taxPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
             {{ row.taxPrice }}
@@ -203,6 +206,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
+import { changeValLimit } from '@/utils/high/index'
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -253,7 +257,8 @@ const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
-  count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }]
+  count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
+  orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = ref<ProductVO[]>([]) // 产品列表
@@ -355,7 +360,8 @@ const handleAdd = () => {
     referenceUnitPrice: undefined,
     taxPrice: undefined,
     taxPercent: undefined,
-    allAmount: undefined
+    allAmount: undefined,
+    orderQuantity: undefined // 下单数量
     // remark: '',
   }
   formData.value.push(row)

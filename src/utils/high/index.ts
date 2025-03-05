@@ -14,3 +14,9 @@ export const insertSearchVal = (data: any) => {
   const inputSearchDB = createDBFn(inputSearch, 1000)
   return inputSearchDB
 }
+
+export const changeValLimit = (row: any, prop: string, min: number, val: any) => {
+  if (!val) {
+    row[prop] = min
+  }
+}

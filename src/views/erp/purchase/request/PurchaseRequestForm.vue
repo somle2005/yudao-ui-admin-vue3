@@ -25,22 +25,30 @@
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="申请产品清单" name="item">
             <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" />
-            <!-- <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" /> -->
           </el-tab-pane>
         </el-tabs>
       </template>
     </SmForm>
     <div class="moreBtnList">
       <el-button @click="dialogVisible = false"> 取消</el-button>
+
       <el-button
-        v-if="auditType"
-        type="danger"
+        v-if="!auditType"
+        type="primary"
         :disabled="formLoading"
-        @click="submitFormDB(AUDIT_TYPE.reject)"
+        @click="submitFormDB(AUDIT_TYPE.agree)"
       >
-        不同意</el-button
+        确定</el-button
       >
-      <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)"> 确定</el-button>
+
+      <template v-if="auditType">
+        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+          不同意</el-button
+        >
+        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
+          同意</el-button
+        >
+      </template>
     </div>
   </Dialog>
 </template>
@@ -95,7 +103,6 @@ let {
 const changeAuditBtnType = (type) => {
   auditBtnType.value = type
   submitForm()
-  console.log('handleQuery')
 }
 const submitFormDB = createDBFn(changeAuditBtnType)
 onMounted(() => {})

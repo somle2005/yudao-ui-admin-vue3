@@ -53,7 +53,9 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
  */
 
 const mergeDetail = (formData, detail, formType, smFormRef) => {
-
+  for (const key in detail) {
+    formData[key] = detail[key]
+  }
   // formData.requestTime = formatTime(formData.requestTime)
   formData.items.forEach((item) => {
     // 批准数量默认值取申请数量
@@ -62,10 +64,6 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
     }
     item.taxPercent = item.taxPercent * 100
   })
-
-  for (const key in detail) {
-    formData[key] = detail[key]
-  }
 
   nextTick(() => {
     const modelValue = smFormRef.value.getFormData()
@@ -77,13 +75,17 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
 }
 
 // 合并 合并采购时列表勾选中传递的items数据
-const mergeSelectItemsData = (formData,data, smFormRef) => {
-
+const mergeSelectItemsData = (formData, data, smFormRef) => {
   data.items.forEach((item) => {
     item.taxPercent = item.taxPercent * 100
   })
   formData.items = data.items
-  
+
+  formData.items.forEach((item) => {
+    // 默认下单数量等于批准数量
+    item.orderQuantity = item.approveCount
+  })
+
   // nextTick(() => {
   //   const modelValue = smFormRef.value.getFormData()
   //   modelValue.items = formData.items
@@ -258,8 +260,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   requestFormOptions.value = createRequestFormOptions()
 
   const auditType = computed(() => formType.value === 'audit')
-  const createAuditFormOptions = (requestFormOptions, auditType) => {
-    const index = requestFormOptions.length - 1
+  const createAuditFormOptions = (formOptions, auditType) => {
+    const index = formOptions.length - 1
     const obj: any = {
       type: 'input',
       label: '审核意见',
@@ -270,13 +272,13 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         clearable: true
       }
     }
-    requestFormOptions.splice(index, 0, obj)
-    requestFormOptions.forEach((item) => {
+    formOptions.splice(index, 0, obj)
+    formOptions.forEach((item) => {
       if (item.prop && item.prop !== 'reviewComment') {
         item.attrs!.disabled = auditType
       }
     })
-    return requestFormOptions
+    return formOptions
   }
 
   const createMergeFormOptions = () => {
@@ -334,15 +336,42 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     ] as FormOptions[]
   }
 
+  const updateFormOptions = (formOptions) => {
+    const index = formOptions.length - 1
+    const obj: any = {
+      type: 'input',
+      label: '审核意见',
+      prop: 'reviewComment',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      }
+    }
+    formOptions.splice(index, 0, obj)
+    return formOptions
+  }
+
   // 处理audit的逻辑
   const operateAudit = (type) => {
-    if (type === 'audit') {
-      requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
-    } else if (type === 'merge') {
-      requestFormOptions.value = createMergeFormOptions()
-    } else {
-      requestFormOptions.value = createRequestFormOptions()
+    const map = {
+      audit: () => {
+        requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
+      },
+      merge: () => {
+        requestFormOptions.value = createMergeFormOptions()
+      },
+      update: () => {
+        requestFormOptions.value = updateFormOptions(createRequestFormOptions())
+      }
     }
+    const fn = map[type]
+    if (fn) {
+      fn()
+      return
+    }
+
+    requestFormOptions.value = createRequestFormOptions()
   }
 
   const auditBtnType = ref(AUDIT_TYPE.reject)
@@ -359,12 +388,10 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     getSupplierProductList(supplierProductList)
     getDeptTree(deptList)
 
-    
-
     if (type === 'merge') {
       dialogTitle.value = '合并采购'
       const formData = getFormData()
-      mergeSelectItemsData(formData,data, smFormRef)
+      mergeSelectItemsData(formData, data, smFormRef)
       return
     }
 
