@@ -149,7 +149,7 @@
           type="primary"
           @click="handleUpdateStatusEnable(scope.row, true)"
           v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.rowOffStatus !== 1"
+          v-if="scope.row.rowOffStatus * 1 !== 1"
         >
           开启
         </el-button>
@@ -159,11 +159,11 @@
           type="danger"
           @click="handleUpdateStatusEnable(scope.row, false)"
           v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.rowOffStatus === 1"
+          v-if="scope.row.rowOffStatus * 1 === 1"
         >
           关闭
         </el-button>
-        <el-button
+        <!-- <el-button
           type="primary"
           link
           @click="mergePurchaseOne(scope.row)"
@@ -171,7 +171,7 @@
           v-if="scope.row.rowOrderStatus !== 1"
         >
           采购
-        </el-button>
+        </el-button> -->
 
         <!-- <el-button
           link
@@ -618,7 +618,7 @@ const mergePurchase = async () => {
       items.push(map[key])
     }
   }
- 
+
   const data = { items }
 
   openForm('merge', 1, data)
