@@ -10,7 +10,7 @@
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
-      <el-table-column label="产品" min-width="180">
+      <el-table-column label="产品编号" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <el-select
@@ -18,17 +18,23 @@
               clearable
               filterable
               @change="onChangeProduct($event, row)"
-              placeholder="请选择产品"
+              placeholder="请选择产品编号"
               :disabled="disabled"
             >
               <el-option
                 v-for="item in productList"
                 :key="item.id"
-                :label="item.name"
+                :label="item.barCode"
                 :value="item.id"
               />
             </el-select>
           </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="产品名称" min-width="180">
+        <template #default="{ row }">
+          <el-text>{{ row.productName }}</el-text>
         </template>
       </el-table-column>
 
@@ -374,12 +380,14 @@ const handleDelete = (index: number) => {
 
 /** 处理产品变更 */
 const onChangeProduct = (productId, row) => {
-  // const product:any = productList.value.find((item) => item.id === productId)
-  // if (product) {
-  //   row.productUnitName = product.unitName
-  //   row.productBarCode = product.barCode
-  //   row.productPrice = product.purchasePrice
-  // }
+  const product:any = productList.value.find((item) => item.id === productId)
+  console.log(product,'选中的产品')
+  if (product) {
+    row.productName = product.name
+    // row.productUnitName = product.unitName
+    // row.productBarCode = product.barCode
+    // row.productPrice = product.purchasePrice
+  }
   // // 加载库存
   // setStockCount(row)
 }
