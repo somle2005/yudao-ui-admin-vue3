@@ -230,8 +230,10 @@ export enum DICT_TYPE {
   REPORT_MAP = 'report_map', // 报表地图
   ERP_PAYMENT_STATUS = 'erp_payment_status', // 采购支付状态
   ERP_STORAGE_STATUS = 'erp_storage_status', // 采购入库状态
+  ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
+  ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
+  ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
 
-  
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台

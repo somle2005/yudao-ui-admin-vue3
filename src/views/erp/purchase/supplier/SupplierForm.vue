@@ -10,32 +10,32 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="名称" prop="name">
-            <el-input v-model="formData.name" placeholder="请输入名称" />
+            <el-input v-model.trim="formData.name" placeholder="请输入名称" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="联系人" prop="contact">
-            <el-input v-model="formData.contact" placeholder="请输入联系人" />
+            <el-input v-model.trim="formData.contact" placeholder="请输入联系人" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="手机号码" prop="mobile">
-            <el-input v-model="formData.mobile" placeholder="请输入手机号码" />
+            <el-input v-model.trim="formData.mobile" placeholder="请输入手机号码" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="联系电话" prop="telephone">
-            <el-input v-model="formData.telephone" placeholder="请输入联系电话" />
+            <el-input v-model.trim="formData.telephone" placeholder="请输入联系电话" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="电子邮箱" prop="email">
-            <el-input v-model="formData.email" placeholder="请输入电子邮箱" />
+            <el-input v-model.trim="formData.email" placeholder="请输入电子邮箱" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="传真" prop="fax">
-            <el-input v-model="formData.fax" placeholder="请输入传真" />
+            <el-input v-model.trim="formData.fax" placeholder="请输入传真" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -63,7 +63,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="纳税人识别号" prop="taxNo">
-            <el-input v-model="formData.taxNo" placeholder="请输入纳税人识别号" />
+            <el-input v-model.trim="formData.taxNo" placeholder="请输入纳税人识别号" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -79,22 +79,64 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="开户行" prop="bankName">
-            <el-input v-model="formData.bankName" placeholder="请输入开户行" />
+            <el-input v-model.trim="formData.bankName" placeholder="请输入开户行" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="开户账号" prop="bankAccount">
-            <el-input v-model="formData.bankAccount" placeholder="请输入开户账号" />
+            <el-input v-model.trim="formData.bankAccount" placeholder="请输入开户账号" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="开户地址" prop="bankAddress">
-            <el-input v-model="formData.bankAddress" placeholder="请输入开户地址" />
+            <el-input v-model.trim="formData.bankAddress" placeholder="请输入开户地址" />
           </el-form-item>
         </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="送达地址" prop="deliveryAddress">
+            <el-input v-model.trim="formData.deliveryAddress" placeholder="请输入送达地址" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="公司地址" prop="companyAddress">
+            <el-input v-model.trim="formData.companyAddress" placeholder="请输入公司地址" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="付款条款类型">
+            <el-select v-model="paymentTermsType" @change="changePaymentTermsType">
+              <el-option
+                v-for="item in paymentTermsTypes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="付款条款列表">
+            <el-select v-model="paymentTermsSelect" @change="changepaymentTermsSelect">
+              <el-option
+                v-for="item in paymentTermsList"
+                :key="item.label"
+                :label="item.label"
+                :value="item.label"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="付款条款" prop="paymentTerms">
+            <el-input v-model.trim="formData.paymentTerms" placeholder="请输入付款条款" />
+          </el-form-item>
+        </el-col>
+
         <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" v-model="formData.remark" placeholder="请输入备注" />
+            <el-input type="textarea" v-model.trim="formData.remark" placeholder="请输入备注" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -113,6 +155,8 @@ import { CommonStatusEnum } from '@/utils/constants'
 /** ERP  表单 */
 defineOptions({ name: 'SupplierForm' })
 
+
+
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
@@ -120,26 +164,38 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
-  id: undefined,
-  name: undefined,
-  contact: undefined,
-  mobile: undefined,
-  telephone: undefined,
-  email: undefined,
-  fax: undefined,
-  remark: undefined,
-  status: undefined,
-  sort: undefined,
-  taxNo: undefined,
-  taxPercent: undefined,
-  bankName: undefined,
-  bankAccount: undefined,
-  bankAddress: undefined
-})
+const formData: any = ref({})
+
+const initFormData = () => {
+  return {
+    id: undefined,
+    name: undefined,
+    contact: undefined,
+    mobile: undefined,
+    telephone: undefined,
+    email: undefined,
+    fax: undefined,
+    remark: undefined,
+    status: undefined,
+    sort: undefined,
+    taxNo: undefined,
+    taxPercent: undefined,
+    bankName: undefined,
+    bankAccount: undefined,
+    bankAddress: undefined,
+    paymentTerms: undefined,
+    deliveryAddress: undefined,
+    companyAddress: undefined
+  }
+}
+formData.value = initFormData()
+
 const formRules = reactive({
   name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }]
+  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
+  paymentTerms: [{ required: true, message: '付款条款不能为空', trigger: 'blur' }],
+  deliveryAddress: [{ required: true, message: '送达地址不能为空', trigger: 'blur' }],
+  companyAddress: [{ required: true, message: '公司地址不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 
@@ -187,23 +243,42 @@ const submitForm = async () => {
 
 /** 重置表单 */
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    name: undefined,
-    contact: undefined,
-    mobile: undefined,
-    telephone: undefined,
-    email: undefined,
-    fax: undefined,
-    remark: undefined,
-    status: CommonStatusEnum.ENABLE,
-    sort: undefined,
-    taxNo: undefined,
-    taxPercent: undefined,
-    bankName: undefined,
-    bankAccount: undefined,
-    bankAddress: undefined
-  }
+  // formData.value = {
+  //   id: undefined,
+  //   name: undefined,
+  //   contact: undefined,
+  //   mobile: undefined,
+  //   telephone: undefined,
+  //   email: undefined,
+  //   fax: undefined,
+  //   remark: undefined,
+  //   status: CommonStatusEnum.ENABLE,
+  //   sort: undefined,
+  //   taxNo: undefined,
+  //   taxPercent: undefined,
+  //   bankName: undefined,
+  //   bankAccount: undefined,
+  //   bankAddress: undefined
+  // }
+  formData.value = initFormData()
   formRef.value?.resetFields()
+}
+
+const paymentTermsType = ref('')
+const paymentTermsTypes = [
+  { label: '外币采购（英文）', value: 'ERP_SUPPLIER_ENGLISH' },
+  { label: '外币采购（中文）', value: 'ERP_SUPPLIER_CHINESE' },
+  { label: '人民币采购', value: 'ERP_SUPPLIER_RMB' }
+]
+
+const paymentTermsList: any = ref([])
+const paymentTermsSelect = ref('')
+
+const changePaymentTermsType = (value: string) => {
+  paymentTermsList.value = getIntDictOptions(DICT_TYPE[value])
+}
+
+const changepaymentTermsSelect = (value: string) => {
+  formData.value.paymentTerms = value
 }
 </script>
