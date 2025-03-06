@@ -67,9 +67,8 @@ export function createVitePlugins() {
       globs: ["src/components/**/**.{vue, md}", '!src/components/DiyEditor/components/mobile/**']
     }),
     EslintPlugin({
-      enable: false,
       cache: false,
-      // include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
+      include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
     }),
     VueI18nPlugin({
       runtimeOnly: true,
