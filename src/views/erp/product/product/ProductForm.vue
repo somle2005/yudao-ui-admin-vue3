@@ -391,7 +391,6 @@ import ProductKeyboardTray from '@/views/erp/product/product/ProductKeyboardTray
 import { getCustomRuleCategoryList } from '@/commonData/index'
 import { createDBFn } from '@/utils/decorate'
 
-
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
 
@@ -446,6 +445,20 @@ const initFormData = () => {
 }
 formData.value = initFormData()
 
+const barCodeValidator = (rule, value, callback) => {
+  if (!value && value !== 0) {
+    callback(new Error('SKU（编码）不能为空'))
+    return
+  }
+
+  const regex = /^[A-Z0-9-]+$/
+  if (regex.test(value)) {
+    callback()
+  } else {
+    callback(new Error('只能包含大写英文、数字和符号-'))
+  }
+}
+
 const formDisabled = computed(() => formType.value === 'detail') // 表单是否禁用
 
 const formRules = reactive({
@@ -460,7 +473,7 @@ const formRules = reactive({
   width: [{ required: true, message: '基础宽度（mm）不能为空', trigger: 'blur' }],
   length: [{ required: true, message: '基础长度（mm）不能为空', trigger: 'blur' }],
   height: [{ required: true, message: '基础高度（mm）不能为空', trigger: 'blur' }],
-  barCode: [{ required: true, message: 'SKU(编码)不能为空', trigger: 'blur' }],
+  barCode: [{ required: true, trigger: 'blur', validator: barCodeValidator }],
   color: [{ required: true, message: '颜色不能为空', trigger: 'blur' }],
   primaryImageUrl: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
 
@@ -580,8 +593,6 @@ const submitForm = async () => {
 }
 
 const submitFormDB = createDBFn(submitForm)
-
-
 
 /** 重置表单 */
 const resetForm = () => {
