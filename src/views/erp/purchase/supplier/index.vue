@@ -1,5 +1,5 @@
 <template>
-  <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" />
+  <!-- <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" /> -->
 
   <ContentWrap>
     <!-- 搜索工作栏 -->
@@ -62,47 +62,40 @@
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="联系人" align="center" prop="contact" />
-      <el-table-column label="手机号码" align="center" prop="mobile" />
-      <el-table-column label="联系电话" align="center" prop="telephone" />
-      <el-table-column label="电子邮箱" align="center" prop="email" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="状态" align="center" prop="status">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:supplier:update']"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:supplier:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页 -->
-    <Pagination
+  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
       :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
-    />
+    >
+      <template #status="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status || ''" />
+      </template>
+
+      <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:supplier:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['erp:supplier:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -111,10 +104,57 @@
 
 <script setup lang="ts">
 import { DICT_TYPE } from '@/utils/dict'
-import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import SupplierForm from './SupplierForm.vue'
+import { useTableData } from '@/components/SmTable/src/utils'
+
+const { tableOptions, transformTableOptions } = useTableData()
+
+const fieldMap = {
+  name: {
+    label: '名称',
+    slot: 'name',
+    wrap: true,
+    width: '250px'
+  },
+  contact: '联系人',
+  mobile: '手机号码',
+  telephone: '联系电话',
+  email: '电子邮箱',
+  status: {
+    label: '状态',
+    slot: 'status',
+    width: '200px'
+  },
+  deliveryAddress: '送达地址',
+  companyAddress: '公司地址',
+  paymentTerms: '付款条款',
+  remark: {
+    label: '备注',
+    slot: 'remark',
+    wrap: true,
+  },
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '200px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap)
+
+tableOptions.value.forEach((item: any) => {
+  const list = ['name']
+  if (list.includes(item.prop)) {
+    return
+  }
+  if (item.prop !== 'remark') {
+    item.width = '200px'
+  } else {
+    item.width = undefined
+  }
+})
 
 /** ERP 供应商 列表 */
 defineOptions({ name: 'ErpSupplier' })

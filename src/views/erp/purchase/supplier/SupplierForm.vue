@@ -95,12 +95,12 @@
 
         <el-col :span="12">
           <el-form-item label="送达地址" prop="deliveryAddress">
-            <el-input v-model.trim="formData.deliveryAddress" placeholder="请输入送达地址" />
+            <el-input maxlength="255" v-model.trim="formData.deliveryAddress" placeholder="请输入送达地址" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="公司地址" prop="companyAddress">
-            <el-input v-model.trim="formData.companyAddress" placeholder="请输入公司地址" />
+            <el-input maxlength="255" v-model.trim="formData.companyAddress" placeholder="请输入公司地址" />
           </el-form-item>
         </el-col>
 
