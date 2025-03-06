@@ -95,18 +95,31 @@
 
         <el-col :span="12">
           <el-form-item label="送达地址" prop="deliveryAddress">
-            <el-input maxlength="255" v-model.trim="formData.deliveryAddress" placeholder="请输入送达地址" />
+            <el-input
+              maxlength="255"
+              v-model.trim="formData.deliveryAddress"
+              placeholder="请输入送达地址"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="公司地址" prop="companyAddress">
-            <el-input maxlength="255" v-model.trim="formData.companyAddress" placeholder="请输入公司地址" />
+            <el-input
+              maxlength="255"
+              v-model.trim="formData.companyAddress"
+              placeholder="请输入公司地址"
+            />
           </el-form-item>
         </el-col>
 
         <el-col :span="12">
           <el-form-item label="付款条款类型">
-            <el-select v-model="paymentTermsType" @change="changePaymentTermsType">
+            <el-select
+              filterable
+              clearable
+              v-model="paymentTermsType"
+              @change="changePaymentTermsType"
+            >
               <el-option
                 v-for="item in paymentTermsTypes"
                 :key="item.value"
@@ -118,7 +131,12 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="付款条款列表">
-            <el-select v-model="paymentTermsSelect" @change="changepaymentTermsSelect">
+            <el-select
+              filterable
+              clearable
+              v-model="paymentTermsSelect"
+              @change="changepaymentTermsSelect"
+            >
               <el-option
                 v-for="item in paymentTermsList"
                 :key="item.label"
@@ -154,8 +172,6 @@ import { CommonStatusEnum } from '@/utils/constants'
 
 /** ERP  表单 */
 defineOptions({ name: 'SupplierForm' })
-
-
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -275,7 +291,13 @@ const paymentTermsList: any = ref([])
 const paymentTermsSelect = ref('')
 
 const changePaymentTermsType = (value: string) => {
-  paymentTermsList.value = getIntDictOptions(DICT_TYPE[value])
+  if (value) {
+    paymentTermsList.value = getIntDictOptions(DICT_TYPE[value])
+  } else {
+    paymentTermsList.value = []
+    paymentTermsSelect.value = ''
+    formData.value.paymentTerms = ''
+  }
 }
 
 const changepaymentTermsSelect = (value: string) => {
