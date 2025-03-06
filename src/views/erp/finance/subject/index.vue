@@ -260,9 +260,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
-// DICT_TYPE.COMMON_BOOLEAN_STATUS 开启状态是用这个吗 到时候再问问
 
-//  创建人创建时间放最后面 备注 ===
 const fieldMap = {
   name: '主体名称',
   status: {
@@ -311,7 +309,7 @@ tableOptions.value.forEach(item => {
   }
 })
 
-console.log(tableOptions.value,'tableOptions.value')
+
 
 /** Erp财务主体 列表 */
 defineOptions({ name: 'ErpFinanceSubject' })
