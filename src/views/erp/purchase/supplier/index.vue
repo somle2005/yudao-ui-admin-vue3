@@ -112,12 +112,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  name: {
-    label: '名称',
-    slot: 'name',
-    wrap: true,
-    width: '250px'
-  },
+  name: '名称',
   contact: '联系人',
   mobile: '手机号码',
   telephone: '联系电话',
@@ -130,11 +125,7 @@ const fieldMap = {
   deliveryAddress: '送达地址',
   companyAddress: '公司地址',
   paymentTerms: '付款条款',
-  remark: {
-    label: '备注',
-    slot: 'remark',
-    wrap: true,
-  },
+  remark: '备注',
   operate: {
     label: '操作',
     slot: 'operate',
@@ -145,10 +136,17 @@ const fieldMap = {
 tableOptions.value = transformTableOptions(fieldMap)
 
 tableOptions.value.forEach((item: any) => {
-  const list = ['name']
-  if (list.includes(item.prop)) {
+  const wrapList = ['name', 'deliveryAddress', 'companyAddress', 'paymentTerms', 'remark']
+  if (wrapList.includes(item.prop)) {
+    item.slot = item.prop
+    item.wrap = true
+  }
+
+  if (item.prop === 'name') {
+    item.width = '250px'
     return
   }
+
   if (item.prop !== 'remark') {
     item.width = '200px'
   } else {
