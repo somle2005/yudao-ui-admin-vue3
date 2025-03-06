@@ -1,7 +1,4 @@
 <script lang="tsx">
-/* eslint-disable */
-/* prettier-ignore */
-// @ts-nocheck
 import { ElTable, ElTableColumn, ElPagination } from 'element-plus'
 import { defineComponent, PropType, ref, computed, unref, watch, onMounted } from 'vue'
 import { propTypes } from '@/utils/propTypes'
