@@ -1,5 +1,5 @@
 <template>
-  <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" />
+  <!-- <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" /> -->
 
   <ContentWrap>
     <!-- 搜索工作栏 -->
@@ -155,7 +155,7 @@
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
+  <!--  <ContentWrap>
     <el-table
       v-loading="loading"
       :data="list"
@@ -263,13 +263,77 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分页 -->
+    <!~~ 分页 ~~>
     <Pagination
       :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
     />
+  </ContentWrap>-->
+
+  <!-- 列表 -->
+  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
+      :total="total"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
+      @selection-change="handleSelectionChange"
+      @pagination="getList"
+    >
+      <template #status="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
+      </template>
+
+      <template #operate="{ scope }">
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['erp:purchase-order:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['erp:purchase-order:update']"
+          :disabled="scope.row.status === 20"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="handleUpdateStatus(scope.row.id, 20)"
+          v-hasPermi="['erp:purchase-order:update-status']"
+          v-if="scope.row.status === 10"
+        >
+          审批
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleUpdateStatus(scope.row.id, 10)"
+          v-hasPermi="['erp:purchase-order:update-status']"
+          v-else
+        >
+          反审批
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete([scope.row.id])"
+          v-hasPermi="['erp:purchase-order:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -287,6 +351,46 @@ import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
 import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+import { useTableData } from '@/components/SmTable/src/utils'
+
+const { tableOptions, transformTableOptions } = useTableData()
+
+// 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
+const fieldMap = {
+  noTime: '单据日期',
+  no: '单据编号', // 采购单编号
+  supplierName: '供应商',
+  auditStatus: '审核状态', // AuditStatus
+
+  executeStatus: '执行状态',
+  inStatus: '入库状态',
+
+  offStatus: '关闭状态', // items
+  // 8:  '入库核销状态',
+
+  taxPrice: '税额', // items
+  allAmount: '价税合计', // items
+  // 26: '已执行已入库数量',
+  // 27: '已执行未入库数量',
+  createUserName: '制单人', // items
+  // 29: '制单时间',
+
+  // 区分是不是整单iems里面数据再做区分
+
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '220px'
+  }
+}
+
+tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
+// tableOptions.value.forEach(item => {
+//   if(item.width === '100px') {
+//     item.width = '200px'
+//   }
+// })
 
 /** ERP 销售订单列表 */
 defineOptions({ name: 'ErpPurchaseOrder' })

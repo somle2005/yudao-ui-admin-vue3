@@ -9,6 +9,7 @@ import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
 import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
 
 interface SelectProp {
   value: number
@@ -34,11 +35,18 @@ export const getDeptTree = (data?: any) => {
 }
 
 // 获取结算账户列表
-export const getAccountList = () => {
+export const getAccountList = (data?: any) => {
   const accountList = ref<AccountVO[]>([]) // 账户列表
   // 加载账户列表
   AccountApi.getAccountSimpleList().then((res) => {
-    accountList.value = res
+    accountList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = accountList.value
+    }
   })
   return accountList
 }
@@ -188,4 +196,21 @@ export const getCustomRuleCategoryList = (data?: any) => {
     }
   })
   return customRuleCategoryList
+}
+
+// 获取财务主体列表
+export const getFinanceSubjectList = (data?: any) => {
+  const financeSubjectList = ref<FinanceSubjectVO[]>([]) // 账户列表
+  // 加载财务主体列表
+  FinanceSubjectApi.getFinanceSubjectSimpleList().then((res) => {
+    financeSubjectList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = financeSubjectList.value
+    }
+  })
+  return financeSubjectList
 }

@@ -349,7 +349,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const operateAudit = (type) => {
     const map = {
       create: () => {
-        console.log('新增create')
         requestFormOptions.value = createRequestFormOptions()
       },
       audit: () => {

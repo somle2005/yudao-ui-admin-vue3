@@ -74,7 +74,7 @@
   >
     <el-row :gutter="20">
       <template v-for="(item, index) in options" :key="index">
-        <el-col v-if="!item.children || !item.children!.length" :span="item?.colConfig?.span || 8">
+        <el-col v-if="!item.children || !item.children!.length" :span="item?.colConfig?.span || 12">
           <el-form-item
             v-if="!item.children || !item.children!.length"
             v-bind="item.formItemConfig"
@@ -104,7 +104,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col v-if="item.children && item.children.length" :span="item?.colConfig?.span || 8">
+        <el-col v-if="item.children && item.children.length" :span="item?.colConfig?.span || 12">
           <el-form-item
             v-if="item.children && item.children.length"
             v-bind="item.formItemConfig"

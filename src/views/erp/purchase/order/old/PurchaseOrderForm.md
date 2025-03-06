@@ -1,6 +1,6 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1200">
-    <!-- <el-form
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1080">
+    <el-form
       ref="formRef"
       :model="formData"
       :rules="formRules"
@@ -44,6 +44,13 @@
           </el-form-item>
         </el-col>
 
+
+
+
+
+
+
+
         <el-col :span="8">
           <el-form-item label="关联订单" prop="orderNo">
             <el-input v-model="formData.orderNo" readonly>
@@ -55,7 +62,7 @@
             </el-input>
           </el-form-item>
         </el-col>
-
+        
         <el-col :span="16">
           <el-form-item label="备注" prop="remark">
             <el-input
@@ -72,7 +79,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <!~~ 子表的表单 ~~>
+      <!-- 子表的表单 -->
       <ContentWrap>
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
           <el-tab-pane label="订单产品清单" name="item">
@@ -81,7 +88,6 @@
         </el-tabs>
       </ContentWrap>
 
-      <!~~ 
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="优惠率（%）" prop="discountPercent">
@@ -139,40 +145,10 @@
             />
           </el-form-item>
         </el-col>
-      </el-row> ~~>
-    </el-form>-->
+      </el-row>
 
-    <SmForm
-      class="-mb-15px"
-      ref="formRef"
-      isCol
-      label-width="150px"
-      v-model="formData"
-      v-loading="formLoading"
-      :options="requestFormOptions"
-      :getModelValue="getFormData"
-      :disabled="disabled"
-    >
-      <!-- <template #primaryImageUrl="{ scope, model }">
-      <UploadImg v-model="model[scope.prop]" />
-    </template> -->
-      <!-- <template #action>
-      <div class="moreBtnList">
-        <el-button type="primary" @click="handleQuery"> 确定</el-button>
-      </div>
-    </template> -->
-      <!-- <template #items="{ scope, model }"> 
-       {{ console.log(scope, model, '打印scope-model') }}  -->
-      <template #items>
-        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="订单产品清单" name="item">
-            <PurchaseOrderItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
-            <!-- <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" /> -->
-          </el-tab-pane>
-        </el-tabs>
-      </template>
-    </SmForm>
-
+      
+    </el-form>
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading" v-if="!disabled">
         确 定
@@ -182,10 +158,10 @@
   </Dialog>
 
   <!-- 可订单的申请列表 -->
-  <!-- <PurchaseRequestOrderEnableList
+  <PurchaseRequestOrderEnableList
     ref="purchaseRequestOrderEnableListRef"
     @success="handlePurchaseRequestChange"
-  /> -->
+  />
 </template>
 <script setup lang="ts">
 import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
@@ -195,8 +171,6 @@ import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import { PurchaseRequestVO } from '@/api/erp/purchase/request'
-import { getAccountList, getFinanceSubjectList, getSupplierList } from '@/commonData'
-import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -213,7 +187,7 @@ const formData: any = ref({})
 
 const initFormData = () => {
   return {
-    id: undefined,
+    // id: 0,
     no: undefined,
     noTime: undefined,
     supplierId: undefined,
@@ -237,7 +211,7 @@ const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
 const supplierList = ref<SupplierVO[]>([]) // 供应商列表
 const accountList = ref<AccountVO[]>([]) // 账户列表
-const financeSubjectList = ref<FinanceSubjectVO[]>([])
+const userList = ref<UserApi.UserVO[]>([]) // 用户列表
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -275,16 +249,15 @@ const open = async (type: string, id?: number) => {
     }
   }
   // 加载供应商列表
-  // supplierList.value = await SupplierApi.getSupplierSimpleList()
-  getSupplierList(supplierList)
+  supplierList.value = await SupplierApi.getSupplierSimpleList()
+  // 加载用户列表
+  userList.value = await UserApi.getSimpleUserList()
   // 加载账户列表
-  getAccountList(accountList)
-  // accountList.value = await AccountApi.getAccountSimpleList()
-  getFinanceSubjectList(financeSubjectList)
-  // const defaultAccount = accountList.value.find((item) => item.defaultStatus)
-  // if (defaultAccount) {
-  //   formData.value.accountId = defaultAccount.id
-  // }
+  accountList.value = await AccountApi.getAccountSimpleList()
+  const defaultAccount = accountList.value.find((item) => item.defaultStatus)
+  if (defaultAccount) {
+    formData.value.accountId = defaultAccount.id
+  }
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
@@ -341,260 +314,4 @@ const resetForm = () => {
   formData.value = initFormData()
   formRef.value?.resetFields()
 }
-
-const requestFormOptions = ref([
-  {
-    type: 'input',
-    label: '单据编号',
-    prop: 'no',
-    placeholder: '保存时自动生成',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      disabled: true
-    }
-  },
-  {
-    type: 'date-picker',
-    placeholder: '请选择单据日期',
-    prop: 'noTime',
-    label: '单据日期',
-    attrs: {
-      clearable: true,
-      type: 'date',
-      'value-format': 'x',
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-    // rules: [
-    //   {
-    //     required: true,
-    //     message: '单据日期不能为空',
-    //     trigger: 'blur'
-    //   }
-    // ]
-  },
-  {
-    type: 'select',
-    placeholder: '请选择供应商',
-    prop: 'supplierId',
-    label: '供应商',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    children: supplierList
-  },
-  {
-    type: 'select',
-    placeholder: '请选择结算账户',
-    prop: 'accountId',
-    label: '结算账户',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    children: accountList
-  },
-
-  // purchaseEntityId 采购主体编号 财务主体精简列表接口也给我一个。
-  {
-    type: 'select',
-    placeholder: '请选择财务主体',
-    prop: 'purchaseEntityId',
-    label: '财务主体',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    children: financeSubjectList
-  },
-
-  {
-    type: 'date-picker',
-    placeholder: '请选择结算日期',
-    prop: 'settlementDate',
-    label: '结算日期',
-    attrs: {
-      clearable: true,
-      type: 'date',
-      'value-format': 'x',
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  },
-  {
-    type: 'input-number',
-    placeholder: '请输入定金金额',
-    prop: 'depositPrice',
-    label: '定金金额',
-    attrs: {
-      'controls-position': 'right',
-      min: 0,
-      precision: 2,
-      // class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  },
-
-  {
-    type: 'input',
-    label: '收货地址',
-    prop: 'address',
-    placeholder: '请输入收货地址',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
-  {
-    type: 'input',
-    label: '付款条款',
-    prop: 'paymentTerms',
-    placeholder: '请输入付款条款',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
-  {
-    type: 'input',
-    label: '备注',
-    prop: 'remark',
-    placeholder: '请输入备注',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
-  {
-    colConfig: { span: 24 },
-    slot: 'items',
-    formItemConfig: {
-      class: 'purchase-request-items'
-    }
-  }
-
-  // {
-  //   type: 'date-picker',
-  //   placeholder: '请选择单据日期',
-  //   prop: 'requestTime',
-  //   label: '单据日期',
-  //   attrs: {
-  //     clearable: true,
-  //     type: 'date',
-  //     // 'value-format': 'YYYY-MM-DD HH:mm:ss',
-  //     'value-format': 'x',
-  //     class: '!w-1/1',
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '单据日期不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // },
-  // {
-  //   type: 'select',
-  //   placeholder: '请选择申请人',
-  //   prop: 'applicantId',
-  //   label: '申请人',
-  //   attrs: {
-  //     filterable: true,
-  //     clearable: true,
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '申请人不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ],
-  //   children: applicantList
-  // },
-  // {
-  //   type: 'tree-select',
-  //   placeholder: '请选择申请部门',
-  //   prop: 'applicationDeptId',
-  //   label: '申请部门',
-  //   attrs: {
-  //     filterable: true,
-  //     clearable: true,
-  //     data: deptList,
-  //     props: defaultProps,
-  //     'check-strictly': true,
-  //     'node-key': 'id'
-  //     // style: {
-  //     //   width: '100%'
-  //     // }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '申请部门不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   type: 'select',
-  //   value: '',
-  //   placeholder: '请选择产品',
-  //   prop: 'productId',
-  //   label: '产品',
-  //   attrs: {
-  //     clearable: true,
-  //     filterable: true,
-  //     style: {
-  //       width: '100%'
-  //     },
-  //     onChange: (value) => {
-  //       const productItem = productList1.value.find((item: any) => item.value === value)
-  //       if (productItem) {
-  //         const formData = getFormData()
-  //         formData.barCode = productItem.barCode
-  //         // const modelVal = smFormRef.value.getFormData()
-  //         // modelVal.barCode = productItem.barCode
-  //       }
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '产品不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ],
-  //   children: productList1
-  // },
-])
-const getFormData = () => {
-  return formData.value
-}
 </script>
-<style lang="scss" scoped>
-@use '../../../../styles/comonForm.scss' as *;
-</style>

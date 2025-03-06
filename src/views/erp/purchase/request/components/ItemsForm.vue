@@ -217,9 +217,8 @@
   </el-row>
 </template>
 <script setup lang="ts">
-import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import { StockApi } from '@/api/erp/stock/stock'
-import { getWarehouseList } from '@/commonData'
+import { getProductList, getWarehouseList } from '@/commonData'
 import {
   erpCountInputFormatter,
   erpPriceInputFormatter,
@@ -281,7 +280,8 @@ const formRules = reactive({
   orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
-const productList = ref<ProductVO[]>([]) // 产品列表
+const productList = getProductList() // 产品列表
+
 
 /** 初始化设置入库项 */
 watch(
@@ -426,7 +426,6 @@ defineExpose({ validate })
 
 /** 初始化 */
 onMounted(async () => {
-  productList.value = await ProductApi.getProductSimpleList()
   // 默认添加一个
   if (formData.value.length === 0) {
     handleAdd()
