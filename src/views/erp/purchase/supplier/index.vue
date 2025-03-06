@@ -136,7 +136,7 @@ const fieldMap = {
 tableOptions.value = transformTableOptions(fieldMap)
 
 tableOptions.value.forEach((item: any) => {
-  const wrapList = ['name', 'deliveryAddress', 'companyAddress', 'paymentTerms', 'remark']
+  const wrapList = ['name', 'email', 'deliveryAddress', 'companyAddress', 'paymentTerms', 'remark']
   if (wrapList.includes(item.prop)) {
     item.slot = item.prop
     item.wrap = true
