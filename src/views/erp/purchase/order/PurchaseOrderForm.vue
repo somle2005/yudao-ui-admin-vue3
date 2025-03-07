@@ -514,35 +514,38 @@ const getFormData = () => {
 }
 
 const addApplicantItem = () => {
-  const items = formData.value.items
-  const selectList = selectionList.value.map((item: any) => {
-    const {
-      erpPurchaseRequestItemId,
-      productId,
-      productBarCode,
-      productName,
-      approveCount,
-      actTaxPrice,
-      taxPercent,
-      taxPrice,
-      warehouseId,
-      expectArrivalDate
-    } = item
-    const obj = {
-      erpPurchaseRequestItemId,
-      productId,
-      productName,
-      productBarCode,
-      applyCount: approveCount || 0,
-      actTaxPrice,
-      taxPercent,
-      taxPrice, //税额需要动态计算
-      warehouseId,
-      deliveryTime: expectArrivalDate
-    }
-    return obj
+  applicantItemDialog.value = false
+  nextTick(() => {
+    const items = formData.value.items
+    const selectList = selectionList.value.map((item: any) => {
+      const {
+        erpPurchaseRequestItemId,
+        productId,
+        productBarCode,
+        productName,
+        approveCount,
+        actTaxPrice,
+        taxPercent,
+        taxPrice,
+        warehouseId,
+        expectArrivalDate
+      } = item
+      const obj = {
+        erpPurchaseRequestItemId,
+        productId,
+        productName,
+        productBarCode,
+        applyCount: approveCount || 0,
+        actTaxPrice,
+        taxPercent,
+        taxPrice, //税额需要动态计算
+        warehouseId,
+        deliveryTime: expectArrivalDate
+      }
+      return obj
+    })
+    formData.value.items = distinctList(items, selectList, 'erpPurchaseRequestItemId')
   })
-  formData.value.items = distinctList(items, selectList, 'erpPurchaseRequestItemId')
 }
 </script>
 <style lang="scss" scoped>
