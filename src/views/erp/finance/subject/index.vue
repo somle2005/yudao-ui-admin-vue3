@@ -133,7 +133,7 @@
         />
       </el-form-item>
 
-      <el-form-item label="创建人" prop="creator">
+      <!-- <el-form-item label="创建人" prop="creator">
         <el-input
           v-model="queryParams.creator"
           placeholder="请输入创建人"
@@ -172,7 +172,7 @@
           :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
           class="!w-240px"
         />
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="备注" prop="remark">
         <el-input
@@ -220,7 +220,6 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-
       <template #status="{ scope }">
         <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
       </template>
@@ -260,7 +259,6 @@ import { useTableData } from '@/components/SmTable/src/utils'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
-
 const fieldMap = {
   name: '主体名称',
   status: {
@@ -281,18 +279,18 @@ const fieldMap = {
   bankAccount: '开户账号',
   bankAddress: '开户地址',
 
-  creator: '创建人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '180px'
-  },
-  updater: '更新人',
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '180px'
-  },
+  // creator: '创建人',
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '180px'
+  // },
+  // updater: '更新人',
+  // updateTime: {
+  //   label: '更新时间',
+  //   formatter: dateFormatter,
+  //   width: '180px'
+  // },
   remark: '备注',
 
   operate: {
@@ -303,13 +301,11 @@ const fieldMap = {
   }
 }
 tableOptions.value = transformTableOptions(fieldMap)
-tableOptions.value.forEach(item => {
-  if(item.width === '100px') {
+tableOptions.value.forEach((item) => {
+  if (item.width === '100px') {
     item.width = '200px'
   }
 })
-
-
 
 /** Erp财务主体 列表 */
 defineOptions({ name: 'ErpFinanceSubject' })

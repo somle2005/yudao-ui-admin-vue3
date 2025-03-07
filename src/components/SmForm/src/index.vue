@@ -72,7 +72,7 @@
     v-bind="$attrs"
     @submit.prevent
   >
-    <el-row :gutter="20">
+    <el-row :gutter="24">
       <template v-for="(item, index) in options" :key="index">
         <el-col v-if="!item.children || !item.children!.length" :span="item?.colConfig?.span || 12">
           <el-form-item
@@ -138,7 +138,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref, onMounted, watch, nextTick } from 'vue'
+import { PropType, ref, onMounted, watch, unref } from 'vue'
 import { FormInstance, FormOptions } from './types/types'
 import { cloneDeep } from 'lodash-es'
 import { UploadFile, UploadFiles, UploadRawFile } from 'element-plus'
@@ -200,6 +200,11 @@ const model = ref<any>(null)
 const rules = ref<any>(null)
 const form = ref<FormInstance | null>()
 
+// 兼容reactive和ref数据 获取外部传入的form数据
+const getOutFormData = () => {
+  return unref(props.getModelValue())
+}
+
 // 初始化表单
 const initForm = () => {
   if (props.options && props.options.length) {
@@ -211,7 +216,7 @@ const initForm = () => {
       // initEditor(item)
     })
     // model.value = cloneDeep(m)
-    model.value = cloneDeep(props.getModelValue())
+    model.value = cloneDeep(getOutFormData())
     rules.value = cloneDeep(r)
   }
 }
@@ -300,16 +305,17 @@ watch(
     // }
 
     const modelVal = cloneDeep(val) // 内部值
-    const adaptVal = cloneDeep(props.getModelValue()) // 外部值
+    const adaptVal = getOutFormData() // 外部值
 
     // 取内部值 赋值给外部值
     props.options.forEach((item) => {
       adaptVal[item.prop!] = modelVal[item.prop!]
     })
-    const modelValue = props.getModelValue()
-    for (let key in adaptVal) {
-      modelValue[key] = adaptVal[key]
-    }
+
+    // const modelValue = unref(props.getModelValue())
+    // for (let key in adaptVal) {
+    //   modelValue[key] = adaptVal[key]
+    // }
 
     /**
      * 比如有联动的值 产品 productId 带出 barCode
@@ -320,7 +326,6 @@ watch(
      * 约定俗成 不在props.options里面的值 统一由外部进行修改formData 通过props.getModelValue()进行合并
      */
 
-    console.log(adaptVal, 'adaptVal')
     // emits('update:modelValue', reactive(adaptVal))
   },
   { deep: true }

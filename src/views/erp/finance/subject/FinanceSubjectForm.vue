@@ -1,71 +1,10 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="800px">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
-      v-loading="formLoading"
-    >
-      <el-form-item label="主体名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入主体名称" />
-      </el-form-item>
-      <el-form-item label="联系人" prop="contact">
-        <el-input v-model="formData.contact" placeholder="请输入联系人" />
-      </el-form-item>
-      <el-form-item label="手机号码" prop="mobile">
-        <el-input v-model="formData.mobile" placeholder="请输入手机号码" />
-      </el-form-item>
-      <el-form-item label="联系电话" prop="telephone">
-        <el-input v-model="formData.telephone" placeholder="请输入联系电话" />
-      </el-form-item>
-      <el-form-item label="电子邮箱" prop="email">
-        <el-input v-model="formData.email" placeholder="请输入电子邮箱" />
-      </el-form-item>
-
-      <el-form-item label="传真" prop="fax">
-        <el-input v-model="formData.fax" placeholder="请输入传真" />
-      </el-form-item>
-      <el-form-item label="送达地址" prop="deliveryAddress">
-        <el-input v-model="formData.deliveryAddress" placeholder="请输入送达地址" />
-      </el-form-item>
-      <el-form-item label="公司地址" prop="companyAddress">
-        <el-input v-model="formData.companyAddress" placeholder="请输入公司地址" />
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="formData.remark" placeholder="请输入备注" />
-      </el-form-item>
-      <el-form-item label="开启状态" prop="status">
-        <el-radio-group v-model="formData.status">
-          <el-radio
-            v-for="dict in getBoolDictOptions(DICT_TYPE.COMMON_BOOLEAN_STATUS)"
-            :key="dict.value"
-            :label="dict.value"
-          >
-            {{ dict.label }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="纳税人识别号" prop="taxNo">
-        <el-input v-model="formData.taxNo" placeholder="请输入纳税人识别号" />
-      </el-form-item>
-      <el-form-item label="开户行" prop="bankName">
-        <el-input v-model="formData.bankName" placeholder="请输入开户行" />
-      </el-form-item>
-      <el-form-item label="开户账号" prop="bankAccount">
-        <el-input v-model="formData.bankAccount" placeholder="请输入开户账号" />
-      </el-form-item>
-      <el-form-item label="开户地址" prop="bankAddress">
-        <el-input v-model="formData.bankAddress" placeholder="请输入开户地址" />
-      </el-form-item>
-    </el-form>
-
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000px">
     <SmForm
       class="-mb-15px"
-      ref="smFormRef"
+      ref="formRef"
       isCol
       label-width="150px"
-      v-model="formData"
       v-loading="formLoading"
       :options="requestFormOptions"
       :getModelValue="getFormData"
@@ -114,11 +53,6 @@ const initFormData = () => {
 }
 formData.value = initFormData()
 
-const formRules = reactive({
-  name: [{ required: true, message: '主体名称不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
-  taxNo: [{ required: true, message: '纳税人识别号不能为空', trigger: 'blur' }]
-})
 const formRef = ref() // 表单 Ref
 
 /** 打开弹窗 */
@@ -132,6 +66,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await FinanceSubjectApi.getFinanceSubject(id)
+      Object.assign(formRef.value.getFormData(), formData.value)    
     } finally {
       formLoading.value = false
     }
@@ -215,7 +150,7 @@ const createFormOptions = () => {
       }
 
       arr.push(obj)
-    } else if(item.prop === 'status') {
+    } else if (item.prop === 'status') {
       const obj = {
         type: 'select',
         placeholder: `请选择${label}`,
@@ -237,123 +172,12 @@ const createFormOptions = () => {
         ],
         children: getBoolDictOptions(DICT_TYPE.COMMON_BOOLEAN_STATUS)
       }
-
       arr.push(obj)
     }
   })
-  console.log(arr,'arr')
   return arr
 }
-// requestFormOptions.value = createFormOptions()
-
-// const requestFormOptions = ref([
-//     {
-//       type: 'date-picker',
-//       placeholder: '请选择单据日期',
-//       prop: 'requestTime',
-//       label: '单据日期',
-//       attrs: {
-//         clearable: true,
-//         type: 'date',
-//         'value-format': 'YYYY-MM-DD HH:mm:ss',
-//         class: '!w-1/1',
-//         style: {
-//           width: '100%'
-//         }
-//       },
-//       rules: [
-//         {
-//           required: true,
-//           message: '单据日期不能为空',
-//           trigger: 'change'
-//         }
-//       ]
-//     },
-//     {
-//       type: 'select',
-//       placeholder: '请选择申请人',
-//       prop: 'applicantId',
-//       label: '申请人',
-//       attrs: {
-//         filterable: true,
-//         clearable: true,
-//         style: {
-//           width: '100%'
-//         }
-//       },
-//       rules: [
-//         {
-//           required: true,
-//           message: '申请人不能为空',
-//           trigger: 'change'
-//         }
-//       ],
-//       children: applicantList
-//     },
-//     {
-//       type: 'tree-select',
-//       placeholder: '请选择申请部门',
-//       prop: 'applicationDeptId',
-//       label: '申请部门',
-//       attrs: {
-//         filterable: true,
-//         clearable: true,
-//         data: deptList,
-//         props: defaultProps,
-//         'check-strictly': true,
-//         'node-key': 'id'
-//         // style: {
-//         //   width: '100%'
-//         // }
-//       },
-//       rules: [
-//         {
-//           required: true,
-//           message: '申请部门不能为空',
-//           trigger: 'change'
-//         }
-//       ]
-//     },
-
-//     {
-//       type: 'select',
-//       placeholder: '请选择供应商产品',
-//       prop: 'supplierId',
-//       label: '供应商产品',
-//       attrs: {
-//         filterable: true,
-//         clearable: true,
-//         style: {
-//           width: '100%'
-//         }
-//       },
-//       rules: [
-//         {
-//           required: true,
-//           message: '供应商产品不能为空',
-//           trigger: 'change'
-//         }
-//       ],
-//       children: supplierProductList
-//     },
-//     {
-//       type: 'input',
-//       label: '收货地址',
-//       prop: 'deliveryDelivery',
-//       placeholder: '请输入收货地址',
-//       attrs: {
-//         style: { width: '100%' },
-//         clearable: true
-//       }
-//     },
-//     {
-//       colConfig: { span: 24 },
-//       slot: 'items',
-//       formItemConfig: {
-//         class: 'purchase-request-items'
-//       }
-//     }
-//   ])
+requestFormOptions.value = createFormOptions()
 
 const getFormData = () => {
   return formData
