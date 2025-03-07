@@ -6,7 +6,7 @@
       seamless
       frameBorder="0"
       scrolling="no"
-      src="http://192.168.10.199:8088/superset/dashboard/p/0wYQZPlE5Og/?hiddenDashboards=1"
+      src="http://192.168.10.199:8088/superset/dashboard/p/xrnm2b1mqON/?hiddenDashboards=1"
     >
     </iframe>
   </div>
