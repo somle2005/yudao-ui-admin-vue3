@@ -299,7 +299,7 @@ watch(
     //   emits('update:modelValue', adaptVal)
     // }
 
-    const modelVal = cloneDeep(val)  // 内部值
+    const modelVal = cloneDeep(val) // 内部值
     const adaptVal = cloneDeep(props.getModelValue()) // 外部值
 
     // 取内部值 赋值给外部值
@@ -307,19 +307,19 @@ watch(
       adaptVal[item.prop!] = modelVal[item.prop!]
     })
     const modelValue = props.getModelValue()
-    for(let key in adaptVal) {
+    for (let key in adaptVal) {
       modelValue[key] = adaptVal[key]
     }
 
     /**
-     * 比如有联动的值 产品 productId 带出 barCode 
+     * 比如有联动的值 产品 productId 带出 barCode
      * props.options项上面肯定不存在barCode
      * 如果统一是 内部值model.value变化 操作 就会还需要出一个额外参数 ['barCode'] 用于联动
      * 如果联动值是操作外部formData 就不需要额外参数 内部变化就会带上这个值
-     * 
+     *
      * 约定俗成 不在props.options里面的值 统一由外部进行修改formData 通过props.getModelValue()进行合并
      */
-  
+
     console.log(adaptVal, 'adaptVal')
     // emits('update:modelValue', reactive(adaptVal))
   },
@@ -360,7 +360,7 @@ const onSuccess = (
 </script>
 
 <style lang="scss" scoped>
-// .\!w-240px {
-//   width: 240px !important;
-// }
+.\!w-240px {
+  width: 240px !important;
+}
 </style>
