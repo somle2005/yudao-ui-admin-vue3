@@ -60,7 +60,27 @@
         </template>
       </el-table-column>
 
-      <!-- currencyId 币别id -->
+      <el-table-column label="货币" prop="currencyId" min-width="120">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
+              <el-select
+                v-model="row.currencyId"
+                placeholder="请选择货币"
+                clearable
+                class="!w-240px"
+              >
+                <el-option
+                  v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-form-item>
+        </template>
+      </el-table-column>
 
       <el-table-column label="含税单价" min-width="120">
         <template #default="{ row, $index }">
@@ -166,22 +186,9 @@
 
       <!-- erpPurchaseRequestItemId 采购申请单，申请项编号 -->
 
+
+      
       <!-- 
-      <el-table-column label="数量" prop="count" min-width="140">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
-            <el-input-number
-              v-model="row.count"
-              controls-position="right"
-              :min="0.001"
-              :precision="3"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-
       <el-table-column label="税额合计" prop="totalPrice" min-width="100">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.totalPrice`" class="mb-0px!">
@@ -212,6 +219,7 @@
 <script setup lang="ts">
 import { StockApi } from '@/api/erp/stock/stock'
 import { getProductList, getWarehouseList } from '@/commonData'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import {
   erpCountInputFormatter,
   erpPriceInputFormatter,
