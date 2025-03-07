@@ -44,3 +44,21 @@ export const nullToList = (formData: any, mapKeys: string[]) => {
   })
   return formData
 }
+
+// 数组去重
+export const distinctList = (list: any[], selectList: any[], compareKey = 'id') => {
+  try {
+    const map = {}
+    list.forEach((item) => {
+      map[item[compareKey]] = 1
+    })
+    selectList.forEach((item) => {
+      if (!map[item[compareKey]]) {
+        list.push(item)
+      }
+    })
+  } catch (e) {
+    console.log('报错了', e)
+  }
+  return list
+}

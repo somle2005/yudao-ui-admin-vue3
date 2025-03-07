@@ -1,147 +1,5 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible" width="1200">
-    <!-- <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
-      v-loading="formLoading"
-      :disabled="disabled"
-    >
-      <el-row :gutter="24">
-        <el-col :span="12">
-          <el-form-item label="单据编号" prop="no">
-            <el-input disabled v-model="formData.no" placeholder="保存时自动生成" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="单据日期" prop="orderTime">
-            <el-date-picker
-              v-model="formData.orderTime"
-              type="date"
-              value-format="x"
-              placeholder="选择单据日期"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="供应商" prop="supplierId">
-            <el-select
-              v-model="formData.supplierId"
-              clearable
-              filterable
-              placeholder="请选择供应商"
-              class="!w-1/1"
-            >
-              <el-option
-                v-for="item in supplierList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="8">
-          <el-form-item label="关联订单" prop="orderNo">
-            <el-input v-model="formData.orderNo" readonly>
-              <template #append>
-                <el-button @click="openPurchaseRequestOrderEnableList">
-                  <Icon icon="ep:search" /> 选择
-                </el-button>
-              </template>
-            </el-input>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="16">
-          <el-form-item label="备注" prop="remark">
-            <el-input
-              type="textarea"
-              v-model="formData.remark"
-              :rows="1"
-              placeholder="请输入备注"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="附件" prop="fileUrl">
-            <UploadFile :is-show-tip="false" v-model="formData.fileUrl" :limit="1" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <!~~ 子表的表单 ~~>
-      <ContentWrap>
-        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
-          <el-tab-pane label="订单产品清单" name="item">
-            <PurchaseOrderItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
-          </el-tab-pane>
-        </el-tabs>
-      </ContentWrap>
-
-      <!~~ 
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="优惠率（%）" prop="discountPercent">
-            <el-input-number
-              v-model="formData.discountPercent"
-              controls-position="right"
-              :min="0"
-              :precision="2"
-              placeholder="请输入优惠率"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="付款优惠" prop="discountPrice">
-            <el-input
-              disabled
-              v-model="formData.discountPrice"
-              :formatter="erpPriceInputFormatter"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="优惠后金额">
-            <el-input disabled v-model="formData.totalPrice" :formatter="erpPriceInputFormatter" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="结算账户" prop="accountId">
-            <el-select
-              v-model="formData.accountId"
-              clearable
-              filterable
-              placeholder="请选择结算账户"
-              class="!w-1/1"
-            >
-              <el-option
-                v-for="item in accountList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="支付订金" prop="depositPrice">
-            <el-input-number
-              v-model="formData.depositPrice"
-              controls-position="right"
-              :min="0"
-              :precision="2"
-              placeholder="请输入支付订金"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row> ~~>
-    </el-form>-->
-
     <SmForm
       class="-mb-15px"
       ref="formRef"
@@ -164,6 +22,10 @@
       <!-- <template #items="{ scope, model }"> 
        {{ console.log(scope, model, '打印scope-model') }}  -->
       <template #items>
+        <el-button type="primary" @click="selectApplicantItem" style="margin-bottom: 10px"
+          >选择申请项</el-button
+        >
+
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="订单产品清单" name="item">
             <PurchaseOrderItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
@@ -181,6 +43,47 @@
     </template>
   </Dialog>
 
+  <Dialog title="采购申请项" v-model="applicantItemDialog" width="1000">
+    <ContentWrap style="padding-bottom: 0">
+      <SmTable
+        border
+        isSelection
+        :loading="loading"
+        :options="tableOptions"
+        :data="list"
+        :total="total"
+        v-model:currentPage="queryParams.pageNo"
+        v-model:pageSize="queryParams.pageSize"
+        @pagination="getList"
+        @selection-change="handleSelectionChange"
+      >
+        <template #status="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
+        </template>
+
+        <template #orderStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
+        </template>
+
+        <template #offStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
+        </template>
+
+        <template #rowOrderStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
+        </template>
+
+        <template #rowOffStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+        </template>
+      </SmTable>
+    </ContentWrap>
+    <template #footer>
+      <el-button @click="addApplicantItem" type="primary"> 确 定 </el-button>
+      <el-button @click="applicantItemDialog = false">取 消</el-button>
+    </template>
+  </Dialog>
+
   <!-- 可订单的申请列表 -->
   <!-- <PurchaseRequestOrderEnableList
     ref="purchaseRequestOrderEnableListRef"
@@ -192,11 +95,26 @@ import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
 import PurchaseOrderItemForm from './components/PurchaseOrderItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
-import * as UserApi from '@/api/system/user'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import { PurchaseRequestVO } from '@/api/erp/purchase/request'
 import { getAccountList, getFinanceSubjectList, getSupplierList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
+import { DICT_TYPE } from '@/utils/dict'
+import { useApplicantTable } from './hooks/useApplicantTable'
+import { distinctList } from '@/utils/transformData'
+
+let {
+  queryParams,
+  list,
+  tableOptions,
+  loading,
+  total,
+  selectionList,
+  handleSelectionChange,
+  getList,
+  selectApplicantItem,
+  applicantItemDialog
+} = useApplicantTable()
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -593,6 +511,38 @@ const requestFormOptions = ref([
 ])
 const getFormData = () => {
   return formData.value
+}
+
+const addApplicantItem = () => {
+  const items = formData.value.items
+  const selectList = selectionList.value.map((item: any) => {
+    const {
+      erpPurchaseRequestItemId,
+      productId,
+      productBarCode,
+      productName,
+      approveCount,
+      actTaxPrice,
+      taxPercent,
+      taxPrice,
+      warehouseId,
+      expectArrivalDate
+    } = item
+    const obj = {
+      erpPurchaseRequestItemId,
+      productId,
+      productName,
+      productBarCode,
+      applyCount: approveCount || 0,
+      actTaxPrice,
+      taxPercent,
+      taxPrice, //税额需要动态计算
+      warehouseId,
+      deliveryTime: expectArrivalDate
+    }
+    return obj
+  })
+  formData.value.items = distinctList(items, selectList, 'erpPurchaseRequestItemId')
 }
 </script>
 <style lang="scss" scoped>
