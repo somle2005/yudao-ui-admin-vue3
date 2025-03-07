@@ -216,7 +216,6 @@ import { cloneDeep } from 'lodash-es'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
-
 const fieldMap = {
   requestTime: {
     label: '单据日期',
@@ -230,7 +229,12 @@ const fieldMap = {
     wrap: true
   },
   applicant: '申请人',
-  applicationDept: '申请部门',
+  applicationDept: {
+    label: '申请部门',
+    slot: 'applicationDept',
+    width: '150px',
+    wrap: true
+  },
   status: {
     label: '审核状态',
     slot: 'status',
@@ -280,6 +284,12 @@ const fieldMap = {
     label: '制单时间',
     formatter: dateFormatter,
     width: '180px'
+  },
+  reviewComment: {
+    label: '审核意见',
+    width: '200px',
+    slot: 'reviewComment',
+    wrap: true
   },
   auditor: '审核人',
   auditTime: {
