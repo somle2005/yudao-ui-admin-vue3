@@ -8,9 +8,10 @@
     :inline-message="true"
     :disabled="disabled"
   >
-    <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px">
+    <!-- show-summary :summary-method="getSummaries" -->
+    <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column label="产品编号" min-width="180">
+      <el-table-column label="产品编号" width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <el-select
@@ -31,13 +32,13 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="产品名称" min-width="120">
+      <el-table-column label="产品名称" width="120">
         <template #default="{ row }">
           <el-text>{{ row.productName }}</el-text>
         </template>
       </el-table-column>
 
-      <el-table-column label="税率（%）" min-width="115">
+      <el-table-column label="税率（%）" width="115">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
             <el-input-number
@@ -50,7 +51,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="税额" prop="taxPrice" min-width="120">
+      <el-table-column label="税额" prop="taxPrice" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
             <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
@@ -60,7 +61,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="货币" prop="currencyId" min-width="120">
+      <el-table-column label="货币" prop="currencyId" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
@@ -68,7 +69,8 @@
                 v-model="row.currencyId"
                 placeholder="请选择货币"
                 clearable
-                class="!w-240px"
+                filterable
+                style="width:100px"
               >
                 <el-option
                   v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
@@ -82,7 +84,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="含税单价" min-width="120">
+      <el-table-column label="含税单价" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
             <el-input-number
@@ -95,7 +97,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="申请数量" min-width="120">
+      <el-table-column label="申请数量" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.applyCount`" class="mb-0px!">
             <el-input-number
@@ -107,7 +109,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="采购入库数量" min-width="120">
+      <el-table-column label="采购入库数量" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.inCount`" class="mb-0px!">
             <el-input-number
@@ -120,7 +122,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="优惠率（%）" min-width="120">
+      <el-table-column label="优惠率（%）" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.discountPercent`" class="mb-0px!">
             <el-input-number
@@ -134,7 +136,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="仓库" min-width="150">
+      <el-table-column label="仓库" width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
             <el-select
@@ -155,7 +157,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="交货日期" min-width="120">
+      <el-table-column label="交货日期" width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.deliveryTime`" class="mb-0px!">
             <el-date-picker
@@ -168,7 +170,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="X码" min-width="120">
+      <el-table-column label="X码" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.xCode`" class="mb-0px!">
             <el-input v-model="row.xCode" class="!w-100%" />
@@ -176,7 +178,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="箱率" min-width="120">
+      <el-table-column label="箱率" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
             <el-input v-model="row.containerRate" class="!w-100%" />
@@ -186,8 +188,6 @@
 
       <!-- erpPurchaseRequestItemId 采购申请单，申请项编号 -->
 
-
-      
       <!-- 
       <el-table-column label="税额合计" prop="totalPrice" min-width="100">
         <template #default="{ row, $index }">
@@ -197,10 +197,10 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column label="备注" min-width="150">
+      <el-table-column label="商品行备注" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-            <el-input v-model="row.remark" placeholder="请输入备注" />
+            <el-input v-model="row.remark" type="textarea"  placeholder="商品行备注" />
           </el-form-item>
         </template>
       </el-table-column>

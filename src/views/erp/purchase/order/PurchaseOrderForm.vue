@@ -21,6 +21,11 @@
     </template> -->
       <!-- <template #items="{ scope, model }"> 
        {{ console.log(scope, model, '打印scope-model') }}  -->
+
+      <template #fileUrl="{ model }">
+        <UploadFile :is-show-tip="false" v-model="model.fileUrl" :limit="1" />
+      </template>
+
       <template #items>
         <el-button type="primary" @click="selectApplicantItem" style="margin-bottom: 10px"
           >选择申请项</el-button
@@ -323,7 +328,6 @@ const requestFormOptions = ref([
     children: accountList
   },
 
-  // purchaseEntityId 采购主体编号 财务主体精简列表接口也给我一个。
   {
     type: 'select',
     placeholder: '请选择财务主体',
@@ -396,9 +400,15 @@ const requestFormOptions = ref([
     prop: 'remark',
     placeholder: '请输入备注',
     attrs: {
+      type: 'textarea',
       style: { width: '100%' },
       clearable: true
     }
+  },
+  {
+    // colConfig: { span: 24 },
+    label: '附件',
+    slot: 'fileUrl'
   },
   {
     colConfig: { span: 24 },
@@ -407,107 +417,6 @@ const requestFormOptions = ref([
       class: 'purchase-request-items'
     }
   }
-
-  // {
-  //   type: 'date-picker',
-  //   placeholder: '请选择单据日期',
-  //   prop: 'requestTime',
-  //   label: '单据日期',
-  //   attrs: {
-  //     clearable: true,
-  //     type: 'date',
-  //     // 'value-format': 'YYYY-MM-DD HH:mm:ss',
-  //     'value-format': 'x',
-  //     class: '!w-1/1',
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '单据日期不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // },
-  // {
-  //   type: 'select',
-  //   placeholder: '请选择申请人',
-  //   prop: 'applicantId',
-  //   label: '申请人',
-  //   attrs: {
-  //     filterable: true,
-  //     clearable: true,
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '申请人不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ],
-  //   children: applicantList
-  // },
-  // {
-  //   type: 'tree-select',
-  //   placeholder: '请选择申请部门',
-  //   prop: 'applicationDeptId',
-  //   label: '申请部门',
-  //   attrs: {
-  //     filterable: true,
-  //     clearable: true,
-  //     data: deptList,
-  //     props: defaultProps,
-  //     'check-strictly': true,
-  //     'node-key': 'id'
-  //     // style: {
-  //     //   width: '100%'
-  //     // }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '申请部门不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   type: 'select',
-  //   value: '',
-  //   placeholder: '请选择产品',
-  //   prop: 'productId',
-  //   label: '产品',
-  //   attrs: {
-  //     clearable: true,
-  //     filterable: true,
-  //     style: {
-  //       width: '100%'
-  //     },
-  //     onChange: (value) => {
-  //       const productItem = productList1.value.find((item: any) => item.value === value)
-  //       if (productItem) {
-  //         const formData = getFormData()
-  //         formData.barCode = productItem.barCode
-  //         // const modelVal = smFormRef.value.getFormData()
-  //         // modelVal.barCode = productItem.barCode
-  //       }
-  //     }
-  //   },
-  //   rules: [
-  //     {
-  //       required: true,
-  //       message: '产品不能为空',
-  //       trigger: 'blur'
-  //     }
-  //   ],
-  //   children: productList1
-  // },
 ])
 const getFormData = () => {
   return formData.value

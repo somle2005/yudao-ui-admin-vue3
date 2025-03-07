@@ -290,13 +290,13 @@
       </template>
 
       <template #operate="{ scope }">
-        <el-button
+        <!-- <el-button
           link
           @click="openForm('detail', scope.row.id)"
           v-hasPermi="['erp:purchase-order:query']"
         >
           详情
-        </el-button>
+        </el-button> -->
         <el-button
           link
           type="primary"

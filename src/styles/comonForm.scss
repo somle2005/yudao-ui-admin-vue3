@@ -1,3 +1,6 @@
 :global(.purchase-request-items .el-form-item__content) {
   margin-left: 0 !important;
 }
+:global(.el-link__inner) {
+  white-space: nowrap;
+}
