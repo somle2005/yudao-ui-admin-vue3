@@ -149,14 +149,18 @@ export const PurchaseOrderApi = {
   },
 
   // 关闭/启用采购订单
-  updatePurchaseOrderStatusEnable: async (data: {
-    orderIds: number[]
-    enable: boolean
-  }) => {
+  updatePurchaseOrderStatusEnable: async (data: { items: any[]; enable: boolean }) => {
     return await request.put({
       url: `/erp/purchase-order/enableStatus`,
       data
     })
-  }
+  },
 
+  // 采购单提交审核
+  submitPurchaseOrderAudit: async (data: { orderIds: any[] }) => {
+    return await request.post({
+      url: `/erp/purchase-order/submitAudit`,
+      data
+    })
+  }
 }

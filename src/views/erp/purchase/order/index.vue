@@ -114,7 +114,7 @@
           type="primary"
           plain
           @click="handleUpdateStatusEnableBatch(true)"
-          v-hasPermi="['erp:purchase-request:enable']"
+          v-hasPermi="['erp:purchase-order:enable']"
         >
           开启
         </el-button>
@@ -123,9 +123,19 @@
           :disabled="disabledBtn"
           plain
           @click="handleUpdateStatusEnableBatch(false)"
-          v-hasPermi="['erp:purchase-request:enable']"
+          v-hasPermi="['erp:purchase-order:enable']"
         >
           关闭
+        </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['erp:purchase-order:update-status']"
+        >
+          提交审核
         </el-button>
 
         <el-switch
@@ -455,22 +465,26 @@ const handleSelectionChange = (rows: PurchaseOrderVO[]) => {
   selectionList.value = rows
 }
 
-const { disabledBtn, handleUpdateStatusEnableBatch } = useBatch(selectionList, getList,wholeOrderEnable)
+const { disabledBtn, handleUpdateStatusEnableBatch, handleSubmitAuditBatch } = useBatch(
+  selectionList,
+  getList,
+  wholeOrderEnable
+)
 
 const createWholeOrder = (branchOptions) => {
   const map = {
-  no: '单据编号', // 采购单编号
-  noTime:'单据日期',
-  supplierName: '供应商',
-  auditStatus: '审核状态',
-  executeStatus:'执行状态',
-  inStatus:'入库状态',
-  offStatus:'关闭状态',
-  taxPrice: '税额', // items
-  allAmount: '价税合计', // items
-  createUserName: '制单人', // items
+    no: '单据编号', // 采购单编号
+    noTime: '单据日期',
+    supplierName: '供应商',
+    auditStatus: '审核状态',
+    executeStatus: '执行状态',
+    inStatus: '入库状态',
+    offStatus: '关闭状态',
+    taxPrice: '税额', // items
+    allAmount: '价税合计', // items
+    createUserName: '制单人', // items
 
-  operate: '操作'
+    operate: '操作'
   }
   const arr: any = []
   branchOptions.forEach((item) => {
