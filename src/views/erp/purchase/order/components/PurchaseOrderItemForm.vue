@@ -170,7 +170,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="优惠率%" width="120">
+      <!-- <el-table-column label="优惠率%" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.discountPercent`" class="mb-0px!">
             <el-input-number
@@ -182,7 +182,7 @@
             />
           </el-form-item>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column label="交货日期" width="180">
         <template #default="{ row, $index }">

@@ -193,6 +193,15 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await PurchaseOrderApi.getPurchaseOrder(id)
+      if (formData.value?.items?.length) {
+        formData.value.items.forEach((item) => {
+          if (item.product) {
+            item.productName = item.product.name
+          }
+        })
+      } else {
+        formData.value.items = []
+      }
     } finally {
       formLoading.value = false
     }
@@ -410,7 +419,7 @@ const requestFormOptions = ref([
   },
   {
     // colConfig: { span: 24 },
-    prop:"fileUrl",
+    prop: 'fileUrl',
     label: '附件',
     slot: 'fileUrl'
   },

@@ -158,6 +158,7 @@
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
+      isSelection
       :loading="loading"
       :options="tableOptions"
       :data="list"
