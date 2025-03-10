@@ -125,7 +125,7 @@
           </el-form-item>
         </template>
       </el-table-column> -->
-      <el-table-column label="含税单价" width="120">
+      <!-- <el-table-column label="含税单价" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
             <el-input-number
@@ -136,6 +136,12 @@
               class="!w-100%"
             />
           </el-form-item>
+        </template>
+      </el-table-column> -->
+
+      <el-table-column label="产品单价" width="200">
+        <template #default="{ row }">
+          <el-input v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
         </template>
       </el-table-column>
 
@@ -150,13 +156,6 @@
               class="!w-100%"
             />
           </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="产品单价" width="200">
-        <template #default="{ row }">
-          <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
-          <!-- <el-text>{{ row.productPrice }}</el-text> -->
         </template>
       </el-table-column>
 
@@ -199,8 +198,8 @@
       </el-table-column>
       <el-table-column label="X码" width="120">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.xCode`" class="mb-0px!">
-            <el-input v-model="row.xCode" class="!w-100%" />
+          <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
+            <el-input v-model="row.xcode" class="!w-100%" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -213,7 +212,7 @@
         </template>
       </el-table-column>
 
-      <!-- erpPurchaseRequestItemId 采购申请单，申请项编号 -->
+      <!-- purchaseApplyItemId 采购申请单，申请项编号 -->
 
       <!-- 
       <el-table-column label="税额合计" prop="totalPrice" min-width="100">
@@ -274,8 +273,8 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
-  // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
-  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
+  productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
+  // actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
@@ -303,7 +302,7 @@ watch(
       // allAmount: 'allAmount',
       // taxPrice: 'taxPrice',
       // taxPercent: 'taxPercent',
-      // actTaxPrice: 'actTaxPrice',
+      actTaxPrice: 'productPrice',
       applyCount: 'count'
     }
 
@@ -353,14 +352,14 @@ const handleAdd = () => {
     taxPercent: undefined,
     taxPrice: undefined,
     currencyId: undefined,
-    actTaxPrice: undefined,
+    // actTaxPrice: undefined, 产品单价就是含税单价了
     remark: undefined,
     discountPercent: undefined,
     warehouseId: undefined,
     deliveryTime: undefined,
-    xCode: undefined,
+    xcode: undefined,
     containerRate: undefined,
-    erpPurchaseRequestItemId: undefined,
+    purchaseApplyItemId: undefined,
     erpPurchaseRequestItemNo: undefined,
     count: undefined
     // inCount: undefined,

@@ -108,6 +108,33 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleUpdateStatusEnableBatch(true)"
+          v-hasPermi="['erp:purchase-request:enable']"
+        >
+          开启
+        </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          plain
+          @click="handleUpdateStatusEnableBatch(false)"
+          v-hasPermi="['erp:purchase-request:enable']"
+        >
+          关闭
+        </el-button>
+
+        <el-switch
+          v-model="wholeOrderEnable"
+          active-text="整单"
+          class="ml-10px"
+          @change="handleWholeOrderEnable"
+        />
+
         <!-- <el-button
           type="danger"
           plain
@@ -153,6 +180,10 @@
 
       <template #offStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
+      </template>
+
+      <template #rowOffStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
       </template>
 
       <template #operate="{ scope }">
@@ -218,13 +249,16 @@ import * as UserApi from '@/api/system/user'
 import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { useBatch } from './hooks/useBatch'
+import { cloneDeep } from 'lodash-es'
+import { mergeItemsToList } from '@/utils/transformData'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
 const fieldMap = {
   no: '单据编号', // 采购单编号
-  noTime:  {
+  noTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '180px'
@@ -247,6 +281,12 @@ const fieldMap = {
     label: '关闭状态',
     slot: 'offStatus'
   }, // items
+
+  rowOffStatus: {
+    label: '行关闭状态',
+    slot: 'rowOffStatus'
+  }, // items
+
   // 8:  '入库核销状态',
 
   taxPrice: '税额', // items
@@ -266,7 +306,9 @@ const fieldMap = {
   }
 }
 
-tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
+const branchOptions = transformTableOptions(fieldMap, { noWidth: true })
+tableOptions.value = cloneDeep(branchOptions)
+
 // tableOptions.value.forEach(item => {
 //   if(item.width === '100px') {
 //     item.width = '200px'
@@ -279,9 +321,14 @@ defineOptions({ name: 'ErpPurchaseOrder' })
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
+const wholeOrderEnable = ref(false)
 const loading = ref(true) // 列表的加载中
 const list = ref<PurchaseOrderVO[]>([]) // 列表的数据
+const itemsList = ref<PurchaseOrderVO[]>([])
+const wholeOrderList = ref<PurchaseOrderVO[]>([])
 const total = ref(0) // 列表的总页数
+const itemsTotal = ref(0) // 分行的总页数
+const wholeOrderTotal = ref(0) // 整单总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -306,8 +353,37 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
-    list.value = data.list
-    total.value = data.total
+
+    // const computeSum = (items: any[], key: string) => {
+    //   if (!items?.length) return
+    //   return items.reduce((prev, cur) => {
+    //     if (cur[key]) {
+    //       return cur[key] + prev
+    //     }
+    //     return prev
+    //   }, 0)
+    // }
+    // wholeOrderList.value = cloneDeep(data.list).map((item) => {
+    //   const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
+    //   keyList.forEach((key) => {
+    //     item[key] = computeSum(item.items, key)
+    //   })
+    //   return item
+    // })
+
+    wholeOrderList.value = cloneDeep(data.list)
+    itemsList.value = mergeItemsToList(data.list, {
+      id: 'rowItemsId',
+      status: 'rowStatus',
+      orderStatus: 'rowOrderStatus',
+      offStatus: 'rowOffStatus'
+    })
+    // 后续需要补充itemsTotal
+    itemsTotal.value = data.itemsTotal || data.total
+    wholeOrderTotal.value = data.total
+
+    list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
+    total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
   } finally {
     loading.value = false
   }
@@ -379,6 +455,53 @@ const handleSelectionChange = (rows: PurchaseOrderVO[]) => {
   selectionList.value = rows
 }
 
+const { disabledBtn, handleUpdateStatusEnableBatch } = useBatch(selectionList, getList,wholeOrderEnable)
+
+const createWholeOrder = (branchOptions) => {
+  const map = {
+  no: '单据编号', // 采购单编号
+  noTime:'单据日期',
+  supplierName: '供应商',
+  auditStatus: '审核状态',
+  executeStatus:'执行状态',
+  inStatus:'入库状态',
+  offStatus:'关闭状态',
+  taxPrice: '税额', // items
+  allAmount: '价税合计', // items
+  createUserName: '制单人', // items
+
+  operate: '操作'
+  }
+  const arr: any = []
+  branchOptions.forEach((item) => {
+    if (item.prop && map[item.prop]) {
+      arr.push(item)
+    }
+  })
+  return arr
+}
+const handleWholeOrderEnable = (val) => {
+  if (val) {
+    // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
+    const options = createWholeOrder(cloneDeep(branchOptions))
+    const len = options.length - 1
+    const limit = len - 4
+
+    for (let i = limit; i < len; i++) {
+      options[i].width = undefined
+    }
+
+    tableOptions.value = options
+    list.value = wholeOrderList.value
+    total.value = wholeOrderTotal.value
+  } else {
+    tableOptions.value = cloneDeep(branchOptions)
+    list.value = itemsList.value
+    total.value = itemsTotal.value
+  }
+  selectionList.value = []
+}
+
 /** 初始化 **/
 onMounted(async () => {
   await getList()
@@ -387,6 +510,7 @@ onMounted(async () => {
   supplierList.value = await SupplierApi.getSupplierSimpleList()
   userList.value = await UserApi.getSimpleUserList()
 })
+
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印
 </script>

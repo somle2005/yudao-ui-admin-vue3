@@ -4,72 +4,72 @@ export interface PurchaseOrderItemVO {
   /**
    * 含税单价
    */
-  actTaxPrice?: number;
+  actTaxPrice?: number
   /**
    * 箱率
    */
-  containerRate?: string;
+  containerRate?: string
   /**
    * 下单数量
    */
-  count?: number;
+  count?: number
   /**
    * 币别id(财务管理-币别维护)
    */
-  currencyId?: number;
+  currencyId?: number
   /**
    * 交货日期
    */
-  deliveryTime?: string;
+  deliveryTime?: string
   /**
    * 优惠率，百分比
    */
-  discountPercent?: number;
+  discountPercent?: number
   /**
    * 采购申请单的申请项id
    */
-  erpPurchaseRequestItemId?: number;
+  erpPurchaseRequestItemId?: number
   /**
    * 采购申请单No
    */
-  erpPurchaseRequestItemNo?: string;
+  erpPurchaseRequestItemNo?: string
   /**
    * 订单项编号
    */
-  id?: number;
+  id?: number
   /**
    * 采购入库数量
    */
-  inCount?: number;
+  inCount?: number
   /**
    * 产品编号
    */
-  productId?: number;
+  productId?: number
   /**
    * 产品单价
    */
-  productPrice?: number;
+  productPrice?: number
   /**
    * 商品行备注
    */
-  remark?: string;
+  remark?: string
   /**
    * 增值税税率，百分比
    */
-  taxPercent?: number;
+  taxPercent?: number
   /**
    * 税额
    */
-  taxPrice?: number;
+  taxPrice?: number
   /**
    * 仓库编号
    */
-  warehouseId?: number;
+  warehouseId?: number
   /**
    * ========== 其他 ==========
    * x码
    */
-  xCode?: string;
+  xCode?: string
 }
 
 // ERP 采购订单 VO
@@ -133,5 +133,30 @@ export const PurchaseOrderApi = {
   // 导出采购订单 Excel
   exportPurchaseOrder: async (params: any) => {
     return await request.download({ url: `/erp/purchase-order/export-excel`, params })
+  },
+
+  // 审核/反审核采购订单
+  updatePurchaseOrderAuditStatus: async (data: {
+    reviewed: boolean
+    pass: boolean
+    orderIds: number[]
+    reviewComment?: string
+  }) => {
+    return await request.post({
+      url: `/erp/purchase-order/auditStatus`,
+      data
+    })
+  },
+
+  // 关闭/启用采购订单
+  updatePurchaseOrderStatusEnable: async (data: {
+    orderIds: number[]
+    enable: boolean
+  }) => {
+    return await request.put({
+      url: `/erp/purchase-order/enableStatus`,
+      data
+    })
   }
+
 }

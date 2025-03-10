@@ -154,11 +154,21 @@ export const useApplicantTable = () => {
       // 展示分行数据
       const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
       list.value = mergeItemsToList(data.list, {
-        id: 'erpPurchaseRequestItemId',
+        id: 'purchaseApplyItemId',
         status: 'rowStatus',
         orderStatus: 'rowOrderStatus',
         offStatus: 'rowOffStatus'
       })
+
+      // 内部有按顺序把对应item数据取出操作
+
+      // list.value.forEach((item:any) => {
+      //   const productId = item.purchaseApplyItemId
+      //   if(item?.items?.length) {
+      //     item.itemActTaxPrice = item.items.find(item.id === productId).actTaxPrice
+      //   }
+      // })
+
       // 后续需要补充itemsTotal
       total.value = data.itemsTotal || data.total
     } finally {

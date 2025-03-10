@@ -460,9 +460,10 @@ const addApplicantItem = () => {
   applicantItemDialog.value = false
   nextTick(() => {
     const items = formData.value.items
+    console.log(selectionList.value,'selectionList.value')
     const selectList = selectionList.value.map((item: any) => {
       const {
-        erpPurchaseRequestItemId,
+        purchaseApplyItemId,
         productId,
         productBarCode,
         productName,
@@ -472,10 +473,10 @@ const addApplicantItem = () => {
         taxPrice,
         warehouseId,
         expectArrivalDate,
-        no
+        no,
       } = item
       const obj = {
-        erpPurchaseRequestItemId,
+        purchaseApplyItemId,
         productId,
         productName,
         productBarCode,
@@ -485,11 +486,12 @@ const addApplicantItem = () => {
         taxPrice, //税额需要动态计算
         warehouseId,
         deliveryTime: expectArrivalDate,
-        erpPurchaseRequestItemNo: no
+        erpPurchaseRequestItemNo: no,
+        productPrice: actTaxPrice
       }
       return obj
     })
-    formData.value.items = distinctList(items, selectList, 'erpPurchaseRequestItemId')
+    formData.value.items = distinctList(items, selectList, 'purchaseApplyItemId')
   })
 }
 </script>
