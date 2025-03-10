@@ -252,7 +252,7 @@ const fieldMap = {
   },
 
   unOrderCount: '未订购数量',
-  orderCount: '已订购数量',
+  orderedQuantity: '已订购数量',
   inQty: '已入库数量',
   // 改造别名
   rowOrderStatus: {
@@ -264,7 +264,12 @@ const fieldMap = {
     label: '行关闭状态',
     slot: 'rowOffStatus'
   },
-  barCode: '商品编码',
+  productBarCode: {
+    label: '商品编码',
+    slot: 'productBarCode',
+    width: '200px',
+    wrap: true
+  },
   productName: {
     label: '商品名称',
     slot: 'productName',
@@ -323,7 +328,7 @@ const createWholeOrder = (branchOptions) => {
     orderStatus: '订购状态',
     offStatus: '关闭状态',
     unOrderCount: '未订购数量',
-    orderCount: '已订购数量',
+    orderedQuantity: '已订购数量',
     inQty: '已入库数量',
     count: '申请数量',
     approveCount: '批准数量',
@@ -409,7 +414,7 @@ const getList = async () => {
       }, 0)
     }
     wholeOrderList.value = cloneDeep(data.list).map((item) => {
-      const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
+      const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount','orderedQuantity']
       keyList.forEach((key) => {
         item[key] = computeSum(item.items, key)
       })
