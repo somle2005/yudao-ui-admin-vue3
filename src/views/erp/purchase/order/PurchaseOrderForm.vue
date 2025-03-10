@@ -22,18 +22,31 @@
       <!-- <template #items="{ scope, model }"> 
        {{ console.log(scope, model, '打印scope-model') }}  -->
 
-      <template #fileUrl="{ model }">
-        <UploadFile :is-show-tip="false" v-model="model.fileUrl" :limit="1" />
+      <template #fileUrl="{ model, scope }">
+        <UploadFile
+          :disabled="scope?.attrs?.disabled"
+          :is-show-tip="false"
+          v-model="model.fileUrl"
+          :limit="1"
+        />
       </template>
 
       <template #items>
-        <el-button type="primary" @click="selectApplicantItem" style="margin-bottom: 10px"
+        <el-button
+          :disabled="itemsFormdisabled"
+          type="primary"
+          @click="selectApplicantItem"
+          style="margin-bottom: 10px"
           >选择申请项</el-button
         >
 
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="订单产品清单" name="item">
-            <PurchaseOrderItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
+            <PurchaseOrderItemForm
+              ref="itemFormRef"
+              :items="formData.items"
+              :disabled="itemsFormdisabled"
+            />
             <!-- <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" /> -->
           </el-tab-pane>
         </el-tabs>
@@ -41,10 +54,18 @@
     </SmForm>
 
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading" v-if="!disabled">
+      <el-button v-if="!auditType" @click="submitForm" type="primary" :disabled="formLoading">
         确 定
       </el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
+      <template v-if="auditType">
+        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+          不同意</el-button
+        >
+        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
+          同意</el-button
+        >
+      </template>
     </template>
   </Dialog>
 
@@ -124,6 +145,8 @@ import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { DICT_TYPE } from '@/utils/dict'
 import { useApplicantTable } from './hooks/useApplicantTable'
 import { distinctList } from '@/utils/transformData'
+import { AUDIT_TYPE } from '@/utils/constant'
+import { createDBFn } from '@/utils/decorate'
 
 let {
   queryParams,
@@ -203,11 +226,234 @@ watch(
   { deep: true }
 )
 
+const auditType = computed(() => formType.value === 'audit')
+const itemsFormdisabled = computed(() => formType.value === 'audit')
+const createRequestFormOptions = () => {
+  return [
+    {
+      type: 'input',
+      label: '单据编号',
+      prop: 'no',
+      placeholder: '保存时自动生成',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      }
+    },
+    {
+      type: 'date-picker',
+      placeholder: '请选择单据日期',
+      prop: 'noTime',
+      label: '单据日期',
+      attrs: {
+        clearable: true,
+        type: 'date',
+        'value-format': 'x',
+        class: '!w-1/1',
+        style: {
+          width: '100%'
+        }
+      }
+      // rules: [
+      //   {
+      //     required: true,
+      //     message: '单据日期不能为空',
+      //     trigger: 'blur'
+      //   }
+      // ]
+    },
+    {
+      type: 'select',
+      placeholder: '请选择供应商',
+      prop: 'supplierId',
+      label: '供应商',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: supplierList
+    },
+    {
+      type: 'select',
+      placeholder: '请选择结算账户',
+      prop: 'accountId',
+      label: '结算账户',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: accountList
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择财务主体',
+      prop: 'purchaseEntityId',
+      label: '财务主体',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+
+    {
+      type: 'date-picker',
+      placeholder: '请选择结算日期',
+      prop: 'settlementDate',
+      label: '结算日期',
+      attrs: {
+        clearable: true,
+        type: 'date',
+        'value-format': 'x',
+        class: '!w-1/1',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'input-number',
+      placeholder: '请输入定金金额',
+      prop: 'depositPrice',
+      label: '定金金额',
+      attrs: {
+        'controls-position': 'right',
+        min: 0,
+        precision: 2,
+        // class: '!w-1/1',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+
+    {
+      type: 'input',
+      label: '收货地址',
+      prop: 'address',
+      placeholder: '请输入收货地址',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      type: 'input',
+      label: '付款条款',
+      prop: 'paymentTerms',
+      placeholder: '请输入付款条款',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      type: 'input',
+      label: '备注',
+      prop: 'remark',
+      placeholder: '请输入备注',
+      attrs: {
+        type: 'textarea',
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      // colConfig: { span: 24 },
+      prop: 'fileUrl',
+      label: '附件',
+      slot: 'fileUrl'
+    },
+    {
+      colConfig: { span: 24 },
+      slot: 'items',
+      formItemConfig: {
+        class: 'purchase-request-items'
+      }
+    }
+  ]
+}
+const requestFormOptions = ref(createRequestFormOptions())
+
+const createAuditFormOptions = (formOptions, auditType) => {
+  const index = formOptions.findIndex((item) => item.prop === 'fileUrl') + 1
+  const obj: any = {
+    type: 'input',
+    label: '审核意见',
+    prop: 'reviewComment',
+    placeholder: '请输入审核意见',
+    attrs: {
+      style: { width: '100%' },
+      clearable: true
+    }
+  }
+  formOptions.splice(index, 0, obj)
+  formOptions.forEach((item) => {
+    if (item.prop && item.prop !== 'reviewComment') {
+      if (item.attrs) {
+        item.attrs!.disabled = auditType
+      } else {
+        item.attrs = {
+          disabled: auditType
+        }
+      }
+    }
+  })
+  return formOptions
+}
+
+const updateFormOptions = (formOptions) => {
+  const index = formOptions.findIndex((item) => item.prop === 'fileUrl') + 1
+  const obj: any = {
+    type: 'input',
+    label: '审核意见',
+    prop: 'reviewComment',
+    attrs: {
+      style: { width: '100%' },
+      clearable: true,
+      disabled: true
+    }
+  }
+  formOptions.splice(index, 0, obj)
+  return formOptions
+}
+
+const operateAudit = (type) => {
+  const map = {
+    create: () => {
+      requestFormOptions.value = createRequestFormOptions()
+    },
+    audit: () => {
+      requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
+    },
+    update: () => {
+      requestFormOptions.value = updateFormOptions(createRequestFormOptions())
+    }
+  }
+  const fn = map[type]
+  if (fn) {
+    fn()
+    return
+  }
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
+  operateAudit(type)
   resetForm()
   // 修改时，设置数据
   if (id) {
@@ -264,6 +510,8 @@ const handlePurchaseRequestChange = (request: PurchaseRequestVO) => {
   formData.value.items = request.items.filter((item) => item.count > 0)
 }
 
+const auditBtnType = ref(AUDIT_TYPE.agree)
+
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
@@ -280,7 +528,15 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await PurchaseOrderApi.createPurchaseOrder(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'audit') {
+      await PurchaseOrderApi.updatePurchaseOrderAuditStatus({
+        reviewed: true,
+        pass: auditBtnType.value === AUDIT_TYPE.agree,
+        orderIds: [data.id],
+        reviewComment: data.reviewComment
+      })
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'update') {
       await PurchaseOrderApi.updatePurchaseOrder(data)
       message.success(t('common.updateSuccess'))
     }
@@ -292,166 +548,18 @@ const submitForm = async () => {
   }
 }
 
+const changeAuditBtnType = (type) => {
+  auditBtnType.value = type
+  submitForm()
+}
+const submitFormDB = createDBFn(changeAuditBtnType)
+
 /** 重置表单 */
 const resetForm = () => {
   formData.value = initFormData()
   formRef.value?.resetFields()
 }
 
-const requestFormOptions = ref([
-  {
-    type: 'input',
-    label: '单据编号',
-    prop: 'no',
-    placeholder: '保存时自动生成',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true,
-      disabled: true
-    }
-  },
-  {
-    type: 'date-picker',
-    placeholder: '请选择单据日期',
-    prop: 'noTime',
-    label: '单据日期',
-    attrs: {
-      clearable: true,
-      type: 'date',
-      'value-format': 'x',
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-    // rules: [
-    //   {
-    //     required: true,
-    //     message: '单据日期不能为空',
-    //     trigger: 'blur'
-    //   }
-    // ]
-  },
-  {
-    type: 'select',
-    placeholder: '请选择供应商',
-    prop: 'supplierId',
-    label: '供应商',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    children: supplierList
-  },
-  {
-    type: 'select',
-    placeholder: '请选择结算账户',
-    prop: 'accountId',
-    label: '结算账户',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    children: accountList
-  },
-
-  {
-    type: 'select',
-    placeholder: '请选择财务主体',
-    prop: 'purchaseEntityId',
-    label: '财务主体',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
-      }
-    },
-    children: financeSubjectList
-  },
-
-  {
-    type: 'date-picker',
-    placeholder: '请选择结算日期',
-    prop: 'settlementDate',
-    label: '结算日期',
-    attrs: {
-      clearable: true,
-      type: 'date',
-      'value-format': 'x',
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  },
-  {
-    type: 'input-number',
-    placeholder: '请输入定金金额',
-    prop: 'depositPrice',
-    label: '定金金额',
-    attrs: {
-      'controls-position': 'right',
-      min: 0,
-      precision: 2,
-      // class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  },
-
-  {
-    type: 'input',
-    label: '收货地址',
-    prop: 'address',
-    placeholder: '请输入收货地址',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
-  {
-    type: 'input',
-    label: '付款条款',
-    prop: 'paymentTerms',
-    placeholder: '请输入付款条款',
-    attrs: {
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
-  {
-    type: 'input',
-    label: '备注',
-    prop: 'remark',
-    placeholder: '请输入备注',
-    attrs: {
-      type: 'textarea',
-      style: { width: '100%' },
-      clearable: true
-    }
-  },
-  {
-    // colConfig: { span: 24 },
-    prop: 'fileUrl',
-    label: '附件',
-    slot: 'fileUrl'
-  },
-  {
-    colConfig: { span: 24 },
-    slot: 'items',
-    formItemConfig: {
-      class: 'purchase-request-items'
-    }
-  }
-])
 const getFormData = () => {
   return formData.value
 }
@@ -460,7 +568,7 @@ const addApplicantItem = () => {
   applicantItemDialog.value = false
   nextTick(() => {
     const items = formData.value.items
-    console.log(selectionList.value,'selectionList.value')
+    console.log(selectionList.value, 'selectionList.value')
     const selectList = selectionList.value.map((item: any) => {
       const {
         purchaseApplyItemId,
@@ -473,7 +581,7 @@ const addApplicantItem = () => {
         taxPrice,
         warehouseId,
         expectArrivalDate,
-        no,
+        no
       } = item
       const obj = {
         purchaseApplyItemId,

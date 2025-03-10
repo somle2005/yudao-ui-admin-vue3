@@ -209,25 +209,24 @@
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['erp:purchase-order:update']"
-          :disabled="scope.row.status === 20"
         >
           编辑
         </el-button>
         <el-button
           link
           type="primary"
-          @click="handleUpdateStatus(scope.row.id, 20)"
+          @click="handleUpdateStatus(scope.row, true)"
           v-hasPermi="['erp:purchase-order:update-status']"
-          v-if="![5].includes(scope.row.status)"
+          v-if="![5].includes(scope.row.auditStatus)"
         >
           审核
         </el-button>
         <el-button
           link
           type="danger"
-          @click="handleUpdateStatus(scope.row.id, 10)"
+          @click="handleUpdateStatus(scope.row, false)"
           v-hasPermi="['erp:purchase-order:update-status']"
-          v-if="scope.row.status === 5"
+          v-if="scope.row.auditStatus === 5"
         >
           反审核
         </el-button>
@@ -431,18 +430,6 @@ const handleDelete = async (ids: number[]) => {
   } catch {}
 }
 
-/** 审批/反审批操作 */
-const handleUpdateStatus = async (id: number, status: number) => {
-  try {
-    // 审批的二次确认
-    await message.confirm(`确定${status === 20 ? '审批' : '反审批'}该订单吗？`)
-    // 发起审批
-    await PurchaseOrderApi.updatePurchaseOrderStatus(id, status)
-    message.success(`${status === 20 ? '审批' : '反审批'}成功`)
-    // 刷新列表
-    await getList()
-  } catch {}
-}
 
 /** 导出按钮操作 */
 const handleExport = async () => {
@@ -470,6 +457,35 @@ const { disabledBtn, handleUpdateStatusEnableBatch, handleSubmitAuditBatch } = u
   getList,
   wholeOrderEnable
 )
+
+/** 审核/反审核操作 */
+const handleUpdateStatus = async (row: any, reviewed: boolean) => {
+  const { id, items = [] } = row
+  /**
+      1、提交审核状态太多-直接出现
+      2、很多情况都会出现 审核按钮 只要不是已审核就出现
+      3、已审核状态 出现 反审核按钮
+   */
+  // 执行审核操作
+  if (reviewed) {
+    openForm('audit', id)
+    return
+  }
+  try {
+    // 审核的二次确认
+    await message.confirm(`确定反审核该申请吗？`)
+    // 发起审核
+    // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
+    await PurchaseOrderApi.updatePurchaseOrderAuditStatus({
+      reviewed,
+      pass: true,
+      orderIds: [id]
+    })
+    message.success('反审核成功')
+    // 刷新列表
+    await getList()
+  } catch {}
+}
 
 const createWholeOrder = (branchOptions) => {
   const map = {

@@ -85,6 +85,7 @@ export interface PurchaseOrderVO {
   outCount: number // 采购出库数量
   returnCount: number // 采购退货数量,
   items: PurchaseOrderItemVO[] // 采购订单明细
+  reviewComment?: string // 审核意见
 }
 
 // ERP 采购订单 API
