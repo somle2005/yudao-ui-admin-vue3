@@ -451,7 +451,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           items: items.map((item) => {
             return {
               id: item.id,
-              approveCount: item.orderQuantity
+              orderQuantity: item.orderQuantity
             }
           })
         })
