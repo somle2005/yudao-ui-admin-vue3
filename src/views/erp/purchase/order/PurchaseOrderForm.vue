@@ -48,7 +48,24 @@
     </template>
   </Dialog>
 
-  <Dialog title="采购申请项" v-model="applicantItemDialog" width="1000">
+  <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1000">
+    <ContentWrap>
+      <!-- 搜索工作栏 -->
+      <SmForm
+        class="-mb-15px"
+        ref="queryFormRef"
+        :inline="true"
+        label-width="68px"
+        v-model="queryParams"
+        :options="searchFormOptions"
+        :getModelValue="getSearchFormData"
+      >
+        <template #action>
+          <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
+          <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        </template>
+      </SmForm>
+    </ContentWrap>
     <ContentWrap style="padding-bottom: 0">
       <SmTable
         border
@@ -118,7 +135,11 @@ let {
   handleSelectionChange,
   getList,
   selectApplicantItem,
-  applicantItemDialog
+  applicantItemDialog,
+  getSearchFormData,
+  searchFormOptions,
+  handleQuery,
+  resetQuery
 } = useApplicantTable()
 
 /** ERP 销售订单表单 */

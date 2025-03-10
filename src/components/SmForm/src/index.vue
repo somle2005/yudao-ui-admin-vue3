@@ -368,4 +368,7 @@ const onSuccess = (
 .\!w-240px {
   width: 240px !important;
 }
+.\!w-160px {
+  width: 160px !important;
+}
 </style>

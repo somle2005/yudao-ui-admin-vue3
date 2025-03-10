@@ -41,7 +41,7 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'select',
       placeholder: '请选择申请人',
-      prop: 'applicant',
+      prop: 'applicantId',
       label: '申请人',
       attrs: {
         class: '!w-240px',
@@ -56,7 +56,7 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'tree-select',
       placeholder: '请选择申请部门',
-      prop: 'applicationDept',
+      prop: 'applicationDeptId',
       label: '申请部门',
       attrs: {
         class: '!w-240px',
@@ -95,7 +95,7 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'select',
       placeholder: '请选择审核人',
-      prop: 'applicant',
+      prop: 'auditorId',
       label: '审核人',
       attrs: {
         class: '!w-240px',

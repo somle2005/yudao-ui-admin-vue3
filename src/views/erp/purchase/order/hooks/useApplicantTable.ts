@@ -1,4 +1,6 @@
 import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/erp/purchase/request'
+import { getDeptTree, getUserList } from '@/commonData'
+import { FormOptions } from '@/components/SmForm/src/types/types'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList } from '@/utils/transformData'
@@ -107,7 +109,7 @@ export const useApplicantTable = () => {
       // supplierId: undefined,
       productId: undefined,
       requestTime: [],
-      status: undefined,
+      status: 5,
       remark: undefined,
       applicant: undefined,
       creator: undefined,
@@ -118,7 +120,7 @@ export const useApplicantTable = () => {
   }
   resetQueryParams(queryParams)
 
-  const handleSearch = () => {
+  const handleQuery = () => {
     queryParams.pageNo = 1
     getList()
   }
@@ -173,6 +175,114 @@ export const useApplicantTable = () => {
   }
 
 
+
+
+    const userList = getUserList()
+    const { deptList, defaultProps } = getDeptTree()
+     const searchFormOptions = ref<Array<FormOptions>>([
+       {
+         type: 'input',
+         label: '单据编号',
+         prop: 'no',
+         placeholder: '请输入单据编号',
+         attrs: {
+           class: '!w-160px',
+           style: { width: '100%' },
+           clearable: true
+         }
+       },
+       {
+         type: 'date-picker',
+         placeholder: '请选择单据日期',
+         prop: 'requestTime',
+         label: '单据日期',
+         attrs: {
+           clearable: true,
+           type: 'daterange',
+           'value-format': 'YYYY-MM-DD HH:mm:ss',
+           'start-placeholder': '开始日期',
+           'end-placeholder': '结束日期',
+           defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+           class: '!w-240px',
+           style: {
+             width: '100%'
+           }
+         }
+       },
+       {
+         type: 'select',
+         placeholder: '请选择申请人',
+         prop: 'applicantId',
+         label: '申请人',
+         attrs: {
+           class: '!w-160px',
+           filterable: true,
+           clearable: true,
+           style: {
+             width: '100%'
+           }
+         },
+         children: userList
+       },
+       {
+         type: 'tree-select',
+         placeholder: '请选择申请部门',
+         prop: 'applicationDeptId',
+         label: '申请部门',
+         attrs: {
+           class: '!w-160px',
+           filterable: true,
+           clearable: true,
+           data: deptList,
+           props: defaultProps,
+           'check-strictly': true,
+           'node-key': 'id'
+           // style: {
+           //   width: '100%'
+           // }
+         },
+       },
+       {
+         type: 'select',
+         placeholder: '请选择审核人',
+         prop: 'auditorId',
+         label: '审核人',
+         attrs: {
+           class: '!w-160px',
+           filterable: true,
+           clearable: true,
+           style: {
+             width: '100%'
+           }
+         },
+         children: userList
+       },
+     ])
+  
+    const events = {
+      'keyup.enter': (e, item) => {
+        handleQuery()
+        console.log(e, '回车事件出发了', item)
+      }
+    }
+  
+    searchFormOptions.value.forEach((item) => {
+      item.events = events
+    })
+
+
+  const getSearchFormData = () => {
+    return queryParams
+  }
+  const resetQuery = () => {
+    resetQueryParams(queryParams)
+    handleQuery()
+  }
+
+  
+
+
+
   return {
     queryParams,
     resetQueryParams,
@@ -185,6 +295,10 @@ export const useApplicantTable = () => {
     getList,
     resetApplicantTable,
     selectApplicantItem,
-    applicantItemDialog
+    applicantItemDialog,
+    getSearchFormData,
+    searchFormOptions,
+    handleQuery,
+    resetQuery,
   }
 }

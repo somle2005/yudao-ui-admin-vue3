@@ -210,7 +210,7 @@
           type="primary"
           @click="handleUpdateStatus(scope.row.id, 20)"
           v-hasPermi="['erp:purchase-order:update-status']"
-          v-if="scope.row.status === 10"
+          v-if="![5].includes(scope.row.status)"
         >
           审核
         </el-button>
@@ -219,7 +219,7 @@
           type="danger"
           @click="handleUpdateStatus(scope.row.id, 10)"
           v-hasPermi="['erp:purchase-order:update-status']"
-          v-else
+          v-if="scope.row.status === 5"
         >
           反审核
         </el-button>

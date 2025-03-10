@@ -224,10 +224,10 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column label="商品行备注" min-width="150">
+      <el-table-column label="备注" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-            <el-input v-model="row.remark" type="textarea" placeholder="商品行备注" />
+            <el-input v-model="row.remark" type="textarea" placeholder="请输入备注" />
           </el-form-item>
         </template>
       </el-table-column>
