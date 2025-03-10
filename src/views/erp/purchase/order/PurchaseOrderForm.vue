@@ -173,11 +173,11 @@ watch(
     if (!val) {
       return
     }
-    const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
-    const discountPrice =
-      val.discountPercent != null ? erpPriceMultiply(totalPrice, val.discountPercent / 100.0) : 0
-    formData.value.discountPrice = discountPrice
-    formData.value.totalPrice = totalPrice - discountPrice
+    // const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
+    // const discountPrice =
+    //   val.discountPercent != null ? erpPriceMultiply(totalPrice, val.discountPercent / 100.0) : 0
+    // formData.value.discountPrice = discountPrice
+    // formData.value.totalPrice = totalPrice - discountPrice
   },
   { deep: true }
 )
@@ -243,7 +243,10 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as PurchaseOrderVO
+    let data = formData.value as unknown as PurchaseOrderVO
+    if (itemFormRef?.value?.formData) {
+      data.items = itemFormRef.value.formData
+    }
     if (formType.value === 'create') {
       await PurchaseOrderApi.createPurchaseOrder(data)
       message.success(t('common.createSuccess'))
@@ -407,6 +410,7 @@ const requestFormOptions = ref([
   },
   {
     // colConfig: { span: 24 },
+    prop:"fileUrl",
     label: '附件',
     slot: 'fileUrl'
   },
@@ -437,7 +441,8 @@ const addApplicantItem = () => {
         taxPercent,
         taxPrice,
         warehouseId,
-        expectArrivalDate
+        expectArrivalDate,
+        no
       } = item
       const obj = {
         erpPurchaseRequestItemId,
@@ -449,7 +454,8 @@ const addApplicantItem = () => {
         taxPercent,
         taxPrice, //税额需要动态计算
         warehouseId,
-        deliveryTime: expectArrivalDate
+        deliveryTime: expectArrivalDate,
+        erpPurchaseRequestItemNo: no
       }
       return obj
     })

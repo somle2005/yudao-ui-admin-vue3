@@ -1,5 +1,77 @@
 import request from '@/config/axios'
 
+export interface PurchaseOrderItemVO {
+  /**
+   * 含税单价
+   */
+  actTaxPrice?: number;
+  /**
+   * 箱率
+   */
+  containerRate?: string;
+  /**
+   * 下单数量
+   */
+  count?: number;
+  /**
+   * 币别id(财务管理-币别维护)
+   */
+  currencyId?: number;
+  /**
+   * 交货日期
+   */
+  deliveryTime?: string;
+  /**
+   * 优惠率，百分比
+   */
+  discountPercent?: number;
+  /**
+   * 采购申请单的申请项id
+   */
+  erpPurchaseRequestItemId?: number;
+  /**
+   * 采购申请单No
+   */
+  erpPurchaseRequestItemNo?: string;
+  /**
+   * 订单项编号
+   */
+  id?: number;
+  /**
+   * 采购入库数量
+   */
+  inCount?: number;
+  /**
+   * 产品编号
+   */
+  productId?: number;
+  /**
+   * 产品单价
+   */
+  productPrice?: number;
+  /**
+   * 商品行备注
+   */
+  remark?: string;
+  /**
+   * 增值税税率，百分比
+   */
+  taxPercent?: number;
+  /**
+   * 税额
+   */
+  taxPrice?: number;
+  /**
+   * 仓库编号
+   */
+  warehouseId?: number;
+  /**
+   * ========== 其他 ==========
+   * x码
+   */
+  xCode?: string;
+}
+
 // ERP 采购订单 VO
 export interface PurchaseOrderVO {
   id: number // 订单工单编号
@@ -11,7 +83,8 @@ export interface PurchaseOrderVO {
   status: number // 状态
   remark: string // 备注
   outCount: number // 采购出库数量
-  returnCount: number // 采购退货数量
+  returnCount: number // 采购退货数量,
+  items: PurchaseOrderItemVO[] // 采购订单明细
 }
 
 // ERP 采购订单 API

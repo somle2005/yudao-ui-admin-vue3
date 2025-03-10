@@ -163,10 +163,11 @@ export const useApplicantTable = () => {
       loading.value = false
     }
   }
-  getList()
+
 
   const applicantItemDialog = ref(false)
   const selectApplicantItem = () => {
+    getList()
     applicantItemDialog.value = true
     resetApplicantTable()
   }

@@ -47,7 +47,8 @@ export const nullToList = (formData: any, mapKeys: string[]) => {
 }
 
 // 数组去重
-export const distinctList = (list: any[], selectList: any[], compareKey = 'id') => {
+export const distinctList = (sourceList: any[], selectList: any[], compareKey = 'id') => {
+  const list = cloneDeep(sourceList)
   try {
     const map = {}
     list.forEach((item) => {
@@ -67,7 +68,7 @@ export const distinctList = (list: any[], selectList: any[], compareKey = 'id') 
 /**
  * 计算税额和价税合计
  * @param list
- * @param keyMap 申请数量applyCount 税率taxPercent 含税单价actTaxPrice   价税合计allAmount 税额taxPrice
+ * @param keyMap 申请数量applyCount 税率taxPercent 含税单价actTaxPrice   价税合计allAmount 税额taxPrice productPrice产品单价
  * @returns
  */
 
@@ -79,6 +80,7 @@ export const computeTaxPriceAndAllAmount = (
     actTaxPrice?: string
     allAmount?: string
     taxPrice?: string
+    productPrice?: string
   }
 ) => {
   if (!list?.length) return list
@@ -87,7 +89,8 @@ export const computeTaxPriceAndAllAmount = (
     applyCount = 'count',
     actTaxPrice = 'actTaxPrice',
     allAmount = 'allAmount',
-    taxPrice = 'taxPrice'
+    taxPrice = 'taxPrice',
+    productPrice = 'productPrice'
   } = keyMap || {}
 
   list.forEach((item) => {
@@ -99,6 +102,8 @@ export const computeTaxPriceAndAllAmount = (
       item[taxPrice] = erpPriceMultiply(item[actTaxPrice], scale)
       // 价税合计 = 含税单价 * 申请数量。
       item[allAmount] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+      // 产品单价
+      item[productPrice] = erpPriceMultiply(item[actTaxPrice], 1 / (1 + taxPercent100))
     }
   })
 }

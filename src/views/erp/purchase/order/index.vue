@@ -141,7 +141,7 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-        <el-button
+        <!-- <el-button
           type="danger"
           plain
           @click="handleDelete(selectionList.map((item) => item.id))"
@@ -149,128 +149,11 @@
           :disabled="selectionList.length === 0"
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
-        </el-button>
+        </el-button> -->
       </el-form-item>
     </el-form>
   </ContentWrap>
 
-  <!-- 列表 -->
-  <!--  <ContentWrap>
-    <el-table
-      v-loading="loading"
-      :data="list"
-      :stripe="true"
-      :show-overflow-tooltip="true"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column width="30" label="选择" type="selection" />
-      <el-table-column min-width="180" label="订单单号" align="center" prop="no" />
-      <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
-      <el-table-column label="供应商" align="center" prop="supplierName" />
-      <el-table-column
-        label="订单时间"
-        align="center"
-        prop="orderTime"
-        :formatter="dateFormatter2"
-        width="120px"
-      />
-      <el-table-column label="创建人" align="center" prop="creatorName" />
-      <el-table-column
-        label="总数量"
-        align="center"
-        prop="totalCount"
-        :formatter="erpCountTableColumnFormatter"
-      />
-      <el-table-column
-        label="入库数量"
-        align="center"
-        prop="inCount"
-        :formatter="erpCountTableColumnFormatter"
-      />
-      <el-table-column
-        label="退货数量"
-        align="center"
-        prop="returnCount"
-        :formatter="erpCountTableColumnFormatter"
-      />
-      <el-table-column
-        label="金额合计"
-        align="center"
-        prop="totalProductPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column
-        label="含税金额"
-        align="center"
-        prop="totalPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column
-        label="支付订金"
-        align="center"
-        prop="depositPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="220">
-        <template #default="scope">
-          <el-button
-            link
-            @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['erp:purchase-order:query']"
-          >
-            详情
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:purchase-order:update']"
-            :disabled="scope.row.status === 20"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="handleUpdateStatus(scope.row.id, 20)"
-            v-hasPermi="['erp:purchase-order:update-status']"
-            v-if="scope.row.status === 10"
-          >
-            审批
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleUpdateStatus(scope.row.id, 10)"
-            v-hasPermi="['erp:purchase-order:update-status']"
-            v-else
-          >
-            反审批
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete([scope.row.id])"
-            v-hasPermi="['erp:purchase-order:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!~~ 分页 ~~>
-    <Pagination
-      :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
-  </ContentWrap>-->
 
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">

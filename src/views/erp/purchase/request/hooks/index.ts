@@ -62,7 +62,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
     if (formType === 'audit') {
       item.approveCount = item.count
     }
-    item.taxPercent = item.taxPercent * 100
+    // item.taxPercent = item.taxPercent * 100
   })
 
   nextTick(() => {
@@ -77,7 +77,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
 // 合并 合并采购时列表勾选中传递的items数据
 const mergeSelectItemsData = (formData, data, smFormRef) => {
   data.items.forEach((item) => {
-    item.taxPercent = item.taxPercent * 100
+    // item.taxPercent = item.taxPercent * 100
   })
   formData.items = data.items
 
@@ -422,7 +422,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       // 税率拿到提交数据进行转换处理
       const data = cloneDeep(getFormData())
       data.items.forEach((item) => {
-        item.taxPercent = item.taxPercent / 100
+        // item.taxPercent = item.taxPercent / 100
         return item
       })
 
