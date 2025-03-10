@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash-es'
+import { erpPriceMultiply } from '@/utils'
 
 /**
  *
@@ -61,4 +62,43 @@ export const distinctList = (list: any[], selectList: any[], compareKey = 'id') 
     console.log('报错了', e)
   }
   return list
+}
+
+/**
+ * 计算税额和价税合计
+ * @param list
+ * @param keyMap 申请数量applyCount 税率taxPercent 含税单价actTaxPrice   价税合计allAmount 税额taxPrice
+ * @returns
+ */
+
+export const computeTaxPriceAndAllAmount = (
+  list: any[],
+  keyMap?: {
+    taxPercent?: string
+    applyCount?: string
+    actTaxPrice?: string
+    allAmount?: string
+    taxPrice?: string
+  }
+) => {
+  if (!list?.length) return list
+  const {
+    taxPercent = 'taxPercent',
+    applyCount = 'count',
+    actTaxPrice = 'actTaxPrice',
+    allAmount = 'allAmount',
+    taxPrice = 'taxPrice'
+  } = keyMap || {}
+
+  list.forEach((item) => {
+    // 申请数量和税率都要有 才能计算出税额
+    if (item[taxPercent] && item[applyCount] && item[actTaxPrice]) {
+      const taxPercent100 = item.taxPercent / 100.0
+      // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
+      const scale = (taxPercent100 / (1 + taxPercent100)) * item[applyCount]
+      item[taxPrice] = erpPriceMultiply(item[actTaxPrice], scale)
+      // 价税合计 = 含税单价 * 申请数量。
+      item[allAmount] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+    }
+  })
 }

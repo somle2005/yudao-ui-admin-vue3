@@ -70,7 +70,7 @@
                 placeholder="请选择货币"
                 clearable
                 filterable
-                style="width:100px"
+                style="width: 100px"
               >
                 <el-option
                   v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
@@ -200,7 +200,7 @@
       <el-table-column label="商品行备注" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-            <el-input v-model="row.remark" type="textarea"  placeholder="商品行备注" />
+            <el-input v-model="row.remark" type="textarea" placeholder="商品行备注" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -227,6 +227,7 @@ import {
   getSumValue
 } from '@/utils'
 import { cloneDeep } from 'lodash-es'
+import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 
 const props = defineProps({
   items: {
@@ -269,16 +270,26 @@ watch(
     if (!val || val.length === 0) {
       return
     }
-    // 循环处理
-    val.forEach((item) => {
-      item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
-      item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
-      if (item.totalProductPrice != null) {
-        item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
-      } else {
-        item.totalPrice = undefined
-      }
-    })
+    const keyMap = {
+      // allAmount: 'allAmount',
+      // taxPrice: 'taxPrice',
+      // taxPercent: 'taxPercent',
+      // actTaxPrice: 'actTaxPrice',
+      applyCount: 'applyCount',
+    }
+
+    computeTaxPriceAndAllAmount(val,keyMap)
+
+    // // 循环处理
+    // val.forEach((item) => {
+    //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
+    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+    //   if (item.totalProductPrice != null) {
+    //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
+    //   } else {
+    //     item.totalPrice = undefined
+    //   }
+    // })
   },
   { deep: true }
 )

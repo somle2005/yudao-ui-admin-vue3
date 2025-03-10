@@ -226,6 +226,7 @@ import {
   getSumValue
 } from '@/utils'
 import { changeValLimit } from '@/utils/high/index'
+import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -312,25 +313,26 @@ watch(
      */
 
     // 循环处理
-    val.forEach((item) => {
-      // 申请数量和税率都要有 才能计算出税额
-      if (item.taxPercent && item.count && item.actTaxPrice) {
-        const taxPercent100 = item.taxPercent / 100.0
-        // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
-        const scale = (taxPercent100 / (1 + taxPercent100)) * item.count
-        item.taxPrice = erpPriceMultiply(item.actTaxPrice, scale)
-        // 价税合计 = 含税单价 * 申请数量。
-        item.allAmount = erpPriceMultiply(item.actTaxPrice, item.count)
-      }
+    computeTaxPriceAndAllAmount(val)
+    // val.forEach((item) => {
+    //   // 申请数量和税率都要有 才能计算出税额
+    //   if (item.taxPercent && item.count && item.actTaxPrice) {
+    //     const taxPercent100 = item.taxPercent / 100.0
+    //     // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
+    //     const scale = (taxPercent100 / (1 + taxPercent100)) * item.count
+    //     item.taxPrice = erpPriceMultiply(item.actTaxPrice, scale)
+    //     // 价税合计 = 含税单价 * 申请数量。
+    //     item.allAmount = erpPriceMultiply(item.actTaxPrice, item.count)
+    //   }
 
-      // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
-      // item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
-      // if (item.totalProductPrice != null) {
-      //   item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
-      // } else {
-      //   item.totalPrice = undefined
-      // }
-    })
+    //   // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
+    //   // item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+    //   // if (item.totalProductPrice != null) {
+    //   //   item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
+    //   // } else {
+    //   //   item.totalPrice = undefined
+    //   // }
+    // })
   },
   { deep: true }
 )
