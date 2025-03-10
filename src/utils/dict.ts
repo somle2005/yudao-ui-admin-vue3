@@ -233,6 +233,7 @@ export enum DICT_TYPE {
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
+  ERP_EXECUTE_STATUS = 'erp_execute_status', // 采购执行状态
 
 
   // ========== AI - 人工智能模块  ==========

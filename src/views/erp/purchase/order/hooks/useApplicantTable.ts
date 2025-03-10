@@ -140,8 +140,8 @@ export const useApplicantTable = () => {
 
   // 弹窗关闭的时候清空选择
   const resetApplicantTable = () => {
-    console.log('打开前重置-关闭清空-重置queryParams')
     selectionList.value = []
+    list.value = []
     resetQueryParams(queryParams)
   }
 
@@ -167,10 +167,11 @@ export const useApplicantTable = () => {
 
   const applicantItemDialog = ref(false)
   const selectApplicantItem = () => {
+    resetApplicantTable()
     getList()
     applicantItemDialog.value = true
-    resetApplicantTable()
   }
+
 
   return {
     queryParams,

@@ -88,7 +88,20 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="采购入库数量" width="120">
+      <el-table-column label="数量" width="120">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.count`" class="mb-0px!">
+            <el-input-number
+              v-model="row.count"
+              controls-position="right"
+              :min="1"
+              class="!w-100%"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <!-- <el-table-column label="采购入库数量" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.inCount`" class="mb-0px!">
             <el-input-number
@@ -111,7 +124,7 @@
             />
           </el-form-item>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="含税单价" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
@@ -263,13 +276,11 @@ const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
-  count: [{ required: true, message: '产品数量不能为空', trigger: 'blur' }]
+  count: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
 const warehouseList = getWarehouseList()
-
-
 
 /** 初始化设置入库项 */
 watch(
@@ -293,7 +304,7 @@ watch(
       // taxPrice: 'taxPrice',
       // taxPercent: 'taxPercent',
       // actTaxPrice: 'actTaxPrice',
-      applyCount: 'applyCount'
+      applyCount: 'count'
     }
 
     computeTaxPriceAndAllAmount(val, keyMap)
@@ -311,9 +322,6 @@ watch(
   },
   { deep: true }
 )
-
-
-
 
 /** 合计 */
 const getSummaries = (param: SummaryMethodProps) => {
@@ -346,16 +354,17 @@ const handleAdd = () => {
     taxPrice: undefined,
     currencyId: undefined,
     actTaxPrice: undefined,
-    applyCount: undefined,
     remark: undefined,
-    inCount: undefined,
     discountPercent: undefined,
     warehouseId: undefined,
     deliveryTime: undefined,
     xCode: undefined,
     containerRate: undefined,
     erpPurchaseRequestItemId: undefined,
-    erpPurchaseRequestItemNo: undefined
+    erpPurchaseRequestItemNo: undefined,
+    count: undefined
+    // inCount: undefined,
+    // applyCount: undefined,
   }
   formData.value.push(row)
 }
@@ -388,7 +397,7 @@ const setStockCount = async (row: any) => {
 const validate = () => {
   return formRef.value.validate()
 }
-defineExpose({ validate,formData })
+defineExpose({ validate, formData })
 
 /** 初始化 */
 onMounted(async () => {

@@ -154,7 +154,6 @@
     </el-form>
   </ContentWrap>
 
-
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
@@ -169,7 +168,23 @@
       @pagination="getList"
     >
       <template #status="{ scope }">
-        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status" />
+        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
+      </template>
+
+      <template #auditStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.auditStatus || ''" />
+      </template>
+
+      <template #executeStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_EXECUTE_STATUS" :value="scope.row.executeStatus || ''" />
+      </template>
+
+      <template #inStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_STORAGE_STATUS" :value="scope.row.inStatus || ''" />
+      </template>
+
+      <template #offStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
       </template>
 
       <template #operate="{ scope }">
@@ -196,7 +211,7 @@
           v-hasPermi="['erp:purchase-order:update-status']"
           v-if="scope.row.status === 10"
         >
-          审批
+          审核
         </el-button>
         <el-button
           link
@@ -205,7 +220,7 @@
           v-hasPermi="['erp:purchase-order:update-status']"
           v-else
         >
-          反审批
+          反审核
         </el-button>
         <el-button
           link
@@ -243,12 +258,23 @@ const fieldMap = {
   noTime: '单据日期',
   no: '单据编号', // 采购单编号
   supplierName: '供应商',
-  auditStatus: '审核状态', // AuditStatus
+  auditStatus: {
+    label: '审核状态',
+    slot: 'auditStatus'
+  }, // AuditStatus
 
-  executeStatus: '执行状态',
-  inStatus: '入库状态',
-
-  offStatus: '关闭状态', // items
+  executeStatus: {
+    label: '执行状态',
+    slot: 'executeStatus'
+  },
+  inStatus: {
+    label: '入库状态',
+    slot: 'inStatus'
+  },
+  offStatus: {
+    label: '关闭状态',
+    slot: 'offStatus'
+  }, // items
   // 8:  '入库核销状态',
 
   taxPrice: '税额', // items

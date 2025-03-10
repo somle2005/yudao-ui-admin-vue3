@@ -449,7 +449,7 @@ const addApplicantItem = () => {
         productId,
         productName,
         productBarCode,
-        applyCount: approveCount || 0,
+        count: approveCount || 0,
         actTaxPrice,
         taxPercent,
         taxPrice, //税额需要动态计算
