@@ -10,10 +10,10 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="订单单号" prop="no">
+      <el-form-item label="单据编号" prop="no">
         <el-input
           v-model="queryParams.no"
-          placeholder="请输入订单单号"
+          placeholder="请输入单据编号"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -35,9 +35,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="订单时间" prop="orderTime">
+      <el-form-item label="单据时间" prop="noTime">
         <el-date-picker
-          v-model="queryParams.orderTime"
+          v-model="queryParams.noTime"
           value-format="YYYY-MM-DD HH:mm:ss"
           type="daterange"
           start-placeholder="开始日期"
@@ -86,39 +86,6 @@
             :label="dict.label"
             :value="dict.value"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="入库数量" prop="inStatus">
-        <el-select
-          v-model="queryParams.inStatus"
-          placeholder="请选择入库数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未入库" value="0" />
-          <el-option label="部分入库" value="1" />
-          <el-option label="全部入库" value="2" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="退货数量" prop="returnStatus">
-        <el-select
-          v-model="queryParams.returnStatus"
-          placeholder="请选择退货数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未退货" value="0" />
-          <el-option label="部分退货" value="1" />
-          <el-option label="全部退货" value="2" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -256,8 +223,12 @@ const { tableOptions, transformTableOptions } = useTableData()
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
 const fieldMap = {
-  noTime: '单据日期',
   no: '单据编号', // 采购单编号
+  noTime:  {
+    label: '单据日期',
+    formatter: dateFormatter2, // 年月日-金蝶
+    width: '180px'
+  },
   supplierName: '供应商',
   auditStatus: {
     label: '审核状态',
@@ -317,7 +288,7 @@ const queryParams = reactive({
   no: undefined,
   supplierId: undefined,
   productId: undefined,
-  orderTime: [],
+  noTime: [],
   status: undefined,
   remark: undefined,
   creator: undefined,
