@@ -4,3 +4,6 @@
 :global(.el-link__inner) {
   white-space: nowrap;
 }
+:global(.common-form-items .el-form-item__content) {
+  margin-left: 0 !important;
+}

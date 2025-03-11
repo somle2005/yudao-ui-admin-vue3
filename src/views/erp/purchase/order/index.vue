@@ -197,13 +197,13 @@
       </template>
 
       <template #operate="{ scope }">
-        <!-- <el-button
+        <el-button
           link
           @click="openForm('detail', scope.row.id)"
           v-hasPermi="['erp:purchase-order:query']"
         >
           详情
-        </el-button> -->
+        </el-button>
         <el-button
           link
           type="primary"
@@ -300,25 +300,9 @@ const fieldMap = {
   taxPrice: '税额', // items
   totalTaxPrice: '价税合计', // items
 
-  productBarCode: {
-    label: 'SKU',
-    width: '200px',
-    slot: 'productBarCode',
-    wrap: true
-  }, // items
-  productName: {
-    label: '产品名称',
-    width: '200px',
-    slot: 'productName',
-    wrap: true
-  }, // items
-
-  reviewComment: {
-    label: '审核意见',
-    width: '200px',
-    slot: 'reviewComment',
-    wrap: true
-  },
+  productBarCode: 'SKU', // items
+  productName: '产品名称', // items
+  reviewComment: '审核意见',
   // allAmount: '价税合计', // items
   // 26: '已执行已入库数量',
   // 27: '已执行未入库数量',
@@ -335,14 +319,19 @@ const fieldMap = {
   }
 }
 
-const branchOptions = transformTableOptions(fieldMap, { noWidth: true })
+const branchOptions = transformTableOptions(fieldMap)
+const wrapList = ['no', 'supplierName', 'productBarCode', 'reviewComment', 'productName', 'remark']
+branchOptions.forEach((item: any) => {
+  if (wrapList.includes(item.prop)) {
+    item.slot = item.prop
+    item.wrap = true
+    item.width = '200px'
+  }
+})
+
 tableOptions.value = cloneDeep(branchOptions)
 
-// tableOptions.value.forEach(item => {
-//   if(item.width === '100px') {
-//     item.width = '200px'
-//   }
-// })
+
 
 /** ERP 销售订单列表 */
 defineOptions({ name: 'ErpPurchaseOrder' })
@@ -383,18 +372,15 @@ const getList = async () => {
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
 
-    data.list.forEach(item => {
-      if(!item?.items?.length) return
+    data.list.forEach((item) => {
+      if (!item?.items?.length) return
       item.items.forEach((a) => {
-        if(a.product) {
+        if (a.product) {
           a.productName = a.product.name
           a.productBarCode = a.product.barCode
         }
       })
     })
-
-
-
 
     const computeSum = (items: any[], key: string) => {
       if (!items?.length) return
@@ -416,7 +402,7 @@ const getList = async () => {
       })
       return item
     })
-    
+
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
       status: 'rowStatus',
@@ -465,7 +451,6 @@ const handleDelete = async (ids: number[]) => {
     selectionList.value = selectionList.value.filter((item) => !ids.includes(item.id))
   } catch {}
 }
-
 
 /** 导出按钮操作 */
 const handleExport = async () => {
@@ -536,8 +521,6 @@ const createWholeOrder = (branchOptions) => {
     allAmount: '价税合计', // items
     // createUserName: '制单人', // items
 
-
-
     reviewComment: '审核意见',
     operate: '操作'
   }
@@ -555,7 +538,7 @@ const handleWholeOrderEnable = (val) => {
     const options = createWholeOrder(cloneDeep(branchOptions))
     const len = options.length - 1
     const limit = len - 4
-
+    // 宽度适配
     for (let i = limit; i < len; i++) {
       options[i].width = undefined
     }

@@ -1,5 +1,5 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1200">
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000">
     <SmForm
       class="-mb-15px"
       ref="formRef"
@@ -9,7 +9,6 @@
       v-loading="formLoading"
       :options="requestFormOptions"
       :getModelValue="getFormData"
-      :disabled="disabled"
     >
       <!-- <template #primaryImageUrl="{ scope, model }">
       <UploadImg v-model="model[scope.prop]" />
@@ -51,6 +50,21 @@
           </el-tab-pane>
         </el-tabs>
       </template>
+
+      <template #inspectionJson>
+        <el-tabs v-model="inspectionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="验货单" name="inspectionJson">
+            <InspectionJsonForm ref="inspectionJsonFormRef" :items="formData.inspectionJson" />
+          </el-tab-pane>
+        </el-tabs>
+      </template>
+      <template #completionJson>
+        <el-tabs v-model="completionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="完工单" name="completionJson">
+            <CompletionJsonForm ref="completionJsonFormRef" :items="formData.completionJson" />
+          </el-tab-pane>
+        </el-tabs>
+      </template>
     </SmForm>
 
     <template #footer>
@@ -69,7 +83,7 @@
     </template>
   </Dialog>
 
-  <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1200">
+  <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1000">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
@@ -147,6 +161,10 @@ import { useApplicantTable } from './hooks/useApplicantTable'
 import { distinctList } from '@/utils/transformData'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
+import { useInspectionJson } from './hooks/useInspectionJson'
+import { useCompletionJson } from './hooks/useCompletionJson'
+import CompletionJsonForm from './components/CompletionJsonForm.vue'
+import InspectionJsonForm from './components/InspectionJsonForm.vue'
 
 let {
   queryParams,
@@ -164,6 +182,9 @@ let {
   handleQuery,
   resetQuery
 } = useApplicantTable()
+
+const { inspectionJsonFormRef, inspectionJsonTabsName } = useInspectionJson()
+const { completionJsonFormRef, completionJsonTabsName } = useCompletionJson()
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -190,7 +211,9 @@ const initFormData = () => {
     depositPrice: undefined,
     fileUrl: undefined,
     remark: undefined,
-    items: []
+    items: [],
+    completionJson: [],
+    InspectionJsonForm: []
   }
 }
 
@@ -227,7 +250,7 @@ watch(
 )
 
 const auditType = computed(() => formType.value === 'audit')
-const itemsFormdisabled = computed(() => formType.value === 'audit')
+const itemsFormdisabled = computed(() => formType.value === 'audit' || formType.value === 'detail')
 const createRequestFormOptions = () => {
   return [
     {
@@ -376,6 +399,7 @@ const createRequestFormOptions = () => {
       slot: 'fileUrl'
     },
     {
+      prop: 'items',
       colConfig: { span: 24 },
       slot: 'items',
       formItemConfig: {
@@ -429,8 +453,33 @@ const updateFormOptions = (formOptions) => {
   return formOptions
 }
 
+const createDetailFormOptions = (formOptions) => {
+  const index = formOptions.findIndex((item) => item.prop === 'items') + 1
+  const obj: any = {
+    prop: 'inspectionJson',
+    colConfig: { span: 24 },
+    slot: 'inspectionJson',
+    formItemConfig: {
+      class: 'common-form-items'
+    }
+  }
+  const obj1: any = {
+    prop: 'completionJson',
+    colConfig: { span: 24 },
+    slot: 'completionJson',
+    formItemConfig: {
+      class: 'common-form-items'
+    }
+  }
+  formOptions.splice(index, 0, obj, obj1)
+  return formOptions
+}
+
 const operateAudit = (type) => {
   const map = {
+    detail: () => {
+      requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
+    },
     create: () => {
       requestFormOptions.value = createRequestFormOptions()
     },
@@ -448,6 +497,7 @@ const operateAudit = (type) => {
   }
 }
 
+const jsonList = ['inspectionJson', 'completionJson']
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -469,6 +519,13 @@ const open = async (type: string, id?: number) => {
       } else {
         formData.value.items = []
       }
+      jsonList.forEach((item) => {
+        if (formData.value[item]) {
+          formData.value[item] = JSON.parse(formData.value[item])
+        } else {
+          formData.value[item] = []
+        }
+      })
     } finally {
       formLoading.value = false
     }
@@ -525,6 +582,14 @@ const submitForm = async () => {
     if (itemFormRef?.value?.formData) {
       data.items = itemFormRef.value.formData
     }
+
+    if (inspectionJsonFormRef?.value?.formData) {
+      data.inspectionJson = JSON.stringify(inspectionJsonFormRef.value.formData)
+    }
+    if (completionJsonFormRef?.value?.formData) {
+      data.completionJson = JSON.stringify(completionJsonFormRef.value.formData)
+    }
+
     if (formType.value === 'create') {
       await PurchaseOrderApi.createPurchaseOrder(data)
       message.success(t('common.createSuccess'))
@@ -537,6 +602,9 @@ const submitForm = async () => {
       })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'update') {
+      await PurchaseOrderApi.updatePurchaseOrder(data)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'detail') {
       await PurchaseOrderApi.updatePurchaseOrder(data)
       message.success(t('common.updateSuccess'))
     }
@@ -568,7 +636,6 @@ const addApplicantItem = () => {
   applicantItemDialog.value = false
   nextTick(() => {
     const items = formData.value.items
-    console.log(selectionList.value, 'selectionList.value')
     const selectList = selectionList.value.map((item: any) => {
       const {
         purchaseApplyItemId,
