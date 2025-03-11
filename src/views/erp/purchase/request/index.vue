@@ -414,7 +414,7 @@ const getList = async () => {
       }, 0)
     }
     wholeOrderList.value = cloneDeep(data.list).map((item) => {
-      const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount','orderedQuantity']
+      const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount','orderedQuantity','unOrderCount']
       keyList.forEach((key) => {
         item[key] = computeSum(item.items, key)
       })
