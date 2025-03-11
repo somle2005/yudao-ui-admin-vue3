@@ -47,9 +47,9 @@ export const useApplicantTable = () => {
       slot: 'offStatus',
       width: '120px'
     },
-
+  
     unOrderCount: '未订购数量',
-    orderCount: '已订购数量',
+    orderedQuantity: '已订购数量',
     inQty: '已入库数量',
     // 改造别名
     rowOrderStatus: {
@@ -61,7 +61,12 @@ export const useApplicantTable = () => {
       label: '行关闭状态',
       slot: 'rowOffStatus'
     },
-    barCode: '商品编码',
+    productBarCode: {
+      label: '商品编码',
+      slot: 'productBarCode',
+      width: '200px',
+      wrap: true
+    },
     productName: {
       label: '商品名称',
       slot: 'productName',
@@ -75,12 +80,18 @@ export const useApplicantTable = () => {
     actTaxPrice: '含税单价',
     taxPrice: '税额',
     allAmount: '价税合计',
-
+  
     creator: '制单人',
     createTime: {
       label: '制单时间',
       formatter: dateFormatter,
       width: '180px'
+    },
+    reviewComment: {
+      label: '审核意见',
+      width: '200px',
+      slot: 'reviewComment',
+      wrap: true
     },
     auditor: '审核人',
     auditTime: {
@@ -90,9 +101,9 @@ export const useApplicantTable = () => {
     },
     expectArrivalDate: {
       label: '期望到货日期',
-      formatter: dateFormatter,
+      formatter: dateFormatter2,
       width: '180px'
-    },
+    }
   }
   const branchOptions = transformTableOptions(fieldMap)
   tableOptions.value = cloneDeep(branchOptions)

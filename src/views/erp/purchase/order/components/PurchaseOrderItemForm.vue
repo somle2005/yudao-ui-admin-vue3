@@ -1,4 +1,5 @@
 <template>
+  <div style="display: contents;">
   <el-form
     ref="formRef"
     :model="formData"
@@ -241,6 +242,7 @@
   <el-row justify="center" class="mt-3" v-if="!disabled">
     <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
   </el-row>
+</div>
 </template>
 <script setup lang="ts">
 import { StockApi } from '@/api/erp/stock/stock'

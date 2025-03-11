@@ -298,11 +298,19 @@ const fieldMap = {
 
   // 8:  '入库核销状态',
 
+  reviewComment: {
+    label: '审核意见',
+    width: '200px',
+    slot: 'reviewComment',
+    wrap: true
+  },
+
   taxPrice: '税额', // items
-  allAmount: '价税合计', // items
+  totalTaxPrice: '价税合计', // items
+  // allAmount: '价税合计', // items
   // 26: '已执行已入库数量',
   // 27: '已执行未入库数量',
-  createUserName: '制单人', // items
+  // createUserName: '制单人', // items
   // 29: '制单时间',
 
   // 区分是不是整单iems里面数据再做区分
@@ -363,24 +371,27 @@ const getList = async () => {
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
 
-    // const computeSum = (items: any[], key: string) => {
-    //   if (!items?.length) return
-    //   return items.reduce((prev, cur) => {
-    //     if (cur[key]) {
-    //       return cur[key] + prev
-    //     }
-    //     return prev
-    //   }, 0)
-    // }
-    // wholeOrderList.value = cloneDeep(data.list).map((item) => {
-    //   const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
-    //   keyList.forEach((key) => {
-    //     item[key] = computeSum(item.items, key)
-    //   })
-    //   return item
-    // })
-
-    wholeOrderList.value = cloneDeep(data.list)
+    const computeSum = (items: any[], key: string) => {
+      if (!items?.length) return
+      return items.reduce((prev, cur) => {
+        if (cur[key]) {
+          return cur[key] + prev
+        }
+        return prev
+      }, 0)
+    }
+    wholeOrderList.value = cloneDeep(data.list).map((item) => {
+      // const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
+      /**
+       * totalTaxPrice-合计产品税价 合计税额
+       */
+      const keyList = ['totalTaxPrice']
+      keyList.forEach((key) => {
+        item[key] = computeSum(item.items, key)
+      })
+      return item
+    })
+    
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
       status: 'rowStatus',

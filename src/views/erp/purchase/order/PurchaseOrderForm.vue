@@ -69,7 +69,7 @@
     </template>
   </Dialog>
 
-  <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1000">
+  <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1200">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm

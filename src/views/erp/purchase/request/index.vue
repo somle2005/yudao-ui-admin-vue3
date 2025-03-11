@@ -304,7 +304,7 @@ const fieldMap = {
   },
   expectArrivalDate: {
     label: '期望到货日期',
-    formatter: dateFormatter,
+    formatter: dateFormatter2,
     width: '180px'
   },
   operate: {
