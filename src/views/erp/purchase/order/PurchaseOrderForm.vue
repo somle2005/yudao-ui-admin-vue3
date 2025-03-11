@@ -454,7 +454,8 @@ const updateFormOptions = (formOptions) => {
 }
 
 const createDetailFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.prop === 'items') + 1
+  // const index = formOptions.findIndex((item) => item.prop === 'items') + 1
+  const index = formOptions.length
   const obj: any = {
     prop: 'inspectionJson',
     colConfig: { span: 24 },
