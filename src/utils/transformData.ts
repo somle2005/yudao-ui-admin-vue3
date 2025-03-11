@@ -90,7 +90,7 @@ export const computeTaxPriceAndAllAmount = (
     actTaxPrice = 'actTaxPrice',
     allAmount = 'allAmount',
     taxPrice = 'taxPrice',
-    onePrice = 'onePrice'
+    onePrice = 'productPrice'
   } = keyMap || {}
 
   list.forEach((item) => {

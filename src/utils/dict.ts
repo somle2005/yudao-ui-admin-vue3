@@ -228,7 +228,7 @@ export enum DICT_TYPE {
   ERP_OFF_STATUS = 'erp_off_status', // 开关状态
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
   REPORT_MAP = 'report_map', // 报表地图
-  ERP_PAYMENT_STATUS = 'erp_payment_status', // 采购支付状态
+  ERP_PAYMENT_STATUS = 'erp_payment_status', // 采购付款状态
   ERP_STORAGE_STATUS = 'erp_storage_status', // 采购入库状态
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）

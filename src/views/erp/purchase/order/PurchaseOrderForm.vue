@@ -662,7 +662,7 @@ const addApplicantItem = () => {
         warehouseId,
         deliveryTime: expectArrivalDate,
         erpPurchaseRequestItemNo: no,
-        productPrice: actTaxPrice
+        // productPrice: actTaxPrice
       }
       return obj
     })

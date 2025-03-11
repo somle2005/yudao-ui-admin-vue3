@@ -31,6 +31,11 @@
               <div :class="['slot-wrap', `slot-${item.prop}`]">{{ scope.row[item.prop!] }}</div>
             </template>
 
+
+            <template v-else-if="item.dictAttrs">
+              <DictTag :type="item.dictAttrs.type" :value="scope.row[item.prop] || ''" />
+            </template>
+
             <template v-else>
               <template v-if="scope.$index + scope.column.id === currentEdit">
                 <div style="display: flex">
@@ -84,6 +89,7 @@ import { TableOptions } from './types'
 import { toLine } from './utils'
 import { cloneDeep } from 'lodash-es'
 import Pagination from './components/Pagination.vue'
+import DictTag from '../../DictTag/src/DictTag.vue'
 
 /** 基础列表 */
 defineOptions({ name: 'SmTable' })

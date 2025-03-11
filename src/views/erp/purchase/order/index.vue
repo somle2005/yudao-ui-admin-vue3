@@ -172,9 +172,9 @@
       @selection-change="handleSelectionChange"
       @pagination="getList"
     >
-      <template #status="{ scope }">
+      <!-- <template #status="{ scope }">
         <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
-      </template>
+      </template> -->
 
       <template #auditStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.auditStatus || ''" />
@@ -188,8 +188,24 @@
         <dict-tag :type="DICT_TYPE.ERP_STORAGE_STATUS" :value="scope.row.inStatus || ''" />
       </template>
 
+      <template #payStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_PAYMENT_STATUS" :value="scope.row.payStatus || ''" />
+      </template>
+
       <template #offStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
+      </template>
+
+      <template #rowExecuteStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_EXECUTE_STATUS" :value="scope.row.rowExecuteStatus || ''" />
+      </template>
+
+      <template #rowInStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_STORAGE_STATUS" :value="scope.row.rowInStatus || ''" />
+      </template>
+
+      <template #rowPayStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_PAYMENT_STATUS" :value="scope.row.rowPayStatus || ''" />
       </template>
 
       <template #rowOffStatus="{ scope }">
@@ -262,6 +278,7 @@ import { useBatch } from './hooks/useBatch'
 import { cloneDeep } from 'lodash-es'
 import { mergeItemsToList } from '@/utils/transformData'
 
+
 const { tableOptions, transformTableOptions } = useTableData()
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
@@ -273,9 +290,11 @@ const fieldMap = {
     width: '180px'
   },
   supplierName: '供应商',
+
   auditStatus: {
     label: '审核状态',
-    slot: 'auditStatus'
+    slot: 'auditStatus',
+    // dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
   }, // AuditStatus
 
   executeStatus: {
@@ -286,11 +305,27 @@ const fieldMap = {
     label: '入库状态',
     slot: 'inStatus'
   },
+  payStatus: {
+    label: '付款状态',
+    slot: 'payStatus'
+  },
   offStatus: {
     label: '关闭状态',
     slot: 'offStatus'
   }, // items
 
+  rowExecuteStatus: {
+    label: '行执行状态',
+    slot: 'rowExecuteStatus'
+  },
+  rowInStatus: {
+    label: '行入库状态',
+    slot: 'rowInStatus'
+  },
+  rowPayStatus: {
+    label: '行付款状态',
+    slot: 'rowPayStatus'
+  },
   rowOffStatus: {
     label: '行关闭状态',
     slot: 'rowOffStatus'
@@ -330,8 +365,7 @@ branchOptions.forEach((item: any) => {
 })
 
 tableOptions.value = cloneDeep(branchOptions)
-
-
+console.log(tableOptions.value,'tableOptions.value')
 
 /** ERP 销售订单列表 */
 defineOptions({ name: 'ErpPurchaseOrder' })
@@ -407,7 +441,10 @@ const getList = async () => {
       id: 'rowItemsId',
       status: 'rowStatus',
       orderStatus: 'rowOrderStatus',
-      offStatus: 'rowOffStatus'
+      offStatus: 'rowOffStatus',
+      executeStatus: 'rowExecuteStatus',
+      inStatus: 'rowInStatus',
+      payStatus: 'rowPayStatus'
     })
     // 后续需要补充itemsTotal
     itemsTotal.value = data.itemsTotal || data.total
@@ -415,6 +452,8 @@ const getList = async () => {
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
+
+    console.log(list.value, 'list.value')
   } finally {
     loading.value = false
   }

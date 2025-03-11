@@ -1,3 +1,7 @@
+interface DictAttrs {
+  type: string
+  value?:  string | number
+}
 export interface TableOptions {
   // 字段名称
   prop?: string
@@ -21,5 +25,7 @@ export interface TableOptions {
   formatter?: (row: any, column: any, cellValue: any, index: number) => VNode | string
   // 文字是否换行 需要开启slot
   wrap?: boolean
+  // 字典组件属性对象 需要开启slot
+  dictAttrs?: DictAttrs
   [key: string]: any
 }
