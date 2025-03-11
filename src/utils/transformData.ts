@@ -81,6 +81,7 @@ export const computeTaxPriceAndAllAmount = (
     allAmount?: string
     taxPrice?: string
     onePrice?: string
+    totalPrice?: string
   }
 ) => {
   if (!list?.length) return list
@@ -90,7 +91,8 @@ export const computeTaxPriceAndAllAmount = (
     actTaxPrice = 'actTaxPrice',
     allAmount = 'allAmount',
     taxPrice = 'taxPrice',
-    onePrice = 'productPrice'
+    onePrice = 'productPrice',
+    totalPrice = 'totalPrice',
   } = keyMap || {}
 
   list.forEach((item) => {
@@ -106,4 +108,10 @@ export const computeTaxPriceAndAllAmount = (
       item[onePrice] = erpPriceMultiply(item[actTaxPrice], 1 / (1 + taxPercent100))
     }
   })
+
+  // totalPrice 总价 = 含税单价 * 数量
+  list.forEach(item => {
+    item[totalPrice] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+  })
+  
 }

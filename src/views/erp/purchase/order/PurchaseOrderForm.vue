@@ -241,10 +241,11 @@ watch(
       return
     }
     // const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
-    // const discountPrice =
-    //   val.discountPercent != null ? erpPriceMultiply(totalPrice, val.discountPercent / 100.0) : 0
-    // formData.value.discountPrice = discountPrice
-    // formData.value.totalPrice = totalPrice - discountPrice
+    // if (val.discountPercent) {
+    //   const discountPrice = erpPriceMultiply(totalPrice, val.discountPercent / 100.0) || 0
+    //   formData.value.discountPrice = discountPrice
+    //   formData.value.totalPrice = totalPrice - discountPrice
+    // }
   },
   { deep: true }
 )
@@ -300,20 +301,6 @@ const createRequestFormOptions = () => {
       },
       children: supplierList
     },
-    {
-      type: 'select',
-      placeholder: '请选择结算账户',
-      prop: 'accountId',
-      label: '结算账户',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: accountList
-    },
 
     {
       type: 'select',
@@ -340,21 +327,6 @@ const createRequestFormOptions = () => {
         type: 'date',
         'value-format': 'x',
         class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'input-number',
-      placeholder: '请输入定金金额',
-      prop: 'depositPrice',
-      label: '定金金额',
-      attrs: {
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        // class: '!w-1/1',
         style: {
           width: '100%'
         }
@@ -405,6 +377,78 @@ const createRequestFormOptions = () => {
       formItemConfig: {
         class: 'purchase-request-items'
       }
+    },
+
+    {
+      type: 'input-number',
+      placeholder: '请输入优惠率',
+      prop: 'discountPercent',
+      label: '优惠率%',
+      attrs: {
+        'controls-position': 'right',
+        min: 0,
+        precision: 2,
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'input-number',
+      prop: 'discountPrice',
+      label: '付款优惠',
+      attrs: {
+        disabled: true,
+        'controls-position': 'right',
+        min: 0,
+        precision: 2,
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'input-number',
+      prop: 'totalPrice',
+      label: '优惠后金额',
+      attrs: {
+        disabled: true,
+        'controls-position': 'right',
+        min: 0,
+        precision: 2,
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'input-number',
+      placeholder: '请输入定金金额',
+      prop: 'depositPrice',
+      label: '定金金额',
+      attrs: {
+        'controls-position': 'right',
+        min: 0,
+        precision: 2,
+        // class: '!w-1/1',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择结算账户',
+      prop: 'accountId',
+      label: '结算账户',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: accountList
     }
   ]
 }
@@ -473,6 +517,18 @@ const createDetailFormOptions = (formOptions) => {
     }
   }
   formOptions.splice(index, 0, obj, obj1)
+
+  const list = ['inspectionJson', 'completionJson']
+  formOptions.forEach((item) => {
+    if (list.includes(item.prop)) return
+    if (item.attrs) {
+      item.attrs!.disabled = true
+    } else {
+      item.attrs = {
+        disabled: true
+      }
+    }
+  })
   return formOptions
 }
 
@@ -586,9 +642,13 @@ const submitForm = async () => {
 
     if (inspectionJsonFormRef?.value?.formData) {
       data.inspectionJson = JSON.stringify(inspectionJsonFormRef.value.formData)
+    } else {
+      data.inspectionJson = ''
     }
     if (completionJsonFormRef?.value?.formData) {
       data.completionJson = JSON.stringify(completionJsonFormRef.value.formData)
+    } else {
+      data.completionJson = ''
     }
 
     if (formType.value === 'create') {
@@ -662,7 +722,7 @@ const addApplicantItem = () => {
         taxPrice, //税额需要动态计算
         warehouseId,
         deliveryTime: expectArrivalDate,
-        erpPurchaseRequestItemNo: no,
+        erpPurchaseRequestItemNo: no
         // productPrice: actTaxPrice
       }
       return obj

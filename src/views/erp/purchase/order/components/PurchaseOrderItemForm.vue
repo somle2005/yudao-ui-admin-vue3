@@ -297,8 +297,9 @@ const warehouseList = getWarehouseList()
 watch(
   () => props.items,
   async (val) => {
-    // formData.value = cloneDeep(val)
-    formData.value = val
+    formData.value = cloneDeep(val)
+    console.log(val,'值改变进来了')
+    // formData.value = val
   },
   { immediate: true, deep: true }
 )
