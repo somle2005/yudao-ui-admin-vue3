@@ -297,6 +297,21 @@ const fieldMap = {
   }, // items
 
   // 8:  '入库核销状态',
+  taxPrice: '税额', // items
+  totalTaxPrice: '价税合计', // items
+
+  productBarCode: {
+    label: 'SKU',
+    width: '200px',
+    slot: 'productBarCode',
+    wrap: true
+  }, // items
+  productName: {
+    label: '产品名称',
+    width: '200px',
+    slot: 'productName',
+    wrap: true
+  }, // items
 
   reviewComment: {
     label: '审核意见',
@@ -304,9 +319,6 @@ const fieldMap = {
     slot: 'reviewComment',
     wrap: true
   },
-
-  taxPrice: '税额', // items
-  totalTaxPrice: '价税合计', // items
   // allAmount: '价税合计', // items
   // 26: '已执行已入库数量',
   // 27: '已执行未入库数量',
@@ -370,6 +382,19 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
+
+    data.list.forEach(item => {
+      if(!item?.items?.length) return
+      item.items.forEach((a) => {
+        if(a.product) {
+          a.productName = a.product.name
+          a.productBarCode = a.product.barCode
+        }
+      })
+    })
+
+
+
 
     const computeSum = (items: any[], key: string) => {
       if (!items?.length) return
@@ -509,8 +534,11 @@ const createWholeOrder = (branchOptions) => {
     offStatus: '关闭状态',
     taxPrice: '税额', // items
     allAmount: '价税合计', // items
-    createUserName: '制单人', // items
+    // createUserName: '制单人', // items
 
+
+
+    reviewComment: '审核意见',
     operate: '操作'
   }
   const arr: any = []

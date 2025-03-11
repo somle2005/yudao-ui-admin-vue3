@@ -545,8 +545,8 @@ const { tableOptions, transformTableOptions } = useTableData()
 10-已入库数量-有-(在items里面-inQty)
 11-行采购状态-(文档无描述)-(在items里面-行采购状态-orderStatus)
 // 12-行关闭状态-(文档无描述)-完全没有-后端说不要
-13-商品编码-无-完全没有-后端barCode
-14-商品名称-有-(在items里面-productName)
+13-SKU-无-完全没有-后端barCode
+14-产品名称-有-(在items里面-productName)
 15-单位。-有-(在items里面-productUnitName)
 16-申请数量-有-(在items里面-后端无返回-count)
 17-批准数量-有-(在items里面-approveCount)
@@ -593,8 +593,8 @@ const fieldMap = {
     label: '行采购状态',
     slot: 'rowOrderStatus'
   },
-  barCode: '商品编码',
-  productName: '商品名称',
+  barCode: 'SKU',
+  productName: '产品名称',
   productUnitName: '单位',
   count: '申请数量',
   approveCount: '批准数量',

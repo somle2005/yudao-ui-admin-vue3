@@ -62,13 +62,13 @@ export const useApplicantTable = () => {
       slot: 'rowOffStatus'
     },
     productBarCode: {
-      label: '商品编码',
+      label: 'SKU',
       slot: 'productBarCode',
       width: '200px',
       wrap: true
     },
     productName: {
-      label: '商品名称',
+      label: '产品名称',
       slot: 'productName',
       width: '200px',
       wrap: true
