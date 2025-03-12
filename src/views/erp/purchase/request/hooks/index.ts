@@ -186,9 +186,9 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       },
       {
         type: 'select',
-        placeholder: '请选择供应商',
+        placeholder: '请选择建议供应商',
         prop: 'supplierId',
-        label: '供应商',
+        label: '建议供应商',
         attrs: {
           filterable: true,
           clearable: true,
@@ -300,9 +300,9 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       },
       {
         type: 'select',
-        placeholder: '请选择建议供应商',
+        placeholder: '请选择供应商',
         prop: 'supplierId',
-        label: '建议供应商',
+        label: '供应商',
         attrs: {
           filterable: true,
           clearable: true,
@@ -313,7 +313,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         rules: [
           {
             required: true,
-            message: '建议供应商不能为空',
+            message: '供应商不能为空',
             trigger: 'blur'
           }
         ],
