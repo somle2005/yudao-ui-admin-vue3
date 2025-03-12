@@ -104,22 +104,22 @@
 
   <!-- 列表 -->
   <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+    <el-table v-loading="loading" :data="list" border :stripe="true" :show-overflow-tooltip="true">
       <!-- <el-table-column label="产品id" align="center" prop="productId" /> -->
-      <el-table-column label="图片" align="center" prop="primaryImageUrl">
+      <el-table-column label="图片" align="center" prop="primaryImageUrl" width="200px">
         <template #default="scope">
           <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column label="SKU" align="center" prop="barCode" />
-      <el-table-column label="产品名称" align="center" prop="productName" />
+      <el-table-column label="SKU" align="center" prop="barCode" width="200px" />
+      <el-table-column label="产品名称" align="center" prop="productName" width="200px" />
       <!-- <el-table-column label="海关分类id" align="center" prop="customCategoryId" /> -->
-      <el-table-column label="海关分类名称" align="center" prop="customCategoryId">
+      <el-table-column label="海关分类名称" align="center" prop="combinedValue" width="200px" />
+      <!-- <el-table-column label="海关分类名称" align="center" prop="customCategoryId">
         <template #default="scope">
-          {{ scope.row.customCategoryId }}
-          <!-- {{ customRuleCategory[scope.row.customCategoryId] }} -->
+          {{ customRuleCategory[scope.row.customCategoryId] }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="创建人" align="center" prop="creator" />
       <el-table-column
         label="创建时间"
@@ -224,6 +224,10 @@ const getList = async () => {
         item.barCode = barCode
         item.productName = name
         item.primaryImageUrl = primaryImageUrl
+      }
+      const customCategory = item.customCategory
+      if (customCategory) {
+        item.combinedValue = customCategory.combinedValue
       }
       return item
     })
