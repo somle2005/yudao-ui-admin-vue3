@@ -213,8 +213,11 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { cloneDeep } from 'lodash-es'
+import { useWholeOrder, useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
 
 const { tableOptions, transformTableOptions } = useTableData()
+
+const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 
 const fieldMap = {
   requestTime: {
@@ -250,39 +253,60 @@ const fieldMap = {
     slot: 'offStatus',
     width: '120px'
   },
-
-  unOrderCount: '未订购数量',
-  orderedQuantity: '已订购数量',
+  unOrderCount: {
+    lable: '未订购数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  }, // 批准数量➖已订购数量后端计算返回
+  orderedQuantity: {
+    label:'已订购数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  },
   inQty: '已入库数量',
   // 改造别名
   rowOrderStatus: {
     label: '行采购状态',
-    slot: 'rowOrderStatus'
+    slot: 'rowOrderStatus',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   // 改造别名
   rowOffStatus: {
     label: '行关闭状态',
-    slot: 'rowOffStatus'
+    slot: 'rowOffStatus',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   productBarCode: {
     label: 'SKU',
     slot: 'productBarCode',
     width: '200px',
-    wrap: true
-  },
+    wrap: true,
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  }, // items
   productName: {
     label: '产品名称',
     slot: 'productName',
     width: '200px',
-    wrap: true
+    wrap: true,
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   productUnitName: '单位',
-  count: '申请数量',
-  approveCount: '批准数量',
+  count: {
+    lable: '申请数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  },
+  approveCount: {
+    lable: '批准数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  },
   referenceUnitPrice: '参考单价',
   actTaxPrice: '含税单价',
-  taxPrice: '税额',
-  allAmount: '价税合计',
+  taxPrice: {
+    label: '税额',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  },
+  allAmount: {
+    label:'价税合计',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  },
 
   creator: '制单人',
   createTime: {
@@ -318,32 +342,32 @@ const fieldMap = {
 const branchOptions = transformTableOptions(fieldMap)
 tableOptions.value = cloneDeep(branchOptions)
 
-const createWholeOrder = (branchOptions) => {
-  const map = {
-    requestTime: '单据日期',
-    no: '单据编号',
-    applicant: '申请人',
-    applicationDept: '申请部门',
-    status: '审核状态',
-    orderStatus: '订购状态',
-    offStatus: '关闭状态',
-    unOrderCount: '未订购数量',
-    orderedQuantity: '已订购数量',
-    inQty: '已入库数量',
-    count: '申请数量',
-    approveCount: '批准数量',
-    taxPrice: '税额',
-    allAmount: '价税合计',
-    operate: '操作'
-  }
-  const arr: any = []
-  branchOptions.forEach((item) => {
-    if (item.prop && map[item.prop]) {
-      arr.push(item)
-    }
-  })
-  return arr
-}
+// const createWholeOrder = (branchOptions) => {
+//   const map = {
+//     requestTime: '单据日期',
+//     no: '单据编号',
+//     applicant: '申请人',
+//     applicationDept: '申请部门',
+//     status: '审核状态',
+//     orderStatus: '订购状态',
+//     offStatus: '关闭状态',
+//     unOrderCount: '未订购数量',
+//     orderedQuantity: '已订购数量',
+//     inQty: '已入库数量',
+//     count: '申请数量',
+//     approveCount: '批准数量',
+//     taxPrice: '税额',
+//     allAmount: '价税合计',
+//     operate: '操作'
+//   }
+//   const arr: any = []
+//   branchOptions.forEach((item) => {
+//     if (item.prop && map[item.prop]) {
+//       arr.push(item)
+//     }
+//   })
+//   return arr
+// }
 
 /** ERP 采购申请列表 */
 defineOptions({ name: 'ErpPurchaseRequest' })
@@ -404,22 +428,25 @@ const getList = async () => {
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
 
-    const computeSum = (items: any[], key: string) => {
-      if (!items?.length) return
-      return items.reduce((prev, cur) => {
-        if (cur[key]) {
-          return cur[key] + prev
-        }
-        return prev
-      }, 0)
-    }
-    wholeOrderList.value = cloneDeep(data.list).map((item) => {
-      const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount','orderedQuantity','unOrderCount']
-      keyList.forEach((key) => {
-        item[key] = computeSum(item.items, key)
-      })
-      return item
-    })
+    // const computeSum = (items: any[], key: string) => {
+    //   if (!items?.length) return
+    //   return items.reduce((prev, cur) => {
+    //     if (cur[key]) {
+    //       return cur[key] + prev
+    //     }
+    //     return prev
+    //   }, 0)
+    // }
+    // wholeOrderList.value = cloneDeep(data.list).map((item) => {
+    //   const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount','orderedQuantity','unOrderCount']
+    //   keyList.forEach((key) => {
+    //     item[key] = computeSum(item.items, key)
+    //   })
+    //   return item
+    // })
+
+
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, branchOptions)
 
     itemsList.value = mergeItemsToList(data.list, {
       id: 'purchaseOrderId',
@@ -438,27 +465,27 @@ const getList = async () => {
   }
 }
 
-const handleWholeOrderEnable = (val) => {
-  if (val) {
-    // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
-    const options = createWholeOrder(cloneDeep(branchOptions))
-    const len = options.length - 1
-    const limit = len - 4
+// const handleWholeOrderEnable = (val) => {
+//   if (val) {
+//     // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
+//     const options = createWholeOrder(cloneDeep(branchOptions))
+//     const len = options.length - 1
+//     const limit = len - 4
 
-    for (let i = limit; i < len; i++) {
-      options[i].width = undefined
-    }
+//     for (let i = limit; i < len; i++) {
+//       options[i].width = undefined
+//     }
 
-    tableOptions.value = options
-    list.value = wholeOrderList.value
-    total.value = wholeOrderTotal.value
-  } else {
-    tableOptions.value = cloneDeep(branchOptions)
-    list.value = itemsList.value
-    total.value = itemsTotal.value
-  }
-  selectionList.value = []
-}
+//     tableOptions.value = options
+//     list.value = wholeOrderList.value
+//     total.value = wholeOrderTotal.value
+//   } else {
+//     tableOptions.value = cloneDeep(branchOptions)
+//     list.value = itemsList.value
+//     total.value = itemsTotal.value
+//   }
+//   selectionList.value = []
+// }
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
@@ -705,6 +732,20 @@ const handleUpdateStatusEnableBatch = async (enable: boolean) => {
 // })
 
 const disabledBtn = computed(() => selectionList.value.length === 0)
+
+
+const { handleWholeOrderEnable } = useWholeOrder(
+  branchOptions,
+  tableOptions,
+  selectionList,
+  list,
+  total,
+  itemsList,
+  itemsTotal,
+  wholeOrderList,
+  wholeOrderTotal
+)
+
 /** 初始化 **/
 onMounted(async () => {
   await getList()

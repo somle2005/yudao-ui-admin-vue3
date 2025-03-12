@@ -528,7 +528,7 @@ const getList = async () => {
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
 
-    console.log(list.value, 'list.value')
+
   } finally {
     loading.value = false
   }
