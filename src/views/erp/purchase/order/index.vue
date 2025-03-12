@@ -176,27 +176,27 @@
         <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
       </template> -->
 
-      <template #auditStatus="{ scope }">
+      <!-- <template #auditStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.auditStatus || ''" />
-      </template>
+      </template> -->
 
-      <template #executeStatus="{ scope }">
+      <!-- <template #executeStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_EXECUTE_STATUS" :value="scope.row.executeStatus || ''" />
-      </template>
+      </template> -->
 
-      <template #inStatus="{ scope }">
+      <!-- <template #inStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_STORAGE_STATUS" :value="scope.row.inStatus || ''" />
-      </template>
+      </template> -->
 
-      <template #payStatus="{ scope }">
+      <!-- <template #payStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_PAYMENT_STATUS" :value="scope.row.payStatus || ''" />
-      </template>
+      </template> -->
 
-      <template #offStatus="{ scope }">
+      <!-- <template #offStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
-      </template>
+      </template> -->
 
-      <template #rowExecuteStatus="{ scope }">
+      <!-- <template #rowExecuteStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_EXECUTE_STATUS" :value="scope.row.rowExecuteStatus || ''" />
       </template>
 
@@ -210,7 +210,7 @@
 
       <template #rowOffStatus="{ scope }">
         <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
-      </template>
+      </template> -->
 
 
       <template #currencyId="{ scope }">
@@ -303,25 +303,29 @@ const fieldMap = {
 
   auditStatus: {
     label: '审核状态',
-    slot: 'auditStatus'
-    // dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
-  }, // AuditStatus
+    slot: 'auditStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_AUDIT_STATUS }
+  },
 
   executeStatus: {
     label: '执行状态',
-    slot: 'executeStatus'
+    slot: 'executeStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS }
   },
   inStatus: {
     label: '入库状态',
-    slot: 'inStatus'
+    slot: 'inStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS }
   },
   payStatus: {
     label: '付款状态',
-    slot: 'payStatus'
+    slot: 'payStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
   },
   offStatus: {
     label: '关闭状态',
-    slot: 'offStatus'
+    slot: 'offStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
   },
 
   // 整单才进行展示
@@ -333,21 +337,25 @@ const fieldMap = {
   rowExecuteStatus: {
     label: '行执行状态',
     slot: 'rowExecuteStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowInStatus: {
     label: '行入库状态',
     slot: 'rowInStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowPayStatus: {
     label: '行付款状态',
     slot: 'rowPayStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowOffStatus: {
     label: '行关闭状态',
     slot: 'rowOffStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 

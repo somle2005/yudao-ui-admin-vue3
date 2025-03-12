@@ -31,9 +31,8 @@
               <div :class="['slot-wrap', `slot-${item.prop}`]">{{ scope.row[item.prop!] }}</div>
             </template>
 
-
             <template v-else-if="item.dictAttrs">
-              <DictTag :type="item.dictAttrs.type" :value="scope.row[item.prop] || ''" />
+              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop]" />
             </template>
 
             <template v-else>
@@ -89,7 +88,6 @@ import { TableOptions } from './types'
 import { toLine } from './utils'
 import { cloneDeep } from 'lodash-es'
 import Pagination from './components/Pagination.vue'
-import DictTag from '../../DictTag/src/DictTag.vue'
 
 /** 基础列表 */
 defineOptions({ name: 'SmTable' })
@@ -117,17 +115,15 @@ const pageAttrs = () => {
 
 const TableAttrs = () => {
   const attrs = useAttrs() || {}
-  const obj:any = {}
+  const obj: any = {}
   const filterAttrs = ['style']
-  for(let key in attrs) {
+  for (let key in attrs) {
     if (!filterAttrs.includes(key)) {
       obj[key] = attrs[key]
     }
   }
   return obj
 }
-
-
 
 const columnItem = (item) => {
   const list = ['label', 'prop', 'width', 'align', 'formatter']
