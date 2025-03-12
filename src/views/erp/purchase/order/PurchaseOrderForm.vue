@@ -158,7 +158,7 @@ import { getAccountList, getFinanceSubjectList, getSupplierList } from '@/common
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { DICT_TYPE } from '@/utils/dict'
 import { useApplicantTable } from './hooks/useApplicantTable'
-import { distinctList } from '@/utils/transformData'
+import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import { useInspectionJson } from './hooks/useInspectionJson'
@@ -240,8 +240,10 @@ watch(
     if (!val) {
       return
     }
-    // const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
+
+    computeDiscountPriceAndTotalPrice(val)
     // if (val.discountPercent) {
+    //   const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
     //   const discountPrice = erpPriceMultiply(totalPrice, val.discountPercent / 100.0) || 0
     //   formData.value.discountPrice = discountPrice
     //   formData.value.totalPrice = totalPrice - discountPrice
@@ -370,8 +372,7 @@ const createRequestFormOptions = () => {
       label: '附件',
       slot: 'fileUrl'
     },
-    {
-      prop: 'items',
+    { 
       colConfig: { span: 24 },
       slot: 'items',
       formItemConfig: {
@@ -498,7 +499,7 @@ const updateFormOptions = (formOptions) => {
 }
 
 const createDetailFormOptions = (formOptions) => {
-  // const index = formOptions.findIndex((item) => item.prop === 'items') + 1
+
   const index = formOptions.length
   const obj: any = {
     prop: 'inspectionJson',

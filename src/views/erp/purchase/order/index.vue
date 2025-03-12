@@ -212,6 +212,12 @@
         <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
       </template>
 
+
+      <template #currencyId="{ scope }">
+        <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.currencyId || ''" />
+      </template>
+      
+
       <template #operate="{ scope }">
         <el-button
           link
@@ -264,7 +270,7 @@
 
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { dateFormatter2 } from '@/utils/formatTime'
+import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
 import PurchaseOrderForm from './PurchaseOrderForm.vue'
@@ -277,9 +283,13 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { cloneDeep } from 'lodash-es'
 import { mergeItemsToList } from '@/utils/transformData'
-
+import { useWholeOrder, useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
 
 const { tableOptions, transformTableOptions } = useTableData()
+
+const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
+
+// 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
 const fieldMap = {
@@ -287,13 +297,13 @@ const fieldMap = {
   noTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
-    width: '180px'
+    width: '200px'
   },
   supplierName: '供应商',
 
   auditStatus: {
     label: '审核状态',
-    slot: 'auditStatus',
+    slot: 'auditStatus'
     // dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
   }, // AuditStatus
 
@@ -312,39 +322,101 @@ const fieldMap = {
   offStatus: {
     label: '关闭状态',
     slot: 'offStatus'
-  }, // items
+  },
+
+  // 成交金额
 
   rowExecuteStatus: {
     label: '行执行状态',
-    slot: 'rowExecuteStatus'
+    slot: 'rowExecuteStatus',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowInStatus: {
     label: '行入库状态',
-    slot: 'rowInStatus'
+    slot: 'rowInStatus',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowPayStatus: {
     label: '行付款状态',
-    slot: 'rowPayStatus'
+    slot: 'rowPayStatus',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowOffStatus: {
     label: '行关闭状态',
-    slot: 'rowOffStatus'
-  }, // items
+    slot: 'rowOffStatus',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
 
   // 8:  '入库核销状态',
-  taxPrice: '税额', // items
-  totalTaxPrice: '价税合计', // items
 
-  productBarCode: 'SKU', // items
-  productName: '产品名称', // items
+  productBarCode: {
+    label: 'SKU',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  productName: {
+    label: '产品名称',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  // 报关品名
+  containerRate: {
+    label: '箱率',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  deliveryDate: {
+    label: '交货日期',
+    formatter: dateFormatter2, // 年月日-金蝶
+    width: '200px'
+  },
+  // 总验货通过数
+  // 待收数量
+  // 下单数量
+  // 下单数量 -没找到 (是取items里面的count产品税率吗)
+  // 已收数量 -没找到
+
+  currencyId: {
+    label: '币种',
+    slot: 'currencyId',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  actTaxPrice: {
+    label: '含税单价',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  taxPrice: {
+    label: '税额',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  allAmount: {
+    label: '价税合计',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+
+  // 取后端总的税额无法进行分行展示数据了
+  // taxPrice: {
+  //   label:'税额',
+  //   wholeOrderEnable: 'items',
+  // }, // items
+  // totalTaxPrice: {
+  //   label: '价税合计',
+  //   wholeOrderEnable: 'items',
+  // }, // items
+
+  //   申请人
+  // 申请部门
+  // 制单人
+  // 制单时间
+
+  auditorName: '审核人',
+  auditTime: {
+    label: '审核时间',
+    formatter: dateFormatter, // 年月日-金蝶
+    width: '200px'
+  },
+
   reviewComment: '审核意见',
-  // allAmount: '价税合计', // items
-  // 26: '已执行已入库数量',
-  // 27: '已执行未入库数量',
-  // createUserName: '制单人', // items
-  // 29: '制单时间',
-
-  // 区分是不是整单iems里面数据再做区分
 
   operate: {
     label: '操作',
@@ -365,7 +437,7 @@ branchOptions.forEach((item: any) => {
 })
 
 tableOptions.value = cloneDeep(branchOptions)
-console.log(tableOptions.value,'tableOptions.value')
+console.log(tableOptions.value, 'tableOptions.value')
 
 /** ERP 销售订单列表 */
 defineOptions({ name: 'ErpPurchaseOrder' })
@@ -416,26 +488,29 @@ const getList = async () => {
       })
     })
 
-    const computeSum = (items: any[], key: string) => {
-      if (!items?.length) return
-      return items.reduce((prev, cur) => {
-        if (cur[key]) {
-          return cur[key] + prev
-        }
-        return prev
-      }, 0)
-    }
-    wholeOrderList.value = cloneDeep(data.list).map((item) => {
-      // const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
-      /**
-       * totalTaxPrice-合计产品税价 合计税额
-       */
-      const keyList = ['totalTaxPrice']
-      keyList.forEach((key) => {
-        item[key] = computeSum(item.items, key)
-      })
-      return item
-    })
+    // const computeSum = (items: any[], key: string) => {
+    //   if (!items?.length) return
+    //   return items.reduce((prev, cur) => {
+    //     if (cur[key]) {
+    //       return cur[key] + prev
+    //     }
+    //     return prev
+    //   }, 0)
+    // }
+    // wholeOrderList.value = cloneDeep(data.list).map((item) => {
+    //   // const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
+    //   /**
+    //    * totalTaxPrice-合计产品税价 合计税额
+    //    */
+    //   const keyList = ['totalTaxPrice']
+    //   keyList.forEach((key) => {
+    //     item[key] = computeSum(item.items, key)
+    //   })
+    //   return item
+    // })
+
+
+    wholeOrderList.value = wholeOrderMergeCompute(data.list,branchOptions)
 
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
@@ -547,51 +622,17 @@ const handleUpdateStatus = async (row: any, reviewed: boolean) => {
   } catch {}
 }
 
-const createWholeOrder = (branchOptions) => {
-  const map = {
-    no: '单据编号', // 采购单编号
-    noTime: '单据日期',
-    supplierName: '供应商',
-    auditStatus: '审核状态',
-    executeStatus: '执行状态',
-    inStatus: '入库状态',
-    offStatus: '关闭状态',
-    taxPrice: '税额', // items
-    allAmount: '价税合计', // items
-    // createUserName: '制单人', // items
-
-    reviewComment: '审核意见',
-    operate: '操作'
-  }
-  const arr: any = []
-  branchOptions.forEach((item) => {
-    if (item.prop && map[item.prop]) {
-      arr.push(item)
-    }
-  })
-  return arr
-}
-const handleWholeOrderEnable = (val) => {
-  if (val) {
-    // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
-    const options = createWholeOrder(cloneDeep(branchOptions))
-    const len = options.length - 1
-    const limit = len - 4
-    // 宽度适配
-    for (let i = limit; i < len; i++) {
-      options[i].width = undefined
-    }
-
-    tableOptions.value = options
-    list.value = wholeOrderList.value
-    total.value = wholeOrderTotal.value
-  } else {
-    tableOptions.value = cloneDeep(branchOptions)
-    list.value = itemsList.value
-    total.value = itemsTotal.value
-  }
-  selectionList.value = []
-}
+const { handleWholeOrderEnable } = useWholeOrder(
+  branchOptions,
+  tableOptions,
+  selectionList,
+  list,
+  total,
+  itemsList,
+  itemsTotal,
+  wholeOrderList,
+  wholeOrderTotal
+)
 
 /** 初始化 **/
 onMounted(async () => {
