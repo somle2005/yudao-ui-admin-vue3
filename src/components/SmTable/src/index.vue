@@ -110,7 +110,7 @@ const pageAttrs = () => {
   pageProps.forEach((item) => {
     obj[item] = pageAttrs[item]
   })
-  console.log(pageAttrs, 'useAttrs-useAttrs')
+  // console.log(pageAttrs, 'useAttrs-useAttrs')
   return obj
   // return Object.assign({ total: 0 }, pageAttrs)
 }
