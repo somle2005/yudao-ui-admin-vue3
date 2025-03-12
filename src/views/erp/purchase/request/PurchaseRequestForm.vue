@@ -10,17 +10,6 @@
       :options="requestFormOptions"
       :getModelValue="getFormData"
     >
-      <!-- <template #primaryImageUrl="{ scope, model }">
-      <UploadImg v-model="model[scope.prop]" />
-    </template> -->
-      <!-- <template #action>
-      <div class="moreBtnList">
-        <el-button type="primary" @click="handleQuery"> 确定</el-button>
-      </div>
-    </template> -->
-
-      <!-- <template #items="{ scope, model }"> -->
-      <!-- {{ console.log(scope, model, '打印scope-model') }} -->
       <template #items>
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="申请产品清单" name="item">
@@ -56,7 +45,7 @@
 import { usePurchaseRequestForm } from './hooks'
 import ItemsForm from './components/ItemsForm.vue'
 import { createDBFn } from '@/utils/decorate'
-import { AUDIT_TYPE } from './constants'
+import { AUDIT_TYPE } from '@/utils/constant'
 
 const resetFormData = () => {
   return reactive({

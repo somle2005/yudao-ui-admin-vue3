@@ -113,8 +113,6 @@ export const computeTaxPriceAndAllAmount = (
   list.forEach((item) => {
     item[totalPrice] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
   })
-  console.log(list, 'list总价计算-这里先进行计算')
-  // debugger
 }
 
 // 计算优惠金额和优惠后金额totalPrice
@@ -148,9 +146,6 @@ export const computeDiscountPriceAndTotalPrice = (
     formData[discountPriceStr] = discountPrice
     // 优惠后金额
     formData.totalPrice = totalPrice - discountPrice
-
     updateVal()
   }
-
-  console.log(formData, '优惠金额计算')
 }

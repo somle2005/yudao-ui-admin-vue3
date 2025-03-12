@@ -84,7 +84,6 @@
   <!-- 列表 -->
   <ContentWrap style="padding-bottom: 0">
     <SmTable
-      border
       isSelection
       :loading="loading"
       :options="tableOptions"
@@ -206,9 +205,6 @@ import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/erp/purchase/request'
 import PurchaseRequestForm from './PurchaseRequestForm.vue'
-import { ProductApi, ProductVO } from '@/api/erp/product/product'
-import { UserVO } from '@/api/system/user'
-import * as UserApi from '@/api/system/user'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
@@ -280,7 +276,7 @@ const fieldMap = {
     width: '200px',
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
-  }, // items
+  },
   productName: {
     label: '产品名称',
     slot: 'productName',
@@ -290,11 +286,11 @@ const fieldMap = {
   },
   productUnitName: '单位',
   count: {
-    lable: '申请数量',
+    label: '申请数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
   approveCount: {
-    lable: '批准数量',
+    label: '批准数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
   referenceUnitPrice: '参考单价',
@@ -342,32 +338,6 @@ const fieldMap = {
 const branchOptions = transformTableOptions(fieldMap)
 tableOptions.value = cloneDeep(branchOptions)
 
-// const createWholeOrder = (branchOptions) => {
-//   const map = {
-//     requestTime: '单据日期',
-//     no: '单据编号',
-//     applicant: '申请人',
-//     applicationDept: '申请部门',
-//     status: '审核状态',
-//     orderStatus: '订购状态',
-//     offStatus: '关闭状态',
-//     unOrderCount: '未订购数量',
-//     orderedQuantity: '已订购数量',
-//     inQty: '已入库数量',
-//     count: '申请数量',
-//     approveCount: '批准数量',
-//     taxPrice: '税额',
-//     allAmount: '价税合计',
-//     operate: '操作'
-//   }
-//   const arr: any = []
-//   branchOptions.forEach((item) => {
-//     if (item.prop && map[item.prop]) {
-//       arr.push(item)
-//     }
-//   })
-//   return arr
-// }
 
 /** ERP 采购申请列表 */
 defineOptions({ name: 'ErpPurchaseRequest' })
@@ -399,9 +369,6 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const productList = ref<ProductVO[]>([]) // 产品列表
-// const supplierList = ref<SupplierVO[]>([]) // 供应商列表
-const userList = ref<UserVO[]>([]) // 用户列表
 /** 选中操作 */
 const selectionList = ref<PurchaseRequestVO[]>([])
 
@@ -427,25 +394,6 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-
-    // const computeSum = (items: any[], key: string) => {
-    //   if (!items?.length) return
-    //   return items.reduce((prev, cur) => {
-    //     if (cur[key]) {
-    //       return cur[key] + prev
-    //     }
-    //     return prev
-    //   }, 0)
-    // }
-    // wholeOrderList.value = cloneDeep(data.list).map((item) => {
-    //   const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount','orderedQuantity','unOrderCount']
-    //   keyList.forEach((key) => {
-    //     item[key] = computeSum(item.items, key)
-    //   })
-    //   return item
-    // })
-
-
     wholeOrderList.value = wholeOrderMergeCompute(data.list, branchOptions)
 
     itemsList.value = mergeItemsToList(data.list, {
@@ -464,28 +412,6 @@ const getList = async () => {
     loading.value = false
   }
 }
-
-// const handleWholeOrderEnable = (val) => {
-//   if (val) {
-//     // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
-//     const options = createWholeOrder(cloneDeep(branchOptions))
-//     const len = options.length - 1
-//     const limit = len - 4
-
-//     for (let i = limit; i < len; i++) {
-//       options[i].width = undefined
-//     }
-
-//     tableOptions.value = options
-//     list.value = wholeOrderList.value
-//     total.value = wholeOrderTotal.value
-//   } else {
-//     tableOptions.value = cloneDeep(branchOptions)
-//     list.value = itemsList.value
-//     total.value = itemsTotal.value
-//   }
-//   selectionList.value = []
-// }
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
@@ -748,11 +674,7 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 /** 初始化 **/
 onMounted(async () => {
-  await getList()
-  // 加载产品、仓库列表、供应商
-  productList.value = await ProductApi.getProductSimpleList()
-  // supplierList.value = await SupplierApi.getSupplierSimpleList()
-  userList.value = await UserApi.getSimpleUserList()
+   getList()
 })
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印

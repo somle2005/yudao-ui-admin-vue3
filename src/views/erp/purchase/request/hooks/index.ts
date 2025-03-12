@@ -1,10 +1,9 @@
 import { PurchaseRequestApi } from '@/api/erp/purchase/request'
-import { getDeptTree, getProductList, getUserList, getSupplierList } from '@/commonData'
+import { getDeptTree, getUserList, getSupplierList } from '@/commonData'
 import { cloneDeep } from 'lodash-es'
-import { formatTime } from '@/utils/formatTime'
 import { defaultProps } from '@/utils/tree'
 import { FormOptions } from '@/components/SmForm/src/types/types'
-import { AUDIT_TYPE } from '../constants'
+import { AUDIT_TYPE } from '@/utils/constant'
 
 /**
 

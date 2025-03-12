@@ -6,6 +6,7 @@
       :stripe="stripe"
       :showOverflowTooltip="showOverflowTooltip"
       :data="tableData"
+      :border="border"
       v-bind="TableAttrs()"
       @row-click="rowClick"
       class="SmTable-el-table"
@@ -156,6 +157,11 @@ const props = defineProps({
   data: {
     type: Array,
     required: true
+  },
+  // 是否开启
+  border: {
+    type: Boolean,
+    default: true
   },
   // 是否为斑马纹
   stripe: {

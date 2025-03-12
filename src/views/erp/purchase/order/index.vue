@@ -212,11 +212,9 @@
         <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
       </template> -->
 
-
       <template #currencyId="{ scope }">
         <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.currencyId || ''" />
       </template>
-      
 
       <template #operate="{ scope }">
         <el-button
@@ -277,7 +275,6 @@ import PurchaseOrderForm from './PurchaseOrderForm.vue'
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
-import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
@@ -427,8 +424,8 @@ const fieldMap = {
   //   wholeOrderEnable: 'items',
   // }, // items
 
-  //   申请人
-  // 申请部门
+  PRItemCreator: '申请人',
+  PRItemDepartmentName: '申请部门',
 
   creator: '制单人',
   createTime: {
@@ -465,7 +462,6 @@ branchOptions.forEach((item: any) => {
 })
 
 tableOptions.value = cloneDeep(branchOptions)
-console.log(tableOptions.value, 'tableOptions.value')
 
 /** ERP 销售订单列表 */
 defineOptions({ name: 'ErpPurchaseOrder' })
@@ -513,32 +509,17 @@ const getList = async () => {
           a.productName = a.product.name
           a.productBarCode = a.product.barCode
         }
+        const purchaseRequestItem = a.purchaseRequestItem
+        if (purchaseRequestItem) {
+          const { creator, departmentName } = purchaseRequestItem
+          item.PRItemCreator = creator
+          item.PRItemDepartmentName = departmentName
+        }
       })
     })
 
-    // const computeSum = (items: any[], key: string) => {
-    //   if (!items?.length) return
-    //   return items.reduce((prev, cur) => {
-    //     if (cur[key]) {
-    //       return cur[key] + prev
-    //     }
-    //     return prev
-    //   }, 0)
-    // }
-    // wholeOrderList.value = cloneDeep(data.list).map((item) => {
-    //   // const keyList = ['count', 'approveCount', 'taxPrice', 'allAmount']
-    //   /**
-    //    * totalTaxPrice-合计产品税价 合计税额
-    //    */
-    //   const keyList = ['totalTaxPrice']
-    //   keyList.forEach((key) => {
-    //     item[key] = computeSum(item.items, key)
-    //   })
-    //   return item
-    // })
 
-
-    wholeOrderList.value = wholeOrderMergeCompute(data.list,branchOptions)
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, branchOptions)
 
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
@@ -555,8 +536,6 @@ const getList = async () => {
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
-
-
   } finally {
     loading.value = false
   }
@@ -664,11 +643,16 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 /** 初始化 **/
 onMounted(async () => {
-  await getList()
-  // 加载产品、仓库列表、供应商
-  productList.value = await ProductApi.getProductSimpleList()
-  supplierList.value = await SupplierApi.getSupplierSimpleList()
-  userList.value = await UserApi.getSimpleUserList()
+  // 加载列表 产品、仓库列表、供应商
+  const [list1, product, supplier, user] = await Promise.all([
+    getList(),
+    ProductApi.getProductSimpleList(),
+    SupplierApi.getSupplierSimpleList(),
+    UserApi.getSimpleUserList()
+  ])
+  productList.value = product
+  supplierList.value = supplier
+  userList.value = user
 })
 
 // TODO 芋艿：可优化功能：列表界面，支持导入
