@@ -254,7 +254,7 @@ const fieldMap = {
     width: '120px'
   },
   unOrderCount: {
-    lable: '未订购数量',
+    label: '未订购数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   }, // 批准数量➖已订购数量后端计算返回
   orderedQuantity: {

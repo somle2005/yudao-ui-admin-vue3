@@ -113,11 +113,13 @@ export const computeTaxPriceAndAllAmount = (
   list.forEach((item) => {
     item[totalPrice] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
   })
-  debugger
+  console.log(list, 'list总价计算-这里先进行计算')
+  // debugger
 }
 
 // 计算优惠金额和优惠后金额totalPrice
 export const computeDiscountPriceAndTotalPrice = (
+  formRef: any,
   formData: any,
   keyMap?: {
     totalPriceStr?: string
@@ -131,11 +133,24 @@ export const computeDiscountPriceAndTotalPrice = (
     discountPercentStr = 'discountPercent'
   } = keyMap || {}
 
+
+  const updateVal = () => {
+    nextTick(() => {
+      const formValue = formRef.value.getFormData()
+      formValue[discountPriceStr] = formData.value[discountPriceStr]
+      formValue[totalPriceStr] = formData.value[totalPriceStr]
+    })
+  }
+
   if (formData.discountPercent) {
     const totalPrice = formData.items.reduce((prev, curr) => prev + curr[totalPriceStr], 0)
     const discountPrice = erpPriceMultiply(totalPrice, formData[discountPercentStr] / 100.0) || 0
-    formData.value[discountPriceStr] = discountPrice
+    formData[discountPriceStr] = discountPrice
     // 优惠后金额
-    formData.value.totalPrice = totalPrice - discountPrice
+    formData.totalPrice = totalPrice - discountPrice
+
+    updateVal()
   }
+
+  console.log(formData, '优惠金额计算')
 }

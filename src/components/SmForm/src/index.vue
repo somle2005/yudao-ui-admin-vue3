@@ -1,140 +1,145 @@
 <template>
-  <el-form
-    v-if="model && !isCol"
-    ref="form"
-    :validate-on-rule-change="false"
-    :model="model"
-    :rules="rules"
-    v-bind="$attrs"
-    @submit.prevent
-  >
-    <template v-for="(item, index) in options" :key="index">
-      <el-form-item
-        v-if="!item.children || !item.children!.length"
-        v-bind="item.formItemConfig"
-        :prop="item.prop"
-        :label="item.label"
-      >
-        <component
-          v-if="showType(item)"
-          :is="`el-${item.type}`"
-          :placeholder="item.placeholder"
-          v-model.trim="model[item.prop!]"
-          v-bind="item.attrs"
-          v-on="item.events || {}"
-          @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
-        />
-        <SmUpload
-          v-else-if="item.type === 'upload'"
-          :uploadItem="item"
-          v-bind="item.uploadAttrs"
-          @before-upload="beforeUpload"
-          @on-success="onSuccess"
-        />
-
-        <slot v-if="item.slot" :name="item.slot" :model="model" :scope="item"></slot>
-
-        <div v-else-if="item.type === 'editor'" id="editor"></div>
-      </el-form-item>
-      <el-form-item
-        v-if="item.children && item.children.length"
-        v-bind="item.formItemConfig"
-        :prop="item.prop"
-        :label="item.label"
-      >
-        <component
-          v-bind="item.attrs"
-          :is="`el-${item.type}`"
-          v-model="model[item.prop!]"
-          :placeholder="item.placeholder"
+  <div class="contents">
+    <el-form
+      v-if="model && !isCol"
+      ref="form"
+      :validate-on-rule-change="false"
+      :model="model"
+      :rules="rules"
+      v-bind="$attrs"
+      @submit.prevent
+    >
+      <template v-for="(item, index) in options" :key="index">
+        <el-form-item
+          v-if="!item.children || !item.children!.length"
+          v-bind="item.formItemConfig"
+          :prop="item.prop"
+          :label="item.label"
         >
           <component
-            :is="`el-${child.componentType || 'option'}`"
-            v-for="(child, i) in item.children"
-            :key="i"
-            :label="child.label"
-            :value="child.value"
+            v-if="showType(item)"
+            :is="`el-${item.type}`"
+            :placeholder="item.placeholder"
+            v-model.trim="model[item.prop!]"
+            v-bind="item.attrs"
+            v-on="item.events || {}"
+            @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
           />
-        </component>
+          <SmUpload
+            v-else-if="item.type === 'upload'"
+            :uploadItem="item"
+            v-bind="item.uploadAttrs"
+            @before-upload="beforeUpload"
+            @on-success="onSuccess"
+          />
+
+          <slot v-if="item.slot" :name="item.slot" :model="model" :scope="item"></slot>
+
+          <div v-else-if="item.type === 'editor'" id="editor"></div>
+        </el-form-item>
+        <el-form-item
+          v-if="item.children && item.children.length"
+          v-bind="item.formItemConfig"
+          :prop="item.prop"
+          :label="item.label"
+        >
+          <component
+            v-bind="item.attrs"
+            :is="`el-${item.type}`"
+            v-model="model[item.prop!]"
+            :placeholder="item.placeholder"
+          >
+            <component
+              :is="`el-${child.componentType || 'option'}`"
+              v-for="(child, i) in item.children"
+              :key="i"
+              :label="child.label"
+              :value="child.value"
+            />
+          </component>
+        </el-form-item>
+      </template>
+      <el-form-item>
+        <slot name="action" :form="form" :model="model"></slot>
       </el-form-item>
-    </template>
-    <el-form-item>
-      <slot name="action" :form="form" :model="model"></slot>
-    </el-form-item>
-  </el-form>
+    </el-form>
 
-  <el-form
-    v-if="model && isCol"
-    ref="form"
-    :validate-on-rule-change="false"
-    :model="model"
-    :rules="rules"
-    v-bind="$attrs"
-    @submit.prevent
-  >
-    <el-row :gutter="24">
-      <template v-for="(item, index) in options" :key="index">
-        <el-col v-if="!item.children || !item.children!.length" :span="item?.colConfig?.span || 12">
-          <el-form-item
+    <el-form
+      v-if="model && isCol"
+      ref="form"
+      :validate-on-rule-change="false"
+      :model="model"
+      :rules="rules"
+      v-bind="$attrs"
+      @submit.prevent
+    >
+      <el-row :gutter="24">
+        <template v-for="(item, index) in options" :key="index">
+          <el-col
             v-if="!item.children || !item.children!.length"
-            v-bind="item.formItemConfig"
-            :prop="item.prop"
-            :label="item.label"
+            :span="item?.colConfig?.span || 12"
           >
-            <component
-              v-if="showType(item)"
-              :is="`el-${item.type}`"
-              :placeholder="item.placeholder"
-              v-model.trim="model[item.prop!]"
-              v-bind="item.attrs"
-              v-on="item.events || {}"
-              @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
-            />
-            <SmUpload
-              v-else-if="item.type === 'upload'"
-              :uploadItem="item"
-              v-bind="item.uploadAttrs"
-              @before-upload="beforeUpload"
-              @on-success="onSuccess"
-            />
-
-            <slot v-if="item.slot" :name="item.slot" :model="model" :scope="item"></slot>
-
-            <div v-else-if="item.type === 'editor'" id="editor"></div>
-          </el-form-item>
-        </el-col>
-
-        <el-col v-if="item.children && item.children.length" :span="item?.colConfig?.span || 12">
-          <el-form-item
-            v-if="item.children && item.children.length"
-            v-bind="item.formItemConfig"
-            :prop="item.prop"
-            :label="item.label"
-          >
-            <component
-              v-bind="item.attrs"
-              :is="`el-${item.type}`"
-              v-model="model[item.prop!]"
-              :placeholder="item.placeholder"
+            <el-form-item
+              v-if="!item.children || !item.children!.length"
+              v-bind="item.formItemConfig"
+              :prop="item.prop"
+              :label="item.label"
             >
               <component
-                :is="`el-${child.componentType || 'option'}`"
-                v-for="(child, i) in item.children"
-                v-bind="child.attrs"
-                :key="i"
-                :label="child.label"
-                :value="child.value"
+                v-if="showType(item)"
+                :is="`el-${item.type}`"
+                :placeholder="item.placeholder"
+                v-model.trim="model[item.prop!]"
+                v-bind="item.attrs"
+                v-on="item.events || {}"
+                @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
               />
-            </component>
-          </el-form-item>
-        </el-col>
-      </template>
-    </el-row>
+              <SmUpload
+                v-else-if="item.type === 'upload'"
+                :uploadItem="item"
+                v-bind="item.uploadAttrs"
+                @before-upload="beforeUpload"
+                @on-success="onSuccess"
+              />
 
-    <el-form-item>
-      <slot name="action" :form="form" :model="model"></slot>
-    </el-form-item>
-  </el-form>
+              <slot v-if="item.slot" :name="item.slot" :model="model" :scope="item"></slot>
+
+              <div v-else-if="item.type === 'editor'" id="editor"></div>
+            </el-form-item>
+          </el-col>
+
+          <el-col v-if="item.children && item.children.length" :span="item?.colConfig?.span || 12">
+            <el-form-item
+              v-if="item.children && item.children.length"
+              v-bind="item.formItemConfig"
+              :prop="item.prop"
+              :label="item.label"
+            >
+              <component
+                v-bind="item.attrs"
+                :is="`el-${item.type}`"
+                v-model="model[item.prop!]"
+                :placeholder="item.placeholder"
+              >
+                <component
+                  :is="`el-${child.componentType || 'option'}`"
+                  v-for="(child, i) in item.children"
+                  v-bind="child.attrs"
+                  :key="i"
+                  :label="child.label"
+                  :value="child.value"
+                />
+              </component>
+            </el-form-item>
+          </el-col>
+        </template>
+      </el-row>
+
+      <el-form-item>
+        <slot name="action" :form="form" :model="model"></slot>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -370,5 +375,8 @@ const onSuccess = (
 }
 .\!w-160px {
   width: 160px !important;
+}
+.contents {
+  display: contents;
 }
 </style>

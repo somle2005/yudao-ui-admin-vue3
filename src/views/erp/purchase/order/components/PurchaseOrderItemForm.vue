@@ -49,6 +49,46 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="申请人" width="200">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
+              <el-select
+                v-if="!row.erpPurchaseRequestItemNo"
+                :disabled="disabled"
+                v-model="row.applicantId"
+                clearable
+                filterable
+                placeholder="请选择申请人"
+              >
+                <el-option
+                  v-for="item in userList"
+                  :key="item.id"
+                  :label="item.nickname"
+                  :value="item.id"
+                />
+              </el-select>
+              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.applicant }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="部门" width="200">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
+              <el-tree-select
+                v-if="!row.erpPurchaseRequestItemNo"
+                :disabled="disabled"
+                v-model="row.applicationDeptId"
+                :data="deptList"
+                :props="defaultProps"
+                check-strictly
+                node-key="id"
+                placeholder="请选择部门"
+              />
+              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.applicationDept }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
@@ -254,7 +294,7 @@
 </template>
 <script setup lang="ts">
 import { StockApi } from '@/api/erp/stock/stock'
-import { getProductList, getWarehouseList } from '@/commonData'
+import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import {
   erpCountInputFormatter,
@@ -265,6 +305,7 @@ import {
 import { cloneDeep } from 'lodash-es'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
+import { defaultProps } from '@/utils/tree'
 
 const props = defineProps({
   items: {
@@ -292,14 +333,17 @@ const formRules = reactive({
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
 const warehouseList = getWarehouseList()
+const deptList: any = ref([])
+const userList: any = ref([])
+getUserList(userList)
+getDeptTree(deptList)
 
 /** 初始化设置入库项 */
 watch(
   () => props.items,
   async (val) => {
-    formData.value = cloneDeep(val)
-    console.log(val,'值改变进来了')
-    // formData.value = val
+    // formData.value = cloneDeep(val)
+    formData.value = val
   },
   { immediate: true, deep: true }
 )
@@ -320,6 +364,7 @@ watch(
       applyCount: 'count'
     }
 
+    // 编辑回显
     computeTaxPriceAndAllAmount(val, keyMap)
 
     // // 循环处理

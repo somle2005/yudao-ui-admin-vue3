@@ -1,151 +1,157 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000">
-    <SmForm
-      class="-mb-15px"
-      ref="formRef"
-      isCol
-      label-width="150px"
-      v-model="formData"
-      v-loading="formLoading"
-      :options="requestFormOptions"
-      :getModelValue="getFormData"
-    >
-      <!-- <template #primaryImageUrl="{ scope, model }">
+  <div style="display: contents">
+    <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000">
+      <SmForm
+        class="-mb-15px"
+        ref="formRef"
+        isCol
+        label-width="150px"
+        v-model="formData"
+        v-loading="formLoading"
+        :options="requestFormOptions"
+        :getModelValue="getFormData"
+      >
+        <!-- <template #primaryImageUrl="{ scope, model }">
       <UploadImg v-model="model[scope.prop]" />
     </template> -->
-      <!-- <template #action>
+        <!-- <template #action>
       <div class="moreBtnList">
         <el-button type="primary" @click="handleQuery"> 确定</el-button>
       </div>
     </template> -->
-      <!-- <template #items="{ scope, model }"> 
+        <!-- <template #items="{ scope, model }"> 
        {{ console.log(scope, model, '打印scope-model') }}  -->
 
-      <template #fileUrl="{ model, scope }">
-        <UploadFile
-          :disabled="scope?.attrs?.disabled"
-          :is-show-tip="false"
-          v-model="model.fileUrl"
-          :limit="1"
-        />
-      </template>
+        <template #fileUrl="{ model, scope }">
+          <UploadFile
+            :disabled="scope?.attrs?.disabled"
+            :is-show-tip="false"
+            v-model="model.fileUrl"
+            :limit="1"
+          />
+        </template>
 
-      <template #items>
-        <el-button
-          :disabled="itemsFormdisabled"
-          type="primary"
-          @click="selectApplicantItem"
-          style="margin-bottom: 10px"
-          >选择申请项</el-button
-        >
+        <template #items>
+          <el-button
+            :disabled="itemsFormdisabled"
+            type="primary"
+            @click="selectApplicantItem"
+            style="margin-bottom: 10px"
+            >选择申请项</el-button
+          >
 
-        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="订单产品清单" name="item">
-            <PurchaseOrderItemForm
-              ref="itemFormRef"
-              :items="formData.items"
-              :disabled="itemsFormdisabled"
-            />
-            <!-- <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" /> -->
-          </el-tab-pane>
-        </el-tabs>
-      </template>
+          <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+            <el-tab-pane label="订单产品清单" name="item">
+              <PurchaseOrderItemForm
+                ref="itemFormRef"
+                :items="formData.items"
+                :disabled="itemsFormdisabled"
+              />
+              <!-- <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" /> -->
+            </el-tab-pane>
+          </el-tabs>
+        </template>
 
-      <template #inspectionJson>
-        <el-tabs v-model="inspectionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="验货单" name="inspectionJson">
-            <InspectionJsonForm ref="inspectionJsonFormRef" :items="formData.inspectionJson" />
-          </el-tab-pane>
-        </el-tabs>
-      </template>
-      <template #completionJson>
-        <el-tabs v-model="completionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="完工单" name="completionJson">
-            <CompletionJsonForm ref="completionJsonFormRef" :items="formData.completionJson" />
-          </el-tab-pane>
-        </el-tabs>
-      </template>
-    </SmForm>
-
-    <template #footer>
-      <el-button v-if="!auditType" @click="submitForm" type="primary" :disabled="formLoading">
-        确 定
-      </el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <template v-if="auditType">
-        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
-          不同意</el-button
-        >
-        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
-          同意</el-button
-        >
-      </template>
-    </template>
-  </Dialog>
-
-  <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1000">
-    <ContentWrap>
-      <!-- 搜索工作栏 -->
-      <SmForm
-        class="-mb-15px"
-        ref="queryFormRef"
-        :inline="true"
-        label-width="68px"
-        v-model="queryParams"
-        :options="searchFormOptions"
-        :getModelValue="getSearchFormData"
-      >
-        <template #action>
-          <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-          <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <template #inspectionJson>
+          <el-tabs v-model="inspectionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+            <el-tab-pane label="验货单" name="inspectionJson">
+              <InspectionJsonForm ref="inspectionJsonFormRef" :items="formData.inspectionJson" />
+            </el-tab-pane>
+          </el-tabs>
+        </template>
+        <template #completionJson>
+          <el-tabs v-model="completionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+            <el-tab-pane label="完工单" name="completionJson">
+              <CompletionJsonForm ref="completionJsonFormRef" :items="formData.completionJson" />
+            </el-tab-pane>
+          </el-tabs>
         </template>
       </SmForm>
-    </ContentWrap>
-    <ContentWrap style="padding-bottom: 0">
-      <SmTable
-        border
-        isSelection
-        :loading="loading"
-        :options="tableOptions"
-        :data="list"
-        :total="total"
-        v-model:currentPage="queryParams.pageNo"
-        v-model:pageSize="queryParams.pageSize"
-        @pagination="getList"
-        @selection-change="handleSelectionChange"
-      >
-        <template #status="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
-        </template>
 
-        <template #orderStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
+      <template #footer>
+        <el-button v-if="!auditType" @click="submitForm" type="primary" :disabled="formLoading">
+          确 定
+        </el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <template v-if="auditType">
+          <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+            不同意</el-button
+          >
+          <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
+            同意</el-button
+          >
         </template>
+      </template>
+    </Dialog>
 
-        <template #offStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
-        </template>
+    <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1000">
+      <ContentWrap>
+        <!-- 搜索工作栏 -->
+        <SmForm
+          class="-mb-15px"
+          ref="queryFormRef"
+          :inline="true"
+          label-width="68px"
+          v-model="queryParams"
+          :options="searchFormOptions"
+          :getModelValue="getSearchFormData"
+        >
+          <template #action>
+            <el-button @click="handleQuery"
+              ><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button
+            >
+            <el-button @click="resetQuery"
+              ><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button
+            >
+          </template>
+        </SmForm>
+      </ContentWrap>
+      <ContentWrap style="padding-bottom: 0">
+        <SmTable
+          border
+          isSelection
+          :loading="loading"
+          :options="tableOptions"
+          :data="list"
+          :total="total"
+          v-model:currentPage="queryParams.pageNo"
+          v-model:pageSize="queryParams.pageSize"
+          @pagination="getList"
+          @selection-change="handleSelectionChange"
+        >
+          <template #status="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
+          </template>
 
-        <template #rowOrderStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
-        </template>
+          <template #orderStatus="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
+          </template>
 
-        <template #rowOffStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
-        </template>
-      </SmTable>
-    </ContentWrap>
-    <template #footer>
-      <el-button @click="addApplicantItem" type="primary"> 确 定 </el-button>
-      <el-button @click="applicantItemDialog = false">取 消</el-button>
-    </template>
-  </Dialog>
+          <template #offStatus="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
+          </template>
 
-  <!-- 可订单的申请列表 -->
-  <!-- <PurchaseRequestOrderEnableList
+          <template #rowOrderStatus="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
+          </template>
+
+          <template #rowOffStatus="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+          </template>
+        </SmTable>
+      </ContentWrap>
+      <template #footer>
+        <el-button @click="addApplicantItem" type="primary"> 确 定 </el-button>
+        <el-button @click="applicantItemDialog = false">取 消</el-button>
+      </template>
+    </Dialog>
+
+    <!-- 可订单的申请列表 -->
+    <!-- <PurchaseRequestOrderEnableList
     ref="purchaseRequestOrderEnableListRef"
     @success="handlePurchaseRequestChange"
   /> -->
+  </div>
 </template>
 <script setup lang="ts">
 import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
@@ -209,7 +215,7 @@ const initFormData = () => {
     settlementDate: undefined,
     orderTime: undefined,
     depositPrice: undefined,
-    fileUrl: undefined,
+    fileUrl: '',
     remark: undefined,
     items: [],
     completionJson: [],
@@ -241,7 +247,18 @@ watch(
       return
     }
 
-    computeDiscountPriceAndTotalPrice(val)
+    if (!val.discountPercent) {
+      return
+    }
+
+    // 编辑回显
+    computeDiscountPriceAndTotalPrice(formRef, formData.value)
+    // nextTick(() => {
+    //   const formValue = formRef.value.getFormData()
+    //   formValue.discountPrice = formData.value.discountPrice
+    //   formValue.totalPrice = formData.value.totalPrice
+    // })
+
     // if (val.discountPercent) {
     //   const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
     //   const discountPrice = erpPriceMultiply(totalPrice, val.discountPercent / 100.0) || 0
@@ -289,6 +306,7 @@ const createRequestFormOptions = () => {
       //   }
       // ]
     },
+
     {
       type: 'select',
       placeholder: '请选择供应商',
@@ -372,7 +390,7 @@ const createRequestFormOptions = () => {
       label: '附件',
       slot: 'fileUrl'
     },
-    { 
+    {
       colConfig: { span: 24 },
       slot: 'items',
       formItemConfig: {
@@ -431,7 +449,6 @@ const createRequestFormOptions = () => {
         'controls-position': 'right',
         min: 0,
         precision: 2,
-        // class: '!w-1/1',
         style: {
           width: '100%'
         }
@@ -499,7 +516,6 @@ const updateFormOptions = (formOptions) => {
 }
 
 const createDetailFormOptions = (formOptions) => {
-
   const index = formOptions.length
   const obj: any = {
     prop: 'inspectionJson',
@@ -698,6 +714,7 @@ const addApplicantItem = () => {
   applicantItemDialog.value = false
   nextTick(() => {
     const items = formData.value.items
+    console.log(selectionList.value, 'selectionList.value')
     const selectList = selectionList.value.map((item: any) => {
       const {
         purchaseApplyItemId,
@@ -710,7 +727,11 @@ const addApplicantItem = () => {
         taxPrice,
         warehouseId,
         expectArrivalDate,
-        no
+        no,
+        applicantId,
+        applicationDeptId,
+        applicationDept,
+        applicant,
       } = item
       const obj = {
         purchaseApplyItemId,
@@ -723,7 +744,11 @@ const addApplicantItem = () => {
         taxPrice, //税额需要动态计算
         warehouseId,
         deliveryTime: expectArrivalDate,
-        erpPurchaseRequestItemNo: no
+        erpPurchaseRequestItemNo: no,
+        applicantId,
+        applicationDeptId,
+        applicationDept,
+        applicant,
         // productPrice: actTaxPrice
       }
       return obj

@@ -370,7 +370,10 @@ const fieldMap = {
     width: '200px'
   },
   // 总验货通过数
-  // 待收数量
+  waitInCount: {
+    label: '待收数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
   // 下单数量
   // 下单数量 -没找到 (是取items里面的count产品税率吗)
   // 已收数量 -没找到
@@ -406,8 +409,13 @@ const fieldMap = {
 
   //   申请人
   // 申请部门
-  // 制单人
-  // 制单时间
+
+  creator: '制单人',
+  createTime: {
+    label: '制单时间',
+    formatter: dateFormatter, // 年月日-金蝶
+    width: '200px'
+  },
 
   auditorName: '审核人',
   auditTime: {
