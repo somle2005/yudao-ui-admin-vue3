@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash-es'
 
 export const WHOLE_ORDER_TYPE = {
-  items:'items',
+  items: 'items',
   mergeCompute: 'mergeCompute'
 }
 
@@ -47,9 +47,8 @@ export const useWholeOrder = (
   }
 }
 
-
 export const useWholeOrderMergeCompute = () => {
-   const wholeOrderMergeCompute = (list: any[], branchOptions) => {
+  const wholeOrderMergeCompute = (list: any[], branchOptions) => {
     const computeSum = (items: any[], key: string) => {
       if (!items?.length) return
       return items.reduce((prev, cur) => {
@@ -59,7 +58,7 @@ export const useWholeOrderMergeCompute = () => {
         return prev
       }, 0)
     }
-  
+
     const keyList = branchOptions
       .filter((item) => item.wholeOrderEnable === WHOLE_ORDER_TYPE.mergeCompute)
       .map((item) => item.prop)
@@ -76,5 +75,3 @@ export const useWholeOrderMergeCompute = () => {
     WHOLE_ORDER_TYPE
   }
 }
-
-
