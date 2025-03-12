@@ -324,7 +324,11 @@ const fieldMap = {
     slot: 'offStatus'
   },
 
-  // 成交金额
+  // 整单才进行展示
+  totalPrice: {
+    label: '成交金额',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
 
   rowExecuteStatus: {
     label: '行执行状态',
@@ -369,15 +373,23 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
-  // 总验货通过数
+  // 总验货通过数-只有整单的时候才进行展示
+  totalInspectionPassCount: {
+    label: '总验货通过数',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
   waitInCount: {
     label: '待收数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  // 下单数量
-  // 下单数量 -没找到 (是取items里面的count产品税率吗)
-  // 已收数量 -没找到
-
+  count: {
+    label: '下单数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  inCount: {
+    label: '已收数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
   currencyId: {
     label: '币种',
     slot: 'currencyId',

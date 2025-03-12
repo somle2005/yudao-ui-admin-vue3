@@ -6,6 +6,7 @@
     v-loading="formLoading"
     label-width="0px"
     :inline-message="true"
+    :disabled="disabled"
   >
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -54,6 +55,10 @@ const props = defineProps({
   items: {
     type: Array,
     default: () => []
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 const formLoading = ref(false) // 表单的加载中

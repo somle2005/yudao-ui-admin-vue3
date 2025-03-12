@@ -55,14 +55,22 @@
         <template #inspectionJson>
           <el-tabs v-model="inspectionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
             <el-tab-pane label="验货单" name="inspectionJson">
-              <InspectionJsonForm ref="inspectionJsonFormRef" :items="formData.inspectionJson" />
+              <InspectionJsonForm
+                ref="inspectionJsonFormRef"
+                :disabled="jsonDisabled"
+                :items="formData.inspectionJson"
+              />
             </el-tab-pane>
           </el-tabs>
         </template>
         <template #completionJson>
           <el-tabs v-model="completionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
             <el-tab-pane label="完工单" name="completionJson">
-              <CompletionJsonForm ref="completionJsonFormRef" :items="formData.completionJson" />
+              <CompletionJsonForm
+                ref="completionJsonFormRef"
+                :disabled="jsonDisabled"
+                :items="formData.completionJson"
+              />
             </el-tab-pane>
           </el-tabs>
         </template>
@@ -572,6 +580,7 @@ const operateAudit = (type) => {
 }
 
 const jsonList = ['inspectionJson', 'completionJson']
+const jsonDisabled = computed(() => formData.value.auditStatus !== 5) // 已审核才可以进行编辑
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -731,7 +740,7 @@ const addApplicantItem = () => {
         applicantId,
         applicationDeptId,
         applicationDept,
-        applicant,
+        applicant
       } = item
       const obj = {
         purchaseApplyItemId,
@@ -748,7 +757,7 @@ const addApplicantItem = () => {
         applicantId,
         applicationDeptId,
         applicationDept,
-        applicant,
+        applicant
         // productPrice: actTaxPrice
       }
       return obj
