@@ -280,6 +280,7 @@ const showAudit = computed(() => props.formType === 'audit' || props.formType ==
 
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
+// 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-SKU(产品名称-单位) 申请数量
 const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],

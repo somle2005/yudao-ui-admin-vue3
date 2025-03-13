@@ -113,6 +113,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
 
   const requestFormOptions = ref<FormOptions[]>([])
+  // 必填项 单据日期 申请人 申请部门
   const createRequestFormOptions = () => {
     return [
       {
