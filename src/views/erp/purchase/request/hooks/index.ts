@@ -116,6 +116,17 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const createRequestFormOptions = () => {
     return [
       {
+        type: 'input',
+        label: '单据编号',
+        prop: 'no',
+        placeholder: '保存时自动生成',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true,
+          disabled: true
+        }
+      },
+      {
         type: 'date-picker',
         placeholder: '请选择单据日期',
         prop: 'requestTime',
