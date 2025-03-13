@@ -56,8 +56,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="SKU（编码）" prop="barCode">
-            <el-input v-model="formData.barCode" placeholder="请输入SKU（编码）" />
+          <el-form-item label="SKU" prop="barCode">
+            <el-input v-model="formData.barCode" placeholder="请输入SKU" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -447,7 +447,7 @@ formData.value = initFormData()
 
 const barCodeValidator = (rule, value, callback) => {
   if (!value && value !== 0) {
-    callback(new Error('SKU（编码）不能为空'))
+    callback(new Error('SKU不能为空'))
     return
   }
 
