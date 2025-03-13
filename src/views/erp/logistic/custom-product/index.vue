@@ -8,7 +8,7 @@
       :inline="true"
       label-width="100px"
     >
-      <el-form-item label="产品" prop="productId">
+      <el-form-item label="SKU" prop="productId">
         <!-- <el-input
           v-model="queryParams.productId"
           placeholder="请输入产品id"
@@ -20,14 +20,14 @@
           v-model="queryParams.productId"
           clearable
           filterable
-          placeholder="请选择产品"
+          placeholder="请选择SKU"
           @keyup.enter="handleQuery"
           class="!w-240px"
         >
           <el-option
             v-for="item in productList"
             :key="item.id"
-            :label="item.name"
+            :label="item.barCode"
             :value="item.id"
           />
         </el-select>
