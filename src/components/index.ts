@@ -5,6 +5,7 @@ import { SmForm } from './SmForm'
 import { SmUpload } from './SmUpload'
 // import {ElDatePicker} from 'element-plus'
 import { ElTreeSelect } from 'element-plus'
+import { SmRemoteSelect } from './SmRemoteSelect'
 
 export const setupGlobCom = (app: App<Element>): void => {
   app.component('Icon', Icon)
@@ -12,5 +13,6 @@ export const setupGlobCom = (app: App<Element>): void => {
   app.component('SmForm', SmForm)
   app.component('SmUpload', SmUpload)
   app.component('ElTreeSelect', ElTreeSelect)
+  app.component('SmRemoteSelect', SmRemoteSelect)
   // app.component('ElDatePicker', ElDatePicker)
 }
