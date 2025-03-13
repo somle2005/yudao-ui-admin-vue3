@@ -37,6 +37,11 @@
           <el-text>{{ row.productName }}</el-text>
         </template>
       </el-table-column>
+      <el-table-column label="单位" min-width="60">
+        <template #default="{ row }">
+          <el-text>{{ row.productUnitName }}</el-text>
+        </template>
+      </el-table-column>
 
       <el-table-column label="仓库" min-width="150">
         <template #default="{ row, $index }">
@@ -400,6 +405,7 @@ const onChangeProduct = (productId, row) => {
   const product: any = productList.value.find((item) => item.id === productId)
   if (product) {
     row.productName = product.name
+    row.productUnitName = product.unitName
     // row.productUnitName = product.unitName
     // row.productBarCode = product.barCode
     // row.productPrice = product.purchasePrice
