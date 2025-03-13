@@ -15,10 +15,10 @@
           v-bind="item.formItemConfig"
           :prop="item.prop"
           :label="item.label"
-        >
+        > 
           <component
             v-if="showType(item)"
-            :is="`el-${item.type}`"
+            :is="getComponentType(item)"
             :placeholder="item.placeholder"
             v-model.trim="model[item.prop!]"
             v-bind="item.attrs"
@@ -87,7 +87,7 @@
             >
               <component
                 v-if="showType(item)"
-                :is="`el-${item.type}`"
+                :is="getComponentType(item)"
                 :placeholder="item.placeholder"
                 v-model.trim="model[item.prop!]"
                 v-bind="item.attrs"
@@ -148,6 +148,12 @@ import { FormInstance, FormOptions } from './types/types'
 import { cloneDeep } from 'lodash-es'
 import { UploadFile, UploadFiles, UploadRawFile } from 'element-plus'
 // import E from "wangeditor"
+
+const getComponentType = (item) => {
+  const { type, componentType } = item
+  if (componentType) return componentType
+  return `el-${type}` // `el-${item.type}`
+}
 
 const dealEvents = (e: any, item: any, type: string) => {
   const events = item.events && item.events[type]
