@@ -225,10 +225,10 @@ const getList = async () => {
         item.productName = name
         item.primaryImageUrl = primaryImageUrl
       }
-      const customCategory = item.customCategory
-      if (customCategory) {
-        item.combinedValue = customCategory.combinedValue
-      }
+      // const customCategory = item.customCategory
+      // if (customCategory) {
+      //   item.combinedValue = customCategory.combinedValue
+      // }
       return item
     })
     total.value = data.total
