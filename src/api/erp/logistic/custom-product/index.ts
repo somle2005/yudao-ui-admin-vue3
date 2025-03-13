@@ -10,31 +10,31 @@ export interface CustomProductVO {
 export const CustomProductApi = {
   // 查询海关管理中，与海关分类-产品。中间联系表。分页
   getCustomProductPage: async (params: any) => {
-    return await request.get({ url: `/erp/custom-product/page`, params })
+    return await request.get({ url: `/tms/custom-product/page`, params })
   },
 
   // 查询海关管理中，与海关分类-产品。中间联系表。详情
   getCustomProduct: async (id: number) => {
-    return await request.get({ url: `/erp/custom-product/get?id=` + id })
+    return await request.get({ url: `/tms/custom-product/get?id=` + id })
   },
 
   // 新增海关管理中，与海关分类-产品。中间联系表。
   createCustomProduct: async (data: CustomProductVO) => {
-    return await request.post({ url: `/erp/custom-product/create`, data })
+    return await request.post({ url: `/tms/custom-product/create`, data })
   },
 
   // 修改海关管理中，与海关分类-产品。中间联系表。
   updateCustomProduct: async (data: CustomProductVO) => {
-    return await request.put({ url: `/erp/custom-product/update`, data })
+    return await request.put({ url: `/tms/custom-product/update`, data })
   },
 
   // 删除海关管理中，与海关分类-产品。中间联系表。
   deleteCustomProduct: async (id: number) => {
-    return await request.delete({ url: `/erp/custom-product/delete?id=` + id })
+    return await request.delete({ url: `/tms/custom-product/delete?id=` + id })
   },
 
   // 导出海关管理中，与海关分类-产品。中间联系表。 Excel
   exportCustomProduct: async (params) => {
-    return await request.download({ url: `/erp/custom-product/export-excel`, params })
+    return await request.download({ url: `/tms/custom-product/export-excel`, params })
   },
 }
