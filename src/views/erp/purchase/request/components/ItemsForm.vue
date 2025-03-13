@@ -10,7 +10,7 @@
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
-      <el-table-column label="产品编号" min-width="180">
+      <el-table-column label="SKU" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <el-select
@@ -18,7 +18,7 @@
               clearable
               filterable
               @change="onChangeProduct($event, row)"
-              placeholder="请选择产品编号"
+              placeholder="请选择SKU"
               :disabled="disabled"
             >
               <el-option
@@ -276,7 +276,7 @@ const showAudit = computed(() => props.formType === 'audit' || props.formType ==
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
 const formRules = reactive({
-  productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
+  productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
   orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }]
 })
