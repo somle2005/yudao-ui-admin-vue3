@@ -150,3 +150,14 @@ export const computeDiscountPriceAndTotalPrice = (
     updateVal()
   }
 }
+
+export const resetQueryParams = (queryParams: { [key: string]: any }, queryFormRef: any) => {
+  for (const key in queryParams) {
+    queryParams[key] = undefined
+  }
+  queryParams.pageNo = 1
+  queryParams.pageSize = 10
+  if (queryFormRef.value) {
+    queryFormRef.value.resetFields()
+  }
+}

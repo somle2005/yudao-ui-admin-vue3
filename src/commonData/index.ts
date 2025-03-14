@@ -189,7 +189,7 @@ export const getUserList = (data?: any) => {
 }
 
 // 获得海关分类组合值精简列表
-export const getCustomProduct = (data?: any) => {
+export const getCustomRuleCategoryList = (data?: any) => {
   const customRuleCategoryList = ref<any[]>([]) // 用户列表
   CustomRuleCategoryApi.getCustomRuleCategorySimpleList().then((res: any) => {
     customRuleCategoryList.value = res.map((item) => {

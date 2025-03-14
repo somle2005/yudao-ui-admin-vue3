@@ -181,6 +181,7 @@ import CompletionJsonForm from './components/CompletionJsonForm.vue'
 import InspectionJsonForm from './components/InspectionJsonForm.vue'
 
 let {
+  queryFormRef,
   queryParams,
   list,
   tableOptions,
@@ -723,7 +724,6 @@ const addApplicantItem = () => {
   applicantItemDialog.value = false
   nextTick(() => {
     const items = formData.value.items
-    console.log(selectionList.value, 'selectionList.value')
     const selectList = selectionList.value.map((item: any) => {
       const {
         purchaseApplyItemId,
