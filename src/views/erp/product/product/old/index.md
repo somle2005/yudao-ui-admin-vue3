@@ -33,10 +33,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="SKU（编码）" prop="code">
+      <el-form-item label="SKU" prop="code">
         <!-- <el-input
           v-model="queryParams.barCode"
-          placeholder="请输入SKU（编码）"
+          placeholder="请输入SKU"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -45,7 +45,7 @@
           v-model="queryParams.barCode"
           clearable
           filterable
-          placeholder="请选择SKU（编码）"
+          placeholder="请选择SKU"
           @keyup.enter="handleQuery"
           @input="insertBarcode"
           class="!w-240px"
@@ -196,7 +196,7 @@
       </el-table-column>
       <el-table-column
         fixed="left"
-        label="SKU（编码）"
+        label="SKU"
         align="center"
         prop="barCode"
         :min-width="columnMinWidth"
@@ -472,7 +472,7 @@ const fieldMap = {
     slot: 'primaryImageUrl'
   },
   barCode: {
-    label: 'SKU（编码）',
+    label: 'SKU',
     fixed: 'left',
     width: '180px',
     slot: 'barCode',

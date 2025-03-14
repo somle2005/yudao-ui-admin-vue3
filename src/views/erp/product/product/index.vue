@@ -25,12 +25,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="SKU（编码）" prop="code">
+      <el-form-item label="SKU" prop="code">
         <el-select
           v-model="queryParams.barCode"
           clearable
           filterable
-          placeholder="请选择SKU（编码）"
+          placeholder="请选择SKU"
           @keyup.enter="handleQuery"
           @input="insertBarcode"
           class="!w-240px"
@@ -352,7 +352,7 @@ const fieldMap = {
     slot: 'primaryImageUrl'
   },
   barCode: {
-    label: 'SKU（编码）',
+    label: 'SKU',
     fixed: 'left',
     width: '180px',
     slot: 'barCode',

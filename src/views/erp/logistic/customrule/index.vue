@@ -13,6 +13,7 @@
           v-model="queryParams.countryCode"
           placeholder="请选择国家编码"
           clearable
+          filterable
           class="!w-240px"
         >
           <el-option
@@ -24,12 +25,12 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="SKU（编码）" prop="barCode">
+      <el-form-item label="SKU" prop="barCode">
         <el-select
           v-model.trim="queryParams.barCode"
           clearable
           filterable
-          placeholder="请选择SKU（编码）"
+          placeholder="请选择SKU"
           @keyup.enter="handleQuery"
           @input="insertBarcode"
           class="!w-240px"
@@ -219,7 +220,7 @@ const fieldMap = {
     width: '100px'
   },
   'product-barCode': {
-    label: 'SKU（编码）',
+    label: 'SKU',
     width: '180px'
   },
   countryCode: {

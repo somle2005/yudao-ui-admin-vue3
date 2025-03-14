@@ -173,31 +173,31 @@ export interface CustomRuleDTO {
 export const CustomRuleApi = {
   // 查询ERP 海关规则分页
   getCustomRulePage: async (params: CustomRuleDTO) => {
-    return await request.get({ url: `/erp/custom-rule/page`, params })
+    return await request.get({ url: `/tms/custom-rule/page`, params })
   },
 
   // 查询ERP 海关规则详情
   getCustomRule: async (id: number) => {
-    return await request.get({ url: `/erp/custom-rule/get?id=` + id })
+    return await request.get({ url: `/tms/custom-rule/get?id=` + id })
   },
 
   // 新增ERP 海关规则
   createCustomRule: async (data: CustomRuleVO) => {
-    return await request.post({ url: `/erp/custom-rule/create`, data })
+    return await request.post({ url: `/tms/custom-rule/create`, data })
   },
 
   // 修改ERP 海关规则
   updateCustomRule: async (data: CustomRuleVO) => {
-    return await request.put({ url: `/erp/custom-rule/update`, data })
+    return await request.put({ url: `/tms/custom-rule/update`, data })
   },
 
   // 删除ERP 海关规则
   deleteCustomRule: async (id: number) => {
-    return await request.delete({ url: `/erp/custom-rule/delete?id=` + id })
+    return await request.delete({ url: `/tms/custom-rule/delete?id=` + id })
   },
 
   // 导出ERP 海关规则 Excel
   exportCustomRule: async (params) => {
-    return await request.download({ url: `/erp/custom-rule/export-excel`, params })
+    return await request.download({ url: `/tms/custom-rule/export-excel`, params })
   }
 }

@@ -67,6 +67,11 @@ export const ProductApi = {
     return await request.get({ url: `/erp/product/simple-list` })
   },
 
+  // 获得产品精简列表(高效)返回100个结果
+  getProductEfficientList: async (params: any) => {
+    return await request.get({ url: `/erp/product/simple-list-efficient`, params })
+  },
+
   // 查询ERP 产品详情
   getProduct: async (id: number) => {
     return await request.get({ url: `/erp/product/get?id=` + id })
@@ -90,5 +95,5 @@ export const ProductApi = {
   // 导出ERP 产品 Excel
   exportProduct: async (params) => {
     return await request.download({ url: `/erp/product/export-excel`, params })
-  },
+  }
 }

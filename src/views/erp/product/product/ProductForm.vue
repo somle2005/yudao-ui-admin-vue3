@@ -56,8 +56,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="SKU（编码）" prop="barCode">
-            <el-input v-model="formData.barCode" placeholder="请输入SKU（编码）" />
+          <el-form-item label="SKU" prop="barCode">
+            <el-input v-model="formData.barCode" placeholder="请输入SKU" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -213,7 +213,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item label="海关分类" prop="customCategoryId">
             <el-select
               v-model="formData.customCategoryId"
@@ -229,7 +229,7 @@
               />
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col> -->
 
         <el-col :span="24">
           <ContentWrap>
@@ -447,7 +447,7 @@ formData.value = initFormData()
 
 const barCodeValidator = (rule, value, callback) => {
   if (!value && value !== 0) {
-    callback(new Error('SKU（编码）不能为空'))
+    callback(new Error('SKU不能为空'))
     return
   }
 
@@ -543,7 +543,7 @@ const open = async (type: string, id?: number) => {
     isEditMode.value = false // 设置为新增模式
   }
   // 加载海关分类
-  getCustomRuleCategoryList(customRuleCategoryList)
+  //getCustomRuleCategoryList(customRuleCategoryList)
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
   categoryList.value = handleTree(categoryData, 'id', 'parentId')
