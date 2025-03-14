@@ -669,12 +669,12 @@ const submitForm = async () => {
     if (inspectionJsonFormRef?.value?.formData) {
       data.inspectionJson = JSON.stringify(inspectionJsonFormRef.value.formData)
     } else {
-      data.inspectionJson = ''
+      data.inspectionJson = '[]'
     }
     if (completionJsonFormRef?.value?.formData) {
       data.completionJson = JSON.stringify(completionJsonFormRef.value.formData)
     } else {
-      data.completionJson = ''
+      data.completionJson = '[]'
     }
 
     if (formType.value === 'create') {
