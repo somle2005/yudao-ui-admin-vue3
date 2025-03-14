@@ -17,13 +17,8 @@
             :rules="formRules.warehouseId"
             class="mb-0px!"
           >
-            <el-select
-              v-model="row.warehouseId"
-              clearable
-              filterable
-              placeholder="请选择仓库"
-              @change="onChangeWarehouse($event, row)"
-            >
+            <!-- @change="onChangeWarehouse($event, row)" -->
+            <el-select v-model="row.warehouseId" clearable filterable placeholder="请选择仓库">
               <el-option
                 v-for="item in warehouseList"
                 :key="item.id"
@@ -179,10 +174,20 @@ import {
 } from '@/utils'
 import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 
-const props = defineProps<{
-  items: undefined
-  disabled: false
-}>()
+const props = defineProps({
+  items: {
+    // type: Array as PropType<PurchaseInItemVO[]>,
+    type: Array,
+    default: () => {
+      return []
+    }
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const formLoading = ref(false) // 表单的加载中
 const formData = ref([])
 const formRules = reactive({

@@ -123,14 +123,15 @@ export const computeDiscountPriceAndTotalPrice = (
     totalPriceStr?: string
     discountPriceStr?: string
     discountPercentStr?: string
+    otherPriceStr?: string // 采购入库
   }
 ) => {
   const {
     totalPriceStr = 'totalPrice',
     discountPriceStr = 'discountPrice',
-    discountPercentStr = 'discountPercent'
+    discountPercentStr = 'discountPercent',
+    otherPriceStr = 'otherPrice'
   } = keyMap || {}
-
 
   const updateVal = () => {
     nextTick(() => {
@@ -145,7 +146,7 @@ export const computeDiscountPriceAndTotalPrice = (
     const discountPrice = erpPriceMultiply(totalPrice, formData[discountPercentStr] / 100.0) || 0
     formData[discountPriceStr] = discountPrice
     // 优惠后金额
-    formData.totalPrice = totalPrice - discountPrice
+    formData.totalPrice = totalPrice - discountPrice - (formData[otherPriceStr] || 0)
     updateVal()
   }
 }
