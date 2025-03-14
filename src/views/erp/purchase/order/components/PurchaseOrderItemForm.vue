@@ -12,7 +12,7 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column label="产品编号" width="180">
+        <el-table-column label="SKU" width="180">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -24,7 +24,7 @@
                 clearable
                 filterable
                 @change="onChangeProduct($event, row)"
-                placeholder="请选择产品编号"
+                placeholder="请选择SKU"
                 :disabled="disabled"
               >
                 <el-option

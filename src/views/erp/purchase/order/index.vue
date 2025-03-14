@@ -305,6 +305,7 @@ const fieldMap = {
   },
   // 总验货通过数-只有整单的时候才进行展示
   totalInspectionPassCount: {
+    width: '250px',
     label: '总验货通过数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },

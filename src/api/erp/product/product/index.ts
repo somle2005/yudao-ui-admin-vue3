@@ -47,6 +47,7 @@ export interface ProductVO {
     * 包装宽度（整数，没有小数点，单位mm，必须为正数）
     */
    packageWidth: number
+   unitName: string // 单位名称
 }
 
 export interface ProductVOSelectItem extends ProductVO {

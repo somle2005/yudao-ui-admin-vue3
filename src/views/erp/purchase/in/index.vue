@@ -78,7 +78,6 @@
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['erp:purchase-in:update']"
-          :disabled="scope.row.status === 20"
         >
           编辑
         </el-button>
