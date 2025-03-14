@@ -127,9 +127,22 @@ export const useForm = (formType) => {
         },
       },
 
-      // auditorStatus 入库审核状态-不用
-
-
+    
+      {
+        type: 'date-picker',
+        placeholder: '请选择结算日期',
+        prop: 'settlementDate',
+        label: '结算日期',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
       {
         type: 'date-picker',
         placeholder: '请选择入库时间',
@@ -153,21 +166,7 @@ export const useForm = (formType) => {
         ]
       },
 
-      {
-        type: 'date-picker',
-        placeholder: '请选择结算日期',
-        prop: 'settlementDate',
-        label: '结算日期',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        }
-      },
+     
 
       {
         type: 'input',

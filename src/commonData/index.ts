@@ -100,12 +100,17 @@ export const getWarehouseList = () => {
   return warehouseList
 }
 // 获取产品列表
-export const getProductList = (data?: any) => {
+export const getProductList = (data?: any, keyMap?: { [key: string]: any }) => {
   const productList = ref<ProductVO[]>([]) // 产品列表
   ProductApi.getProductSimpleList().then((res) => {
     productList.value = res.map((item) => {
       item.label = item.name + '  ' + item.barCode
       item.value = item.id
+
+      if (keyMap) {
+        item.label = item[keyMap.label]
+        item.value = item[keyMap.value]
+      }
       return item
     })
     if (data) {
