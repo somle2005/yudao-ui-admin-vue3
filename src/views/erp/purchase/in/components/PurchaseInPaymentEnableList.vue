@@ -1,167 +1,337 @@
-<!-- 可付款的采购入库单列表 -->
+<!-- 可付款的采购入库单列表 选择采购申请项（仅展示已审核）-->
 <template>
-  <Dialog
-    title="选择采购入库（仅展示可付款）"
-    v-model="dialogVisible"
-    :appendToBody="true"
-    :scroll="true"
-    width="1080"
-  >
+  <Dialog title="选择采购入库（仅展示可付款）" v-model="dialogVisible" width="1000">
     <ContentWrap>
       <!-- 搜索工作栏 -->
-      <el-form
+      <SmForm
         class="-mb-15px"
-        :model="queryParams"
         ref="queryFormRef"
         :inline="true"
         label-width="68px"
+        v-model="queryParams"
+        :options="searchFormOptions"
+        :getModelValue="getSearchFormData"
       >
-        <el-form-item label="入库单号" prop="no">
-          <el-input
-            v-model="queryParams.no"
-            placeholder="请输入入库单号"
-            clearable
-            @keyup.enter="handleQuery"
-            class="!w-160px"
-          />
-        </el-form-item>
-        <el-form-item label="产品" prop="productId">
-          <el-select
-            v-model="queryParams.productId"
-            clearable
-            filterable
-            placeholder="请选择产品"
-            class="!w-160px"
-          >
-            <el-option
-              v-for="item in productList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="入库时间" prop="orderTime">
-          <el-date-picker
-            v-model="queryParams.inTime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            type="daterange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-            class="!w-160px"
-          />
-        </el-form-item>
-        <el-form-item>
+        <template #action>
           <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
           <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        </el-form-item>
-      </el-form>
+        </template>
+      </SmForm>
     </ContentWrap>
-
-    <ContentWrap>
-      <el-table
-        v-loading="loading"
+    <ContentWrap style="padding-bottom: 0">
+      <SmTable
+        border
+        isSelection
+        :loading="loading"
+        :options="tableOptions"
         :data="list"
-        :show-overflow-tooltip="true"
-        :stripe="true"
+        :total="total"
+        v-model:currentPage="queryParams.pageNo"
+        v-model:pageSize="queryParams.pageSize"
+        @pagination="getList"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column width="30" label="选择" type="selection" />
-        <el-table-column min-width="180" label="入库单号" align="center" prop="no" />
-        <el-table-column label="供应商" align="center" prop="supplierName" />
-        <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
-        <el-table-column
-          label="入库时间"
-          align="center"
-          prop="inTime"
-          :formatter="dateFormatter2"
-          width="120px"
-        />
-        <el-table-column label="创建人" align="center" prop="creatorName" />
-        <el-table-column
-          label="应付金额"
-          align="center"
-          prop="totalPrice"
-          :formatter="erpPriceTableColumnFormatter"
-        />
-        <el-table-column
-          label="已付金额"
-          align="center"
-          prop="paymentPrice"
-          :formatter="erpPriceTableColumnFormatter"
-        />
-        <el-table-column label="未付金额" align="center">
-          <template #default="scope">
-            <span v-if="scope.row.paymentPrice === scope.row.totalPrice">0</span>
-            <el-tag type="danger" v-else>
-              {{ erpPriceInputFormatter(scope.row.totalPrice - scope.row.paymentPrice) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- 分页 -->
-      <Pagination
-        v-model:limit="queryParams.pageSize"
-        v-model:page="queryParams.pageNo"
-        :total="total"
-        @pagination="getList"
-      />
+        <template #status="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
+        </template>
+
+        <template #orderStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
+        </template>
+
+        <template #offStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
+        </template>
+
+        <template #rowOrderStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
+        </template>
+
+        <template #rowOffStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+        </template>
+      </SmTable>
     </ContentWrap>
     <template #footer>
-      <el-button :disabled="!selectionList.length" type="primary" @click="submitForm">
-        确 定
-      </el-button>
+      <el-button @click="submitForm" type="primary"> 确 定 </el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
 </template>
 <script lang="ts" setup>
-import { ElTable } from 'element-plus'
-import { dateFormatter2 } from '@/utils/formatTime'
 import { erpPriceInputFormatter, erpPriceTableColumnFormatter } from '@/utils'
-import { ProductApi, ProductVO } from '@/api/erp/product/product'
-import { PurchaseInApi, PurchaseInVO } from '@/api/erp/purchase/in'
+import { DICT_TYPE } from '@/utils/dict'
+import { useTableData } from '@/components/SmTable/src/utils'
+import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
+import { mergeItemsToList, resetQueryParams } from '@/utils/transformData'
+import { cloneDeep } from 'lodash-es'
+import { useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
+import { PurchaseOrderApi } from '@/api/erp/purchase/order'
+import { useSearchForm } from '../hooks/search'
+
+// 暂时都是分行展示逻辑
 
 defineOptions({ name: 'PurchaseInPaymentEnableList' })
 
-const list = ref<PurchaseInVO[]>([]) // 列表的数据
-const total = ref(0) // 列表的总页数
-const loading = ref(false) // 列表的加载中
 const dialogVisible = ref(false) // 弹窗的是否展示
-const queryParams = reactive({
-  pageNo: 1,
-  pageSize: 10,
-  no: undefined,
-  productId: undefined,
-  inTime: [],
-  paymentEnable: true,
-  supplierId: undefined
-})
-const queryFormRef = ref() // 搜索的表单
-const productList = ref<ProductVO[]>([]) // 产品列表
 
-/** 选中操作 */
-const selectionList = ref<PurchaseInVO[]>([])
-const handleSelectionChange = (rows: PurchaseInVO[]) => {
+const queryFormRef = ref() // 搜索的表单
+const selectionList = ref<any[]>([])
+
+const loading = ref(false)
+const total = ref(0)
+const list = ref<any[]>([]) // 列表的数据
+const { tableOptions, transformTableOptions } = useTableData()
+
+const { WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
+// 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
+
+// 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
+const fieldMap = {
+  no: '单据编号', // 采购单编号
+  noTime: {
+    label: '单据日期',
+    formatter: dateFormatter2, // 年月日-金蝶
+    width: '200px'
+  },
+  supplierName: '供应商',
+
+  auditStatus: {
+    label: '审核状态',
+    slot: 'auditStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_AUDIT_STATUS }
+  },
+
+  executeStatus: {
+    label: '执行状态',
+    slot: 'executeStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS }
+  },
+  inStatus: {
+    label: '入库状态',
+    slot: 'inStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS }
+  },
+  payStatus: {
+    label: '付款状态',
+    slot: 'payStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
+  },
+  offStatus: {
+    label: '关闭状态',
+    slot: 'offStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
+  },
+
+  // 整单才进行展示
+  totalPrice: {
+    label: '成交金额',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
+  },
+
+  rowExecuteStatus: {
+    label: '行执行状态',
+    slot: 'rowExecuteStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS },
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  rowInStatus: {
+    label: '行入库状态',
+    slot: 'rowInStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS },
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  rowPayStatus: {
+    label: '行付款状态',
+    slot: 'rowPayStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS },
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  rowOffStatus: {
+    label: '行关闭状态',
+    slot: 'rowOffStatus',
+    dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS },
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  // 8:  '入库核销状态',
+
+  productBarCode: {
+    label: 'SKU',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  productName: {
+    label: '产品名称',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  // 报关品名
+  containerRate: {
+    label: '箱率',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  deliveryDate: {
+    label: '交货日期',
+    formatter: dateFormatter2, // 年月日-金蝶
+    width: '200px'
+  },
+  // 总验货通过数-只有整单的时候才进行展示
+  totalInspectionPassCount: {
+    width: '250px',
+    label: '总验货通过数',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  waitInCount: {
+    label: '待收数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  count: {
+    label: '下单数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  inCount: {
+    label: '已收数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  currencyId: {
+    label: '币种',
+    slot: 'currencyId',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  actTaxPrice: {
+    label: '含税单价',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  taxPrice: {
+    label: '税额',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  allAmount: {
+    label: '价税合计',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+
+  // 取后端总的税额无法进行分行展示数据了
+  // taxPrice: {
+  //   label:'税额',
+  //   wholeOrderEnable: 'items',
+  // }, // items
+  // totalTaxPrice: {
+  //   label: '价税合计',
+  //   wholeOrderEnable: 'items',
+  // }, // items
+
+  PRItemCreator: {
+    label: '申请人',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  PRItemDepartmentName: {
+    label: '申请部门',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
+  creator: '制单人',
+  createTime: {
+    label: '制单时间',
+    formatter: dateFormatter, // 年月日-金蝶
+    width: '200px'
+  },
+
+  auditorName: '审核人',
+  auditTime: {
+    label: '审核时间',
+    formatter: dateFormatter, // 年月日-金蝶
+    width: '200px'
+  },
+
+  reviewComment: '审核意见',
+
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '220px'
+  }
+}
+
+const branchOptions = transformTableOptions(fieldMap)
+const wrapList = ['no', 'supplierName', 'productBarCode', 'reviewComment', 'productName', 'remark']
+branchOptions.forEach((item: any) => {
+  if (wrapList.includes(item.prop)) {
+    item.slot = item.prop
+    item.wrap = true
+    item.width = '200px'
+  }
+})
+
+tableOptions.value = cloneDeep(branchOptions)
+
+// 注意外面都要用let
+// eslint-disable-next-line prefer-const
+let queryParams: any = reactive({})
+
+const getList = async () => {
+  loading.value = true
+  try {
+    const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
+
+    data.list.forEach((item) => {
+      if (!item?.items?.length) return
+      item.items.forEach((a) => {
+        if (a.product) {
+          a.productName = a.product.name
+          a.productBarCode = a.product.barCode
+        }
+        const purchaseRequestItem = a.purchaseRequestItem
+        if (purchaseRequestItem) {
+          const { creator, departmentName } = purchaseRequestItem
+          item.PRItemCreator = creator
+          item.PRItemDepartmentName = departmentName
+        }
+      })
+    })
+
+    list.value = mergeItemsToList(data.list, {
+      id: 'rowItemsId',
+      status: 'rowStatus',
+      orderStatus: 'rowOrderStatus',
+      offStatus: 'rowOffStatus',
+      executeStatus: 'rowExecuteStatus',
+      inStatus: 'rowInStatus',
+      payStatus: 'rowPayStatus'
+    })
+
+    // 后续需要补充itemsTotal
+    total.value = data.itemsTotal || data.total
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleQuery = () => {
+  queryParams.pageNo = 1
+  selectionList.value = []
+  getList()
+}
+
+const handleSelectionChange = (rows: any[]) => {
   selectionList.value = rows
 }
 
-/** 打开弹窗 */
-const open = async (supplierId: number) => {
-  dialogVisible.value = true
-  await nextTick() // 等待，避免 queryFormRef 为空
-  // 加载可入库的订单列表
-  queryParams.supplierId = supplierId
-  await resetQuery()
-  // 加载产品列表
-  productList.value = await ProductApi.getProductSimpleList()
+
+
+const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const resetQuery = () => {
+  resetQueryParams(queryParams, queryFormRef)
+  handleQuery()
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交选择 */
 const emits = defineEmits<{
-  (e: 'success', value: PurchaseInVO[]): void
+  (e: 'success', value: any[]): void
 }>()
 const submitForm = () => {
   try {
@@ -172,28 +342,11 @@ const submitForm = () => {
   }
 }
 
-/** 加载列表  */
-const getList = async () => {
-  loading.value = true
-  try {
-    const data = await PurchaseInApi.getPurchaseInPage(queryParams)
-    list.value = data.list
-    total.value = data.total
-  } finally {
-    loading.value = false
-  }
+/** 打开弹窗 */
+const open = async (supplierId: number) => {
+  resetQuery()
+  dialogVisible.value = true
+  // await nextTick() // 等待，避免 queryFormRef 为空
 }
-
-/** 重置按钮操作 */
-const resetQuery = () => {
-  queryFormRef.value.resetFields()
-  handleQuery()
-}
-
-/** 搜索按钮操作 */
-const handleQuery = () => {
-  queryParams.pageNo = 1
-  selectionList.value = []
-  getList()
-}
+defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 </script>

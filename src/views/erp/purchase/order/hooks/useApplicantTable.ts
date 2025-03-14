@@ -26,10 +26,10 @@ export const useApplicantTable = () => {
       slot: 'no',
       wrap: true
     },
-    applicant: '申请人',
-    applicationDept: {
+    applicantName: '申请人',
+    applicationDeptName: {
       label: '申请部门',
-      slot: 'applicationDept',
+      slot: 'applicationDeptName',
       width: '150px',
       wrap: true
     },

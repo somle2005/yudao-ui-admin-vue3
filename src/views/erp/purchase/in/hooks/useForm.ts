@@ -26,11 +26,11 @@ export const useForm = (formType) => {
         }
       },
 
-      {
-        prop: 'orderNo',
-        label: '关联订单',
-        slot: 'orderNo'
-      },
+      // {
+      //   prop: 'orderNo',
+      //   label: '关联订单',
+      //   slot: 'orderNo'
+      // },
 
       {
         type: 'date-picker',
