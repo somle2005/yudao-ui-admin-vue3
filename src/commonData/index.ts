@@ -10,6 +10,7 @@ import { getSimpleUserList, UserVO } from '@/api/system/user'
 import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
+import { CustomProductApi } from '@/api/erp/logistic/custom-product'
 
 interface SelectProp {
   value: number
@@ -188,7 +189,7 @@ export const getUserList = (data?: any) => {
 }
 
 // 获得海关分类组合值精简列表
-export const getCustomRuleCategoryList = (data?: any) => {
+export const getCustomProduct = (data?: any) => {
   const customRuleCategoryList = ref<any[]>([]) // 用户列表
   CustomRuleCategoryApi.getCustomRuleCategorySimpleList().then((res: any) => {
     customRuleCategoryList.value = res.map((item) => {
@@ -218,4 +219,20 @@ export const getFinanceSubjectList = (data?: any) => {
     }
   })
   return financeSubjectList
+}
+
+// 查询海关管理中，与海关分类-产品 列表
+export const getCustomProductList = (data?: any) => {
+  const customProduct = ref<any[]>([]) // 用户列表
+  CustomProductApi.getCustomProductSimpleList().then((res: any) => {
+    customProduct.value = res.map((item) => {
+      item.label = item.combinedValue
+      item.value = item.customCategoryId
+      return item
+    })
+    if (data) {
+      data.value = customProduct.value
+    }
+  })
+  return customProduct
 }
