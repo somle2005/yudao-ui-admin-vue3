@@ -213,7 +213,7 @@
           </el-form-item>
         </el-col>
 
-        <!-- <el-col :span="12">
+        <el-col :span="12">
           <el-form-item label="海关分类" prop="customCategoryId">
             <el-select
               v-model="formData.customCategoryId"
@@ -222,14 +222,14 @@
               placeholder="请选择海关分类"
             >
               <el-option
-                v-for="dict in customRuleCategoryList"
+                v-for="dict in customProduct"
                 :key="dict.value"
                 :label="dict.label"
                 :value="dict.value"
               />
             </el-select>
           </el-form-item>
-        </el-col> -->
+        </el-col>
 
         <el-col :span="24">
           <ContentWrap>
@@ -388,7 +388,7 @@ import ProductBookcase from '@/views/erp/product/product/ProductBookcase.vue'
 import ProductIronFilingCabinet from '@/views/erp/product/product/ProductIronFilingCabinet.vue'
 import ProductDesktopStorageRack from '@/views/erp/product/product/ProductDesktopStorageRack.vue'
 import ProductKeyboardTray from '@/views/erp/product/product/ProductKeyboardTray.vue'
-import { getCustomRuleCategoryList } from '@/commonData/index'
+import { getCustomProductList, getCustomRuleCategoryList } from '@/commonData/index'
 import { createDBFn } from '@/utils/decorate'
 
 /** ERP 产品 表单 */
@@ -489,6 +489,7 @@ const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
 const isEditMode = ref(false) // 控制是否为编辑模式
 const customRuleCategoryList = ref<any[]>([]) // 海关分类
+const customProduct = ref<any[]>([])
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
@@ -543,7 +544,8 @@ const open = async (type: string, id?: number) => {
     isEditMode.value = false // 设置为新增模式
   }
   // 加载海关分类
-  //getCustomRuleCategoryList(customRuleCategoryList)
+  // getCustomRuleCategoryList(customRuleCategoryList)
+  getCustomProductList(customProduct)
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
   categoryList.value = handleTree(categoryData, 'id', 'parentId')

@@ -13,6 +13,11 @@ export const CustomProductApi = {
     return await request.get({ url: `/tms/custom-product/page`, params })
   },
 
+  // 查询海关管理中，与海关分类-产品 精简列表
+  getCustomProductSimpleList: async () => {
+    return await request.get({ url: `/tms/custom-product/simple-list` })
+  },
+
   // 查询海关管理中，与海关分类-产品。中间联系表。详情
   getCustomProduct: async (id: number) => {
     return await request.get({ url: `/tms/custom-product/get?id=` + id })
@@ -36,5 +41,5 @@ export const CustomProductApi = {
   // 导出海关管理中，与海关分类-产品。中间联系表。 Excel
   exportCustomProduct: async (params) => {
     return await request.download({ url: `/tms/custom-product/export-excel`, params })
-  },
+  }
 }
