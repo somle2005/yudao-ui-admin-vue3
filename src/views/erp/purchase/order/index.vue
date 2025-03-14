@@ -3,92 +3,16 @@
 
   <ContentWrap>
     <!-- 搜索工作栏 -->
-    <el-form
+    <SmForm
       class="-mb-15px"
-      :model="queryParams"
       ref="queryFormRef"
       :inline="true"
       label-width="68px"
+      v-model="queryParams"
+      :options="searchFormOptions"
+      :getModelValue="getSearchFormData"
     >
-      <el-form-item label="单据编号" prop="no">
-        <el-input
-          v-model="queryParams.no"
-          placeholder="请输入单据编号"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="产品" prop="productId">
-        <el-select
-          v-model="queryParams.productId"
-          clearable
-          filterable
-          placeholder="请选择产品"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="单据时间" prop="noTime">
-        <el-date-picker
-          v-model="queryParams.noTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="供应商" prop="supplierId">
-        <el-select
-          v-model="queryParams.supplierId"
-          clearable
-          filterable
-          placeholder="请选择供供应商"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in supplierList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建人" prop="creator">
-        <el-select
-          v-model="queryParams.creator"
-          clearable
-          filterable
-          placeholder="请选择创建人"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in userList"
-            :key="item.id"
-            :label="item.nickname"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
+      <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
         <el-button
@@ -154,8 +78,8 @@
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
         </el-button> -->
-      </el-form-item>
-    </el-form>
+      </template>
+    </SmForm>
   </ContentWrap>
 
   <!-- 列表 -->
@@ -281,6 +205,7 @@ import { useBatch } from './hooks/useBatch'
 import { cloneDeep } from 'lodash-es'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useWholeOrder, useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
+import { useSearchForm } from './hooks/search'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -645,6 +570,8 @@ const { handleWholeOrderEnable } = useWholeOrder(
   wholeOrderList,
   wholeOrderTotal
 )
+
+const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 /** 初始化 **/
 onMounted(async () => {

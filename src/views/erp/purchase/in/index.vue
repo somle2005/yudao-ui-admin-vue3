@@ -1,8 +1,6 @@
 <template>
   <!-- <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" /> -->
 
- 
-
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
@@ -52,8 +50,6 @@
       </template>
     </SmForm>
   </ContentWrap>
-
-
 
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
@@ -306,10 +302,7 @@ const { handleWholeOrderEnable } = useWholeOrder(
   wholeOrderTotal
 )
 
-const getSearchFormData = () => {
-  return queryParams
-}
-const searchFormOptions = useSearchForm(handleQuery)
+const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 /** 初始化 **/
 onMounted(async () => {
