@@ -328,7 +328,7 @@ const fieldMap = {
   // 整单才进行展示
   totalPrice: {
     label: '成交金额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
   },
 
   rowExecuteStatus: {
@@ -424,8 +424,14 @@ const fieldMap = {
   //   wholeOrderEnable: 'items',
   // }, // items
 
-  PRItemCreator: '申请人',
-  PRItemDepartmentName: '申请部门',
+  PRItemCreator: {
+    label: '申请人',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  PRItemDepartmentName: {
+    label: '申请部门',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
 
   creator: '制单人',
   createTime: {
@@ -517,7 +523,6 @@ const getList = async () => {
         }
       })
     })
-
 
     wholeOrderList.value = wholeOrderMergeCompute(data.list, branchOptions)
 

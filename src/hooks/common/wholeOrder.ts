@@ -1,8 +1,9 @@
 import { cloneDeep } from 'lodash-es'
 
 export const WHOLE_ORDER_TYPE = {
-  items: 'items',
-  mergeCompute: 'mergeCompute'
+  items: 'items', // 分行才进行展示 整单不展示
+  mergeCompute: 'mergeCompute',
+  wholeOrder: 'wholeOrder', // 整单才进行展示
 }
 
 export const useWholeOrder = (
