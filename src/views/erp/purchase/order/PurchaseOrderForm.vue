@@ -77,7 +77,7 @@
       </SmForm>
 
       <template #footer>
-        <el-button v-if="!auditType" @click="submitForm" type="primary" :disabled="formLoading">
+        <el-button v-if="!auditType" @click="submitFormDB" type="primary" :disabled="formLoading">
           确 定
         </el-button>
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -228,7 +228,7 @@ const initFormData = () => {
     remark: undefined,
     items: [],
     completionJson: [],
-    InspectionJsonForm: []
+    InspectionJson: []
   }
 }
 
@@ -707,7 +707,7 @@ const submitForm = async () => {
   }
 }
 
-const changeAuditBtnType = (type) => {
+const changeAuditBtnType = (type = '') => {
   auditBtnType.value = type
   submitForm()
 }

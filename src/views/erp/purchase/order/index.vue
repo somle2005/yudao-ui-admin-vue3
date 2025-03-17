@@ -310,17 +310,18 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   waitInCount: {
-    label: '待收数量',
+    label: '待收数量', // 待入库数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   count: {
-    label: '下单数量',
+    label: '下单数量', // 产品下单数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   inCount: {
-    label: '已收数量',
+    label: '已收数量', // 采购入库数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
+  // items-returnCount-采购退货数量
   currencyId: {
     label: '币种',
     slot: 'currencyId',
@@ -470,6 +471,8 @@ const getList = async () => {
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
+
+    console.log(list.value,'list.value')
   } finally {
     loading.value = false
   }

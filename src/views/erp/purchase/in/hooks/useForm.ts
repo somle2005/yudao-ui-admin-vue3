@@ -5,7 +5,7 @@ import { getUserList } from '@/commonData'
 export const useForm = (formType) => {
   const supplierList = ref<any[]>([]) // 供应商列表
   const accountList = ref<any[]>([]) // 账户列表
-  const userList = ref<any[]>([])
+  // const userList = ref<any[]>([])
 
   const auditType = computed(() => formType.value === 'audit')
   const itemsFormdisabled = computed(
@@ -95,37 +95,37 @@ export const useForm = (formType) => {
         }
       },
 
-      {
-        type: 'select',
-        placeholder: '请选择审核人',
-        prop: 'auditorId',
-        label: '审核人',
-        attrs: {
-          class: '!w-160px',
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: userList
-      },
+      // {
+      //   type: 'select',
+      //   placeholder: '请选择审核人',
+      //   prop: 'auditorId',
+      //   label: '审核人',
+      //   attrs: {
+      //     class: '!w-160px',
+      //     filterable: true,
+      //     clearable: true,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   },
+      //   children: userList
+      // },
 
-      {
-        type: 'date-picker',
-        placeholder: '请选择审核时间',
-        prop: 'auditTime',
-        label: '审核时间',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        },
-      },
+      // {
+      //   type: 'date-picker',
+      //   placeholder: '请选择审核时间',
+      //   prop: 'auditTime',
+      //   label: '审核时间',
+      //   attrs: {
+      //     clearable: true,
+      //     type: 'date',
+      //     'value-format': 'x',
+      //     class: '!w-1/1',
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   },
+      // },
 
     
       {
@@ -168,26 +168,26 @@ export const useForm = (formType) => {
 
      
 
-      {
-        type: 'input',
-        label: '收货地址',
-        prop: 'address',
-        placeholder: '请输入收货地址',
-        attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
-      {
-        type: 'input',
-        label: '付款条款',
-        prop: 'paymentTerms',
-        placeholder: '请输入付款条款',
-        attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
+      // {
+      //   type: 'input',
+      //   label: '收货地址',
+      //   prop: 'address',
+      //   placeholder: '请输入收货地址',
+      //   attrs: {
+      //     style: { width: '100%' },
+      //     clearable: true
+      //   }
+      // },
+      // {
+      //   type: 'input',
+      //   label: '付款条款',
+      //   prop: 'paymentTerms',
+      //   placeholder: '请输入付款条款',
+      //   attrs: {
+      //     style: { width: '100%' },
+      //     clearable: true
+      //   }
+      // },
       {
         type: 'input',
         label: '备注',
@@ -325,7 +325,7 @@ export const useForm = (formType) => {
   const initDialogData = () => {
     getAccountList(accountList)
     getSupplierList(supplierList)
-    getUserList(userList)
+    // getUserList(userList)
   }
 
   return {

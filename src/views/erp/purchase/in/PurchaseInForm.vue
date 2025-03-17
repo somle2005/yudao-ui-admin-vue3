@@ -255,7 +255,9 @@ const resetForm = () => {
   //   items: []
   // }
   formData.value = initFormData()
-  formRef.value?.resetFields()
+  nextTick(() => {
+    formRef.value?.resetFields()
+  })
 }
 
 const addItem = (selectionList: any[]) => {
