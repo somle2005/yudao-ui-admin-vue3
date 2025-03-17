@@ -2,8 +2,8 @@
 // const { wsCache } = useCache('sessionStorage')
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { useDictStoreWithOut } from '@/store/modules/dict'
-import {hasPermission} from "@/directives/permission/hasPermi";
-
+import { hasPermission } from '@/directives/permission/hasPermi'
+import { useUserStoreWithOut } from '@/store/modules/user'
 
 const { t } = useI18n() // 国际化
 
@@ -38,11 +38,17 @@ export function checkRole(value: string[]) {
   }
 }
 
-export async function resetDictCache(){
+export async function resetDictCache() {
   // sessionStorage.removeItem(CACHE_KEY.DICT_CACHE)
   // wsCache.delete(CACHE_KEY.DICT_CACHE)
   // window.wsCahce= wsCache
   const dictStore = useDictStoreWithOut()
   dictStore.resetDict()
-  console.log(dictStore,'dictStore-重置缓存')
+  console.log(dictStore, 'dictStore-重置缓存')
+}
+
+export async function resetPermissions() {
+  const userStore = useUserStoreWithOut()
+  await userStore.resetUserInfoAction()
+  console.log('权限重置')
 }

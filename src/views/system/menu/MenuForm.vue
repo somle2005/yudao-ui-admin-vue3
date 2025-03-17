@@ -44,10 +44,18 @@
         <el-input v-model.trim="formData.path" clearable placeholder="请输入路由地址" />
       </el-form-item>
       <el-form-item v-if="formData.type === 2" label="组件地址" prop="component">
-        <el-input v-model.trim="formData.component" clearable placeholder="例如说：system/user/index" />
+        <el-input
+          v-model.trim="formData.component"
+          clearable
+          placeholder="例如说：system/user/index"
+        />
       </el-form-item>
       <el-form-item v-if="formData.type === 2" label="路由（组件）名字" prop="componentName">
-        <el-input v-model.trim="formData.componentName" clearable placeholder="例如说：SystemUser" />
+        <el-input
+          v-model.trim="formData.componentName"
+          clearable
+          placeholder="例如说：SystemUser"
+        />
       </el-form-item>
       <el-form-item v-if="formData.type !== 1" label="权限标识" prop="permission">
         <template #label>
@@ -118,6 +126,7 @@ import * as MenuApi from '@/api/system/menu'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import { CommonStatusEnum, SystemMenuTypeEnum } from '@/utils/constants'
 import { defaultProps, handleTree } from '@/utils/tree'
+import { resetPermissions } from '@/utils/permission'
 
 defineOptions({ name: 'SystemMenuForm' })
 
@@ -217,6 +226,7 @@ const submitForm = async () => {
     formLoading.value = false
     // 清空，从而触发刷新
     wsCache.delete(CACHE_KEY.ROLE_ROUTERS)
+    resetPermissions()
   }
 }
 

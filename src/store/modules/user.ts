@@ -64,6 +64,21 @@ export const useUserStore = defineStore('admin-user', {
       wsCache.set(CACHE_KEY.USER, userInfo)
       wsCache.set(CACHE_KEY.ROLE_ROUTERS, userInfo.menus)
     },
+    async resetUserInfoAction() {
+      if (!getAccessToken()) {
+        this.resetState()
+        return null
+      }
+      const userInfo = await getInfo()
+      this.permissions = new Set(userInfo.permissions)
+      this.roles = userInfo.roles
+      this.user = userInfo.user
+      this.isSetUser = true
+      wsCache.delete(CACHE_KEY.USER)
+      wsCache.delete(CACHE_KEY.ROLE_ROUTERS)
+      wsCache.set(CACHE_KEY.USER, userInfo)
+      wsCache.set(CACHE_KEY.ROLE_ROUTERS, userInfo.menus)
+    },
     async setUserAvatarAction(avatar: string) {
       const userInfo = wsCache.get(CACHE_KEY.USER)
       // NOTE: 是否需要像`setUserInfoAction`一样判断`userInfo != null`
