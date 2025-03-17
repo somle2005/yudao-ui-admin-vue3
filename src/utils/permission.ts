@@ -48,6 +48,7 @@ export async function resetDictCache() {
 }
 
 export async function resetPermissions() {
+  // todo刷新浏览器
   const userStore = useUserStoreWithOut()
   await userStore.resetUserInfoAction()
   console.log('权限重置')
