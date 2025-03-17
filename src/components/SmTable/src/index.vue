@@ -33,7 +33,7 @@
             </template>
 
             <template v-else-if="item.dictAttrs">
-              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop]" />
+              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] || ''" />
             </template>
 
             <template v-else>
