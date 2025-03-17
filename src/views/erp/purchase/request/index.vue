@@ -47,7 +47,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['erp:purchase-request:audit']"
+          v-hasPermi="['erp:purchase-request:submitAudit']"
         >
           提交审核
         </el-button>

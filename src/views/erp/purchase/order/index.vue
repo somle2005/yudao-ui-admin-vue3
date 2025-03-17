@@ -57,7 +57,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['erp:purchase-order:update-status']"
+          v-hasPermi="['erp:purchase-order:submitAudit']"
         >
           提交审核
         </el-button>
@@ -160,7 +160,7 @@
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
-          v-hasPermi="['erp:purchase-order:update-status']"
+          v-hasPermi="['erp:purchase-order:audit']"
           v-if="![5].includes(scope.row.auditStatus)"
         >
           审核
@@ -169,7 +169,7 @@
           link
           type="danger"
           @click="handleUpdateStatus(scope.row, false)"
-          v-hasPermi="['erp:purchase-order:update-status']"
+          v-hasPermi="['erp:purchase-order:audit']"
           v-if="scope.row.auditStatus === 5"
         >
           反审核

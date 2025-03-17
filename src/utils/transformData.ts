@@ -136,8 +136,8 @@ export const computeDiscountPriceAndTotalPrice = (
   const updateVal = () => {
     nextTick(() => {
       const formValue = formRef.value.getFormData()
-      formValue[discountPriceStr] = formData.value[discountPriceStr]
-      formValue[totalPriceStr] = formData.value[totalPriceStr]
+      formValue[discountPriceStr] = formData[discountPriceStr]
+      formValue[totalPriceStr] = formData[totalPriceStr]
     })
   }
 

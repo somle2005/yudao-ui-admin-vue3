@@ -230,6 +230,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
+import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 
@@ -387,7 +388,7 @@ const handleAdd = () => {
     actTaxPrice: undefined,
     referenceUnitPrice: undefined,
     taxPrice: undefined,
-    taxPercent: undefined,
+    taxPercent: TAX_PERCENT,
     allAmount: undefined,
     orderQuantity: undefined, // 下单数量
     expectArrivalDate: undefined
