@@ -739,8 +739,8 @@ const addApplicantItem = () => {
         no,
         applicantId,
         applicationDeptId,
-        applicationDeptName,
-        applicantName
+        applicant,
+        applicationDept
       } = item
       const obj = {
         purchaseApplyItemId,
@@ -756,8 +756,8 @@ const addApplicantItem = () => {
         erpPurchaseRequestItemNo: no,
         applicantId,
         applicationDeptId,
-        applicationDeptName,
-        applicantName
+        applicationDept,
+        applicant
         // productPrice: actTaxPrice
       }
       return obj

@@ -350,11 +350,11 @@ const fieldMap = {
   //   wholeOrderEnable: 'items',
   // }, // items
 
-  PRItemCreator: {
+  applicantName: {
     label: '申请人',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  PRItemDepartmentName: {
+  departmentName: {
     label: '申请部门',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -441,12 +441,15 @@ const getList = async () => {
           a.productName = a.product.name
           a.productBarCode = a.product.barCode
         }
-        const purchaseRequestItem = a.purchaseRequestItem
-        if (purchaseRequestItem) {
-          const { creator, departmentName } = purchaseRequestItem
-          item.PRItemCreator = creator
-          item.PRItemDepartmentName = departmentName
-        }
+        // const purchaseRequestItem = a.purchaseRequestItem
+        // if (purchaseRequestItem) {
+        //   const { creator, departmentName } = purchaseRequestItem
+        //   item.PRItemCreator = creator
+        //   item.PRItemDepartmentName = departmentName
+        // }
+        // const { applicantName, departmentName } = a
+        // item.itemApplicantName = applicantName
+        // item.itemDepartmentName = departmentName
       })
     })
 
