@@ -88,6 +88,7 @@ export interface PurchaseOrderVO {
   reviewComment?: string // 审核意见
   inspectionJson?: string // 检验单
   completionJson?: string // 完工单
+  totalInspectionPassCount?: number // 总检验通过数量
 }
 
 // ERP 采购订单 API

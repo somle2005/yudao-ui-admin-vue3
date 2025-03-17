@@ -124,7 +124,7 @@ const formRef = ref() // 表单 Ref
 // const accountList = ref<AccountVO[]>([]) // 账户列表
 // const userList = ref<UserApi.UserVO[]>([]) // 用户列表
 
-const { auditType, itemsFormdisabled, requestFormOptions, operateAudit, initDialogData } =
+let { auditType, itemsFormdisabled, requestFormOptions, operateAudit, initDialogData } =
   useForm(formType)
 
 /** 子表的表单 */

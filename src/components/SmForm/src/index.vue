@@ -19,7 +19,7 @@
           <component
             v-if="showType(item)"
             :is="getComponentType(item)"
-            :placeholder="item.placeholder"
+            :placeholder="getPlaceholder(item.placeholder)"
             v-model.trim="model[item.prop!]"
             v-bind="item.attrs"
             v-on="item.events || {}"
@@ -47,7 +47,7 @@
             v-bind="item.attrs"
             :is="`el-${item.type}`"
             v-model="model[item.prop!]"
-            :placeholder="item.placeholder"
+            :placeholder="getPlaceholder(item.placeholder)"
           >
             <component
               :is="`el-${child.componentType || 'option'}`"
@@ -88,7 +88,7 @@
               <component
                 v-if="showType(item)"
                 :is="getComponentType(item)"
-                :placeholder="item.placeholder"
+                :placeholder="getPlaceholder(item.placeholder)"
                 v-model.trim="model[item.prop!]"
                 v-bind="item.attrs"
                 v-on="item.events || {}"
@@ -119,7 +119,7 @@
                 v-bind="item.attrs"
                 :is="`el-${item.type}`"
                 v-model="model[item.prop!]"
-                :placeholder="item.placeholder"
+                :placeholder="getPlaceholder(item.placeholder)"
               >
                 <component
                   :is="`el-${child.componentType || 'option'}`"
@@ -216,6 +216,10 @@ const getOutFormData = () => {
   return unref(props.getModelValue())
 }
 
+const getPlaceholder = (placeholder?:string) => {
+  return placeholder || ''
+}
+
 // 初始化表单
 const initForm = () => {
   if (props.options && props.options.length) {
@@ -238,7 +242,7 @@ const initForm = () => {
 //     nextTick(() => {
 //       if (document.getElementById('editor')) {
 //         const editor = new E('#editor')
-//         editor.config.placeholder = item.placeholder!
+//         editor.config.placeholder = getPlaceholder(item.placeholder)!
 //         editor.create()
 //         // 初始化富文本的内容
 //         editor.txt.html(item.value)

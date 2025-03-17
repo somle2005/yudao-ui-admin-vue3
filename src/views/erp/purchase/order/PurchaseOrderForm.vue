@@ -581,7 +581,7 @@ const operateAudit = (type) => {
 }
 
 const jsonList = ['inspectionJson', 'completionJson']
-const jsonDisabled = computed(() => formData.value.auditStatus !== 5) // 已审核才可以进行编辑
+const jsonDisabled = computed(() => formData.value.auditStatus === 5) // 审核不可以进行编辑
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -671,6 +671,7 @@ const submitForm = async () => {
 
     if (inspectionJsonFormRef?.value?.formData) {
       data.inspectionJson = JSON.stringify(inspectionJsonFormRef.value.formData)
+      data.totalInspectionPassCount = inspectionJsonFormRef.value.formData.reduce((prev, cur) => prev + (cur.inspectionPassCount || 0), 0)
     } else {
       data.inspectionJson = '[]'
     }
