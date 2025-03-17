@@ -279,7 +279,8 @@ const getFormData = () => {
 defineExpose({
   resetFields,
   validate,
-  getFormData
+  getFormData,
+  initForm
 })
 
 onMounted(() => {

@@ -164,6 +164,8 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await PurchaseInApi.getPurchaseIn(id)
+      // 主动触发表单数据回显
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }
@@ -308,8 +310,7 @@ const addItem = (selectionList: any[]) => {
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName,
-     
+        applicationDeptName
       } = item
       const obj = {
         orderNo: no,
@@ -335,7 +336,7 @@ const addItem = (selectionList: any[]) => {
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName,
+        applicationDeptName
         // productPrice: actTaxPrice
       }
       return obj

@@ -610,6 +610,8 @@ const open = async (type: string, id?: number) => {
           formData.value[item] = []
         }
       })
+      // 主动触发表单数据回显
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }
