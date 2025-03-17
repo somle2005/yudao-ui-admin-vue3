@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="菜单名称" prop="name">
-        <el-input v-model="formData.name" clearable placeholder="请输入菜单名称" />
+        <el-input v-model.trim="formData.name" clearable placeholder="请输入菜单名称" />
       </el-form-item>
       <el-form-item label="菜单类型" prop="type">
         <el-radio-group v-model="formData.type">
@@ -41,13 +41,13 @@
             title="路由地址"
           />
         </template>
-        <el-input v-model="formData.path" clearable placeholder="请输入路由地址" />
+        <el-input v-model.trim="formData.path" clearable placeholder="请输入路由地址" />
       </el-form-item>
       <el-form-item v-if="formData.type === 2" label="组件地址" prop="component">
-        <el-input v-model="formData.component" clearable placeholder="例如说：system/user/index" />
+        <el-input v-model.trim="formData.component" clearable placeholder="例如说：system/user/index" />
       </el-form-item>
       <el-form-item v-if="formData.type === 2" label="路由（组件）名字" prop="componentName">
-        <el-input v-model="formData.componentName" clearable placeholder="例如说：SystemUser" />
+        <el-input v-model.trim="formData.componentName" clearable placeholder="例如说：SystemUser" />
       </el-form-item>
       <el-form-item v-if="formData.type !== 1" label="权限标识" prop="permission">
         <template #label>
@@ -56,7 +56,7 @@
             title="权限标识"
           />
         </template>
-        <el-input v-model="formData.permission" clearable placeholder="请输入权限标识" />
+        <el-input v-model.trim="formData.permission" clearable placeholder="请输入权限标识" />
       </el-form-item>
       <el-form-item label="显示排序" prop="sort">
         <el-input-number v-model="formData.sort" :min="0" clearable controls-position="right" />
