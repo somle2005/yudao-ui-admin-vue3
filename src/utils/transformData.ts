@@ -163,9 +163,13 @@ export const resetQueryParams = (queryParams: { [key: string]: any }, queryFormR
 }
 
 export const filterObjKey = (queryParams: { [key: string]: any }, saveObjkeyList: string[]) => {
- const map = {}
- saveObjkeyList.forEach((key) => {
-   map[key] = queryParams[key]
- })
- return map
+  try {
+    const map = {}
+    saveObjkeyList.forEach((key) => {
+      map[key] = queryParams[key]
+    })
+    return map
+  } catch (e) {
+    console.log(e,'报错了')
+  }
 }
