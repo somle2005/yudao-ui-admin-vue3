@@ -283,7 +283,9 @@ watch(
 )
 
 const auditType = computed(() => formType.value === 'audit')
-const itemsFormdisabled = computed(() => formType.value === 'audit' || formType.value === 'detail')
+const itemsFormdisabled = computed(
+  () => formType.value === 'audit' || formType.value === 'detail' || formType.value === 'merge'
+)
 const createRequestFormOptions = () => {
   return [
     {
@@ -583,6 +585,11 @@ const createMergeFormOptions = (formOptions) => {
   const options = formOptions.filter((item) => item.prop !== 'purchaseEntityId')
   const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
   options.splice(index, 0, obj)
+  options.forEach((item) => {
+    if (item.prop === 'depositPrice') {
+      item.attrs!.disabled = true
+    }
+  })
   return options
 }
 
@@ -754,9 +761,21 @@ const submitForm = async () => {
           ...data,
           itemIds: items.map((item) => item.id) as number[]
         },
-        ['noTime','supplierId','address','settlementDate','accountId','discountPercent','otherPrice','fileUrl','remark', 'itemIds']
+        [
+          'noTime',
+          'supplierId',
+          'address',
+          'settlementDate',
+          'accountId',
+          'discountPercent',
+          'otherPrice',
+          'fileUrl',
+          'remark',
+          'itemIds'
+        ]
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
+      message.success('合并入库成功')
     }
     dialogVisible.value = false
     // 发送操作成功的事件
@@ -814,8 +833,8 @@ const addApplicantItem = () => {
         erpPurchaseRequestItemNo: no,
         applicantId,
         applicationDeptId,
-        applicationDept,
-        applicant
+        departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName
+        applicantName: applicant
         // productPrice: actTaxPrice
       }
       return obj

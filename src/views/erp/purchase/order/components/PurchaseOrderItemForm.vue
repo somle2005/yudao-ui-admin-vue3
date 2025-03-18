@@ -67,7 +67,7 @@
                   :value="item.id"
                 />
               </el-select>
-              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.applicant }}</el-text>
+              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.applicantName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -84,7 +84,7 @@
                 node-key="id"
                 placeholder="请选择部门"
               />
-              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.applicationDept }}</el-text>
+              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.departmentName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
