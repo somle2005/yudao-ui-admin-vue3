@@ -172,7 +172,11 @@ import { getAccountList, getFinanceSubjectList, getSupplierList } from '@/common
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { DICT_TYPE } from '@/utils/dict'
 import { useApplicantTable } from './hooks/useApplicantTable'
-import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
+import {
+  computeDiscountPriceAndTotalPrice,
+  distinctList,
+  filterObjKey
+} from '@/utils/transformData'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import { useInspectionJson } from './hooks/useInspectionJson'
@@ -561,7 +565,25 @@ const createDetailFormOptions = (formOptions) => {
 }
 
 const createMergeFormOptions = (formOptions) => {
-  return formOptions.filter((item) => item.prop !== 'purchaseEntityId')
+  // 优惠后金额-totalPrice-追加其他金额 otherPrice
+  const obj: any = {
+    type: 'input-number',
+    placeholder: '请输入其他金额',
+    prop: 'otherPrice',
+    label: '其他金额',
+    attrs: {
+      'controls-position': 'right',
+      min: 0,
+      precision: 2,
+      style: {
+        width: '100%'
+      }
+    }
+  }
+  const options = formOptions.filter((item) => item.prop !== 'purchaseEntityId')
+  const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
+  options.splice(index, 0, obj)
+  return options
 }
 
 const operateAudit = (type) => {
@@ -726,14 +748,15 @@ const submitForm = async () => {
       await PurchaseOrderApi.updatePurchaseOrder(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'merge') {
-
-      const {  items } = data
-        message.success('合并采购成功')
-      await PurchaseOrderApi.mergePurchaseOrder({
-        ...data,
-        itemIds: items.map((item) => item.id) as number[]
-      })
-      message.success('合并成功')
+      const { items } = data
+      const queryData: any = filterObjKey(
+        {
+          ...data,
+          itemIds: items.map((item) => item.id) as number[]
+        },
+        ['noTime','supplierId','address','settlementDate','accountId','discountPercent','otherPrice','fileUrl','remark', 'itemIds']
+      )
+      await PurchaseOrderApi.mergePurchaseOrder(queryData)
     }
     dialogVisible.value = false
     // 发送操作成功的事件

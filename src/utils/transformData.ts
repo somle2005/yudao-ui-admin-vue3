@@ -146,7 +146,7 @@ export const computeDiscountPriceAndTotalPrice = (
     const discountPrice = erpPriceMultiply(totalPrice, formData[discountPercentStr] / 100.0) || 0
     formData[discountPriceStr] = discountPrice
     // 优惠后金额
-    formData.totalPrice = totalPrice - discountPrice - (formData[otherPriceStr] || 0)
+    formData.totalPrice = totalPrice - discountPrice + (formData[otherPriceStr] || 0)
     updateVal()
   }
 }
@@ -160,4 +160,12 @@ export const resetQueryParams = (queryParams: { [key: string]: any }, queryFormR
   if (queryFormRef.value) {
     queryFormRef.value.resetFields()
   }
+}
+
+export const filterObjKey = (queryParams: { [key: string]: any }, saveObjkeyList: string[]) => {
+ const map = {}
+ saveObjkeyList.forEach((key) => {
+   map[key] = queryParams[key]
+ })
+ return map
 }
