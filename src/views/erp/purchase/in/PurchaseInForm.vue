@@ -261,6 +261,7 @@ const resetForm = () => {
 }
 
 const addItem = (selectionList: any[]) => {
+  // reconciliationStatus 对账状态(false:未对账 ，true:已对账) 看看是不是要加上
   nextTick(() => {
     const items = formData.value.items
     const selectList = selectionList.map((item: any) => {
@@ -288,16 +289,19 @@ const addItem = (selectionList: any[]) => {
         applicationDeptName-申请部门名称
 
        */
+      // 采购订单分页需带出数据
       const {
         no,
-        orderItemId, //list记得转化
+        rowItemsId, //list记得转化
         productId,
         productBarCode,
+        productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
 
         productPrice,
         count,
+
         taxPercent,
         taxPrice,
         actTaxPrice,
@@ -309,17 +313,25 @@ const addItem = (selectionList: any[]) => {
         warehouseId,
         expectArrivalDate,
 
+        currencyId,
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName
+        departmentName
       } = item
+
+
+      /**
+       * 采购入库需要的数据和回显name数据
+       * 无法带出的内容有 exchangeRate-source
+       */
       const obj = {
         orderNo: no,
-        orderItemId, //list记得转化
+        orderItemId: rowItemsId, //list记得转化
         productId,
         productBarCode,
         productUnitName, //列表要转化取item-product里面数据
+        productUnitId, // 列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
 
         productPrice,
@@ -335,10 +347,11 @@ const addItem = (selectionList: any[]) => {
         warehouseId,
         expectArrivalDate,
 
+        currencyId,
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName
+        applicationDeptName: departmentName
         // productPrice: actTaxPrice
       }
       return obj

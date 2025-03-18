@@ -283,13 +283,18 @@ const getList = async () => {
         if (a.product) {
           a.productName = a.product.name
           a.productBarCode = a.product.barCode
+          a.model = a.product.model
+          a.productUnitName = a.product.unitName
+          a.productUnitId = a.product.unitId
+          // productId-item有
+          a.productId = a.product.id
         }
-        const purchaseRequestItem = a.purchaseRequestItem
-        if (purchaseRequestItem) {
-          const { creator, departmentName } = purchaseRequestItem
-          item.PRItemCreator = creator
-          item.PRItemDepartmentName = departmentName
-        }
+        // const purchaseRequestItem = a.purchaseRequestItem
+        // if (purchaseRequestItem) {
+        //   const { creator, departmentName } = purchaseRequestItem
+        //   item.PRItemCreator = creator
+        //   item.PRItemDepartmentName = departmentName
+        // }
       })
     })
 
