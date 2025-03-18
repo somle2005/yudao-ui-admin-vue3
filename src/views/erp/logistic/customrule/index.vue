@@ -117,7 +117,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:custom-rule:create']"
+          v-hasPermi="['tms:custom-rule:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -126,7 +126,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:custom-rule:export']"
+          v-hasPermi="['tms:custom-rule:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -168,7 +168,7 @@
           link
           type="primary"
           @click="copyForm(scope.row.id)"
-          v-hasPermi="['erp:custom-rule:create']"
+          v-hasPermi="['tms:custom-rule:create']"
         >
           复制
         </el-button>
@@ -176,7 +176,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:custom-rule:update']"
+          v-hasPermi="['tms:custom-rule:update']"
         >
           编辑
         </el-button>
@@ -184,7 +184,7 @@
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
-          v-hasPermi="['erp:custom-rule:delete']"
+          v-hasPermi="['tms:custom-rule:delete']"
         >
           删除
         </el-button>
