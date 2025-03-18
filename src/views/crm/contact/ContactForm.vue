@@ -18,7 +18,7 @@
             <el-select
               v-model="formData.ownerUserId"
               :disabled="formType !== 'create'"
-              class="w-1/1"
+              class="w-1/1" filterable
             >
               <el-option
                 v-for="item in userOptions"
@@ -37,7 +37,7 @@
               :disabled="formData.customerDefault"
               v-model="formData.customerId"
               placeholder="请选择客户"
-              class="w-1/1"
+              class="w-1/1" filterable
             >
               <el-option
                 v-for="item in customerList"
@@ -113,7 +113,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="直属上级" prop="parentId">
-            <el-select v-model="formData.parentId" placeholder="请选择直属上级" class="w-1/1">
+            <el-select v-model="formData.parentId" placeholder="请选择直属上级" class="w-1/1" filterable>
               <el-option
                 v-for="item in contactList"
                 :key="item.id"
