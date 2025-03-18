@@ -394,7 +394,7 @@ const createRequestFormOptions = () => {
       }
     },
     {
-      // colConfig: { span: 24 },
+      colConfig: { span: 24 },
       prop: 'fileUrl',
       label: '附件',
       slot: 'fileUrl'
@@ -488,6 +488,7 @@ const createAuditFormOptions = (formOptions, auditType) => {
     label: '审核意见',
     prop: 'reviewComment',
     placeholder: '请输入审核意见',
+    colConfig: { span: 24 },
     attrs: {
       style: { width: '100%' },
       clearable: true
@@ -514,6 +515,7 @@ const updateFormOptions = (formOptions) => {
     type: 'input',
     label: '审核意见',
     prop: 'reviewComment',
+    colConfig: { span: 24 },
     attrs: {
       style: { width: '100%' },
       clearable: true,
@@ -558,6 +560,10 @@ const createDetailFormOptions = (formOptions) => {
   return formOptions
 }
 
+const createMergeFormOptions = (formOptions) => {
+  return formOptions.filter((item) => item.prop !== 'purchaseEntityId')
+}
+
 const operateAudit = (type) => {
   const map = {
     detail: () => {
@@ -571,6 +577,9 @@ const operateAudit = (type) => {
     },
     update: () => {
       requestFormOptions.value = updateFormOptions(createRequestFormOptions())
+    },
+    merge: () => {
+      requestFormOptions.value = createMergeFormOptions(createRequestFormOptions())
     }
   }
   const fn = map[type]
@@ -580,15 +589,26 @@ const operateAudit = (type) => {
   }
 }
 
+const getFormData = () => {
+  return formData.value
+}
+
 const jsonList = ['inspectionJson', 'completionJson']
 const jsonDisabled = computed(() => formData.value.auditStatus === 5) // 审核不可以进行编辑
+
+// 合并 合并入库时列表勾选中传递的items数据
+const mergeSelectItemsData = (formData, data) => {
+  formData.items = data.items
+}
+
 /** 打开弹窗 */
-const open = async (type: string, id?: number) => {
+const open = async (type: string, id?: number, data?: any) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
   operateAudit(type)
   resetForm()
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -610,6 +630,12 @@ const open = async (type: string, id?: number) => {
           formData.value[item] = []
         }
       })
+
+      if (type === 'merge') {
+        dialogTitle.value = '合并入库'
+        const formData = getFormData()
+        mergeSelectItemsData(formData, data)
+      }
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {
@@ -617,11 +643,9 @@ const open = async (type: string, id?: number) => {
     }
   }
   // 加载供应商列表
-  // supplierList.value = await SupplierApi.getSupplierSimpleList()
   getSupplierList(supplierList)
   // 加载账户列表
   getAccountList(accountList)
-  // accountList.value = await AccountApi.getAccountSimpleList()
   getFinanceSubjectList(financeSubjectList)
   // const defaultAccount = accountList.value.find((item) => item.defaultStatus)
   // if (defaultAccount) {
@@ -671,7 +695,10 @@ const submitForm = async () => {
 
     if (inspectionJsonFormRef?.value?.formData) {
       data.inspectionJson = JSON.stringify(inspectionJsonFormRef.value.formData)
-      data.totalInspectionPassCount = inspectionJsonFormRef.value.formData.reduce((prev, cur) => prev + (cur.inspectionPassCount || 0), 0)
+      data.totalInspectionPassCount = inspectionJsonFormRef.value.formData.reduce(
+        (prev, cur) => prev + (cur.inspectionPassCount || 0),
+        0
+      )
     } else {
       data.inspectionJson = '[]'
     }
@@ -698,6 +725,15 @@ const submitForm = async () => {
     } else if (formType.value === 'detail') {
       await PurchaseOrderApi.updatePurchaseOrder(data)
       message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'merge') {
+
+      const {  items } = data
+        message.success('合并采购成功')
+      await PurchaseOrderApi.mergePurchaseOrder({
+        ...data,
+        itemIds: items.map((item) => item.id) as number[]
+      })
+      message.success('合并成功')
     }
     dialogVisible.value = false
     // 发送操作成功的事件
@@ -717,10 +753,6 @@ const submitFormDB = createDBFn(changeAuditBtnType)
 const resetForm = () => {
   formData.value = initFormData()
   formRef.value?.resetFields()
-}
-
-const getFormData = () => {
-  return formData.value
 }
 
 const addApplicantItem = () => {

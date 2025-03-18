@@ -66,8 +66,7 @@
           :disabled="disabledBtn"
           type="primary"
           plain
-          @click="mergePurchase"
-          :loading="mergeLoading"
+          @click="mergeOrder"
           v-hasPermi="['erp:purchase-order:merge']"
         >
           合并入库
@@ -217,6 +216,7 @@ import { cloneDeep } from 'lodash-es'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useWholeOrder, useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
 import { useSearchForm } from './hooks/search'
+import { mergeItems } from '@/utils/operate'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -605,40 +605,8 @@ onMounted(async () => {
   userList.value = user
 })
 
-const mergePurchase = async () => {
-  // 5已审核
-  const auditType = 5
-  const hasAudit = selectionList.value.some((item: any) => item.status === auditType)
-  if (!hasAudit) {
-    message.error('选中行未包含审核单据，请检查')
-    return
-  }
-
-  let items: any = []
-  // 如果不是审核状态的要进行剔除
-  const selectList: any = selectionList.value.filter((item: any) => item.status === auditType)
-  // 整单数据
-  if (wholeOrderEnable.value) {
-    selectList.forEach((item) => {
-      if (!item?.items?.length) return
-      items.push(...item.items)
-    })
-  }
-  // 分行数据 需要去重行id相同的
-  else {
-    selectList.forEach((item) => {
-      if (!item?.items?.length) return
-      const purchaseOrderId = item.purchaseOrderId
-      const target = item.items.find((a) => a.id === purchaseOrderId)
-      if (target) {
-        items.push(target)
-      }
-    })
-  }
-
-  const data = { items }
-  openForm('merge', 1, data)
-  // mergeLoading.value = false
+const mergeOrder = async () => {
+  mergeItems(wholeOrderEnable, selectionList, openForm, 'rowItemsId')
 }
 
 // TODO 芋艿：可优化功能：列表界面，支持导入

@@ -89,6 +89,7 @@ export interface PurchaseOrderVO {
   inspectionJson?: string // 检验单
   completionJson?: string // 完工单
   totalInspectionPassCount?: number // 总检验通过数量
+  supplierId?: number
 }
 
 interface PurchaseMergeVO {
@@ -131,7 +132,7 @@ interface PurchaseMergeVO {
   /**
    * 供应商编号
    */
-  supplierId: number
+  supplierId?: number
   // [property: string]: any;
 }
 
