@@ -26,6 +26,7 @@
           class="!w-240px"
           placeholder="请选择客户"
           @keyup.enter="handleQuery"
+          filterable
         >
           <el-option
             v-for="item in customerList"
