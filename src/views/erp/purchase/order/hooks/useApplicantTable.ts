@@ -179,12 +179,7 @@ export const useApplicantTable = () => {
     }
   }
 
-  const applicantItemDialog = ref(false)
-  const selectApplicantItem = () => {
-    resetApplicantTable()
-    getList()
-    applicantItemDialog.value = true
-  }
+
 
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()
@@ -299,8 +294,6 @@ export const useApplicantTable = () => {
     handleSelectionChange,
     getList,
     resetApplicantTable,
-    selectApplicantItem,
-    applicantItemDialog,
     getSearchFormData,
     searchFormOptions,
     handleQuery,

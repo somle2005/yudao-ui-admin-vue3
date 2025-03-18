@@ -35,7 +35,7 @@
           <el-button
             :disabled="itemsFormdisabled"
             type="primary"
-            @click="selectApplicantItem"
+            @click="openEnableList"
             style="margin-bottom: 10px"
             >选择申请项</el-button
           >
@@ -92,69 +92,8 @@
       </template>
     </Dialog>
 
-    <Dialog title="选择采购申请项（仅展示已审核）" v-model="applicantItemDialog" width="1000">
-      <ContentWrap>
-        <!-- 搜索工作栏 -->
-        <SmForm
-          class="-mb-15px"
-          ref="queryFormRef"
-          :inline="true"
-          label-width="68px"
-          v-model="queryParams"
-          :options="searchFormOptions"
-          :getModelValue="getSearchFormData"
-        >
-          <template #action>
-            <el-button @click="handleQuery"
-              ><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button
-            >
-            <el-button @click="resetQuery"
-              ><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button
-            >
-          </template>
-        </SmForm>
-      </ContentWrap>
-      <ContentWrap style="padding-bottom: 0">
-        <SmTable
-          border
-          isSelection
-          :loading="loading"
-          :options="tableOptions"
-          :data="list"
-          :total="total"
-          v-model:currentPage="queryParams.pageNo"
-          v-model:pageSize="queryParams.pageSize"
-          @pagination="getList"
-          @selection-change="handleSelectionChange"
-        >
-          <template #status="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
-          </template>
-
-          <template #orderStatus="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
-          </template>
-
-          <template #offStatus="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
-          </template>
-
-          <template #rowOrderStatus="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
-          </template>
-
-          <template #rowOffStatus="{ scope }">
-            <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
-          </template>
-        </SmTable>
-      </ContentWrap>
-      <template #footer>
-        <el-button @click="addApplicantItem" type="primary"> 确 定 </el-button>
-        <el-button @click="applicantItemDialog = false">取 消</el-button>
-      </template>
-    </Dialog>
-
     <!-- 可订单的申请列表 -->
+    <EnableList ref="enableListRef" @success="addItem" />
     <!-- <PurchaseRequestOrderEnableList
     ref="purchaseRequestOrderEnableListRef"
     @success="handlePurchaseRequestChange"
@@ -170,8 +109,6 @@ import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import { PurchaseRequestVO } from '@/api/erp/purchase/request'
 import { getAccountList, getFinanceSubjectList, getSupplierList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
-import { DICT_TYPE } from '@/utils/dict'
-import { useApplicantTable } from './hooks/useApplicantTable'
 import {
   computeDiscountPriceAndTotalPrice,
   distinctList,
@@ -183,24 +120,7 @@ import { useInspectionJson } from './hooks/useInspectionJson'
 import { useCompletionJson } from './hooks/useCompletionJson'
 import CompletionJsonForm from './components/CompletionJsonForm.vue'
 import InspectionJsonForm from './components/InspectionJsonForm.vue'
-
-let {
-  queryFormRef,
-  queryParams,
-  list,
-  tableOptions,
-  loading,
-  total,
-  selectionList,
-  handleSelectionChange,
-  getList,
-  selectApplicantItem,
-  applicantItemDialog,
-  getSearchFormData,
-  searchFormOptions,
-  handleQuery,
-  resetQuery
-} = useApplicantTable()
+import EnableList from './components/EnableList.vue'
 
 const { inspectionJsonFormRef, inspectionJsonTabsName } = useInspectionJson()
 const { completionJsonFormRef, completionJsonTabsName } = useCompletionJson()
@@ -238,10 +158,6 @@ const initFormData = () => {
 
 formData.value = initFormData()
 
-const formRules = reactive({
-  supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
-  orderTime: [{ required: true, message: '订单时间不能为空', trigger: 'blur' }]
-})
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
 const supplierList = ref<SupplierVO[]>([]) // 供应商列表
@@ -684,26 +600,9 @@ const open = async (type: string, id?: number, data?: any) => {
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 打开【可入库的订单列表】弹窗 */
-const purchaseRequestOrderEnableListRef = ref() // 可入库的订单列表 Ref
-const openPurchaseRequestOrderEnableList = () => {
-  purchaseRequestOrderEnableListRef.value.open()
-}
-
-const handlePurchaseRequestChange = (request: PurchaseRequestVO) => {
-  // 将申请单设置到订单
-  formData.value.requestId = request.id
-  formData.value.requestNo = request.no
-  formData.value.accountId = request.accountId
-  formData.value.remark = request.remark
-  formData.value.fileUrl = request.fileUrl
-  // 将申请单设置到订单项
-  request.items.forEach((item) => {
-    item.totalCount = item.count
-    item.count = item.totalCount - item.orderCount
-    item.requestItemId = item.id
-    item.id = undefined
-  })
-  formData.value.items = request.items.filter((item) => item.count > 0)
+const enableListRef = ref() // 可入库的订单列表 Ref
+const openEnableList = () => {
+  enableListRef.value.open()
 }
 
 const auditBtnType = ref(AUDIT_TYPE.agree)
@@ -797,11 +696,10 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 
-const addApplicantItem = () => {
-  applicantItemDialog.value = false
+const addItem = (selectionList) => {
   nextTick(() => {
     const items = formData.value.items
-    const selectList = selectionList.value.map((item: any) => {
+    const selectList = selectionList.map((item: any) => {
       const {
         purchaseApplyItemId,
         productId,
