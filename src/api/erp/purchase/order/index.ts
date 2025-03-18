@@ -91,6 +91,50 @@ export interface PurchaseOrderVO {
   totalInspectionPassCount?: number // 总检验通过数量
 }
 
+interface PurchaseMergeVO {
+  /**
+   * 结算账户编号
+   */
+  accountId?: number
+  /**
+   * 收获地址
+   */
+  address?: string
+  /**
+   * 优惠率，百分比
+   */
+  discountPercent?: number
+  /**
+   * 附件地址
+   */
+  fileUrl?: string
+  /**
+   * 订单项ids
+   */
+  itemIds: number[]
+  /**
+   * 单据日期
+   */
+  noTime?: string
+  /**
+   * 其它金额，单位：元
+   */
+  otherPrice?: number
+  /**
+   * 入库备注
+   */
+  remark?: string
+  /**
+   * 结算日期
+   */
+  settlementDate?: string
+  /**
+   * 供应商编号
+   */
+  supplierId: number
+  // [property: string]: any;
+}
+
 // ERP 采购订单 API
 export const PurchaseOrderApi = {
   // 查询采购订单分页
@@ -164,6 +208,14 @@ export const PurchaseOrderApi = {
   submitPurchaseOrderAudit: async (data: { orderIds: any[] }) => {
     return await request.post({
       url: `/erp/purchase-order/submitAudit`,
+      data
+    })
+  },
+
+  // 采购单合并入库
+  mergePurchaseOrder: async (data: PurchaseMergeVO) => {
+    return await request.post({
+      url: `/erp/purchase-order/merge`,
       data
     })
   }

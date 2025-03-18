@@ -62,6 +62,17 @@
           提交审核
         </el-button>
 
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="mergePurchase"
+          :loading="mergeLoading"
+          v-hasPermi="['erp:purchase-order:merge']"
+        >
+          合并入库
+        </el-button>
+
         <el-switch
           v-model="wholeOrderEnable"
           active-text="整单"
@@ -472,7 +483,7 @@ const getList = async () => {
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
 
-    console.log(list.value,'list.value')
+    console.log(list.value, 'list.value')
   } finally {
     loading.value = false
   }
@@ -492,8 +503,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, data?: any) => {
+  formRef.value.open(type, id, data)
 }
 
 /** 删除按钮操作 */
@@ -593,6 +604,42 @@ onMounted(async () => {
   supplierList.value = supplier
   userList.value = user
 })
+
+const mergePurchase = async () => {
+  // 5已审核
+  const auditType = 5
+  const hasAudit = selectionList.value.some((item: any) => item.status === auditType)
+  if (!hasAudit) {
+    message.error('选中行未包含审核单据，请检查')
+    return
+  }
+
+  let items: any = []
+  // 如果不是审核状态的要进行剔除
+  const selectList: any = selectionList.value.filter((item: any) => item.status === auditType)
+  // 整单数据
+  if (wholeOrderEnable.value) {
+    selectList.forEach((item) => {
+      if (!item?.items?.length) return
+      items.push(...item.items)
+    })
+  }
+  // 分行数据 需要去重行id相同的
+  else {
+    selectList.forEach((item) => {
+      if (!item?.items?.length) return
+      const purchaseOrderId = item.purchaseOrderId
+      const target = item.items.find((a) => a.id === purchaseOrderId)
+      if (target) {
+        items.push(target)
+      }
+    })
+  }
+
+  const data = { items }
+  openForm('merge', 1, data)
+  // mergeLoading.value = false
+}
 
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印
