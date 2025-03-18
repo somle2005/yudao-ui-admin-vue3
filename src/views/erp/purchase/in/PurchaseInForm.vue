@@ -50,7 +50,12 @@
     </SmForm>
 
     <template #footer>
-      <el-button v-if="!auditType" @click="submitForm" type="primary" :disabled="formLoading">
+      <el-button
+        v-if="!auditType"
+        @click="submitFormDB(AUDIT_TYPE.agree)"
+        type="primary"
+        :disabled="formLoading"
+      >
         确 定
       </el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -217,8 +222,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await PurchaseInApi.createPurchaseIn(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await PurchaseInApi.updatePurchaseIn(data)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'audit') {
+      await PurchaseInApi.updatePurchaseInAuditStatus({
+        reviewed: true,
+        pass: auditBtnType.value === AUDIT_TYPE.agree,
+        inId: data.id,
+        reviewComment: data.reviewComment
+      })
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -270,7 +283,7 @@ const addItem = (selectionList: any[]) => {
        * orderItemId 采购订单项编号
        * warehouseId 仓库编号
        * productId 产品编号 productBarCode 单位 unitName unitId model型号规格 可能要从product对象里面取list数据转化一下
-       * 外部有  productUnitId  productPrice 产品单价 
+       * 外部有  productUnitId  productPrice 产品单价
         count 产品数量
         taxPercent 税率，百分比
         taxPrice 税额
@@ -319,7 +332,6 @@ const addItem = (selectionList: any[]) => {
         applicationDeptId,
         departmentName
       } = item
-
 
       /**
        * 采购入库需要的数据和回显name数据

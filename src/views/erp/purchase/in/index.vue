@@ -32,6 +32,36 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['erp:purchase-in:submitAudit']"
+        >
+          提交审核
+        </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="changePayStatusBatch(selectionList, true)"
+          v-hasPermi="['erp:purchase-in:changePayStatus']"
+        >
+          付款
+        </el-button>
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="changePayStatusBatch(selectionList, false)"
+          v-hasPermi="['erp:purchase-in:changePayStatus']"
+        >
+          撤销付款
+        </el-button>
+
         <el-switch
           v-model="wholeOrderEnable"
           active-text="整单"
@@ -84,8 +114,8 @@
         <el-button
           link
           type="primary"
-          @click="handleUpdateStatus(scope.row.id, 20)"
-          v-hasPermi="['erp:purchase-in:update-status']"
+          @click="handleUpdateStatus(scope.row, true)"
+          v-hasPermi="['erp:purchase-in:audit']"
           v-if="![5].includes(scope.row.auditStatus)"
         >
           审核
@@ -93,8 +123,8 @@
         <el-button
           link
           type="danger"
-          @click="handleUpdateStatus(scope.row.id, 10)"
-          v-hasPermi="['erp:purchase-in:update-status']"
+          @click="handleUpdateStatus(scope.row, false)"
+          v-hasPermi="['erp:purchase-in:audit']"
           v-if="scope.row.auditStatus === 5"
         >
           反审核
@@ -134,6 +164,7 @@ import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
+import { useBatch } from './hooks/useBatch'
 
 /** ERP 销售入库列表 */
 defineOptions({ name: 'ErpPurchaseIn' })
@@ -161,11 +192,6 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const productList = ref<ProductVO[]>([]) // 产品列表
-const supplierList = ref<SupplierVO[]>([]) // 供应商列表
-const userList = ref<UserVO[]>([]) // 用户列表
-const warehouseList = ref<WarehouseVO[]>([]) // 仓库列表
-const accountList = ref<AccountVO[]>([]) // 账户列表
 
 let {
   branchOptions,
@@ -255,19 +281,6 @@ const handleDelete = async (ids: number[]) => {
   } catch {}
 }
 
-/** 审批/反审批操作 */
-const handleUpdateStatus = async (id: number, status: number) => {
-  try {
-    // 审批的二次确认
-    await message.confirm(`确定${status === 20 ? '审批' : '反审批'}该入库吗？`)
-    // 发起审批
-    await PurchaseInApi.updatePurchaseInStatus(id, status)
-    message.success(`${status === 20 ? '审批' : '反审批'}成功`)
-    // 刷新列表
-    await getList()
-  } catch {}
-}
-
 /** 导出按钮操作 */
 const handleExport = async () => {
   try {
@@ -303,22 +316,17 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
+const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatusBatch } = useBatch(
+  selectionList,
+  getList,
+  wholeOrderEnable,
+  openForm
+)
+
 /** 初始化 **/
 onMounted(async () => {
   // 加载 列表 产品、仓库列表、供应商
-  const [list1, product, supplier, user, warehouse, account] = await Promise.all([
-    getList(),
-    ProductApi.getProductSimpleList(),
-    SupplierApi.getSupplierSimpleList(),
-    UserApi.getSimpleUserList(),
-    WarehouseApi.getWarehouseSimpleList(),
-    AccountApi.getAccountSimpleList()
-  ])
-  productList.value = product
-  supplierList.value = supplier
-  userList.value = user
-  warehouseList.value = warehouse
-  accountList.value = account
+  getList()
 })
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印

@@ -12,6 +12,7 @@ export interface PurchaseInVO {
   remark: string // 备注
   outCount: number // 采购出库数量
   returnCount: number // 采购退货数量
+  reviewComment?: string // 审核意见
 }
 
 // ERP 采购入库 API
@@ -60,5 +61,34 @@ export const PurchaseInApi = {
   // 导出采购入库 Excel
   exportPurchaseIn: async (params: any) => {
     return await request.download({ url: `/erp/purchase-in/export-excel`, params })
+  },
+
+  // 审核/反审核采购入库
+  updatePurchaseInAuditStatus: async (data: {
+    reviewed: boolean
+    pass: boolean
+    inId: number
+    reviewComment?: string
+  }) => {
+    return await request.post({
+      url: `/erp/purchase-in/auditStatus`,
+      data
+    })
+  },
+
+  // 采购入库提交审核
+  submitPurchaseInAudit: async (params: { inIds: number[] }) => {
+    return await request.get({
+      url: `/admin-api/erp/purchase-in/submitAudit`,
+      params
+    })
+  },
+
+  // 采购入库切换付款状态
+  changePurchaseInPayStatus: async (data: { inItemIds: number[]; pass: boolean }) => {
+    return await request.post({
+      url: `/erp/purchase-in/changePayStatus`,
+      data
+    })
   }
 }
