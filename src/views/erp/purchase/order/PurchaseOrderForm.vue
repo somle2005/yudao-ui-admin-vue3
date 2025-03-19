@@ -176,9 +176,9 @@ watch(
       return
     }
 
-    if (!val.discountPercent) {
-      return
-    }
+    // if (!val.discountPercent) {
+    //   return
+    // }
 
     // 编辑回显
     computeDiscountPriceAndTotalPrice(formRef, formData.value)

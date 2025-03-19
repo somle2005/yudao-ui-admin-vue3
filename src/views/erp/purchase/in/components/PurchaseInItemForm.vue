@@ -248,6 +248,8 @@ import {
 // import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
+import { TAX_PERCENT } from '@/utils/constant'
 
 const props = defineProps({
   items: {
@@ -267,7 +269,7 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   // warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
-  productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
+  productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
@@ -304,6 +306,17 @@ watch(
     if (!val || val.length === 0) {
       return
     }
+    const keyMap = {
+      taxPrice: 'taxPrice',
+      taxPercent: 'taxPercent',
+      allAmount: 'allAmount',
+      actTaxPrice: 'actTaxPrice',
+      onePrice: 'productPrice',
+      applyCount: 'count'
+    }
+
+    // 编辑回显
+    computeTaxPriceAndAllAmount(val, keyMap)
     // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
@@ -353,7 +366,7 @@ const handleAdd = () => {
 
     productPrice: undefined,
     count: undefined,
-    taxPercent: undefined,
+    taxPercent: TAX_PERCENT,
     taxPrice: undefined,
     actTaxPrice: undefined,
     allAmount: undefined,

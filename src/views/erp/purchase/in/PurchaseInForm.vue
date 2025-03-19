@@ -143,6 +143,8 @@ watch(
     if (!val) {
       return
     }
+    // 编辑回显
+    computeDiscountPriceAndTotalPrice(formRef, formData.value)
     // 计算
     // const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
     // const discountPrice =

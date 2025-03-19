@@ -141,14 +141,13 @@ export const computeDiscountPriceAndTotalPrice = (
     })
   }
 
-  if (formData.discountPercent) {
-    const totalPrice = formData.items.reduce((prev, curr) => prev + curr[totalPriceStr], 0)
-    const discountPrice = erpPriceMultiply(totalPrice, formData[discountPercentStr] / 100.0) || 0
-    formData[discountPriceStr] = discountPrice
-    // 优惠后金额
-    formData.totalPrice = totalPrice - discountPrice + (formData[otherPriceStr] || 0)
-    updateVal()
-  }
+  const discountPercent = formData[discountPercentStr] ? formData[discountPercentStr] : 0
+  const totalPrice = formData.items.reduce((prev, curr) => prev + curr[totalPriceStr], 0)
+  const discountPrice = erpPriceMultiply(totalPrice, discountPercent / 100.0) || 0
+  formData[discountPriceStr] = discountPrice
+  // 优惠后金额
+  formData.totalPrice = totalPrice - discountPrice + (formData[otherPriceStr] || 0)
+  updateVal()
 }
 
 export const resetQueryParams = (queryParams: { [key: string]: any }, queryFormRef: any) => {
@@ -170,6 +169,6 @@ export const filterObjKey = (queryParams: { [key: string]: any }, saveObjkeyList
     })
     return map
   } catch (e) {
-    console.log(e,'报错了')
+    console.log(e, '报错了')
   }
 }
