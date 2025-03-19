@@ -260,7 +260,6 @@ export const useForm = (formType) => {
         prop: 'otherPrice',
         label: '其他金额',
         attrs: {
-          disabled: true,
           'controls-position': 'right',
           min: 0,
           precision: 2,

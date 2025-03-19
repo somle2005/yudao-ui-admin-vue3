@@ -114,7 +114,7 @@ import {
   distinctList,
   filterObjKey
 } from '@/utils/transformData'
-import { AUDIT_TYPE } from '@/utils/constant'
+import { AUDIT_TYPE, TAX_PERCENT } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import { useInspectionJson } from './hooks/useInspectionJson'
 import { useCompletionJson } from './hooks/useCompletionJson'
@@ -707,7 +707,7 @@ const addItem = (selectionList) => {
         productName,
         approveCount,
         actTaxPrice,
-        taxPercent,
+        taxPercent = TAX_PERCENT,
         taxPrice,
         warehouseId,
         expectArrivalDate,

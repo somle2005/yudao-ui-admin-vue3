@@ -82,7 +82,7 @@ import PurchaseInPaymentEnableList from './components/PurchaseInPaymentEnableLis
 import { PurchaseOrderVO } from '@/api/erp/purchase/order'
 import * as UserApi from '@/api/system/user'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
-import { AUDIT_TYPE } from '@/utils/constant'
+import { AUDIT_TYPE, TAX_PERCENT } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import { useForm } from './hooks/useForm'
 import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
@@ -319,7 +319,7 @@ const addItem = (selectionList: any[]) => {
         productPrice,
         count,
 
-        taxPercent,
+        taxPercent = TAX_PERCENT,
         taxPrice,
         actTaxPrice,
         allAmount,

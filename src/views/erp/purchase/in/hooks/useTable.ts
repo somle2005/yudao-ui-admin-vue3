@@ -47,6 +47,13 @@ export const useTable = () => {
       formatter: dateFormatter2, // 年月日-金蝶
       width: '200px'
     },
+
+    // items-product带出barCode SKU name
+    productBarCode: {
+      label: 'SKU',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
     supplierName: '供应商',
 
     auditStatus: {
@@ -78,11 +85,6 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
     },
 
-    // items-product带出barCode SKU name
-    productBarCode: {
-      label: 'SKU',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
     productName: {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -136,8 +138,6 @@ export const useTable = () => {
       formatter: dateFormatter,
       width: '200px'
     },
-
-
 
     // rowExecuteStatus: {
     //   label: '行执行状态',
