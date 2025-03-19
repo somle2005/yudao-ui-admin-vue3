@@ -144,11 +144,11 @@ watch(
       return
     }
     // 计算
-    const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
-    const discountPrice =
-      val.discountPercent != null ? erpPriceMultiply(totalPrice, val.discountPercent / 100.0) : 0
-    formData.value.discountPrice = discountPrice
-    formData.value.totalPrice = totalPrice - discountPrice + val.otherPrice
+    // const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
+    // const discountPrice =
+    //   val.discountPercent != null ? erpPriceMultiply(totalPrice, val.discountPercent / 100.0) : 0
+    // formData.value.discountPrice = discountPrice
+    // formData.value.totalPrice = totalPrice - discountPrice + val.otherPrice
   },
   { deep: true }
 )
@@ -277,6 +277,7 @@ const addItem = (selectionList: any[]) => {
   // reconciliationStatus 对账状态(false:未对账 ，true:已对账) 看看是不是要加上
   nextTick(() => {
     const items = formData.value.items
+    const itemIdKey = 'orderItemId'
     const selectList = selectionList.map((item: any) => {
       /**
        * 采购入库需要 orderNo 采购订单编号
@@ -307,6 +308,7 @@ const addItem = (selectionList: any[]) => {
         no,
         rowItemsId, //list记得转化
         productId,
+        productName,
         productBarCode,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
@@ -339,8 +341,9 @@ const addItem = (selectionList: any[]) => {
        */
       const obj = {
         orderNo: no,
-        orderItemId: rowItemsId, //list记得转化
+        [itemIdKey]: rowItemsId, //list记得转化
         productId,
+        productName,
         productBarCode,
         productUnitName, //列表要转化取item-product里面数据
         productUnitId, // 列表要转化取item-product里面数据
@@ -368,7 +371,7 @@ const addItem = (selectionList: any[]) => {
       }
       return obj
     })
-    formData.value.items = distinctList(items, selectList, 'purchaseApplyItemId')
+    formData.value.items = distinctList(items, selectList, itemIdKey)
   })
 }
 </script>

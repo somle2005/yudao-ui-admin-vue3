@@ -348,9 +348,9 @@ const submitForm = () => {
 }
 
 /** 打开弹窗 */
-const open = async (supplierId: number) => {
-  resetQuery()
+const open = async () => {
   dialogVisible.value = true
+  resetQuery()
   // await nextTick() // 等待，避免 queryFormRef 为空
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
