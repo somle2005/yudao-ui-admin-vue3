@@ -209,7 +209,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { cloneDeep } from 'lodash-es'
-import { useWholeOrder, useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
+import { useWholeOrder, useWholeOrderMergeCompute, createBranchOrder } from '@/hooks/common/wholeOrder'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -335,8 +335,8 @@ const fieldMap = {
     width: '320px'
   }
 }
-const branchOptions = transformTableOptions(fieldMap)
-tableOptions.value = cloneDeep(branchOptions)
+const allOptions = transformTableOptions(fieldMap)
+tableOptions.value = createBranchOrder(cloneDeep(allOptions))
 
 
 /** ERP 采购申请列表 */
@@ -394,7 +394,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, branchOptions)
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
 
     itemsList.value = mergeItemsToList(data.list, {
       id: 'purchaseOrderId',
@@ -661,7 +661,7 @@ const disabledBtn = computed(() => selectionList.value.length === 0)
 
 
 const { handleWholeOrderEnable } = useWholeOrder(
-  branchOptions,
+  allOptions,
   tableOptions,
   selectionList,
   list,

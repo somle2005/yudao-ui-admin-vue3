@@ -194,7 +194,7 @@ const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
 
 let {
-  branchOptions,
+  allOptions,
   tableOptions,
 
   wholeOrderEnable,
@@ -230,7 +230,7 @@ const getList = async () => {
       })
     })
 
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, branchOptions)
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
       status: 'rowStatus',
@@ -303,7 +303,7 @@ const handleSelectionChange = (rows: PurchaseInVO[]) => {
 }
 
 const { handleWholeOrderEnable } = useWholeOrder(
-  branchOptions,
+  allOptions,
   tableOptions,
   selectionList,
   list,

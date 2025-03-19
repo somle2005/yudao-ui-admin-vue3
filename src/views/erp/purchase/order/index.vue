@@ -214,7 +214,11 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { cloneDeep } from 'lodash-es'
 import { mergeItemsToList } from '@/utils/transformData'
-import { useWholeOrder, useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
+import {
+  useWholeOrder,
+  useWholeOrderMergeCompute,
+  createBranchOrder
+} from '@/hooks/common/wholeOrder'
 import { useSearchForm } from './hooks/search'
 import { mergeItems } from '@/utils/operate'
 
@@ -261,11 +265,10 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
   },
 
-
   // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
   totalPrice: {
     label: '成交金额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示 
+    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
   },
 
   rowExecuteStatus: {
@@ -396,9 +399,9 @@ const fieldMap = {
   }
 }
 
-const branchOptions = transformTableOptions(fieldMap)
+const allOptions = transformTableOptions(fieldMap)
 const wrapList = ['no', 'supplierName', 'productBarCode', 'reviewComment', 'productName', 'remark']
-branchOptions.forEach((item: any) => {
+allOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
     item.slot = item.prop
     item.wrap = true
@@ -406,7 +409,7 @@ branchOptions.forEach((item: any) => {
   }
 })
 
-tableOptions.value = cloneDeep(branchOptions)
+tableOptions.value = createBranchOrder(cloneDeep(allOptions))
 
 /** ERP 销售订单列表 */
 defineOptions({ name: 'ErpPurchaseOrder' })
@@ -466,7 +469,7 @@ const getList = async () => {
       })
     })
 
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, branchOptions)
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
 
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
@@ -483,8 +486,6 @@ const getList = async () => {
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
-
-    console.log(list.value, 'list.value')
   } finally {
     loading.value = false
   }
@@ -579,7 +580,7 @@ const handleUpdateStatus = async (row: any, reviewed: boolean) => {
 }
 
 const { handleWholeOrderEnable } = useWholeOrder(
-  branchOptions,
+  allOptions,
   tableOptions,
   selectionList,
   list,

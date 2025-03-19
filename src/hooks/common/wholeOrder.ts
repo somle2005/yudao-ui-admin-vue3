@@ -6,8 +6,15 @@ export const WHOLE_ORDER_TYPE = {
   wholeOrder: 'wholeOrder', // 整单才进行展示
 }
 
+export const createWholeOrder = (allOptions) => {
+  return allOptions.filter((item) => item.wholeOrderEnable !== WHOLE_ORDER_TYPE.items)
+}
+export const createBranchOrder = (allOptions) => {
+  return allOptions.filter((item) => item.wholeOrderEnable !== WHOLE_ORDER_TYPE.wholeOrder)
+}
+
 export const useWholeOrder = (
-  branchOptions,
+  allOptions,
   tableOptions,
   selectionList,
   list,
@@ -17,13 +24,10 @@ export const useWholeOrder = (
   wholeOrderList,
   wholeOrderTotal
 ) => {
-  const createWholeOrder = (branchOptions) => {
-    return branchOptions.filter((item) => item.wholeOrderEnable !== WHOLE_ORDER_TYPE.items)
-  }
   const handleWholeOrderEnable = (val) => {
     if (val) {
       // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
-      const options = createWholeOrder(cloneDeep(branchOptions))
+      const options = createWholeOrder(cloneDeep(allOptions))
       // 采购申请-采购订单-采购入库 列数超过10条以上-整单
       // const len = options.length - 1
       // const limit = len - 4
@@ -36,7 +40,7 @@ export const useWholeOrder = (
       list.value = wholeOrderList.value
       total.value = wholeOrderTotal.value
     } else {
-      tableOptions.value = cloneDeep(branchOptions)
+      tableOptions.value = createBranchOrder(cloneDeep(allOptions))
       list.value = itemsList.value
       total.value = itemsTotal.value
     }
@@ -44,6 +48,7 @@ export const useWholeOrder = (
   }
 
   return {
+    createBranchOrder,
     createWholeOrder,
     handleWholeOrderEnable
   }

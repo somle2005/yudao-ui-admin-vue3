@@ -1,5 +1,5 @@
 import { useTableData } from '@/components/SmTable/src/utils'
-import { useWholeOrderMergeCompute, useWholeOrder } from '@/hooks/common/wholeOrder'
+import { useWholeOrderMergeCompute, useWholeOrder, createBranchOrder } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
@@ -174,7 +174,7 @@ export const useTable = () => {
     }
   }
 
-  const branchOptions = transformTableOptions(fieldMap)
+  const allOptions = transformTableOptions(fieldMap)
   const wrapList = [
     'no',
     'supplierName',
@@ -183,7 +183,7 @@ export const useTable = () => {
     'productName',
     'remark'
   ]
-  branchOptions.forEach((item: any) => {
+  allOptions.forEach((item: any) => {
     if (wrapList.includes(item.prop)) {
       item.slot = item.prop
       item.wrap = true
@@ -191,7 +191,7 @@ export const useTable = () => {
     }
   })
 
-  tableOptions.value = cloneDeep(branchOptions)
+  tableOptions.value = createBranchOrder(cloneDeep(allOptions))
 
   const wholeOrderEnable = ref(false)
   const itemsList = ref<any[]>([])
@@ -209,7 +209,7 @@ export const useTable = () => {
   }
 
   return {
-    branchOptions,
+    allOptions,
     tableOptions,
 
     wholeOrderEnable,
