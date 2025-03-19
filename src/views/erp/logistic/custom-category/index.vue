@@ -60,7 +60,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:custom-category:create']"
+          v-hasPermi="['tms:custom-category:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -69,7 +69,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:custom-category:export']"
+          v-hasPermi="['tms:custom-category:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -133,7 +133,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:custom-category:update']"
+            v-hasPermi="['tms:custom-category:update']"
           >
             编辑
           </el-button>
@@ -141,7 +141,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:custom-category:delete']"
+            v-hasPermi="['tms:custom-category:delete']"
           >
             删除
           </el-button>
