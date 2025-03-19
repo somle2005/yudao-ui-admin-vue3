@@ -24,12 +24,13 @@ export const useWholeOrder = (
     if (val) {
       // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
       const options = createWholeOrder(cloneDeep(branchOptions))
-      const len = options.length - 1
-      const limit = len - 4
-      // 宽度适配
-      for (let i = limit; i < len; i++) {
-        options[i].width = undefined
-      }
+      // 采购申请-采购订单-采购入库 列数超过10条以上-整单
+      // const len = options.length - 1
+      // const limit = len - 4
+      // // 宽度适配
+      // for (let i = limit; i < len; i++) {
+      //   options[i].width = undefined
+      // }
 
       tableOptions.value = options
       list.value = wholeOrderList.value
