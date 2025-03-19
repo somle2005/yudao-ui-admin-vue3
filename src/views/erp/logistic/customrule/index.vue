@@ -26,7 +26,7 @@
       </el-form-item>
 
       <el-form-item label="SKU" prop="barCode">
-        <el-select
+        <!-- <el-select
           v-model.trim="queryParams.barCode"
           clearable
           filterable
@@ -40,6 +40,21 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
+          />
+        </el-select> -->
+        <el-select
+          v-model.trim="queryParams.productId"
+          clearable
+          filterable
+          placeholder="请选择SKU"
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in productList"
+            :key="item.id"
+            :label="item.barCode"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
@@ -206,10 +221,12 @@ import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { getProductNameList } from '@/commonData'
+// import { getProductNameList } from '@/commonData'
 import { insertSearchVal } from '@/utils/high'
+import { getProductList } from '@/commonData'
 
-const { productSkuList } = getProductNameList()
+// const { productSkuList } = getProductNameList()
+const productList = getProductList()
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -284,7 +301,8 @@ const queryParams = reactive({
   barCode: undefined,
   hscode: undefined,
   createTime: [] as string[],
-  fbaBarCode: undefined
+  fbaBarCode: undefined,
+  productId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -362,7 +380,7 @@ const copyForm = (id?: number) => {
 }
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
-const insertBarcode = insertSearchVal(productSkuList)
+// const insertBarcode = insertSearchVal(productSkuList)
 
 const createTimeChange = (val: any) => {
   queryParams.createTime = val
