@@ -1,4 +1,5 @@
 import { getAccountList, getSupplierList } from '@/commonData'
+import { RECONCILIATION_STSTUS } from '../constant'
 
 export const useForm = (formType) => {
   const supplierList = ref<any[]>([]) // 供应商列表
@@ -247,7 +248,21 @@ export const useForm = (formType) => {
           }
         },
         children: accountList
-      }
+      },
+      {
+        type: 'select',
+        placeholder: '请选择对账状态',
+        prop: 'accountId',
+        label: '对账状态',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: RECONCILIATION_STSTUS
+      },
     ]
   }
   const requestFormOptions = ref(createRequestFormOptions())

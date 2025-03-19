@@ -72,6 +72,10 @@ export const useTable = () => {
       slot: 'payStatus',
       dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
     },
+    reconciliationStatus: {
+      label: '对账状态',
+      slot: 'reconciliationStatus',
+    },
 
     // rowPayStatus: {
     //   label: '行付款状态',

@@ -95,6 +95,11 @@
       @selection-change="handleSelectionChange"
       @pagination="getList"
     >
+      <template #reconciliationStatus="{ scope }">
+        <ElTag :type="RECONCILIATION_STSTUS_MAP[scope.row.reconciliationStatus]?.colorType">
+          {{ RECONCILIATION_STSTUS_MAP[scope.row.reconciliationStatus]?.label }}
+        </ElTag>
+      </template>
       <template #operate="{ scope }">
         <!-- <el-button
             link
@@ -165,6 +170,7 @@ import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
+import { RECONCILIATION_STSTUS_MAP } from './constant'
 
 /** ERP 销售入库列表 */
 defineOptions({ name: 'ErpPurchaseIn' })
