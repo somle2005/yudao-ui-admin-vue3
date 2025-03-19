@@ -1,6 +1,4 @@
 import { getAccountList, getSupplierList } from '@/commonData'
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
-import { getUserList } from '@/commonData'
 
 export const useForm = (formType) => {
   const supplierList = ref<any[]>([]) // 供应商列表
@@ -64,20 +62,7 @@ export const useForm = (formType) => {
         children: supplierList
       },
 
-      {
-        type: 'select',
-        placeholder: '请选择币种',
-        prop: 'currencyId',
-        label: '币种',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: getIntDictOptions(DICT_TYPE.CURRENCY_CODE)
-      },
+
 
       // 注意精度
       {
@@ -94,39 +79,6 @@ export const useForm = (formType) => {
           }
         }
       },
-
-      // {
-      //   type: 'select',
-      //   placeholder: '请选择审核人',
-      //   prop: 'auditorId',
-      //   label: '审核人',
-      //   attrs: {
-      //     class: '!w-160px',
-      //     filterable: true,
-      //     clearable: true,
-      //     style: {
-      //       width: '100%'
-      //     }
-      //   },
-      //   children: userList
-      // },
-
-      // {
-      //   type: 'date-picker',
-      //   placeholder: '请选择审核时间',
-      //   prop: 'auditTime',
-      //   label: '审核时间',
-      //   attrs: {
-      //     clearable: true,
-      //     type: 'date',
-      //     'value-format': 'x',
-      //     class: '!w-1/1',
-      //     style: {
-      //       width: '100%'
-      //     }
-      //   },
-      // },
-
     
       {
         type: 'date-picker',
@@ -324,7 +276,6 @@ export const useForm = (formType) => {
   const initDialogData = () => {
     getAccountList(accountList)
     getSupplierList(supplierList)
-    // getUserList(userList)
   }
 
   return {

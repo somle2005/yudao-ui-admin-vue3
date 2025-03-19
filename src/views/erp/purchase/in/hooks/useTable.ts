@@ -79,10 +79,10 @@ export const useTable = () => {
     //   dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
     // },
 
-    // 整单才进行展示
+    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
     totalPrice: {
       label: '成交金额',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
+      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
 
     productName: {
