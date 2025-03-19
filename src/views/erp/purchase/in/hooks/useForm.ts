@@ -47,7 +47,6 @@ export const useForm = (formType) => {
         }
       },
 
-
       {
         type: 'select',
         placeholder: '请选择供应商',
@@ -62,8 +61,6 @@ export const useForm = (formType) => {
         },
         children: supplierList
       },
-
-
 
       // 注意精度
       {
@@ -80,7 +77,7 @@ export const useForm = (formType) => {
           }
         }
       },
-    
+
       {
         type: 'date-picker',
         placeholder: '请选择结算日期',
@@ -118,8 +115,6 @@ export const useForm = (formType) => {
           }
         ]
       },
-
-     
 
       // {
       //   type: 'input',
@@ -262,10 +257,56 @@ export const useForm = (formType) => {
           }
         },
         children: RECONCILIATION_STSTUS
-      },
+      }
     ]
   }
-  const requestFormOptions = ref(createRequestFormOptions())
+  const requestFormOptions = ref({})
+
+  const createAuditFormOptions = (formOptions, auditType) => {
+    const index = formOptions.findIndex((item) => item.prop === 'fileUrl') + 1
+    const obj: any = {
+      type: 'input',
+      label: '审核意见',
+      prop: 'reviewComment',
+      placeholder: '请输入审核意见',
+      colConfig: { span: 24 },
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    }
+    formOptions.splice(index, 0, obj)
+    formOptions.forEach((item) => {
+      if (item.prop && item.prop !== 'reviewComment') {
+        if (item.attrs) {
+          item.attrs!.disabled = auditType
+        } else {
+          item.attrs = {
+            disabled: auditType
+          }
+        }
+      }
+    })
+    return formOptions
+  }
+
+  const updateFormOptions = (formOptions) => {
+    const index = formOptions.findIndex((item) => item.prop === 'fileUrl') + 1
+    const obj: any = {
+      type: 'input',
+      label: '审核意见',
+      prop: 'reviewComment',
+      colConfig: { span: 24 },
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      }
+    }
+    formOptions.splice(index, 0, obj)
+    return formOptions
+  }
+
   const operateAudit = (type) => {
     const map = {
       detail: () => {
@@ -275,10 +316,10 @@ export const useForm = (formType) => {
         requestFormOptions.value = createRequestFormOptions()
       },
       audit: () => {
-        // requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
+        requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
       },
       update: () => {
-        // requestFormOptions.value = updateFormOptions(createRequestFormOptions())
+        requestFormOptions.value = updateFormOptions(createRequestFormOptions())
       }
     }
     const fn = map[type]
