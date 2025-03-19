@@ -43,6 +43,11 @@
             <el-text>{{ row.productName }}</el-text>
           </template>
         </el-table-column>
+        <el-table-column label="单位" min-width="60">
+          <template #default="{ row }">
+            <el-text>{{ row.productUnitName }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column label="型号规格" width="180">
           <template #default="{ row }">
             <el-text>{{ row.model }}</el-text>
@@ -203,7 +208,7 @@
         <el-table-column label="箱率" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-              <el-input v-model="row.containerRate" class="!w-100%" />
+              <el-input v-model.trim="row.containerRate" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -211,7 +216,7 @@
         <el-table-column label="备注" min-width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-              <el-input v-model="row.remark" type="textarea" placeholder="请输入备注" />
+              <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
             </el-form-item>
           </template>
         </el-table-column>
