@@ -288,7 +288,7 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
+// const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -307,7 +307,7 @@ const getList = async () => {
   } finally {
     loading.value = false
   }
-  supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
+  // supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
 }
 
 /** 搜索按钮操作 */
