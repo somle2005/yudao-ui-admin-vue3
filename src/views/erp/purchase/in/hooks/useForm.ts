@@ -152,7 +152,7 @@ export const useForm = (formType) => {
         }
       },
       {
-        // colConfig: { span: 24 },
+        colConfig: { span: 24 },
         prop: 'fileUrl',
         label: '附件',
         slot: 'fileUrl'

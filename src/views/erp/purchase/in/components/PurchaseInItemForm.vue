@@ -232,9 +232,9 @@
         </el-table-column>
       </el-table>
     </el-form>
-    <el-row justify="center" class="mt-3" v-if="!disabled">
+    <!-- <el-row justify="center" class="mt-3" v-if="!disabled">
       <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -293,7 +293,6 @@ watch(
     //     setStockCount(item)
     //   }
     // })
-    console.log('props.items', val)
     formData.value = val
   },
   { immediate: true, deep: true }
@@ -384,21 +383,6 @@ const handleAdd = () => {
     applicationDeptName: undefined
     // productPrice: actTaxPrice
   }
-
-  // const row = {
-  //   id: undefined,
-  //   productId: undefined,
-  //   productUnitName: undefined, // 产品单位
-  //   productBarCode: undefined, // 产品条码
-  //   productPrice: undefined,
-  //   stockCount: undefined,
-  //   count: 1,
-  //   totalProductPrice: undefined,
-  //   taxPercent: undefined,
-  //   taxPrice: undefined,
-  //   totalPrice: undefined,
-  //   remark: undefined
-  // }
   formData.value.push(row)
 }
 
