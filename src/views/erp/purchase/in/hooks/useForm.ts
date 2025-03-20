@@ -247,7 +247,7 @@ export const useForm = (formType) => {
       {
         type: 'select',
         placeholder: '请选择对账状态',
-        prop: 'accountId',
+        prop: 'reconciliationStatus',
         label: '对账状态',
         attrs: {
           filterable: true,
