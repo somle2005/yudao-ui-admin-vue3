@@ -20,7 +20,7 @@
               :rules="formRules.productId"
               class="mb-0px!"
             >
-              <el-select
+              <!-- <el-select
                 v-model="row.productId"
                 clearable
                 filterable
@@ -34,7 +34,8 @@
                   :label="item.barCode"
                   :value="item.id"
                 />
-              </el-select>
+              </el-select> -->
+              <el-text> {{ row.productBarCode }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -62,7 +63,7 @@
 
         <el-table-column label="申请人" width="200">
           <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
               <!-- <el-select
                 v-if="!row.orderNo"
                 :disabled="disabled"
