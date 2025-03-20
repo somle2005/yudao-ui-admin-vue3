@@ -77,10 +77,10 @@ export const PurchaseInApi = {
   },
 
   // 采购入库提交审核
-  submitPurchaseInAudit: async (params: { inIds: number[] }) => {
-    return await request.get({
+  submitPurchaseInAudit: async (data: { inIds: number[] }) => {
+    return await request.put({
       url: `/admin-api/erp/purchase-in/submitAudit`,
-      params
+      data
     })
   },
 
