@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column label="部门" width="200">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
               <el-tree-select
                 v-if="!row.erpPurchaseRequestItemNo"
                 :disabled="disabled"
