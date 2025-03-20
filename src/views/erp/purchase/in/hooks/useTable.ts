@@ -185,7 +185,9 @@ export const useTable = () => {
     'productBarCode',
     'reviewComment',
     'productName',
-    'remark'
+    'remark',
+    'orderNo',
+    'warehouseName'
   ]
   allOptions.forEach((item: any) => {
     if (wrapList.includes(item.prop)) {

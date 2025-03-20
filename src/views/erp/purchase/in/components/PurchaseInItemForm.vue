@@ -113,6 +113,7 @@
                 class="mb-0px!"
               >
                 <el-select
+                  disabled
                   v-model="row.currencyId"
                   placeholder="请选择币种"
                   clearable
@@ -131,7 +132,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="汇率" width="115">
+        <!-- <el-table-column label="汇率" width="115">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.exchangeRate`" class="mb-0px!">
               <el-input-number
@@ -143,12 +144,12 @@
               />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="仓库" width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <el-select
+              <!-- <el-select
                 :disabled="disabled"
                 v-model="row.warehouseId"
                 clearable
@@ -161,7 +162,8 @@
                   :label="item.name"
                   :value="item.id"
                 />
-              </el-select>
+              </el-select> -->
+              <el-text>{{ row.warehouseName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -183,6 +185,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
               <el-input-number
+                disabled
                 v-model="row.actTaxPrice"
                 controls-position="right"
                 :min="0.01"
@@ -202,6 +205,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
               <el-input-number
+                disabled
                 v-model="row.taxPercent"
                 controls-position="right"
                 :min="0"
@@ -225,7 +229,7 @@
         <el-table-column label="箱率" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-              <el-input v-model.trim="row.containerRate" class="!w-100%" />
+              <el-input disabled v-model.trim="row.containerRate" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
