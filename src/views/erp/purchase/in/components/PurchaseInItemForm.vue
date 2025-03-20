@@ -128,6 +128,20 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="汇率" width="115">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.exchangeRate`" class="mb-0px!">
+              <el-input-number
+                v-model="row.exchangeRate"
+                controls-position="right"
+                :min="0"
+                :precision="2"
+                class="!w-100%"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column label="仓库" width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
@@ -209,6 +223,15 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
               <el-input v-model.trim="row.containerRate" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="源单类型" min-width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
+              <!-- <el-input v-model.trim="row.source"  placeholder="请输入源单类型" /> -->
+              <el-text>{{ row.source }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>

@@ -110,12 +110,13 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: userList
-    },
+    }, 
+    // 关联订单
     {
       type: 'input',
-      label: '关联订单',
+      label: '源单单号',
       prop: 'orderNo',
-      placeholder: '请输入关联订单',
+      placeholder: '请输入源单单号',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },

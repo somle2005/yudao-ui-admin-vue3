@@ -61,23 +61,6 @@ export const useForm = (formType) => {
         },
         children: supplierList
       },
-
-      // 注意精度
-      {
-        type: 'input-number',
-        placeholder: '请输入汇率',
-        prop: 'exchangeRate',
-        label: '汇率',
-        attrs: {
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-
       {
         type: 'date-picker',
         placeholder: '请选择结算日期',
