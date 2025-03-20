@@ -10,9 +10,13 @@ export const useForm = (formType) => {
   const itemsFormdisabled = computed(
     () => formType.value === 'audit' || formType.value === 'detail'
   )
-
+ 
+  /**
+   * 必填项 单据编号(后端生成)-单据日期-供应商-币别-汇率-单位-数量-含税单价
+   * 这里只有单据日期-供应商是必填项其余都是非必填项 - 其余都在items里面作为必填项了
+   */
   const createRequestFormOptions = () => {
-    return [
+    const list = [
       {
         type: 'input',
         label: '单据编号',
@@ -89,26 +93,18 @@ export const useForm = (formType) => {
           style: {
             width: '100%'
           }
-        },
-        rules: [
-          {
-            required: true,
-            message: '入库日期不能为空',
-            trigger: 'blur'
-          }
-        ]
+        }
       },
-
-      // {
-      //   type: 'input',
-      //   label: '收货地址',
-      //   prop: 'address',
-      //   placeholder: '请输入收货地址',
-      //   attrs: {
-      //     style: { width: '100%' },
-      //     clearable: true
-      //   }
-      // },
+      {
+        type: 'input',
+        label: '收货地址',
+        prop: 'address',
+        placeholder: '请输入收货地址',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
       // {
       //   type: 'input',
       //   label: '付款条款',
@@ -242,6 +238,20 @@ export const useForm = (formType) => {
         children: RECONCILIATION_STSTUS
       }
     ]
+
+    const requireList = ['noTime','supplierId']
+    requireList.forEach(prop => {
+      const target = list.find(item => item.prop === prop) as any
+      if(!target) return
+      target.rules = [
+        {
+          required: true,
+          message: `${target.label}不能为空`,
+          trigger: 'blur'
+        }
+      ]
+    })
+    return list
   }
   const requestFormOptions = ref({})
 
