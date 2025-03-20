@@ -265,6 +265,15 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
   },
 
+  productBarCode: {
+    label: 'SKU',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  productName: {
+    label: '产品名称',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+
   // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
   totalPrice: {
     label: '成交金额',
@@ -298,15 +307,6 @@ const fieldMap = {
 
   // 8:  '入库核销状态',
 
-  productBarCode: {
-    label: 'SKU',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
-  },
-  productName: {
-    label: '产品名称',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
-  },
-
   // 报关品名
   containerRate: {
     label: '箱率',
@@ -335,6 +335,10 @@ const fieldMap = {
   inCount: {
     label: '已收数量', // 采购入库数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+  returnCount: {
+    label: '退货数量', // 采购退货数量
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 整单展示
   },
   // items-returnCount-采购退货数量
   currencyId: {

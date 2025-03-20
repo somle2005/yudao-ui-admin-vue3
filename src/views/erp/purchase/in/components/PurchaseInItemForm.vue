@@ -62,8 +62,8 @@
 
         <el-table-column label="申请人" width="200">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
-              <el-select
+          <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
+              <!-- <el-select
                 v-if="!row.orderNo"
                 :disabled="disabled"
                 v-model="row.applicantId"
@@ -78,7 +78,8 @@
                   :value="item.id"
                 />
               </el-select>
-              <el-text v-if="row.orderNo">{{ row.applicantName }}</el-text>
+              <el-text v-if="row.orderNo">{{ row.applicantName }}</el-text> -->
+              <el-text>{{ row.applicantName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -86,7 +87,7 @@
         <el-table-column label="部门" width="200">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
-              <el-tree-select
+              <!-- <el-tree-select
                 v-if="!row.orderNo"
                 :disabled="disabled"
                 v-model="row.applicationDeptId"
@@ -96,7 +97,8 @@
                 node-key="id"
                 placeholder="请选择部门"
               />
-              <el-text v-if="row.orderNo">{{ row.applicationDeptName }}</el-text>
+              <el-text v-if="row.orderNo">{{ row.applicationDeptName }}</el-text> -->
+              <el-text>{{ row.applicationDeptName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -301,8 +303,8 @@ const formRef = ref([]) // 表单 Ref
 // const defaultWarehouse = ref<WarehouseVO>(undefined) // 默认仓库
 const productList = getProductList() // 产品列表
 const warehouseList = getWarehouseList()
-const { deptList, defaultProps } = getDeptTree()
-const userList = getUserList()
+// const { deptList, defaultProps } = getDeptTree()
+// const userList = getUserList()
 
 /** 初始化设置入库项 */
 watch(
