@@ -48,11 +48,11 @@
             <el-text>{{ row.productUnitName }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column label="型号规格" width="180">
+        <!-- <el-table-column label="型号规格" width="180">
           <template #default="{ row }">
             <el-text>{{ row.model }}</el-text>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="采购订单编号" width="200">
           <template #default="{ row }">
