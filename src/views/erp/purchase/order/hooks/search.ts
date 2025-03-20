@@ -64,7 +64,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择供应商',
-      prop: 'auditorId',
+      prop: 'supplierId',
       label: '供应商',
       attrs: {
         class: '!w-240px',
