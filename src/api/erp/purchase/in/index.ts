@@ -79,7 +79,7 @@ export const PurchaseInApi = {
   // 采购入库提交审核
   submitPurchaseInAudit: async (data: { inIds: number[] }) => {
     return await request.put({
-      url: `/admin-api/erp/purchase-in/submitAudit`,
+      url: `/erp/purchase-in/submitAudit`,
       data
     })
   },
