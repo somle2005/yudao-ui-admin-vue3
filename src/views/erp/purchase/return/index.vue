@@ -19,7 +19,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:purchase-in:create']"
+          v-hasPermi="['erp:purchase-return:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -28,7 +28,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:purchase-in:export']"
+          v-hasPermi="['erp:purchase-return:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -38,7 +38,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['erp:purchase-in:submitAudit']"
+          v-hasPermi="['erp:purchase-return:submitAudit']"
         >
           提交审核
         </el-button>
@@ -47,19 +47,19 @@
           :disabled="disabledBtn"
           type="primary"
           plain
-          @click="changePayStatusBatch(selectionList, true)"
-          v-hasPermi="['erp:purchase-in:changePayStatus']"
+          @click="changeRefundStatusBatch(selectionList, true)"
+          v-hasPermi="['erp:purchase-return:changeRefundStatus']"
         >
-          付款
+          退款
         </el-button>
         <el-button
           :disabled="disabledBtn"
           type="primary"
           plain
-          @click="changePayStatusBatch(selectionList, false)"
-          v-hasPermi="['erp:purchase-in:changePayStatus']"
+          @click="changeRefundStatusBatch(selectionList, false)"
+          v-hasPermi="['erp:purchase-return:changeRefundStatus']"
         >
-          撤销付款
+          撤销退款
         </el-button>
 
         <el-switch
@@ -72,7 +72,7 @@
           type="danger"
           plain
           @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['erp:purchase-in:delete']"
+          v-hasPermi="['erp:purchase-return:delete']"
           :disabled="selectionList.length === 0"
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
@@ -309,12 +309,8 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatusBatch } = useBatch(
-  selectionList,
-  getList,
-  wholeOrderEnable,
-  openForm
-)
+const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changeRefundStatusBatch } =
+  useBatch(selectionList, getList, wholeOrderEnable, openForm)
 
 /** 初始化 **/
 onMounted(async () => {

@@ -49,8 +49,8 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
   }
 
   /** 退款完成|退款撤销 */
-  const changePayStatusBatch = async (list: any[], refund: boolean) => {
-    const str = refund ? '退款完成' : '退款撤销'
+  const changeRefundStatusBatch = async (list: any[], refund: boolean) => {
+    const str = refund ? '退款' : '撤销退款'
 
     try {
       await message.confirm(`确定${str}吗？`)
@@ -71,6 +71,6 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
     disabledBtn,
     handleSubmitAuditBatch,
     handleUpdateStatus,
-    changePayStatusBatch
+    changeRefundStatusBatch
   }
 }
