@@ -58,5 +58,34 @@ export const PurchaseReturnApi = {
   // 导出采购退货 Excel
   exportPurchaseReturn: async (params: any) => {
     return await request.download({ url: `/erp/purchase-return/export-excel`, params })
+  },
+
+  // 审核/反审核采购退货
+  updatePurchaseReturnAuditStatus: async (data: {
+    reviewed: boolean
+    pass: boolean
+    ids: number[]
+    reviewComment?: string
+  }) => {
+    return await request.put({
+      url: `/erp/purchase-return/auditStatus`,
+      data
+    })
+  },
+
+  // 采购退货提交审核
+  submitPurchaseReturnAudit: async (data: { ids: number[] }) => {
+    return await request.put({
+      url: `/admin-api/erp/purchase-in/submitAudit`,
+      data
+    })
+  },
+
+  // 采购退货切换付款状态
+  changePurchaseReturnPayStatus: async (data: { ids: number[]; refund: boolean }) => {
+    return await request.put({
+      url: `/erp/purchase-in/changePayStatus`,
+      data
+    })
   }
 }
