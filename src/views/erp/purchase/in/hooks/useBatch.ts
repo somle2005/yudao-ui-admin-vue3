@@ -1,4 +1,5 @@
 import { PurchaseInApi } from '@/api/erp/purchase/in'
+import { getWholeOrderItemsId } from '@/hooks/common/wholeOrder'
 
 export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => {
   const message = useMessage() // 消息弹窗
@@ -53,12 +54,11 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
     const str = pass ? '付款' : '撤销付款'
 
     try {
-      // 审核的二次确认
       await message.confirm(`确定${str}吗？`)
-      // 发起审核
-      // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
       await PurchaseInApi.changePurchaseInPayStatus({
-        inItemIds: list.map((item) => item.rowItemsId),
+        // inItemIds: list.map((item) => item.rowItemsId),
+        // 整单分行-行id获取要做区分
+        inItemIds: getWholeOrderItemsId(list, wholeOrderEnable, 'rowItemsId'),
         pass
       })
       message.success(`${str}成功`)

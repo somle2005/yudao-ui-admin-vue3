@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash-es'
 export const WHOLE_ORDER_TYPE = {
   items: 'items', // 分行才进行展示 整单不展示
   mergeCompute: 'mergeCompute',
-  wholeOrder: 'wholeOrder', // 整单才进行展示
+  wholeOrder: 'wholeOrder' // 整单才进行展示
 }
 
 export const createWholeOrder = (allOptions) => {
@@ -81,4 +81,23 @@ export const useWholeOrderMergeCompute = () => {
     wholeOrderMergeCompute,
     WHOLE_ORDER_TYPE
   }
+}
+
+export const getWholeOrderItemsId = (
+  selectionList: any[],
+  wholeOrderEnable: any,
+  itemIdKey: string
+) => {
+  let ids: any = []
+  if (wholeOrderEnable.value) {
+    selectionList.forEach((item: any) => {
+      if (!item?.items?.length) return
+      item.items.forEach((item) => {
+        ids.push(item.id)
+      })
+    })
+  } else {
+    ids = selectionList.map((item: any) => item[itemIdKey])
+  }
+  return ids
 }
