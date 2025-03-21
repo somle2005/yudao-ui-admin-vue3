@@ -1,5 +1,9 @@
 import { useTableData } from '@/components/SmTable/src/utils'
-import { useWholeOrderMergeCompute, useWholeOrder, createBranchOrder } from '@/hooks/common/wholeOrder'
+import {
+  useWholeOrderMergeCompute,
+  useWholeOrder,
+  createBranchOrder
+} from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
@@ -74,7 +78,13 @@ export const useTable = () => {
     },
     reconciliationStatus: {
       label: '对账状态',
-      slot: 'reconciliationStatus',
+      slot: 'reconciliationStatus'
+    },
+    rowPayStatus: {
+      label: '行付款状态',
+      slot: 'rowPayStatus',
+      dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS },
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     // rowPayStatus: {
