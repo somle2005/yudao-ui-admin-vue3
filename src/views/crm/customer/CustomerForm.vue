@@ -15,7 +15,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="客户来源" prop="source">
-            <el-select v-model="formData.source" placeholder="请选择客户来源" class="w-1/1">
+            <el-select v-model="formData.source" placeholder="请选择客户来源" class="w-1/1" filterable>
               <el-option
                 v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_SOURCE)"
                 :key="dict.value"
@@ -40,6 +40,7 @@
               placeholder="请选择客户标签"
               clearable
               class="w-1/1"
+              filterable
             >
               <el-option
                 v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CLIENT_TAG)"
@@ -72,7 +73,7 @@
             <el-select
               v-model="formData.ownerUserId"
               :disabled="formType !== 'create'"
-              class="w-1/1"
+              class="w-1/1" filterable
             >
               <el-option
                 v-for="item in userOptions"
@@ -108,7 +109,7 @@
 
         <el-col :span="12">
           <el-form-item label="客户行业" prop="industryId">
-            <el-select v-model="formData.industryId" placeholder="请选择客户行业" class="w-1/1">
+            <el-select v-model="formData.industryId" placeholder="请选择客户行业" class="w-1/1" filterable>
               <el-option
                 v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_INDUSTRY)"
                 :key="dict.value"
@@ -120,7 +121,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="客户级别" prop="level">
-            <el-select v-model="formData.level" placeholder="请选择客户级别" class="w-1/1">
+            <el-select v-model="formData.level" placeholder="请选择客户级别" class="w-1/1" filterable>
               <el-option
                 v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_LEVEL)"
                 :key="dict.value"
@@ -138,6 +139,7 @@
               v-model="formData.countryCodes"
               placeholder="请选择国家"
               clearable
+              filterable
               class="w-1/1"
             >
               <el-option

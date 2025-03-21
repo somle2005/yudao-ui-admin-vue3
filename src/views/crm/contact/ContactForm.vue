@@ -18,7 +18,7 @@
             <el-select
               v-model="formData.ownerUserId"
               :disabled="formType !== 'create'"
-              class="w-1/1"
+              class="w-1/1" filterable
             >
               <el-option
                 v-for="item in userOptions"
@@ -37,7 +37,7 @@
               :disabled="formData.customerDefault"
               v-model="formData.customerId"
               placeholder="请选择客户"
-              class="w-1/1"
+              class="w-1/1" filterable
             >
               <el-option
                 v-for="item in customerList"
@@ -113,7 +113,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="直属上级" prop="parentId">
-            <el-select v-model="formData.parentId" placeholder="请选择直属上级" class="w-1/1">
+            <el-select v-model="formData.parentId" placeholder="请选择直属上级" class="w-1/1" filterable>
               <el-option
                 v-for="item in contactList"
                 :key="item.id"
@@ -127,16 +127,22 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="地址" prop="areaId">
-            <el-cascader
-              v-model="formData.areaId"
-              :options="areaList"
-              :props="defaultProps"
-              class="w-1/1"
+          <el-form-item label="国家" prop="countryCodes">
+            <el-select
+              multiple
+              v-model="formData.countryCodes"
+              placeholder="请选择国家"
               clearable
               filterable
-              placeholder="请选择城市"
-            />
+              class="w-1/1"
+            >
+              <el-option
+                v-for="dict in getIntDictOptions(DICT_TYPE.COUNTRY_CODE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -206,7 +212,8 @@ const formData = ref({
   parentId: undefined,
   remark: undefined,
   businessId: undefined,
-  customerDefault: false
+  customerDefault: false,
+  countryCodes: []
 })
 const formRules = reactive({
   name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],

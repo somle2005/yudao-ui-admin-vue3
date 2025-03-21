@@ -15,16 +15,16 @@
         />
       </el-form-item>
       <el-form-item label="数据标签" prop="label">
-        <el-input v-model="formData.label" placeholder="请输入数据标签" />
+        <el-input v-model.trim="formData.label" placeholder="请输入数据标签" />
       </el-form-item>
       <el-form-item label="数据键值" prop="value">
-        <!-- <el-input v-model="formData.value" placeholder="请输入数据键值" /> -->
-        <el-input-number
+        <el-input v-model.trim="formData.value" placeholder="请输入数据键值" />
+        <!-- <el-input-number
           v-model="formData.value"
           placeholder="请输入数据键值"
           controls-position="right"
           :min="1"
-        />
+        /> -->
       </el-form-item>
       <el-form-item label="显示排序" prop="sort">
         <el-input-number v-model="formData.sort" :min="0" controls-position="right" />

@@ -24,10 +24,10 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="SKU（编码）" prop="barCode">
+      <el-form-item label="SKU" prop="barCode">
         <!-- <el-input
           v-model="queryParams.barCode"
-          placeholder="请输入sku（编码）"
+          placeholder="请输入SKU"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -36,7 +36,7 @@
           v-model.trim="queryParams.barCode"
           clearable
           filterable
-          placeholder="请选择SKU（编码）"
+          placeholder="请选择SKU"
           @keyup.enter="handleQuery"
           @input="insertBarcode"
           class="!w-240px"
@@ -170,7 +170,7 @@
   <!--  <ContentWrap>
     <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
 
-      <el-table-column label="SKU（编码）" align="center" prop="product-barCode" />
+      <el-table-column label="SKU" align="center" prop="product-barCode" />
       <el-table-column label="国家编码" align="center" prop="countryCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
@@ -348,7 +348,7 @@ const fieldMap = {
     width: '100px'
   },
   'product-barCode': {
-    label: 'SKU（编码）',
+    label: 'SKU',
     width: '180px'
   },
   countryCode: {

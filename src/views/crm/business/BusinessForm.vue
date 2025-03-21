@@ -19,6 +19,7 @@
               v-model="formData.ownerUserId"
               :disabled="formType !== 'create'"
               class="w-1/1"
+              filterable
             >
               <el-option
                 v-for="item in userOptions"
@@ -36,6 +37,7 @@
               v-model="formData.customerId"
               placeholder="请选择客户"
               class="w-1/1"
+              filterable
             >
               <el-option
                 v-for="item in customerList"
@@ -56,6 +58,7 @@
               clearable
               class="w-1/1"
               :disabled="formType !== 'create'"
+              filterable
             >
               <el-option
                 v-for="item in statusTypeList"

@@ -13,6 +13,7 @@
           v-model="queryParams.countryCode"
           placeholder="请选择国家编码"
           clearable
+          filterable
           class="!w-240px"
         >
           <el-option
@@ -24,12 +25,12 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="SKU（编码）" prop="barCode">
-        <el-select
+      <el-form-item label="SKU" prop="barCode">
+        <!-- <el-select
           v-model.trim="queryParams.barCode"
           clearable
           filterable
-          placeholder="请选择SKU（编码）"
+          placeholder="请选择SKU"
           @keyup.enter="handleQuery"
           @input="insertBarcode"
           class="!w-240px"
@@ -39,6 +40,21 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
+          />
+        </el-select> -->
+        <el-select
+          v-model.trim="queryParams.productId"
+          clearable
+          filterable
+          placeholder="请选择SKU"
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in productList"
+            :key="item.id"
+            :label="item.barCode"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
@@ -116,7 +132,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:custom-rule:create']"
+          v-hasPermi="['tms:custom-rule:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -125,7 +141,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:custom-rule:export']"
+          v-hasPermi="['tms:custom-rule:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -167,7 +183,7 @@
           link
           type="primary"
           @click="copyForm(scope.row.id)"
-          v-hasPermi="['erp:custom-rule:create']"
+          v-hasPermi="['tms:custom-rule:create']"
         >
           复制
         </el-button>
@@ -175,7 +191,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:custom-rule:update']"
+          v-hasPermi="['tms:custom-rule:update']"
         >
           编辑
         </el-button>
@@ -183,7 +199,7 @@
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
-          v-hasPermi="['erp:custom-rule:delete']"
+          v-hasPermi="['tms:custom-rule:delete']"
         >
           删除
         </el-button>
@@ -205,10 +221,12 @@ import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { getProductNameList } from '@/commonData'
+// import { getProductNameList } from '@/commonData'
 import { insertSearchVal } from '@/utils/high'
+import { getProductList } from '@/commonData'
 
-const { productSkuList } = getProductNameList()
+// const { productSkuList } = getProductNameList()
+const productList = getProductList()
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -219,7 +237,7 @@ const fieldMap = {
     width: '100px'
   },
   'product-barCode': {
-    label: 'SKU（编码）',
+    label: 'SKU',
     width: '180px'
   },
   countryCode: {
@@ -283,11 +301,12 @@ const queryParams = reactive({
   barCode: undefined,
   hscode: undefined,
   createTime: [] as string[],
-  fbaBarCode: undefined
+  fbaBarCode: undefined,
+  productId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
+// const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -306,7 +325,7 @@ const getList = async () => {
   } finally {
     loading.value = false
   }
-  supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
+  // supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
 }
 
 /** 搜索按钮操作 */
@@ -361,7 +380,7 @@ const copyForm = (id?: number) => {
 }
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
-const insertBarcode = insertSearchVal(productSkuList)
+// const insertBarcode = insertSearchVal(productSkuList)
 
 const createTimeChange = (val: any) => {
   queryParams.createTime = val

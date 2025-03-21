@@ -23,7 +23,7 @@
             <el-select
               v-model="formData.ownerUserId"
               :disabled="formType !== 'create'"
-              class="w-1/1"
+              class="w-1/1" filterable
             >
               <el-option
                 v-for="item in userOptions"
@@ -42,7 +42,7 @@
               v-model="formData.customerId"
               placeholder="请选择客户"
               class="w-1/1"
-              @change="handleCustomerChange"
+              @change="handleCustomerChange" filterable
             >
               <el-option
                 v-for="item in customerList"
@@ -60,6 +60,7 @@
               :disabled="!formData.customerId"
               v-model="formData.businessId"
               class="w-1/1"
+              filterable
             >
               <el-option
                 v-for="item in getBusinessOptions"
@@ -109,7 +110,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="公司签约人" prop="signUserId">
-            <el-select v-model="formData.signUserId" class="w-1/1">
+            <el-select v-model="formData.signUserId" class="w-1/1" filterable>
               <el-option
                 v-for="item in userOptions"
                 :key="item.id"
@@ -125,6 +126,7 @@
               v-model="formData.signContactId"
               :disabled="!formData.customerId"
               class="w-1/1"
+              filterable
             >
               <el-option
                 v-for="item in getContactOptions"

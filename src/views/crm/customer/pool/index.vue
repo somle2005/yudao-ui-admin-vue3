@@ -35,6 +35,7 @@
           class="!w-240px"
           clearable
           placeholder="请选择所属行业"
+          filterable
         >
           <el-option
             v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_INDUSTRY)"
@@ -50,6 +51,7 @@
           class="!w-240px"
           clearable
           placeholder="请选择客户级别"
+          filterable
         >
           <el-option
             v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_LEVEL)"
@@ -65,6 +67,7 @@
           class="!w-240px"
           clearable
           placeholder="请选择客户来源"
+          filterable
         >
           <el-option
             v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_SOURCE)"
