@@ -35,15 +35,11 @@
           type="primary"
           @click="openAddItem"
           style="margin-bottom: 10px"
-          >选择订单项</el-button
+          >选择入库项</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="入库产品清单" name="item">
-            <PurchaseInItemForm
-              ref="itemFormRef"
-              :items="formData.items"
-              :disabled="itemsFormdisabled"
-            />
+          <el-tab-pane label="退货产品清单" name="item">
+            <ItemForm ref="itemFormRef" :items="formData.items" :disabled="itemsFormdisabled" />
           </el-tab-pane>
         </el-tabs>
       </template>
@@ -71,13 +67,13 @@
   </Dialog>
 
   <!-- 可入库的订单列表 -->
-  <PurchaseInPaymentEnableList ref="addItemRef" @success="addItem" />
+  <EnableList ref="addItemRef" @success="addItem" />
 </template>
 <script setup lang="ts">
 import { PurchaseInApi, PurchaseInVO } from '@/api/erp/purchase/in'
-import PurchaseInItemForm from './components/PurchaseInItemForm.vue'
+import ItemForm from './components/ItemForm.vue'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
-import PurchaseInPaymentEnableList from './components/PurchaseInPaymentEnableList.vue'
+import EnableList from './components/EnableList.vue'
 import { AUDIT_TYPE, TAX_PERCENT } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import { useForm } from './hooks/useForm'

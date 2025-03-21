@@ -1,4 +1,10 @@
-import { getProductList, getSupplierList, getUserList } from '@/commonData'
+import {
+  getAccountList,
+  getProductList,
+  getSupplierList,
+  getUserList,
+  getWarehouseList
+} from '@/commonData'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
@@ -6,8 +12,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const userList = getUserList()
   const productList = getProductList(null, { label: 'barCode', value: 'id' })
   const supplierList = getSupplierList()
+  const warehouseList = getWarehouseList()
+  const accountList = getAccountList()
   const searchFormOptions = ref<Array<FormOptions>>([
-    // 订单单号
+    // 入库单号
     {
       type: 'input',
       label: '单据编号',
@@ -35,12 +43,12 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: productList
     },
-    // 订单时间
+
     {
       type: 'date-picker',
-      placeholder: '请选择采购时间',
-      prop: 'orderTime',
-      label: '采购时间',
+      placeholder: '请选择入库时间',
+      prop: 'inTime',
+      label: '入库时间',
       attrs: {
         clearable: true,
         type: 'daterange',
@@ -71,6 +79,22 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: supplierList
     },
 
+    {
+      type: 'select',
+      placeholder: '请选择仓库',
+      prop: 'warehouseId',
+      label: '仓库',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: warehouseList
+    },
+
     // 制单人-创建人-注意后端是否处理了
     {
       type: 'select',
@@ -87,6 +111,48 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: userList
     },
+    // 关联订单
+    {
+      type: 'input',
+      label: '源单单号',
+      prop: 'orderNo',
+      placeholder: '请输入源单单号',
+      attrs: {
+        class: '!w-240px',
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择结算账户',
+      prop: 'auditorId',
+      label: '结算账户',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: accountList
+    },
+    {
+      type: 'select',
+      placeholder: '请选择付款状态',
+      prop: 'payStatus',
+      label: '付款状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.ERP_PAYMENT_STATUS)
+    },
     {
       type: 'select',
       placeholder: '请选择审核状态',
@@ -101,22 +167,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)
-    },
-
-    {
-      type: 'select',
-      placeholder: '请选择入库状态',
-      prop: 'inStatus',
-      label: '入库状态',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.ERP_STORAGE_STATUS)
     }
   ])
 
@@ -129,9 +179,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
   searchFormOptions.value.forEach((item) => {
     item.events = events
-    if (item.attrs) {
-      item.attrs.class = '!w-160px'
-    }
   })
   const getSearchFormData = () => {
     return queryParams

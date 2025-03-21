@@ -55,11 +55,17 @@
           </template>
         </el-table-column> -->
 
+        <el-table-column label="入库项id" width="200">
+          <template #default="{ row }">
+            <el-text>{{ row.inItemId }}</el-text>
+          </template>
+        </el-table-column>
+        <!-- 
         <el-table-column label="采购订单编号" width="200">
           <template #default="{ row }">
             <el-text>{{ row.orderNo }}</el-text>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="申请人" width="200">
           <template #default="{ row, $index }">
@@ -253,13 +259,13 @@
 
         <!-- allAmount价税合计-orderItemId 采购订单项id  不展示传参带过去 -->
 
-        <el-table-column align="center" fixed="right" label="操作" width="60">
+        <!-- <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
               —
             </el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-form>
     <!-- <el-row justify="center" class="mt-3" v-if="!disabled">
