@@ -1,16 +1,13 @@
-import { getAccountList, getSupplierList } from '@/commonData'
-import { RECONCILIATION_STSTUS } from '../constant'
+import { getAccountList } from '@/commonData'
 
 export const useForm = (formType) => {
-  const supplierList = ref<any[]>([]) // 供应商列表
   const accountList = ref<any[]>([]) // 账户列表
-  // const userList = ref<any[]>([])
 
   const auditType = computed(() => formType.value === 'audit')
   const itemsFormdisabled = computed(
     () => formType.value === 'audit' || formType.value === 'detail'
   )
- 
+
   /**
    * 必填项 单据编号(后端生成)-单据日期-供应商-币别-汇率-单位-数量-含税单价
    * 这里只有单据日期-供应商是必填项其余都是非必填项 - 其余都在items里面作为必填项了
@@ -29,17 +26,11 @@ export const useForm = (formType) => {
         }
       },
 
-      // {
-      //   prop: 'orderNo',
-      //   label: '关联订单',
-      //   slot: 'orderNo'
-      // },
-
       {
         type: 'date-picker',
-        placeholder: '请选择单据日期',
-        prop: 'noTime',
-        label: '单据日期',
+        placeholder: '请选择退货日期',
+        prop: 'returnTime',
+        label: '退货日期',
         attrs: {
           clearable: true,
           type: 'date',
@@ -50,71 +41,6 @@ export const useForm = (formType) => {
           }
         }
       },
-
-      {
-        type: 'select',
-        placeholder: '请选择供应商',
-        prop: 'supplierId',
-        label: '供应商',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: supplierList
-      },
-      {
-        type: 'date-picker',
-        placeholder: '请选择结算日期',
-        prop: 'settlementDate',
-        label: '结算日期',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'date-picker',
-        placeholder: '请选择入库时间',
-        prop: 'inTime',
-        label: '入库时间',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input',
-        label: '收货地址',
-        prop: 'address',
-        placeholder: '请输入收货地址',
-        attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
-      // {
-      //   type: 'input',
-      //   label: '付款条款',
-      //   prop: 'paymentTerms',
-      //   placeholder: '请输入付款条款',
-      //   attrs: {
-      //     style: { width: '100%' },
-      //     clearable: true
-      //   }
-      // },
       {
         type: 'input',
         label: '备注',
@@ -195,20 +121,6 @@ export const useForm = (formType) => {
           }
         }
       },
-      // {
-      //   type: 'input-number',
-      //   placeholder: '请输入定金金额',
-      //   prop: 'depositPrice',
-      //   label: '定金金额',
-      //   attrs: {
-      //     'controls-position': 'right',
-      //     min: 0,
-      //     precision: 2,
-      //     style: {
-      //       width: '100%'
-      //     }
-      //   }
-      // },
       {
         type: 'select',
         placeholder: '请选择结算账户',
@@ -222,27 +134,13 @@ export const useForm = (formType) => {
           }
         },
         children: accountList
-      },
-      {
-        type: 'select',
-        placeholder: '请选择对账状态',
-        prop: 'reconciliationStatus',
-        label: '对账状态',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: RECONCILIATION_STSTUS
       }
     ]
 
-    const requireList = ['noTime','supplierId']
-    requireList.forEach(prop => {
-      const target = list.find(item => item.prop === prop) as any
-      if(!target) return
+    const requireList = ['returnTime']
+    requireList.forEach((prop) => {
+      const target = list.find((item) => item.prop === prop) as any
+      if (!target) return
       target.rules = [
         {
           required: true,
@@ -324,7 +222,6 @@ export const useForm = (formType) => {
 
   const initDialogData = () => {
     getAccountList(accountList)
-    getSupplierList(supplierList)
   }
 
   return {

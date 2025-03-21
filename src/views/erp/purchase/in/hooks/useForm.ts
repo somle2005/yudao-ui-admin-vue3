@@ -1,5 +1,5 @@
 import { getAccountList, getSupplierList } from '@/commonData'
-import { RECONCILIATION_STSTUS } from '../constant'
+import { RECONCILIATION_STSTUS } from '@/utils/constant'
 
 export const useForm = (formType) => {
   const supplierList = ref<any[]>([]) // 供应商列表

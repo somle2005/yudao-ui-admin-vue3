@@ -20,21 +20,6 @@
               :rules="formRules.productId"
               class="mb-0px!"
             >
-              <!-- <el-select
-                v-model="row.productId"
-                clearable
-                filterable
-                @change="onChangeProduct($event, row)"
-                placeholder="请选择SKU"
-                :disabled="disabled"
-              >
-                <el-option
-                  v-for="item in productList"
-                  :key="item.id"
-                  :label="item.barCode"
-                  :value="item.id"
-                />
-              </el-select> -->
               <el-text> {{ row.productBarCode }}</el-text>
             </el-form-item>
           </template>
@@ -49,11 +34,6 @@
             <el-text>{{ row.productUnitName }}</el-text>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="型号规格" width="180">
-          <template #default="{ row }">
-            <el-text>{{ row.model }}</el-text>
-          </template>
-        </el-table-column> -->
 
         <el-table-column label="入库项id" width="200">
           <template #default="{ row }">
@@ -70,22 +50,6 @@
         <el-table-column label="申请人" width="200">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
-              <!-- <el-select
-                v-if="!row.orderNo"
-                :disabled="disabled"
-                v-model="row.applicantId"
-                clearable
-                filterable
-                placeholder="请选择申请人"
-              >
-                <el-option
-                  v-for="item in userList"
-                  :key="item.id"
-                  :label="item.nickname"
-                  :value="item.id"
-                />
-              </el-select>
-              <el-text v-if="row.orderNo">{{ row.applicantName }}</el-text> -->
               <el-text>{{ row.applicantName }}</el-text>
             </el-form-item>
           </template>
@@ -94,17 +58,6 @@
         <el-table-column label="部门" width="200">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
-              <!-- <el-tree-select
-                v-if="!row.orderNo"
-                :disabled="disabled"
-                v-model="row.applicationDeptId"
-                :data="deptList"
-                :props="defaultProps"
-                check-strictly
-                node-key="id"
-                placeholder="请选择部门"
-              />
-              <el-text v-if="row.orderNo">{{ row.applicationDeptName }}</el-text> -->
               <el-text>{{ row.applicationDeptName }}</el-text>
             </el-form-item>
           </template>
@@ -138,37 +91,9 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="汇率" width="115">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.exchangeRate`" class="mb-0px!">
-              <el-input-number
-                v-model="row.exchangeRate"
-                controls-position="right"
-                :min="0"
-                :precision="2"
-                class="!w-100%"
-              />
-            </el-form-item>
-          </template>
-        </el-table-column> -->
-
         <el-table-column label="仓库" width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <!-- <el-select
-                :disabled="disabled"
-                v-model="row.warehouseId"
-                clearable
-                filterable
-                placeholder="请选择仓库"
-              >
-                <el-option
-                  v-for="item in warehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select> -->
               <el-text>{{ row.warehouseName }}</el-text>
             </el-form-item>
           </template>
@@ -178,6 +103,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.count`" class="mb-0px!">
               <el-input-number
+                disabled
                 v-model="row.count"
                 controls-position="right"
                 :min="1"
@@ -236,15 +162,6 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
               <el-input disabled v-model.trim="row.containerRate" class="!w-100%" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="源单类型" min-width="150">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-              <!-- <el-input v-model.trim="row.source"  placeholder="请输入源单类型" /> -->
-              <el-text>{{ row.source }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
