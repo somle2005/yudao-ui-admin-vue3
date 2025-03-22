@@ -150,8 +150,6 @@
     </el-form>
   </ContentWrap>
 
- 
-
   <!-- 列表 -->
   <!--  <ContentWrap>
     <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
@@ -251,10 +249,12 @@
     />
   </ContentWrap>-->
 
-
-
-   <!-- 表格配置 -->
-   <SmTableField  :tableList="tableFieldColumnList" :iconSize="25"  @confirm="tableFieldConfigConfirm" />
+  <!-- 表格配置 -->
+  <SmTableField
+    :tableList="tableFieldColumnList"
+    :iconSize="25"
+    @confirm="tableFieldConfigConfirm"
+  />
 
   <!-- isSelection -->
   <ContentWrap>
@@ -329,9 +329,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useSmTableField } from '@/components/SmTableField/src/utils'
 import { cloneDeep } from 'lodash-es'
 
-
-const { tableOptions,allTableOptions, transformTableOptions, dealTableField} =  useTableData()
-
+const { tableOptions, allTableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   primaryImageUrl: {
@@ -369,7 +367,9 @@ const fieldMap = {
 tableOptions.value = transformTableOptions(fieldMap)
 allTableOptions.value = cloneDeep(tableOptions.value)
 
-const { tableFieldColumnList,saveTableFieldConfig } = useSmTableField(cloneDeep(tableOptions.value))
+const { tableFieldColumnList, saveTableFieldConfig, dealTableField } = useSmTableField(
+  cloneDeep(tableOptions.value)
+)
 
 console.log(tableFieldColumnList.value, 'tableFieldColumnList.value')
 console.log(tableOptions.value, 'tableOptions.value')
@@ -377,13 +377,10 @@ console.log(tableOptions.value, 'tableOptions.value')
 const tableFieldConfigConfirm = (data) => {
   saveTableFieldConfig(data)
   tableFieldColumnList.value = data
-  // 处理表格数据 
-  console.log('tableFieldConfigConfirm',data)
-  tableOptions.value = dealTableField(data,allTableOptions.value )
+  // 处理表格数据
+  console.log('tableFieldConfigConfirm', data)
+  tableOptions.value = dealTableField(data, allTableOptions.value)
 }
-
-
-
 
 /** ERP 海关规则 列表 */
 defineOptions({ name: 'ErpCustomRule' })
