@@ -4,13 +4,13 @@ import { PropType, ref, watch } from 'vue'
 import { DEFAULT_TABLE_CONFIG_VAl } from './utils'
 import { cloneDeep, debounce } from 'lodash-es'
 
-
 const props = defineProps({
   tableConfig: {
     type: Object as PropType<TableOptionsConfig>,
     default: () => {
       return {
-        originName: 'label',
+        originLabel: 'label',
+        label: 'label',
         prop: 'prop',
         width: 'width',
         align: 'align',
@@ -36,9 +36,17 @@ const dialogTable = ref(false)
 
 // 这里还可以进行扩展提示-比如字段要求
 const columnData = [
+  // {
+  //   prop: 'originLabel',
+  //   label: '原字段名称'
+  // },
   {
-    prop: 'originName',
-    label: '原字段名称'
+    prop: 'label',
+    label: '字段名称'
+  },
+  {
+    prop: 'isEnable',
+    label: '是否启用'
   },
   {
     prop: 'width',
@@ -61,10 +69,6 @@ const columnData = [
         value: 'right'
       }
     ]
-  },
-  {
-    prop: 'isEnable',
-    label: '是否启用'
   },
   {
     prop: 'fixed',
@@ -106,8 +110,6 @@ const handleDragOver = (e) => {
   e.dataTransfer.dropEffect = 'move'
 }
 
-
-
 const handleDragEnter = debounce((e, item) => {
   e.dataTransfer.effectAllowed = 'move'
   if (dragItem === item) {
@@ -118,7 +120,7 @@ const handleDragEnter = debounce((e, item) => {
   const dst = updateItems.indexOf(item)
   updateItems.splice(dst, 0, ...updateItems.splice(src, 1))
   tableData.value = handleSort(updateItems)
-},100)
+}, 100)
 
 // const transformTableData = (data: Array<TableOptionsProps>): Array<TableOptionsProps> => {
 const transformTableData = (data: Array<TableOptionsProps>, config = props.tableConfig) => {
@@ -190,7 +192,6 @@ watch(
     immediate: true
   }
 )
-
 </script>
 
 <template>
@@ -212,9 +213,12 @@ watch(
             :key="item.prop"
             :label="item.label"
           >
-            <template v-if="item.prop === 'originName'" #default="{ row }">
-              <span>{{ row.originName }}</span>
+            <template v-if="item.prop === 'label'" #default="{ row }">
+              <span>{{ row.label }}</span>
             </template>
+            <!-- <template v-else-if="item.prop === 'originLabel'" #default="{ row }">
+              <span>{{ row.originLabel }}</span>
+            </template> -->
             <template v-else-if="item.prop === 'width'" #default="{ row }">
               <ElInput size="small" v-model="row.width" />
             </template>
