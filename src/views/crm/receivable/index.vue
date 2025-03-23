@@ -111,6 +111,7 @@
         label="回款日期"
         prop="returnTime"
         width="150px"
+        sortable
       />
       <el-table-column
         align="center"
@@ -140,6 +141,7 @@
         label="更新时间"
         prop="updateTime"
         width="180px"
+        sortable
       />
       <el-table-column
         :formatter="dateFormatter"
@@ -147,6 +149,7 @@
         label="创建时间"
         prop="createTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="120" />
       <el-table-column align="center" fixed="right" label="回款状态" prop="auditStatus" width="120">

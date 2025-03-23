@@ -61,6 +61,7 @@
         label="下次联系时间"
         prop="contactNextTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="备注" prop="remark" width="200" />
       <el-table-column
@@ -69,6 +70,7 @@
         prop="contactLastTime"
         :formatter="dateFormatter"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="最后跟进记录" prop="contactLastContent" width="200" />
       <el-table-column align="center" label="负责人" prop="ownerUserName" width="100px" />
@@ -79,6 +81,7 @@
         prop="updateTime"
         :formatter="dateFormatter"
         width="180px"
+        sortable
       />
       <el-table-column
         label="创建时间"
@@ -86,6 +89,7 @@
         prop="createTime"
         :formatter="dateFormatter"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
     </el-table>

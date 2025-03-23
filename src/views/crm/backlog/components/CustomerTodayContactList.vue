@@ -74,6 +74,7 @@
         label="下次联系时间"
         prop="contactNextTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="备注" prop="remark" width="200" />
       <el-table-column align="center" label="锁定状态" prop="lockStatus">
@@ -92,10 +93,11 @@
         label="最后跟进时间"
         prop="contactLastTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="最后跟进记录" prop="contactLastContent" width="200" />
       <el-table-column label="地址" align="center" prop="detailAddress" width="180" />
-      <el-table-column align="center" label="距离进入公海天数" prop="poolDay" width="140">
+      <el-table-column align="center" label="距离进入公海天数" prop="poolDay" width="160" sortable>
         <template #default="scope"> {{ scope.row.poolDay }} 天</template>
       </el-table-column>
       <el-table-column align="center" label="负责人" prop="ownerUserName" width="100px" />
@@ -106,6 +108,7 @@
         label="更新时间"
         prop="updateTime"
         width="180px"
+        sortable
       />
       <el-table-column
         :formatter="dateFormatter"
@@ -113,6 +116,7 @@
         label="创建时间"
         prop="createTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
     </el-table>
