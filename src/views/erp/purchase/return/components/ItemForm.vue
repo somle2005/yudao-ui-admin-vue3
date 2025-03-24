@@ -110,7 +110,9 @@
                 v-model="row.count"
                 controls-position="right"
                 :min="1"
+                :max="row.originCount"
                 class="!w-100%"
+                @change="(val) => changeValLimit(row, 'originCount', 1, val)"
               />
             </el-form-item>
           </template>
@@ -206,6 +208,7 @@ import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/co
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
+import { changeValLimit } from '@/utils/high/index'
 
 const props = defineProps({
   items: {

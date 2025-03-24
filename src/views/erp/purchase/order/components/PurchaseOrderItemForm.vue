@@ -181,7 +181,11 @@
       </el-table-column> -->
         <el-table-column label="含税单价" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
+            <el-form-item
+              :prop="`${$index}.actTaxPrice`"
+              :rules="formRules.actTaxPrice"
+              class="mb-0px!"
+            >
               <el-input-number
                 v-model="row.actTaxPrice"
                 controls-position="right"

@@ -338,8 +338,14 @@ const fieldMap = {
   totalInspectionPassCount: {
     width: '250px',
     label: '总验货通过数',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
   },
+  totalFinishCount: {
+    width: '250px',
+    label: '总完成数',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
+  },
+
   waitInCount: {
     label: '待收数量', // 待入库数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
@@ -402,7 +408,7 @@ const fieldMap = {
     width: '200px'
   },
 
-  auditorName: '审核人',
+  auditor: '审核人',
   auditTime: {
     label: '审核时间',
     formatter: dateFormatter, // 年月日-金蝶
