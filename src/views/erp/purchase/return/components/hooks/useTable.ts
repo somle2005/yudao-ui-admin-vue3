@@ -120,12 +120,12 @@ export const useTable = () => {
     },
     reviewComment: '审核意见',
 
-    operate: {
-      label: '操作',
-      slot: 'operate',
-      fixed: 'right',
-      width: '220px'
-    }
+    // operate: {
+    //   label: '操作',
+    //   slot: 'operate',
+    //   fixed: 'right',
+    //   width: '220px'
+    // }
   }
 
   const allOptions = transformTableOptions(fieldMap)

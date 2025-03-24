@@ -1,6 +1,6 @@
-<!-- 可付款的采购入库单列表 选择采购申请项（仅展示已审核）-->
+<!-- 选择采购入库（仅展示可付款）-->
 <template>
-  <Dialog title="选择采购入库（仅展示可付款）" v-model="dialogVisible" width="1000">
+  <Dialog title="选择采购入库项（仅展示已审核）" v-model="dialogVisible" width="1000">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
@@ -47,7 +47,7 @@
 </template>
 <script lang="ts" setup>
 import { resetQueryParams } from '@/utils/transformData'
-import { useSearchForm } from '../hooks/search'
+import { useSearchForm } from './hooks/search'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseInApi } from '@/api/erp/purchase/in'
 import { useTable } from './hooks/useTable'
@@ -87,6 +87,7 @@ let {
 
 // 这里只有整单展示了-退货单是整单退货-带出子项所有id
 const getList = async () => {
+  queryParams.auditStatus = 5 // 已审核
   loading.value = true
   try {
     const data = await PurchaseInApi.getPurchaseInPage(queryParams)
@@ -133,7 +134,18 @@ const handleQuery = () => {
 
 const handleCurrentChange = (row: any) => {
   console.log('当前选中项', row)
-  selectionList.value = [row]
+  // 转换成整单数据
+  // selectionList.value = [row]
+  selectionList.value = mergeItemsToList([row], {
+    id: 'rowItemsId',
+    status: 'rowStatus',
+    orderStatus: 'rowOrderStatus',
+    offStatus: 'rowOffStatus',
+    executeStatus: 'rowExecuteStatus',
+    inStatus: 'rowInStatus',
+    payStatus: 'rowPayStatus'
+  })
+  console.log(selectionList.value, 'selectionList.value')
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)

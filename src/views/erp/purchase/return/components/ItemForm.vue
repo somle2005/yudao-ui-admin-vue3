@@ -103,7 +103,6 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.count`" class="mb-0px!">
               <el-input-number
-                disabled
                 v-model="row.count"
                 controls-position="right"
                 :min="1"
@@ -176,13 +175,13 @@
 
         <!-- allAmount价税合计-orderItemId 采购订单项id  不展示传参带过去 -->
 
-        <!-- <el-table-column align="center" fixed="right" label="操作" width="60">
+        <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
               —
             </el-button>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
     </el-form>
     <!-- <el-row justify="center" class="mt-3" v-if="!disabled">
