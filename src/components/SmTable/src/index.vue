@@ -12,6 +12,16 @@
       class="SmTable-el-table"
     >
       <el-table-column v-if="isSelection" fixed="left" width="30" label="选择" type="selection" />
+      <!-- 后期可以补充oneSelectionAttrs进行扩展 -->
+      <el-table-column v-if="oneSelection" fixed="left" align="center" width="40">
+        <template #default="scope">
+          <el-radio
+            :value="scope.row.id"
+            v-model="currentRowValue"
+            @change="handleCurrentChange(scope.row)"
+          />
+        </template>
+      </el-table-column>
       <template v-for="(item, index) in tableOption" :key="index">
         <el-table-column
           v-if="item.prop && !item.action"
@@ -138,6 +148,11 @@ const columnItem = (item) => {
 }
 
 const props = defineProps({
+  // 是否开启单选
+  oneSelection: {
+    type: Boolean,
+    default: false
+  },
   // 是否开启选择列
   isSelection: {
     type: Boolean,
@@ -195,7 +210,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['confirm', 'cancel', 'update:editRowType', 'row-click'])
+const emits = defineEmits(['confirm', 'cancel', 'update:editRowType', 'row-click','oneSelectionChange'])
 
 // 当前被点击的单元格的标识
 const currentEdit = ref<string>('')
@@ -263,6 +278,14 @@ const rowClick = (row: any, column: any) => {
   //   // 重置按钮的标识
   //   if (!row.rowEdit) emits('update:editRowType', '')
   // }
+}
+
+/** 选中行 */
+const currentRowValue = ref(undefined) // 选中行的 value
+const currentRow = ref(undefined) // 选中行
+const handleCurrentChange = (row) => {
+  currentRow.value = row
+  emits('oneSelectionChange', row)
 }
 </script>
 

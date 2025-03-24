@@ -2,6 +2,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import {
   useWholeOrderMergeCompute,
   useWholeOrder,
+  createWholeOrder,
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
@@ -146,7 +147,9 @@ export const useTable = () => {
     }
   })
 
-  tableOptions.value = createBranchOrder(cloneDeep(allOptions))
+  // tableOptions.value = createBranchOrder(cloneDeep(allOptions))
+  tableOptions.value = createWholeOrder(cloneDeep(allOptions))
+  
 
   // 退货单只能整单
   const wholeOrderEnable = ref(true)

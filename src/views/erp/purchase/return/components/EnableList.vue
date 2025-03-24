@@ -21,7 +21,8 @@
     <ContentWrap style="padding-bottom: 0">
       <SmTable
         border
-        isSelection
+        oneSelection
+        highlight-current-row
         :loading="loading"
         :options="tableOptions"
         :data="list"
@@ -29,7 +30,7 @@
         v-model:currentPage="queryParams.pageNo"
         v-model:pageSize="queryParams.pageSize"
         @pagination="getList"
-        @selection-change="handleSelectionChange"
+        @one-selection-change="handleCurrentChange"
       >
         <template #reconciliationStatus="{ scope }">
           <ElTag :type="RECONCILIATION_STSTUS_MAP[scope.row.reconciliationStatus]?.colorType">
@@ -67,7 +68,6 @@ const list = ref<any[]>([]) // 列表的数据
 // 注意外面都要用let
 // eslint-disable-next-line prefer-const
 let queryParams: any = reactive({})
-
 
 let {
   allOptions,
@@ -131,8 +131,9 @@ const handleQuery = () => {
   getList()
 }
 
-const handleSelectionChange = (rows: any[]) => {
-  selectionList.value = rows
+const handleCurrentChange = (row: any) => {
+  console.log('当前选中项', row)
+  selectionList.value = [row]
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
