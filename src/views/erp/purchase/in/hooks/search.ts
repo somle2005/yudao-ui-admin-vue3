@@ -123,21 +123,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
-    {
-      type: 'select',
-      placeholder: '请选择结算账户',
-      prop: 'auditorId',
-      label: '结算账户',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: accountList
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择结算账户',
+    //   prop: 'auditorId',
+    //   label: '结算账户',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: accountList
+    // },
     {
       type: 'select',
       placeholder: '请选择付款状态',

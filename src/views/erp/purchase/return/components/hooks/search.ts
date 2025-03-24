@@ -28,21 +28,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
       }
     },
     // 产品用SKU
-    {
-      type: 'select',
-      placeholder: '请选择SKU',
-      prop: 'productId',
-      label: 'SKU',
-      attrs: {
-        clearable: true,
-        filterable: true,
-        class: '!w-240px',
-        style: {
-          width: '100%'
-        }
-      },
-      children: productList
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择SKU',
+    //   prop: 'productId',
+    //   label: 'SKU',
+    //   attrs: {
+    //     clearable: true,
+    //     filterable: true,
+    //     class: '!w-240px',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: productList
+    // },
 
     {
       type: 'date-picker',
@@ -79,21 +79,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: supplierList
     },
 
-    {
-      type: 'select',
-      placeholder: '请选择仓库',
-      prop: 'warehouseId',
-      label: '仓库',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: warehouseList
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择仓库',
+    //   prop: 'warehouseId',
+    //   label: '仓库',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: warehouseList
+    // },
 
     // 制单人-创建人-注意后端是否处理了
     {
@@ -123,21 +123,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
-    {
-      type: 'select',
-      placeholder: '请选择结算账户',
-      prop: 'auditorId',
-      label: '结算账户',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: accountList
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择结算账户',
+    //   prop: 'auditorId',
+    //   label: '结算账户',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: accountList
+    // },
     {
       type: 'select',
       placeholder: '请选择付款状态',

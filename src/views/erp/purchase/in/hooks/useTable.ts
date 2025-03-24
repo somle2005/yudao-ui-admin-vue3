@@ -51,6 +51,11 @@ export const useTable = () => {
       formatter: dateFormatter2, // 年月日-金蝶
       width: '200px'
     },
+    inTime: {
+      label: '入库时间',
+      formatter: dateFormatter, // 年月日-金蝶
+      width: '200px'
+    },
 
     // items-product带出barCode SKU name
     productBarCode: {
