@@ -20,6 +20,7 @@ const tableFieldConfigKey = 'tableFieldConfig'
  * 一个页面很容易有多个表格-弹窗=== 所以默认自行做成多属性对象配置
  *
  * 后面大概率要改成接口调用-所以还是层级低一些好(key value格式给接口)
+ * http://localhost/erp/purchase/return?abc=3 pathName经过检验不会带上url参数后缀可以作为唯一页面key
  */
 const getCacheKey = () => {
   // tableFieldConfigKey + path+userId作为key
