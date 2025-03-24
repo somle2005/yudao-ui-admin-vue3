@@ -209,7 +209,11 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { mergeItemsToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { cloneDeep } from 'lodash-es'
-import { useWholeOrder, useWholeOrderMergeCompute, createBranchOrder } from '@/hooks/common/wholeOrder'
+import {
+  useWholeOrder,
+  useWholeOrderMergeCompute,
+  createBranchOrder
+} from '@/hooks/common/wholeOrder'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -253,11 +257,16 @@ const fieldMap = {
     label: '未订购数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   }, // 批准数量➖已订购数量后端计算返回
-  orderedQuantity: {
-    label:'已订购数量',
+  // orderedQuantity: {
+  //   label:'已订购数量',
+  //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  // },
+  // inQty: '已入库数量',
+  orderCount: {
+    label: '已订购数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
-  inQty: '已入库数量',
+  inCount: '已入库数量',
   // 改造别名
   rowOrderStatus: {
     label: '行采购状态',
@@ -300,7 +309,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
   allAmount: {
-    label:'价税合计',
+    label: '价税合计',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
 
@@ -337,7 +346,6 @@ const fieldMap = {
 }
 const allOptions = transformTableOptions(fieldMap)
 tableOptions.value = createBranchOrder(cloneDeep(allOptions))
-
 
 /** ERP 采购申请列表 */
 defineOptions({ name: 'ErpPurchaseRequest' })
@@ -659,7 +667,6 @@ const handleUpdateStatusEnableBatch = async (enable: boolean) => {
 
 const disabledBtn = computed(() => selectionList.value.length === 0)
 
-
 const { handleWholeOrderEnable } = useWholeOrder(
   allOptions,
   tableOptions,
@@ -674,7 +681,7 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 /** 初始化 **/
 onMounted(async () => {
-   getList()
+  getList()
 })
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印
