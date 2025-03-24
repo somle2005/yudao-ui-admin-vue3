@@ -323,10 +323,16 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
-  deliveryDate: {
+  // deliveryDate: {
+  //   label: '交货日期',
+  //   formatter: dateFormatter2, // 年月日-金蝶
+  //   width: '200px'
+  // },
+  deliveryTime: {
     label: '交货日期',
     formatter: dateFormatter2, // 年月日-金蝶
-    width: '200px'
+    width: '200px',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   // 总验货通过数-只有整单的时候才进行展示
   totalInspectionPassCount: {
