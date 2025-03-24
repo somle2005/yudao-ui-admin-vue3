@@ -230,9 +230,9 @@ export const PurchaseOrderApi = {
   },
   // 生成采购合同
   generatePurchaseOrderContract: async (data: { templateName: string; orderId: number }) => {
-    return await request.post({
+    return await request.downloadPost({
       url: `/erp/purchase-order/generateContract`,
-      data
+      data,
     })
   }
 }

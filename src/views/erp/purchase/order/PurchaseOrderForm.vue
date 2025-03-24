@@ -122,6 +122,7 @@ import { useCompletionJson } from './hooks/useCompletionJson'
 import CompletionJsonForm from './components/CompletionJsonForm.vue'
 import InspectionJsonForm from './components/InspectionJsonForm.vue'
 import EnableList from './components/EnableList.vue'
+import download from '@/utils/download'
 
 const { inspectionJsonFormRef, inspectionJsonTabsName } = useInspectionJson()
 const { completionJsonFormRef, completionJsonTabsName } = useCompletionJson()
@@ -750,10 +751,12 @@ const submitForm = async () => {
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
       message.success('合并入库成功')
     } else if (formType.value === 'generateContract') {
-      await PurchaseOrderApi.generatePurchaseOrderContract({
+      const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract({
         templateName: data.templateName!,
         orderId: data.id
       })
+      console.log(downLoadData,'downLoadData')
+      download.pdf(downLoadData, '采购合同.pdf')
       message.success('生成采购合同成功')
     }
     dialogVisible.value = false
