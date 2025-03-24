@@ -112,7 +112,7 @@
                 :min="1"
                 :max="row.originCount"
                 class="!w-100%"
-                @change="(val) => changeValLimit(row, 'originCount', 1, val)"
+                @change="(val) => changeValLimit(row, 'count', 1, val)"
               />
             </el-form-item>
           </template>
