@@ -146,9 +146,13 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="24">
           <el-form-item label="付款条款" prop="paymentTerms">
-            <el-input v-model.trim="formData.paymentTerms" placeholder="请输入付款条款" />
+            <el-input
+              type="textarea"
+              v-model.trim="formData.paymentTerms"
+              placeholder="请输入付款条款"
+            />
           </el-form-item>
         </el-col>
 
