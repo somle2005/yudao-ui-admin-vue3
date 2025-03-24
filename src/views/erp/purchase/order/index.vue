@@ -72,6 +72,16 @@
           合并入库
         </el-button>
 
+        <el-button
+          :disabled="generateContractDisabledBtn"
+          type="primary"
+          plain
+          @click="mergeOrder"
+          v-hasPermi="['erp:purchase-order:generateContract']"
+        >
+          生成采购合同
+        </el-button>
+
         <el-switch
           v-model="wholeOrderEnable"
           active-text="整单"
@@ -548,11 +558,12 @@ const handleSelectionChange = (rows: PurchaseOrderVO[]) => {
   selectionList.value = rows
 }
 
-const { disabledBtn, handleUpdateStatusEnableBatch, handleSubmitAuditBatch } = useBatch(
-  selectionList,
-  getList,
-  wholeOrderEnable
-)
+const {
+  generateContractDisabledBtn,
+  disabledBtn,
+  handleUpdateStatusEnableBatch,
+  handleSubmitAuditBatch
+} = useBatch(selectionList, getList, wholeOrderEnable)
 
 /** 审核/反审核操作 */
 const handleUpdateStatus = async (row: any, reviewed: boolean) => {

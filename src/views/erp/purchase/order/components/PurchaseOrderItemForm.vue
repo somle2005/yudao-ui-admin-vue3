@@ -12,6 +12,11 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column v-if="formType !== 'create'" label="id" min-width="120">
+          <template #default="{ row }">
+            <el-text>{{ row.id }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column label="SKU" width="180">
           <template #default="{ row, $index }">
             <el-form-item

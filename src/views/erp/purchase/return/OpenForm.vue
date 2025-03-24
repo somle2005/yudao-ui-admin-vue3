@@ -39,7 +39,12 @@
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="退货产品清单" name="item">
-            <ItemForm ref="itemFormRef" :items="formData.items" :disabled="itemsFormdisabled" />
+            <ItemForm
+              ref="itemFormRef"
+              :items="formData.items"
+              :disabled="itemsFormdisabled"
+              :formType="formType"
+            />
           </el-tab-pane>
         </el-tabs>
       </template>

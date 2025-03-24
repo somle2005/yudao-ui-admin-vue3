@@ -43,6 +43,7 @@
               ref="itemFormRef"
               :items="formData.items"
               :disabled="itemsFormdisabled"
+              :formType="formType"
             />
           </el-tab-pane>
         </el-tabs>

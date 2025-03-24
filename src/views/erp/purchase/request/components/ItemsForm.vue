@@ -10,6 +10,11 @@
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
+      <el-table-column v-if="formType !== 'create'" label="id" min-width="120">
+        <template #default="{ row }">
+          <el-text>{{ row.id }}</el-text>
+        </template>
+      </el-table-column>
       <el-table-column label="SKU" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
@@ -289,7 +294,6 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
-
 
 /** 初始化设置入库项 */
 watch(
