@@ -263,6 +263,7 @@ const addItem = (selectionList: any[]) => {
         containerRate,
 
         warehouseId,
+        warehouseName,
         // expectArrivalDate,
         source,
 
@@ -270,7 +271,7 @@ const addItem = (selectionList: any[]) => {
         applicantId,
         applicantName,
         applicationDeptId,
-        departmentName
+        applicationDeptName
       } = item
 
       /**
@@ -298,6 +299,7 @@ const addItem = (selectionList: any[]) => {
         containerRate,
 
         warehouseId,
+        warehouseName,
         // expectArrivalDate,
         source,
 
@@ -305,7 +307,7 @@ const addItem = (selectionList: any[]) => {
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName: departmentName
+        applicationDeptName
       }
       return obj
     })

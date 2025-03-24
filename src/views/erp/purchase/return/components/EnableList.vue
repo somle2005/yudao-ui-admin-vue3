@@ -143,7 +143,8 @@ const handleCurrentChange = (row: any) => {
     offStatus: 'rowOffStatus',
     executeStatus: 'rowExecuteStatus',
     inStatus: 'rowInStatus',
-    payStatus: 'rowPayStatus'
+    payStatus: 'rowPayStatus',
+    currencyId: 'currencyId'
   })
   console.log(selectionList.value, 'selectionList.value')
 }

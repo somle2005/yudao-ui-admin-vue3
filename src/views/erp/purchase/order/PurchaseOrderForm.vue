@@ -755,7 +755,6 @@ const submitForm = async () => {
         templateName: data.templateName!,
         orderId: data.id
       })
-      console.log(downLoadData,'downLoadData')
       download.pdf(downLoadData, '采购合同.pdf')
       message.success('生成采购合同成功')
     }

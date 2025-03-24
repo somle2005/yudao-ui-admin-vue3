@@ -218,11 +218,11 @@ const getList = async () => {
           a.productBarCode = a.product.barCode
         }
 
-        item.itemApplicantName = item.applicantName
-        item.itemApplicationDeptName = item.applicationDeptName
+        // item.itemApplicantName = item.applicantName
+        // item.itemApplicationDeptName = item.applicationDeptName
       })
     })
-
+    console.log(data.list,'data.list')
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',

@@ -133,11 +133,11 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
 
-    itemApplicantName: {
+    applicantName: {
       label: '申请人',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    itemApplicationDeptName: {
+    applicationDeptName: {
       label: '申请部门',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
