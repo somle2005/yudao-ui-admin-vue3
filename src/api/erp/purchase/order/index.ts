@@ -90,6 +90,7 @@ export interface PurchaseOrderVO {
   completionJson?: string // 完工单
   totalInspectionPassCount?: number // 总检验通过数量
   supplierId?: number
+  templateName?: string // 模板名称-生成采购合同才出现
 }
 
 interface PurchaseMergeVO {
@@ -217,6 +218,20 @@ export const PurchaseOrderApi = {
   mergePurchaseOrder: async (data: PurchaseMergeVO) => {
     return await request.post({
       url: `/erp/purchase-order/merge`,
+      data
+    })
+  },
+
+  // 查询采购合同模板
+  getPurchaseOrderTemplateList: async () => {
+    return await request.get({
+      url: `/erp/purchase-order/getTemplateList`
+    })
+  },
+  // 生成采购合同
+  generatePurchaseOrderContract: async (data: { templateName: string; orderId: number }) => {
+    return await request.post({
+      url: `/erp/purchase-order/generateContract`,
       data
     })
   }

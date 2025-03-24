@@ -16,7 +16,9 @@ export const mergeItems = async (
 
   const items: any = []
   // 如果不是审核状态的要进行剔除
-  const selectList: any = selectionList.value.filter((item: any) => item[auditStatusKey] === auditType)
+  const selectList: any = selectionList.value.filter(
+    (item: any) => item[auditStatusKey] === auditType
+  )
   // 整单数据
   if (wholeOrderEnable.value) {
     selectList.forEach((item) => {
@@ -45,5 +47,11 @@ export const mergeItems = async (
 
   const data = { items }
   openForm('merge', selectList[0].id, data)
+  // mergeLoading.value = false
+}
+
+export const generateContract = async (selectionList, openForm) => {
+  const selectList: any = selectionList.value
+  openForm('generateContract', selectList[0].id)
   // mergeLoading.value = false
 }

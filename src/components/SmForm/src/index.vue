@@ -15,7 +15,7 @@
           v-bind="item.formItemConfig"
           :prop="item.prop"
           :label="item.label"
-        > 
+        >
           <component
             v-if="showType(item)"
             :is="getComponentType(item)"
@@ -216,7 +216,7 @@ const getOutFormData = () => {
   return unref(props.getModelValue())
 }
 
-const getPlaceholder = (placeholder?:string) => {
+const getPlaceholder = (placeholder?: string) => {
   return placeholder || ''
 }
 
@@ -272,8 +272,14 @@ const resetFields = () => {
 }
 // 表单验证方法
 const validate = () => {
+  return form.value!.validate()
+}
+
+// 拿到更细颗粒度-内部那些错误有问题
+const validateFn = () => {
   return form.value!.validate
 }
+
 // 获取表单数据
 const getFormData = () => {
   return model.value
@@ -283,6 +289,7 @@ const getFormData = () => {
 defineExpose({
   resetFields,
   validate,
+  validateFn,
   getFormData,
   initForm
 })

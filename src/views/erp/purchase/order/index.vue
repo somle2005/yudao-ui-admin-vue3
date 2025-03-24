@@ -76,7 +76,7 @@
           :disabled="generateContractDisabledBtn"
           type="primary"
           plain
-          @click="mergeOrder"
+          @click="generateContractOrder"
           v-hasPermi="['erp:purchase-order:generateContract']"
         >
           生成采购合同
@@ -230,7 +230,7 @@ import {
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
 import { useSearchForm } from './hooks/search'
-import { mergeItems } from '@/utils/operate'
+import { generateContract, mergeItems } from '@/utils/operate'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -630,6 +630,10 @@ onMounted(async () => {
 
 const mergeOrder = async () => {
   mergeItems(wholeOrderEnable, selectionList, openForm, 'rowItemsId')
+}
+
+const generateContractOrder = async () => {
+  generateContract(selectionList, openForm)
 }
 
 // TODO 芋艿：可优化功能：列表界面，支持导入

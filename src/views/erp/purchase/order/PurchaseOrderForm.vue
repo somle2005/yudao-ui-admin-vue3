@@ -164,6 +164,7 @@ const formRef = ref() // 表单 Ref
 const supplierList = ref<SupplierVO[]>([]) // 供应商列表
 const accountList = ref<AccountVO[]>([]) // 账户列表
 const financeSubjectList = ref<FinanceSubjectVO[]>([])
+const templateList = ref<any[]>([]) // 模板列表
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -200,8 +201,8 @@ watch(
 )
 
 const auditType = computed(() => formType.value === 'audit')
-const itemsFormdisabled = computed(
-  () => formType.value === 'audit' || formType.value === 'detail' || formType.value === 'merge'
+const itemsFormdisabled = computed(() =>
+  ['audit', 'detail', 'merge', 'generateContract'].includes(formType.value)
 )
 const createRequestFormOptions = () => {
   return [
@@ -510,6 +511,64 @@ const createMergeFormOptions = (formOptions) => {
   return options
 }
 
+const createGenerateContractFormOptions = (formOptions) => {
+  // 优惠后金额-totalPrice-追加其他金额 otherPrice
+  const obj: any = {
+    type: 'input-number',
+    placeholder: '请输入其他金额',
+    prop: 'otherPrice',
+    label: '其他金额',
+    attrs: {
+      'controls-position': 'right',
+      min: 0,
+      precision: 2,
+      style: {
+        width: '100%'
+      }
+    }
+  }
+  const options = formOptions.filter((item) => item.prop !== 'purchaseEntityId')
+  const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
+  options.splice(index, 0, obj)
+
+  // 全都disabled-下面附件带-采购合同模板
+  options.forEach((item) => {
+    if (item.attrs) {
+      item.attrs!.disabled = true
+    } else {
+      item.attrs = {
+        disabled: true
+      }
+    }
+  })
+
+  const template = {
+    type: 'select',
+    placeholder: '请选择采购合同模板',
+    prop: 'templateName',
+    label: '采购合同模板',
+    attrs: {
+      filterable: true,
+      clearable: true,
+      style: {
+        width: '100%'
+      }
+    },
+    rules: [
+      {
+        required: true,
+        message: '采购合同模板不能为空',
+        trigger: 'blur'
+      }
+    ],
+    children: templateList
+  }
+  const templateIndex = options.findIndex((item) => item.prop === 'fileUrl') + 1
+  options.splice(templateIndex, 0, template)
+
+  return options
+}
+
 const operateAudit = (type) => {
   const map = {
     detail: () => {
@@ -526,6 +585,10 @@ const operateAudit = (type) => {
     },
     merge: () => {
       requestFormOptions.value = createMergeFormOptions(createRequestFormOptions())
+    },
+    generateContract: () => {
+      dialogTitle.value = '生成采购合同'
+      requestFormOptions.value = createGenerateContractFormOptions(createRequestFormOptions())
     }
   }
   const fn = map[type]
@@ -593,6 +656,15 @@ const open = async (type: string, id?: number, data?: any) => {
   // 加载账户列表
   getAccountList(accountList)
   getFinanceSubjectList(financeSubjectList)
+  PurchaseOrderApi.getPurchaseOrderTemplateList().then((res) => {
+    templateList.value = res.map((item) => {
+      return {
+        label: item,
+        value: item
+      }
+    })
+  })
+
   // const defaultAccount = accountList.value.find((item) => item.defaultStatus)
   // if (defaultAccount) {
   //   formData.value.accountId = defaultAccount.id
@@ -614,6 +686,7 @@ const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
   await itemFormRef.value.validate()
+  
   // 提交请求
   formLoading.value = true
   try {
@@ -676,6 +749,12 @@ const submitForm = async () => {
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
       message.success('合并入库成功')
+    } else if (formType.value === 'generateContract') {
+      await PurchaseOrderApi.generatePurchaseOrderContract({
+        templateName: data.templateName!,
+        orderId: data.id
+      })
+      message.success('生成采购合同成功')
     }
     dialogVisible.value = false
     // 发送操作成功的事件
