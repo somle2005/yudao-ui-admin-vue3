@@ -123,6 +123,8 @@ import CompletionJsonForm from './components/CompletionJsonForm.vue'
 import InspectionJsonForm from './components/InspectionJsonForm.vue'
 import EnableList from './components/EnableList.vue'
 import download from '@/utils/download'
+import { addRules } from '@/components/SmForm/src/utils'
+import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 const { inspectionJsonFormRef, inspectionJsonTabsName } = useInspectionJson()
 const { completionJsonFormRef, completionJsonTabsName } = useCompletionJson()
@@ -543,31 +545,112 @@ const createGenerateContractFormOptions = (formOptions) => {
     }
   })
 
-  const template = {
-    type: 'select',
-    placeholder: '请选择采购合同模板',
-    prop: 'templateName',
-    label: '采购合同模板',
-    attrs: {
-      filterable: true,
-      clearable: true,
-      style: {
-        width: '100%'
+  // 删除items清单列表之前的选项
+  const itemsIndex = options.findIndex((item) => item.slot === 'items')
+  options.splice(0, itemsIndex)
+
+  const printOptions = [
+    {
+      type: 'input',
+      placeholder: '请选择签订地点',
+      label: '签订地点',
+      prop: 'signingPlace',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
       }
     },
-    rules: [
-      {
-        required: true,
-        message: '采购合同模板不能为空',
-        trigger: 'blur'
+    {
+      type: 'date-picker',
+      placeholder: '请选择订立日期',
+      prop: 'signingDate',
+      label: '订立日期',
+      attrs: {
+        clearable: true,
+        type: 'date',
+        'value-format': 'x',
+        class: '!w-1/1',
+        style: {
+          width: '100%'
+        }
       }
-    ],
-    children: templateList
-  }
-  const templateIndex = options.findIndex((item) => item.prop === 'fileUrl') + 1
-  options.splice(templateIndex, 0, template)
+    },
 
-  return options
+    {
+      type: 'select',
+      placeholder: '请选择甲方',
+      prop: 'partyAId',
+      label: '甲方',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+    {
+      type: 'select',
+      placeholder: '请选择乙方',
+      prop: 'partyBId',
+      label: '乙方',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择币种',
+      prop: 'currencyName',
+      label: '币种',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
+        item.value = item.label
+        return item
+      })
+    },
+    {
+      type: 'select',
+      placeholder: '请选择采购合同模板',
+      prop: 'templateName',
+      label: '采购合同模板',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: templateList
+    },
+    {
+      type: 'input',
+      label: '付款条款',
+      prop: 'paymentTerms',
+      placeholder: '请输入付款条款',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    }
+  ]
+
+  addRules(printOptions)
+
+  return printOptions.concat(options)
 }
 
 const operateAudit = (type) => {
@@ -687,7 +770,7 @@ const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
   await itemFormRef.value.validate()
-  
+
   // 提交请求
   formLoading.value = true
   try {
@@ -751,10 +834,18 @@ const submitForm = async () => {
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
       message.success('合并入库成功')
     } else if (formType.value === 'generateContract') {
-      const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract({
-        templateName: data.templateName!,
-        orderId: data.id
-      })
+      data.orderId = data.id
+      const queryData: any = filterObjKey(data, [
+        'templateName',
+        'orderId',
+        'signingPlace',
+        'signingDate',
+        'currencyName',
+        'partyAId',
+        'partyBId',
+        'paymentTerms'
+      ])
+      const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract(queryData)
       download.pdf(downLoadData, '采购合同.pdf')
       message.success('生成采购合同成功')
     }
@@ -801,7 +892,7 @@ const addItem = (selectionList) => {
         productName,
         productUnitName,
         barCode,
-        productPrice,
+        productPrice
       } = item
       const obj = {
         purchaseApplyItemId,
@@ -822,7 +913,7 @@ const addItem = (selectionList) => {
         productBarCode,
         productUnitName,
         barCode,
-        productPrice,
+        productPrice
         // productPrice: actTaxPrice
       }
       return obj

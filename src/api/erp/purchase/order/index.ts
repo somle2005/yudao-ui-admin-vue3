@@ -91,9 +91,10 @@ export interface PurchaseOrderVO {
   totalInspectionPassCount?: number // 总检验通过数量
   supplierId?: number
   templateName?: string // 模板名称-生成采购合同才出现
+  orderId?: number // 生成采购合同才出现
 }
 
-interface PurchaseMergeVO {
+interface PurchaseOrderMergeVO {
   /**
    * 结算账户编号
    */
@@ -135,6 +136,42 @@ interface PurchaseMergeVO {
    */
   supplierId?: number
   // [property: string]: any;
+}
+
+interface PurchaseOrderContractDTO {
+  /**
+   * 币别名称(计价单位)
+   */
+  currencyName: string;
+  /**
+   * 采购订单编号
+   */
+  orderId: number;
+  /**
+   * 甲方乙方
+   * 甲方主体id
+   */
+  partyAId: number;
+  /**
+   * 乙方主体id
+   */
+  partyBId: number;
+  /**
+   * 付款条款
+   */
+  paymentTerms: string;
+  /**
+   * 订立日期
+   */
+  signingDate: string;
+  /**
+   * 签订地点
+   */
+  signingPlace: string;
+  /**
+   * 模板名称
+   */
+  templateName: string;
 }
 
 // ERP 采购订单 API
@@ -215,7 +252,7 @@ export const PurchaseOrderApi = {
   },
 
   // 采购单合并入库
-  mergePurchaseOrder: async (data: PurchaseMergeVO) => {
+  mergePurchaseOrder: async (data: PurchaseOrderMergeVO) => {
     return await request.post({
       url: `/erp/purchase-order/merge`,
       data
@@ -229,7 +266,7 @@ export const PurchaseOrderApi = {
     })
   },
   // 生成采购合同
-  generatePurchaseOrderContract: async (data: { templateName: string; orderId: number }) => {
+  generatePurchaseOrderContract: async (data: PurchaseOrderContractDTO) => {
     return await request.downloadPost({
       url: `/erp/purchase-order/generateContract`,
       data,
