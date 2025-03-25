@@ -166,6 +166,7 @@ export interface CustomRuleDTO {
    * 基础宽度（mm）
    */
   width?: number;
+  productId?: number;
 }
 
 

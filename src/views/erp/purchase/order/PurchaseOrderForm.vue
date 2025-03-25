@@ -528,7 +528,7 @@ const createGenerateContractFormOptions = (formOptions) => {
       }
     }
   }
-  const options = formOptions.filter((item) => item.prop !== 'purchaseEntityId')
+  const options = formOptions
   const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
   options.splice(index, 0, obj)
 

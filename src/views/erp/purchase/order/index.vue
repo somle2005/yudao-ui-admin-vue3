@@ -622,16 +622,17 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 
 /** 初始化 **/
 onMounted(async () => {
-  // 加载列表 产品、仓库列表、供应商
-  const [list1, product, supplier, user] = await Promise.all([
-    getList(),
-    ProductApi.getProductSimpleList(),
-    SupplierApi.getSupplierSimpleList(),
-    UserApi.getSimpleUserList()
-  ])
-  productList.value = product
-  supplierList.value = supplier
-  userList.value = user
+  getList()
+  // // 加载列表 产品、仓库列表、供应商
+  // const [list1, product, supplier, user] = await Promise.all([
+  //   getList(),
+  //   ProductApi.getProductSimpleList(),
+  //   SupplierApi.getSupplierSimpleList(),
+  //   UserApi.getSimpleUserList()
+  // ])
+  // productList.value = product
+  // supplierList.value = supplier
+  // userList.value = user
 })
 
 const mergeOrder = async () => {
