@@ -708,11 +708,11 @@ const open = async (type: string, id?: number, data?: any) => {
     try {
       formData.value = await PurchaseOrderApi.getPurchaseOrder(id)
       if (formData.value?.items?.length) {
-        formData.value.items.forEach((item) => {
-          if (item.product) {
-            item.productName = item.product.name
-          }
-        })
+        // formData.value.items.forEach((item) => {
+        //   if (item.product) {
+        //     item.productName = item.product.name
+        //   }
+        // })
       } else {
         formData.value.items = []
       }

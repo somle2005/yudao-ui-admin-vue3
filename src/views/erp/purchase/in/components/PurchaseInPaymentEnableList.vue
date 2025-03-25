@@ -1,6 +1,6 @@
-<!-- 可付款的采购入库单列表 选择采购申请项（仅展示已审核）-->
+<!-- 可付款的采购入库单列表 选择采购入库（仅展示可付款）-->
 <template>
-  <Dialog title="选择采购入库（仅展示可付款）" v-model="dialogVisible" width="1000">
+  <Dialog title="选择采购申请项（仅展示已审核）" v-model="dialogVisible" width="1000">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
@@ -59,7 +59,6 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import { erpPriceInputFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { DICT_TYPE } from '@/utils/dict'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
@@ -67,7 +66,7 @@ import { mergeItemsToList, resetQueryParams } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
 import { useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
 import { PurchaseOrderApi } from '@/api/erp/purchase/order'
-import { useSearchForm } from '../hooks/search'
+import { useSearchForm } from './hooks/search'
 
 // 暂时都是分行展示逻辑
 
@@ -156,7 +155,7 @@ const fieldMap = {
 
   // 8:  '入库核销状态',
 
-  productBarCode: {
+  barCode: {
     label: 'SKU',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -248,16 +247,16 @@ const fieldMap = {
 
   reviewComment: '审核意见',
 
-  operate: {
-    label: '操作',
-    slot: 'operate',
-    fixed: 'right',
-    width: '220px'
-  }
+  // operate: {
+  //   label: '操作',
+  //   slot: 'operate',
+  //   fixed: 'right',
+  //   width: '220px'
+  // }
 }
 
 const branchOptions = transformTableOptions(fieldMap)
-const wrapList = ['no', 'supplierName', 'productBarCode', 'reviewComment', 'productName', 'remark']
+const wrapList = ['no', 'supplierName', 'barCode', 'reviewComment', 'productName', 'remark']
 branchOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
     item.slot = item.prop
@@ -273,30 +272,31 @@ tableOptions.value = cloneDeep(branchOptions)
 let queryParams: any = reactive({})
 
 const getList = async () => {
+  queryParams.auditStatus = 5
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
 
-    data.list.forEach((item) => {
-      if (!item?.items?.length) return
-      item.items.forEach((a) => {
-        if (a.product) {
-          a.productName = a.product.name
-          a.productBarCode = a.product.barCode
-          a.model = a.product.model
-          a.productUnitName = a.product.unitName
-          a.productUnitId = a.product.unitId
-          // productId-item有
-          a.productId = a.product.id
-        }
-        // const purchaseRequestItem = a.purchaseRequestItem
-        // if (purchaseRequestItem) {
-        //   const { creator, departmentName } = purchaseRequestItem
-        //   item.PRItemCreator = creator
-        //   item.PRItemDepartmentName = departmentName
-        // }
-      })
-    })
+    // data.list.forEach((item) => {
+    //   if (!item?.items?.length) return
+    //   item.items.forEach((a) => {
+    //     if (a.product) {
+    //       a.productName = a.product.name
+    //       a.productBarCode = a.product.barCode
+    //       a.model = a.product.model
+    //       a.productUnitName = a.product.unitName
+    //       a.productUnitId = a.product.unitId
+    //       // productId-item有
+    //       a.productId = a.product.id
+    //     }
+    //     // const purchaseRequestItem = a.purchaseRequestItem
+    //     // if (purchaseRequestItem) {
+    //     //   const { creator, departmentName } = purchaseRequestItem
+    //     //   item.PRItemCreator = creator
+    //     //   item.PRItemDepartmentName = departmentName
+    //     // }
+    //   })
+    // })
 
     list.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',

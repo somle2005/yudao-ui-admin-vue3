@@ -87,21 +87,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: userList
     },
-    {
-      type: 'select',
-      placeholder: '请选择审核状态',
-      prop: 'auditStatus',
-      label: '审核状态',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择审核状态',
+    //   prop: 'auditStatus',
+    //   label: '审核状态',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)
+    // },
 
     {
       type: 'select',

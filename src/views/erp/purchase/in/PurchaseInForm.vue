@@ -167,7 +167,7 @@ const open = async (type: string, id?: number) => {
           if (a.product) {
             a.productId = a.product.id // 防止后端不放外面
             a.productName = a.product.name
-            a.productBarCode = a.product.barCode
+            a.barCode = a.product.barCode
             a.productUnitName = a.product.unitName
             a.productUnitId = a.product.unitId
           }
@@ -245,15 +245,17 @@ const addItem = (selectionList: any[]) => {
       const {
         no,
         rowItemsId, //list记得转化
+
         productId,
         productName,
         productBarCode,
+        barCode,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
-
         productPrice,
         count,
+        declaredType,
 
         taxPercent = TAX_PERCENT,
         taxPrice,
@@ -264,13 +266,14 @@ const addItem = (selectionList: any[]) => {
         containerRate,
 
         warehouseId,
+        warehouseName,
         expectArrivalDate,
 
         currencyId,
         applicantId,
         applicantName,
         applicationDeptId,
-        departmentName
+        departmentName,
       } = item
 
       /**
@@ -280,15 +283,18 @@ const addItem = (selectionList: any[]) => {
       const obj = {
         orderNo: no,
         [itemIdKey]: rowItemsId, //list记得转化
+
         productId,
         productName,
         productBarCode,
-        productUnitName, //列表要转化取item-product里面数据
+        barCode,
         productUnitId, // 列表要转化取item-product里面数据
+        productUnitName, //列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
-
         productPrice,
         count,
+        declaredType,
+       
         taxPercent,
         taxPrice,
         actTaxPrice,
@@ -298,13 +304,14 @@ const addItem = (selectionList: any[]) => {
         containerRate,
 
         warehouseId,
+        warehouseName,
         expectArrivalDate,
 
         currencyId,
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName: departmentName
+        applicationDeptName: departmentName,
       }
       return obj
     })

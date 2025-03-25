@@ -275,7 +275,11 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS }
   },
 
-  productBarCode: {
+  // productBarCode: {
+  //   label: 'SKU',
+  //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  // },
+  barCode: {
     label: 'SKU',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -426,7 +430,7 @@ const fieldMap = {
 }
 
 const allOptions = transformTableOptions(fieldMap)
-const wrapList = ['no', 'supplierName', 'productBarCode', 'reviewComment', 'productName', 'remark']
+const wrapList = ['no', 'supplierName', 'barCode', 'reviewComment', 'productName', 'remark']
 allOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
     item.slot = item.prop
@@ -476,24 +480,24 @@ const getList = async () => {
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
 
-    data.list.forEach((item) => {
-      if (!item?.items?.length) return
-      item.items.forEach((a) => {
-        if (a.product) {
-          a.productName = a.product.name
-          a.productBarCode = a.product.barCode
-        }
-        // const purchaseRequestItem = a.purchaseRequestItem
-        // if (purchaseRequestItem) {
-        //   const { creator, departmentName } = purchaseRequestItem
-        //   item.PRItemCreator = creator
-        //   item.PRItemDepartmentName = departmentName
-        // }
-        // const { applicantName, departmentName } = a
-        // item.itemApplicantName = applicantName
-        // item.itemDepartmentName = departmentName
-      })
-    })
+    // data.list.forEach((item) => {
+    //   if (!item?.items?.length) return
+    //   item.items.forEach((a) => {
+    //     if (a.product) {
+    //       a.productName = a.product.name
+    //       a.productBarCode = a.product.barCode
+    //     }
+    //     // const purchaseRequestItem = a.purchaseRequestItem
+    //     // if (purchaseRequestItem) {
+    //     //   const { creator, departmentName } = purchaseRequestItem
+    //     //   item.PRItemCreator = creator
+    //     //   item.PRItemDepartmentName = departmentName
+    //     // }
+    //     // const { applicantName, departmentName } = a
+    //     // item.itemApplicantName = applicantName
+    //     // item.itemDepartmentName = departmentName
+    //   })
+    // })
 
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
 
