@@ -1,5 +1,6 @@
 import { CustomRuleCategoryApi } from "@/api/erp/logistic/custom-category"
 import { CustomProductApi } from "@/api/erp/logistic/custom-product"
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 const message = useMessage() // 消息弹窗
 export const mergeItems = async (
@@ -81,4 +82,11 @@ export const getDeclaredType = async (val: any, row: any, list: any[]) => {
   } else {
     row.declaredType = ''
   }
+}
+
+export const currencyChange = (currencyId,row) => {
+  const currency = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).find((item) => item.value === currencyId)
+  if(currency) {
+    row.currencyName = currency.label
+  }  console.log(currencyId,row,'currencyChange')
 }

@@ -134,6 +134,7 @@ export const useApplicantTable = () => {
 
   const handleQuery = () => {
     queryParams.pageNo = 1
+    queryParams.status = 5
     getList()
   }
 

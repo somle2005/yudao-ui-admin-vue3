@@ -24,11 +24,12 @@
               :rules="formRules.productId"
               class="mb-0px!"
             >
-              <el-select
+              <!-- <el-select
                 v-model="row.productId"
                 clearable
                 filterable
                 @change="onChangeProduct($event, row)"
+                @update:model-value="updateModelValue"
                 placeholder="请选择SKU"
                 :disabled="disabled"
               >
@@ -38,13 +39,49 @@
                   :label="item.barCode"
                   :value="item.id"
                 />
-              </el-select>
+              </el-select> -->
+              <!-- @update:model-value=" @change="onChangeProduct($event, row)" 测试可以 -->
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.productId"
+                placeholder="请选择SKU"
+                @change="
+                  (val) =>
+                    updateModelValue(
+                      val,
+                      row,
+                      productList,
+                      'id',
+                      {
+                        productName: 'name',
+                        barCode: 'barCode',
+                        productUnitName: 'unitName',
+                        productUnitId: 'unitId'
+                      },
+                      getDeclaredType
+                    )
+                "
+                :data="productList"
+                :keyMap="{ label: 'barCode', value: 'id' }"
+              />
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="产品名称" width="120">
           <template #default="{ row }">
             <el-text>{{ row.productName }}</el-text>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="报关品名" width="180">
+          <template #default="{ row, $index }">
+            <el-form-item
+              :prop="`${$index}.declaredType`"
+              :rules="formRules.declaredType"
+              class="mb-0px!"
+            >
+              <el-input :disabled="disabled" v-model="row.declaredType" />
+            </el-form-item>
           </template>
         </el-table-column>
 
@@ -108,6 +145,7 @@
                   clearable
                   filterable
                   style="width: 100px"
+                  @change="currencyChange($event, row)"
                 >
                   <el-option
                     v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
@@ -315,6 +353,8 @@ import { cloneDeep } from 'lodash-es'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { defaultProps } from '@/utils/tree'
+import { updateModelValue } from '@/utils/high/index'
+import { getDeclaredType, currencyChange } from '@/utils/operate/purchase'
 
 const props = defineProps({
   items: {
@@ -337,7 +377,8 @@ const formRules = reactive({
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
+  currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
+  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
@@ -465,6 +506,49 @@ const validate = () => {
   return formRef.value.validate()
 }
 defineExpose({ validate, formData })
+
+// const updateModelValue = (
+//   val,
+//   row,
+//   list,
+//   targetKey = 'id',
+//   transFormMap: { [key: string]: string }
+// ) => {
+//   if (!list?.length) return
+//   const item = list.find((item) => item[targetKey] === val)
+//   if (item) {
+//     for (let key in transFormMap) {
+//       row[key] = item[transFormMap[key]]
+//     }
+//     // row.productName = item.name
+//   }
+//   console.log(val, 'updateModelValue', row)
+// }
+
+// const getDeclaredType = async (val: any, row: any, list: any[]) => {
+//   // row.declaredType = '' // 前置置空 会有闪动
+
+//   const product = list.find((item) => item.id === val)
+//   if (!product) return
+
+//   const data = await CustomProductApi.getCustomProductPage({ productId: product.id })
+//   let customCategoryId
+
+//   if (data?.list?.length) {
+//     customCategoryId = data.list[0].customCategoryId
+//   }
+//   if (!customCategoryId) {
+//     row.declaredType = ''
+//     return
+//   }
+
+//   const customRuleCategoryData = await CustomRuleCategoryApi.getCustomRuleCategory(customCategoryId)
+//   if (customRuleCategoryData) {
+//     row.declaredType = customRuleCategoryData.declaredType
+//   } else {
+//     row.declaredType = ''
+//   }
+// }
 
 /** 初始化 */
 onMounted(async () => {

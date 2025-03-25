@@ -797,7 +797,8 @@ const addItem = (selectionList) => {
         applicantId,
         applicationDeptId,
         applicant,
-        applicationDept
+        applicationDept,
+        declaredType
       } = item
       const obj = {
         purchaseApplyItemId,
@@ -814,7 +815,8 @@ const addItem = (selectionList) => {
         applicantId,
         applicationDeptId,
         departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName
-        applicantName: applicant
+        applicantName: applicant,
+        declaredType
         // productPrice: actTaxPrice
       }
       return obj
