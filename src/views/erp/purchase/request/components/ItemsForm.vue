@@ -15,7 +15,7 @@
           <el-text>{{ row.id }}</el-text>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" min-width="180">
+      <!-- <el-table-column label="SKU" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <el-select
@@ -35,7 +35,53 @@
             </el-select>
           </el-form-item>
         </template>
-      </el-table-column>
+      </el-table-column> -->
+
+      <el-table-column label="SKU" width="180">
+          <template #default="{ row, $index }">
+            <el-form-item
+              :prop="`${$index}.productId`"
+              :rules="formRules.productId"
+              class="mb-0px!"
+            >
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.productId"
+                placeholder="请选择SKU"
+                @change="
+                  (val) =>
+                    updateModelValue(
+                      val,
+                      row,
+                      productList,
+                      'id',
+                      {
+                        productName: 'name',
+                        barCode: 'barCode',
+                        productUnitName: 'unitName'
+                      },
+                      getDeclaredType
+                    )
+                "
+                :data="productList"
+                :keyMap="{ label: 'barCode', value: 'id' }"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="报关品名" width="180">
+          <template #default="{ row, $index }">
+            <el-form-item
+              :prop="`${$index}.declaredType`"
+              :rules="formRules.declaredType"
+              class="mb-0px!"
+            >
+              <el-input :disabled="disabled" v-model="row.declaredType" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
 
       <el-table-column label="产品名称" min-width="120">
         <template #default="{ row }">
@@ -217,7 +263,7 @@
       </el-table-column> -->
       <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
-          <el-button @click="handleDelete($index)" link>—</el-button>
+          <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>—</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -238,6 +284,8 @@ import {
 import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
+import { updateModelValue } from '@/utils/high/index'
+import { getDeclaredType } from '@/utils/operate/purchase'
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -290,7 +338,8 @@ const formData = ref<Array<any>>([])
 const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
-  orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }]
+  orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],
+  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表

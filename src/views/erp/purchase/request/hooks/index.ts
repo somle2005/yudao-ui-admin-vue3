@@ -141,14 +141,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           style: {
             width: '100%'
           }
-        },
-        rules: [
-          {
-            required: true,
-            message: '单据日期不能为空',
-            trigger: 'blur'
-          }
-        ]
+        }
       },
       {
         type: 'select',
@@ -424,7 +417,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     // catch会拿到错误数据 没有进入catch说明校验通过了
     try {
       const valida1 = await itemFormRef.value.validate()
-      const valiad2 = await smFormRef.value.validate()()
+      const valiad2 = await smFormRef.value.validate()
       if (!(valida1 && valiad2)) return
 
       // 提交请求
