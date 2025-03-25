@@ -72,6 +72,11 @@
             <el-text>{{ row.productName }}</el-text>
           </template>
         </el-table-column>
+        <el-table-column label="单位" min-width="60">
+          <template #default="{ row }">
+            <el-text>{{ row.productUnitName }}</el-text>
+          </template>
+        </el-table-column>
 
         <el-table-column label="报关品名" width="180">
           <template #default="{ row, $index }">
