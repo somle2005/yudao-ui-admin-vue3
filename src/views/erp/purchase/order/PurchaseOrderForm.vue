@@ -784,9 +784,6 @@ const addItem = (selectionList) => {
     const selectList = selectionList.map((item: any) => {
       const {
         purchaseApplyItemId,
-        productId,
-        productBarCode,
-        productName,
         approveCount,
         actTaxPrice,
         taxPercent = TAX_PERCENT,
@@ -798,13 +795,16 @@ const addItem = (selectionList) => {
         applicationDeptId,
         applicant,
         applicationDept,
-        declaredType
+        declaredType,
+        productId,
+        productBarCode,
+        productName,
+        productUnitName,
+        barCode,
+        productPrice,
       } = item
       const obj = {
         purchaseApplyItemId,
-        productId,
-        productName,
-        productBarCode,
         count: approveCount || 0,
         actTaxPrice,
         taxPercent,
@@ -816,7 +816,13 @@ const addItem = (selectionList) => {
         applicationDeptId,
         departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName
         applicantName: applicant,
-        declaredType
+        declaredType,
+        productId,
+        productName,
+        productBarCode,
+        productUnitName,
+        barCode,
+        productPrice,
         // productPrice: actTaxPrice
       }
       return obj
