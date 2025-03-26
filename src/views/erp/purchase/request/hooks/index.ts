@@ -1,5 +1,5 @@
 import { PurchaseRequestApi } from '@/api/erp/purchase/request'
-import { getDeptTree, getUserList, getSupplierList } from '@/commonData'
+import { getDeptTree, getUserList, getSupplierList, getCurrencyList } from '@/commonData'
 import { cloneDeep } from 'lodash-es'
 import { defaultProps } from '@/utils/tree'
 import { FormOptions } from '@/components/SmForm/src/types/types'
@@ -279,6 +279,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   }
 
   const createMergeFormOptions = () => {
+    const currencyList = getCurrencyList()
+
     return [
       {
         type: 'date-picker',
@@ -323,6 +325,35 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         ],
         children: supplierList
       },
+      {
+        type: 'select',
+        placeholder: '请选择币种',
+        prop: 'currencyName',
+        label: '币种',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          },
+          onChange: (val) => {
+            const item = currencyList.value.find((item) => item.label === val)
+            if (item) {
+              const formData = getFormData()
+              formData.currencyId = item.id
+            }
+          }
+        },
+        rules: [
+          {
+            required: true,
+            message: '币种不能为空',
+            trigger: 'blur'
+          }
+        ],
+        children: currencyList
+      },
+
       {
         colConfig: { span: 24 },
         slot: 'items',
@@ -448,8 +479,10 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         })
         message.success(t('common.updateSuccess'))
       } else if (formType.value === 'merge') {
-        const { orderTime, supplierId, items } = data
+        const { orderTime, supplierId, items,currencyId,currencyName } = data
         await PurchaseRequestApi.mergePurchaseRequest({
+          currencyId,
+          currencyName,
           orderTime,
           supplierId,
           items: items.map((item) => {

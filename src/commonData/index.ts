@@ -11,6 +11,7 @@ import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { CustomProductApi } from '@/api/erp/logistic/custom-product'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 interface SelectProp {
   value: number
@@ -235,4 +236,15 @@ export const getCustomProductList = (data?: any) => {
     }
   })
   return customProduct
+}
+
+
+// 获取币种列表
+export const getCurrencyList = () => {
+  const list = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
+    item.id = item.value
+    item.value = item.label
+    return item
+  })
+  return ref(list)
 }

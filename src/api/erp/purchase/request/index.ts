@@ -25,6 +25,7 @@ interface MergeItems {
    * 下单数量
    */
   orderQuantity: number
+  
 }
 interface PurchaseRequestMergeVO {
   /**
@@ -39,6 +40,8 @@ interface PurchaseRequestMergeVO {
    * 供应商编号
    */
   supplierId: number
+  currencyName: string // 订单币别名称
+  currencyId: number
 }
 
 // ERP采购申请单 API
