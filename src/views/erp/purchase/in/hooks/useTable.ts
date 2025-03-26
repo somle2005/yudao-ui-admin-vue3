@@ -110,6 +110,11 @@ export const useTable = () => {
     },
     // 报关品名 产品id里面有(能带出来吗)等后端
 
+    declaredType: {
+      label: '报关品名',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
     warehouseName: {
       label: '仓库',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -202,7 +207,8 @@ export const useTable = () => {
     'productName',
     'remark',
     'orderNo',
-    'warehouseName'
+    'warehouseName',
+    'declaredType'
   ]
   allOptions.forEach((item: any) => {
     if (wrapList.includes(item.prop)) {

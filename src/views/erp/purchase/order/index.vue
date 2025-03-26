@@ -287,6 +287,10 @@ const fieldMap = {
     label: '产品名称',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
+  declaredType: {
+    label: '报关品名',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
 
   // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
   totalPrice: {
@@ -430,7 +434,15 @@ const fieldMap = {
 }
 
 const allOptions = transformTableOptions(fieldMap)
-const wrapList = ['no', 'supplierName', 'barCode', 'reviewComment', 'productName', 'remark']
+const wrapList = [
+  'no',
+  'supplierName',
+  'barCode',
+  'reviewComment',
+  'productName',
+  'remark',
+  'declaredType'
+]
 allOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
     item.slot = item.prop

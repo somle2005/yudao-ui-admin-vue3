@@ -293,6 +293,13 @@ const fieldMap = {
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
+  declaredType: {
+    label: '报关品名',
+    slot: 'declaredType',
+    width: '200px',
+    wrap: true,
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
   productUnitName: '单位',
   count: {
     label: '申请数量',
