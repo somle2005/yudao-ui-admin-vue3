@@ -142,6 +142,12 @@
             <el-input v-model="formData.remark" placeholder="请输入备注" type="textarea" />
           </el-form-item>
         </el-col>
+
+        <el-col :span="24">
+          <el-form-item label="附件" prop="fileUrls">
+            <UploadFile :is-show-tip="false" v-model="formData.fileUrls"/>
+          </el-form-item>
+        </el-col>
       </el-row>
       <!-- 子表的表单 -->
       <ContentWrap>
@@ -227,7 +233,8 @@ const formData = ref({
   discountPercent: 0,
   totalProductPrice: undefined,
   remark: undefined,
-  products: []
+  products: [],
+  fileUrls: []
 })
 const formRules = reactive({
   name: [{ required: true, message: '合同名称不能为空', trigger: 'blur' }],
