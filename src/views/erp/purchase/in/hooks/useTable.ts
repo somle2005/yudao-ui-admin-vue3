@@ -104,6 +104,12 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
 
+    // 分行才展示
+    itemTotalPrice: {
+      label: '总价',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
     productName: {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items

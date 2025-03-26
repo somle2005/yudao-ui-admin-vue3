@@ -231,7 +231,8 @@ const getList = async () => {
       offStatus: 'rowOffStatus',
       executeStatus: 'rowExecuteStatus',
       inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus'
+      payStatus: 'rowPayStatus',
+      totalPrice: 'itemTotalPrice'
     })
 
     switchList(list, total, data)

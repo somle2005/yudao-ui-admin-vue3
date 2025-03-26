@@ -377,6 +377,11 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
+  payPrice: {
+    label: '已付款金额',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  },
+
   actTaxPrice: {
     label: '含税单价',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
