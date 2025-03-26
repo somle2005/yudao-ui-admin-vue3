@@ -158,6 +158,7 @@ import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
+import { PurchaseReturnApi } from '@/api/erp/purchase/return'
 
 /** ERP 销售入库列表 */
 defineOptions({ name: 'ErpPurchaseReturn' })
@@ -206,22 +207,22 @@ let {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await PurchaseInApi.getPurchaseInPage(queryParams)
+    const data = await PurchaseReturnApi.getPurchaseReturnPage(queryParams)
 
     // todo取出items里面对应对象数据
 
-    data.list.forEach((item) => {
-      if (!item?.items?.length) return
-      item.items.forEach((a) => {
-        if (a.product) {
-          a.productName = a.product.name
-          a.productBarCode = a.product.barCode
-        }
+    // data.list.forEach((item) => {
+    //   if (!item?.items?.length) return
+    //   item.items.forEach((a) => {
+    //     if (a.product) {
+    //       a.productName = a.product.name
+    //       a.productBarCode = a.product.barCode
+    //     }
 
-        item.itemApplicantName = item.applicantName
-        item.itemApplicationDeptName = item.applicationDeptName
-      })
-    })
+    //     item.itemApplicantName = item.applicantName
+    //     item.itemApplicationDeptName = item.applicationDeptName
+    //   })
+    // })
 
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsToList(data.list, {
@@ -235,8 +236,6 @@ const getList = async () => {
     })
 
     switchList(list, total, data)
-    // list.value = data.list
-    // total.value = data.total
   } finally {
     loading.value = false
   }
