@@ -84,6 +84,7 @@ import { createDBFn } from '@/utils/decorate'
 import { useForm } from './hooks/useForm'
 import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
 import { useOutData } from './components/hooks/outdata'
+import { PurchaseReturnApi } from '@/api/erp/purchase/return'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -160,19 +161,19 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await PurchaseInApi.getPurchaseIn(id)
+      formData.value = await PurchaseReturnApi.getPurchaseReturn(id)
 
-      if (formData.value?.items?.length) {
-        formData.value.items.forEach((a) => {
-          if (a.product) {
-            a.productId = a.product.id // 防止后端不放外面
-            a.productName = a.product.name
-            a.productBarCode = a.product.barCode
-            a.productUnitName = a.product.unitName
-            a.productUnitId = a.product.unitId
-          }
-        })
-      }
+      // if (formData.value?.items?.length) {
+      //   formData.value.items.forEach((a) => {
+      //     if (a.product) {
+      //       a.productId = a.product.id // 防止后端不放外面
+      //       a.productName = a.product.name
+      //       a.productBarCode = a.product.barCode
+      //       a.productUnitName = a.product.unitName
+      //       a.productUnitId = a.product.unitId
+      //     }
+      //   })
+      // }
 
       // 主动触发表单数据回显
       formRef.value.initForm()

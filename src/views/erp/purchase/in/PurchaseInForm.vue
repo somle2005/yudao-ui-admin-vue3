@@ -162,17 +162,17 @@ const open = async (type: string, id?: number) => {
     try {
       formData.value = await PurchaseInApi.getPurchaseIn(id)
 
-      if (formData.value?.items?.length) {
-        formData.value.items.forEach((a) => {
-          if (a.product) {
-            a.productId = a.product.id // 防止后端不放外面
-            a.productName = a.product.name
-            a.barCode = a.product.barCode
-            a.productUnitName = a.product.unitName
-            a.productUnitId = a.product.unitId
-          }
-        })
-      }
+      // if (formData.value?.items?.length) {
+      //   formData.value.items.forEach((a) => {
+      //     if (a.product) {
+      //       a.productId = a.product.id // 防止后端不放外面
+      //       a.productName = a.product.name
+      //       a.barCode = a.product.barCode
+      //       a.productUnitName = a.product.unitName
+      //       a.productUnitId = a.product.unitId
+      //     }
+      //   })
+      // }
 
       // 主动触发表单数据回显
       formRef.value.initForm()
