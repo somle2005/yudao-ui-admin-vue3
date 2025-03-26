@@ -108,7 +108,12 @@ import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import { PurchaseRequestVO } from '@/api/erp/purchase/request'
-import { getAccountList, getFinanceSubjectList, getSupplierList } from '@/commonData'
+import {
+  getAccountList,
+  getCurrencyList,
+  getFinanceSubjectList,
+  getSupplierList
+} from '@/commonData'
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import {
   computeDiscountPriceAndTotalPrice,
@@ -168,6 +173,7 @@ const supplierList = ref<SupplierVO[]>([]) // 供应商列表
 const accountList = ref<AccountVO[]>([]) // 账户列表
 const financeSubjectList = ref<FinanceSubjectVO[]>([])
 const templateList = ref<any[]>([]) // 模板列表
+const currencyList = getCurrencyList() // 币别列表
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -309,6 +315,36 @@ const createRequestFormOptions = () => {
         clearable: true
       }
     },
+
+    {
+      type: 'select',
+      placeholder: '请选择币种',
+      prop: 'currencyName',
+      label: '币种',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        },
+        onChange: (val) => {
+          const item = currencyList.value.find((item) => item.label === val)
+          if (item) {
+            const formData = getFormData()
+            formData.currencyId = item.id
+          }
+        }
+      },
+      rules: [
+        {
+          required: true,
+          message: '币种不能为空',
+          trigger: 'blur'
+        }
+      ],
+      children: currencyList
+    },
+
     {
       type: 'input',
       label: '备注',
@@ -615,12 +651,16 @@ const createGenerateContractFormOptions = (formOptions) => {
         clearable: true,
         style: {
           width: '100%'
+        },
+        onChange: (val) => {
+          const item = currencyList.value.find((item) => item.label === val)
+          if (item) {
+            const formData = getFormData()
+            formData.currencyId = item.id
+          }
         }
       },
-      children: getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
-        item.value = item.label
-        return item
-      })
+      children: currencyList
     },
     {
       type: 'select',
@@ -735,6 +775,8 @@ const open = async (type: string, id?: number, data?: any) => {
       formLoading.value = false
     }
   }
+
+  getCurrencyList(currencyList)
   // 加载供应商列表
   getSupplierList(supplierList)
   // 加载账户列表
@@ -828,7 +870,9 @@ const submitForm = async () => {
           'otherPrice',
           'fileUrl',
           'remark',
-          'itemIds'
+          'itemIds',
+          'currencyName',
+          'currencyId',
         ]
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
@@ -841,6 +885,7 @@ const submitForm = async () => {
         'signingPlace',
         'signingDate',
         'currencyName',
+        'currencyId',
         'partyAId',
         'partyBId',
         'paymentTerms'

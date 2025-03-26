@@ -88,5 +88,5 @@ export const currencyChange = (currencyId,row) => {
   const currency = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).find((item) => item.value === currencyId)
   if(currency) {
     row.currencyName = currency.label
-  }  console.log(currencyId,row,'currencyChange')
+  }
 }

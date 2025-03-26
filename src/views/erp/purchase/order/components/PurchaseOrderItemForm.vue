@@ -139,11 +139,7 @@
         <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
-              <el-form-item
-                :prop="`${$index}.currencyId`"
-                :rules="formRules.currencyId"
-                class="mb-0px!"
-              >
+              <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
                 <el-select
                   v-model="row.currencyId"
                   placeholder="请选择币种"
@@ -384,7 +380,7 @@ const formRules = reactive({
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
+  // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
   declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref

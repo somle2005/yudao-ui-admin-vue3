@@ -371,11 +371,13 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 整单展示
   },
   // items-returnCount-采购退货数量
-  currencyId: {
-    label: '币种',
-    slot: 'currencyId',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
-  },
+  // currencyId: {
+  //   label: '币种',
+  //   slot: 'currencyId',
+  //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  // },
+
+  currencyName: '币种',
 
   payPrice: {
     label: '已付款金额',

@@ -240,11 +240,14 @@ export const getCustomProductList = (data?: any) => {
 
 
 // 获取币种列表
-export const getCurrencyList = () => {
+export const getCurrencyList = (data?) => {
   const list = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
     item.id = item.value
     item.value = item.label
     return item
   })
+  if(data) {
+    data.value = list
+  }
   return ref(list)
 }
