@@ -42,7 +42,7 @@
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <SmSelect
-              :disabled="disabled"
+              :disabled="productDisabled"
               v-model="row.productId"
               placeholder="请选择SKU"
               @change="
@@ -74,7 +74,7 @@
             :rules="formRules.declaredType"
             class="mb-0px!"
           >
-            <el-input :disabled="disabled" v-model="row.declaredType" />
+            <el-input :disabled="productDisabled" v-model="row.declaredType" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -124,6 +124,7 @@
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
             <el-date-picker
+              :disabled="mergeDisabled"
               v-model="row.expectArrivalDate"
               type="date"
               value-format="x"
@@ -158,7 +159,7 @@
           <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
             <!-- @change="(val) => (row.approveCount = val)" -->
             <el-input-number
-              :disabled="disabled"
+              :disabled="productDisabled"
               v-model="row.count"
               controls-position="right"
               :min="1"
@@ -257,16 +258,16 @@
           </el-form-item>
         </template>
       </el-table-column> -->
-      <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
+      <el-table-column v-if="!productDisabled" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
-          <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link
+          <el-button :productDisabled="formData.length === 1" @click="handleDelete($index)" link
             >—</el-button
           >
         </template>
       </el-table-column>
     </el-table>
   </el-form>
-  <el-row justify="center" class="mt-3" v-if="!disabled">
+  <el-row justify="center" class="mt-3" v-if="!productDisabled">
     <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
   </el-row>
 </template>
@@ -325,8 +326,9 @@ const props = defineProps({
   }
 })
 
+const productDisabled = computed(() => ['audit', 'detail', 'merge'].includes(props.formType))
 const allDisabled = computed(() => ['detail'].includes(props.formType))
-const disabled = computed(() => ['audit', 'merge', 'detail'].includes(props.formType))
+const disabled = computed(() => ['audit', 'detail'].includes(props.formType))
 // 批准数量在merge下要禁用
 const mergeDisabled = computed(() => props.formType === 'merge')
 const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')

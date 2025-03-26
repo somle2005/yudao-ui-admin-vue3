@@ -1,9 +1,17 @@
 import { PurchaseRequestApi } from '@/api/erp/purchase/request'
-import { getDeptTree, getUserList, getSupplierList, getCurrencyList } from '@/commonData'
+import {
+  getDeptTree,
+  getUserList,
+  getSupplierList,
+  getCurrencyList,
+  getFinanceSubjectList
+} from '@/commonData'
 import { cloneDeep } from 'lodash-es'
 import { defaultProps } from '@/utils/tree'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { AUDIT_TYPE } from '@/utils/constant'
+import { FinanceSubjectVO } from '@/api/erp/finance/subject'
+import { filterObjKey } from '@/utils/transformData'
 
 /**
 
@@ -102,6 +110,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const supplierProductList = ref([])
   const deptList = ref([])
   const supplierList = ref([])
+  const financeSubjectList = ref<FinanceSubjectVO[]>([])
 
   const smFormRef = ref()
 
@@ -281,7 +290,37 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const createMergeFormOptions = () => {
     const currencyList = getCurrencyList()
 
+    // 缺少 出运港  目的港
     return [
+      {
+        type: 'date-picker',
+        placeholder: '请选择单据日期',
+        prop: 'noTime',
+        label: '单据日期',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'select',
+        placeholder: '请选择财务主体',
+        prop: 'purchaseEntityId',
+        label: '财务主体',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: financeSubjectList
+      },
       {
         type: 'date-picker',
         placeholder: '请选择期望采购时间',
@@ -355,6 +394,17 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       },
 
       {
+        type: 'input',
+        label: '付款条款',
+        prop: 'paymentTerms',
+        placeholder: '请输入付款条款',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+
+      {
         colConfig: { span: 24 },
         slot: 'items',
         formItemConfig: {
@@ -423,6 +473,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
 
   const getSelectData = (type) => {
     getSupplierList(supplierList)
+    getFinanceSubjectList(financeSubjectList)
     if (type !== 'merge') {
       getUserList(applicantList)
       getDeptTree(deptList)
@@ -495,19 +546,33 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         })
         message.success(t('common.updateSuccess'))
       } else if (formType.value === 'merge') {
-        const { orderTime, supplierId, items, currencyId, currencyName } = data
-        await PurchaseRequestApi.mergePurchaseRequest({
-          currencyId,
-          currencyName,
-          orderTime,
-          supplierId,
-          items: items.map((item) => {
-            return {
-              id: item.id,
-              orderQuantity: item.orderQuantity
-            }
-          })
-        })
+        // const { orderTime, supplierId, items, currencyId, currencyName } = data
+        // await PurchaseRequestApi.mergePurchaseRequest({
+        //   currencyId,
+        //   currencyName,
+        //   orderTime,
+        //   supplierId,
+        //   items,
+        //   // items: items.map((item) => {
+        //   //   return {
+        //   //     id: item.id,
+        //   //     orderQuantity: item.orderQuantity
+        //   //   }
+        //   // })
+        // })
+
+        // todo后续追 加出运港 目的港 等后端字段
+        const queryData: any = filterObjKey(data, [
+          'noTime',
+          'purchaseEntityId',
+          'paymentTerms',
+          'orderTime',
+          'supplierId',
+          'items',
+          'currencyId',
+          'currencyName'
+        ])
+        await PurchaseRequestApi.mergePurchaseRequest(queryData)
         message.success('合并采购成功')
       } else if (formType.value === 'update') {
         await PurchaseRequestApi.updatePurchaseRequest(data)
