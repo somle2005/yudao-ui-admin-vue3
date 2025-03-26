@@ -192,7 +192,7 @@
           link
           type="primary"
           @click="openForm('detail', scope.row.id)"
-          v-hasPermi="['erp:product:update']"
+          v-hasPermi="['erp:product:query']"
         >
           详情
         </el-button>

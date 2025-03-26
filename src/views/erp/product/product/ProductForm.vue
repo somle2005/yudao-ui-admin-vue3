@@ -1,7 +1,7 @@
 <template>
   <!-- scroll max-height="500px" -->
   <Dialog width="800px" class="productForm-dialog" :title="dialogTitle" v-model="dialogVisible">
-    <div class="editBtn" v-if="formDisabled">
+    <div class="editBtn" v-if="formDisabled" v-hasPermi="['erp:product:query']">
       <el-button type="primary" @click="detailEdit">编辑</el-button>
     </div>
     <el-form
@@ -213,7 +213,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item label="海关分类" prop="customCategoryId">
             <el-select
               v-model="formData.customCategoryId"
@@ -229,7 +229,7 @@
               />
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col> -->
 
         <el-col :span="24">
           <ContentWrap>
@@ -545,7 +545,7 @@ const open = async (type: string, id?: number) => {
   }
   // 加载海关分类
   // getCustomRuleCategoryList(customRuleCategoryList)
-  getCustomProductList(customProduct)
+  //getCustomProductList(customProduct)
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
   categoryList.value = handleTree(categoryData, 'id', 'parentId')

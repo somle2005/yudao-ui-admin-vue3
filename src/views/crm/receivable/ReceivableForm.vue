@@ -19,6 +19,7 @@
               v-model="formData.ownerUserId"
               :disabled="formType !== 'create'"
               class="w-1/1"
+              filterable
             >
               <el-option
                 v-for="item in userOptions"
@@ -93,7 +94,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="回款方式" prop="returnType">
-            <el-select v-model="formData.returnType" class="w-1/1" placeholder="请选择回款方式">
+            <el-select v-model="formData.returnType" class="w-1/1" placeholder="请选择回款方式" filterable>
               <el-option
                 v-for="dict in getIntDictOptions(DICT_TYPE.CRM_RECEIVABLE_RETURN_TYPE)"
                 :key="dict.value"
