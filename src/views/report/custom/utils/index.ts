@@ -1,10 +1,17 @@
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 
-
 export const createMapStyle = (key: string) => {
   try {
     const dictOptions = getDictOptions(DICT_TYPE.REPORT_MAP)
-    const height = dictOptions.find((item) => item.label === key).value + 'px'
+
+    const dict = dictOptions.find((item) => item.label === key)
+    if (!dict) {
+      return ref({
+        width: '100%',
+        height: '1200px'
+      })
+    }
+    const height = dict.value + 'px'
     return ref({
       width: '100%',
       height
