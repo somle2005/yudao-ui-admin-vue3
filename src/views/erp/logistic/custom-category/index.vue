@@ -160,7 +160,7 @@
     <CustomRuleCategoryItemList :category-id="categoryId" />
   </Dialog> -->
 
-  <el-tabs v-if="categoryId" model-value="customRuleCategoryItem">
+  <el-tabs v-if="sonExist" model-value="customRuleCategoryItem">
     <el-tab-pane label="海关分类子表" name="customRuleCategoryItem">
       <CustomRuleCategoryItemList ref="customRuleCategoryItemListRef" :category-id="categoryId" />
     </el-tab-pane>
@@ -183,12 +183,9 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 /** 海关品类 列表 */
 defineOptions({ name: 'ErpCustomRuleCategory' })
 
-const categoryId = ref(undefined)
-const handleRowClick = (row) => {
-  categoryId.value = row.id
-}
 
-const categoryDialog = ref(false)
+
+
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -208,6 +205,14 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
+
+// const categoryDialog = ref(false)
+const categoryId = ref(undefined)
+const handleRowClick = (row) => {
+  categoryId.value = row.id
+}
+
+const sonExist = computed(() => categoryId.value && list?.value?.length)
 
 /** 查询列表 */
 const getList = async () => {
