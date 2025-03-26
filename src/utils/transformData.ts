@@ -104,9 +104,18 @@ export const computeTaxPriceAndAllAmount = (
       item[taxPrice] = erpPriceMultiply(item[actTaxPrice], scale)
       // 价税合计 = 含税单价 * 申请数量。
       item[allAmount] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+    }
+
+    // 税率-含税单价才能计算出产品单价
+    if (item[taxPercent] && item[actTaxPrice]) {
+      const taxPercent100 = item.taxPercent / 100.0
       // 单价
       item[onePrice] = erpPriceMultiply(item[actTaxPrice], 1 / (1 + taxPercent100))
+    } else {
+      // 税率-含税单价 其中一个没有单价变为空
+      item[onePrice] = undefined
     }
+
   })
 
   // totalPrice 总价 = 含税单价 * 数量
