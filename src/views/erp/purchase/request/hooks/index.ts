@@ -380,6 +380,19 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     return formOptions
   }
 
+  const createDetailFormOptions = (formOptions) => {
+    formOptions.forEach((item) => {
+      if (item.attrs) {
+        item.attrs.disabled = true
+      } else {
+        item.attrs = {
+          disabled: true
+        }
+      }
+    })
+    return formOptions
+  }
+
   // 处理audit的逻辑
   const operateAudit = (type) => {
     const map = {
@@ -394,6 +407,9 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       },
       update: () => {
         requestFormOptions.value = updateFormOptions(createRequestFormOptions())
+      },
+      detail: () => {
+        requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
       }
     }
     const fn = map[type]
@@ -479,7 +495,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         })
         message.success(t('common.updateSuccess'))
       } else if (formType.value === 'merge') {
-        const { orderTime, supplierId, items,currencyId,currencyName } = data
+        const { orderTime, supplierId, items, currencyId, currencyName } = data
         await PurchaseRequestApi.mergePurchaseRequest({
           currencyId,
           currencyName,

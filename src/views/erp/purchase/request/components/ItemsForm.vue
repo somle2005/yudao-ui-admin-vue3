@@ -6,6 +6,7 @@
     v-loading="formLoading"
     label-width="0px"
     :inline-message="true"
+    :disabled="allDisabled"
   >
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table :data="formData" class="-mt-10px">
@@ -38,50 +39,45 @@
       </el-table-column> -->
 
       <el-table-column label="SKU" width="180">
-          <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.productId`"
-              :rules="formRules.productId"
-              class="mb-0px!"
-            >
-              <SmSelect
-                :disabled="disabled"
-                v-model="row.productId"
-                placeholder="请选择SKU"
-                @change="
-                  (val) =>
-                    updateModelValue(
-                      val,
-                      row,
-                      productList,
-                      'id',
-                      {
-                        productName: 'name',
-                        barCode: 'barCode',
-                        productUnitName: 'unitName'
-                      },
-                      getDeclaredType
-                    )
-                "
-                :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
-              />
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
+            <SmSelect
+              :disabled="disabled"
+              v-model="row.productId"
+              placeholder="请选择SKU"
+              @change="
+                (val) =>
+                  updateModelValue(
+                    val,
+                    row,
+                    productList,
+                    'id',
+                    {
+                      productName: 'name',
+                      barCode: 'barCode',
+                      productUnitName: 'unitName'
+                    },
+                    getDeclaredType
+                  )
+              "
+              :data="productList"
+              :keyMap="{ label: 'barCode', value: 'id' }"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
 
-        <el-table-column label="报关品名" width="180">
-          <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.declaredType`"
-              :rules="formRules.declaredType"
-              class="mb-0px!"
-            >
-              <el-input :disabled="disabled" v-model="row.declaredType" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
+      <el-table-column label="报关品名" width="180">
+        <template #default="{ row, $index }">
+          <el-form-item
+            :prop="`${$index}.declaredType`"
+            :rules="formRules.declaredType"
+            class="mb-0px!"
+          >
+            <el-input :disabled="disabled" v-model="row.declaredType" />
+          </el-form-item>
+        </template>
+      </el-table-column>
 
       <el-table-column label="产品名称" min-width="120">
         <template #default="{ row }">
@@ -263,7 +259,9 @@
       </el-table-column> -->
       <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
-          <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>—</el-button>
+          <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link
+            >—</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -327,7 +325,8 @@ const props = defineProps({
   }
 })
 
-const disabled = computed(() => props.formType === 'audit' || props.formType === 'merge')
+const allDisabled = computed(() => ['detail'].includes(props.formType))
+const disabled = computed(() => ['audit', 'merge', 'detail'].includes(props.formType))
 // 批准数量在merge下要禁用
 const mergeDisabled = computed(() => props.formType === 'merge')
 const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')

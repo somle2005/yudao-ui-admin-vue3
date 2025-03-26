@@ -115,7 +115,14 @@
       </template>
 
       <template #operate="{ scope }">
-        <!-- <el-button link @click="openForm('detail', scope.row.id)"> 详情 </el-button> -->
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['erp:purchase-request:query']"
+        >
+          详情
+        </el-button>
+
         <el-button
           link
           type="primary"
