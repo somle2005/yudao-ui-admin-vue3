@@ -7,7 +7,6 @@
       v-loading="formLoading"
       label-width="0px"
       :inline-message="true"
-      :disabled="disabled"
     >
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table :data="formData" class="-mt-10px">
@@ -23,6 +22,7 @@
               :prop="`${$index}.productId`"
               :rules="formRules.productId"
               class="mb-0px!"
+              :disabled="disabled"
             >
               <!-- <el-select
                 v-model="row.productId"
@@ -141,6 +141,7 @@
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
               <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
                 <el-select
+                  :disabled="disabled"
                   v-model="row.currencyId"
                   placeholder="请选择币种"
                   clearable
@@ -181,6 +182,7 @@
           </template>
         </el-table-column>
 
+        <!-- 暂时先不做最大值校验 -->
         <el-table-column label="数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.count`" class="mb-0px!">
@@ -226,6 +228,7 @@
               class="mb-0px!"
             >
               <el-input-number
+                :disabled="disabled"
                 v-model="row.actTaxPrice"
                 controls-position="right"
                 :min="0.01"
@@ -246,6 +249,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
               <el-input-number
+                :disabled="disabled"
                 v-model="row.taxPercent"
                 controls-position="right"
                 :min="0"
@@ -284,6 +288,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deliveryTime`" class="mb-0px!">
               <el-date-picker
+                :disabled="disabled"
                 v-model="row.deliveryTime"
                 type="date"
                 value-format="x"
@@ -296,7 +301,7 @@
         <el-table-column label="X码" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
-              <el-input v-model="row.xcode" class="!w-100%" />
+              <el-input v-model="row.xcode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -304,7 +309,7 @@
         <el-table-column label="箱率" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-              <el-input v-model.trim="row.containerRate" class="!w-100%" />
+              <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>

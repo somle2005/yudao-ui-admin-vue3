@@ -377,7 +377,11 @@ const fieldMap = {
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
 
-  currencyName: '币种',
+  // currencyName: '币种',
+  itemCurrencyName: {
+    label: '币种',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
 
   payPrice: {
     label: '已付款金额',
@@ -527,7 +531,8 @@ const getList = async () => {
       offStatus: 'rowOffStatus',
       executeStatus: 'rowExecuteStatus',
       inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus'
+      payStatus: 'rowPayStatus',
+      currencyName: 'itemCurrencyName',
     })
     // 后续需要补充itemsTotal
     itemsTotal.value = data.itemsTotal || data.total

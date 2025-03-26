@@ -335,13 +335,6 @@ const createRequestFormOptions = () => {
           }
         }
       },
-      rules: [
-        {
-          required: true,
-          message: '币种不能为空',
-          trigger: 'blur'
-        }
-      ],
       children: currencyList
     },
 
@@ -731,6 +724,10 @@ const jsonDisabled = computed(() => formData.value.auditStatus === 5) // 审核�
 
 // 合并 合并入库时列表勾选中传递的items数据
 const mergeSelectItemsData = (formData, data) => {
+  // count-数量要能够修改不能超过原始值
+  data.items.forEach((item) => {
+    item.originCount = item.count
+  })
   formData.items = data.items
 }
 
@@ -872,7 +869,7 @@ const submitForm = async () => {
           'remark',
           'itemIds',
           'currencyName',
-          'currencyId',
+          'currencyId'
         ]
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
