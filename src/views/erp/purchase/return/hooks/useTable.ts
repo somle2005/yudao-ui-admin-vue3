@@ -6,30 +6,21 @@ import { cloneDeep } from 'lodash-es'
 
 /**
  * 
-单据日期-1
 单据编号-1
-供应商-1
+单据日期-1
 审核状态-1
-付款状态-1
-成交金额-1
-SKU-1
-商品名称(产品名称)-1
-报关品名
+退款状态-1 缺后端字典
+供应商-1 
+SKU编码-1
+商品名称-1
 仓库-1
-数量 -产品数量-1
-含税单价-1
-价税合计-1
-申请人-1
-申请部门-1
+数量-count产品数量
 源单类型
 源单单号
 制单人-1
 制单时间-1
 审核人-1
 审核时间-1
-
-暂无
-报关品名
  */
 
 export const useTable = () => {
@@ -41,19 +32,19 @@ export const useTable = () => {
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
   const fieldMap = {
-    no: '单据编号', // 采购单编号
-    noTime: {
-      label: '单据日期',
+    no: '单据编号', // 退货单编号
+    returnTime: {
+      label: '单据日期', // 退货时间
       formatter: dateFormatter2, // 年月日-金蝶
       width: '200px'
     },
 
     // items-product带出barCode SKU name
-    productBarCode: {
+    barCode: {
       label: 'SKU',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-
+  
     supplierName: '供应商',
 
     auditStatus: {
@@ -62,27 +53,13 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.ERP_AUDIT_STATUS }
     },
 
-    // inStatus: {
-    //   label: '入库状态',
-    //   slot: 'inStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS }
-    // },
-    payStatus: {
-      label: '付款状态',
-      slot: 'payStatus',
-      dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
-    },
-    reconciliationStatus: {
-      label: '对账状态',
-      slot: 'reconciliationStatus',
+    refundStatus: {
+      label: '退款状态', // 缺后端字典
+      slot: 'refundStatus',
+      dictAttrs: { type: DICT_TYPE.ERP_AUDIT_STATUS }
     },
 
-    // rowPayStatus: {
-    //   label: '行付款状态',
-    //   slot: 'rowPayStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
-    // },
-
+    
     // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
     totalPrice: {
       label: '成交金额',
@@ -105,27 +82,27 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
 
-    actTaxPrice: {
-      label: '含税单价',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
-    },
-    // taxPrice: {
-    //   label: '税额',
+    // actTaxPrice: {
+    //   label: '含税单价',
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     // },
-    allAmount: {
-      label: '价税合计',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
-    },
+    // // taxPrice: {
+    // //   label: '税额',
+    // //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    // // },
+    // allAmount: {
+    //   label: '价税合计',
+    //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    // },
 
-    itemApplicantName: {
-      label: '申请人',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-    itemApplicationDeptName: {
-      label: '申请部门',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
+    // itemApplicantName: {
+    //   label: '申请人',
+    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // },
+    // itemApplicationDeptName: {
+    //   label: '申请部门',
+    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // },
     source: '源单类型',
     orderNo: '源单单号',
 
@@ -136,37 +113,12 @@ export const useTable = () => {
       width: '200px'
     },
 
-    auditorName: '审核人',
+    auditor: '审核人',
     auditTime: {
       label: '审核时间',
       formatter: dateFormatter,
       width: '200px'
     },
-
-    // rowExecuteStatus: {
-    //   label: '行执行状态',
-    //   slot: 'rowExecuteStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS },
-    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    // },
-    // rowInStatus: {
-    //   label: '行入库状态',
-    //   slot: 'rowInStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS },
-    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    // },
-    // rowPayStatus: {
-    //   label: '行付款状态',
-    //   slot: 'rowPayStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS },
-    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    // },
-    // rowOffStatus: {
-    //   label: '行关闭状态',
-    //   slot: 'rowOffStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS },
-    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    // },
 
     reviewComment: '审核意见',
 

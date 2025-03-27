@@ -126,7 +126,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // {
     //   type: 'select',
     //   placeholder: '请选择结算账户',
-    //   prop: 'auditorId',
+    //   prop: 'accountId',
     //   label: '结算账户',
     //   attrs: {
     //     class: '!w-240px',
