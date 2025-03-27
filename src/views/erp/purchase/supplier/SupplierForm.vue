@@ -112,7 +112,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item label="付款条款类型">
             <el-select
               filterable
@@ -145,13 +145,18 @@
               />
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="24">
           <el-form-item label="付款条款" prop="paymentTerms">
-            <el-input
+            <!-- <el-input
               type="textarea"
               v-model.trim="formData.paymentTerms"
               placeholder="请输入付款条款"
+            /> -->
+            <SmSelect
+              v-model="formData.paymentTerms"
+              placeholder="请选择付款条款"
+              :data="paymentTermsList"
             />
           </el-form-item>
         </el-col>
@@ -172,7 +177,8 @@
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
-import { CommonStatusEnum } from '@/utils/constants'
+import { getPaymentTermsList } from '@/commonData/purchase'
+// import { CommonStatusEnum } from '@/utils/constants'
 
 /** ERP  表单 */
 defineOptions({ name: 'SupplierForm' })
@@ -185,6 +191,7 @@ const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData: any = ref({})
+const paymentTermsList = getPaymentTermsList()
 
 const initFormData = () => {
   return {
@@ -284,27 +291,27 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 
-const paymentTermsType = ref('')
-const paymentTermsTypes = [
-  { label: '外币采购（英文）', value: 'ERP_SUPPLIER_ENGLISH' },
-  { label: '外币采购（中文）', value: 'ERP_SUPPLIER_CHINESE' },
-  { label: '人民币采购', value: 'ERP_SUPPLIER_RMB' }
-]
+// const paymentTermsType = ref('')
+// const paymentTermsTypes = [
+//   { label: '外币采购（英文）', value: 'ERP_SUPPLIER_ENGLISH' },
+//   { label: '外币采购（中文）', value: 'ERP_SUPPLIER_CHINESE' },
+//   { label: '人民币采购', value: 'ERP_SUPPLIER_RMB' }
+// ]
 
-const paymentTermsList: any = ref([])
-const paymentTermsSelect = ref('')
+// const paymentTermsList: any = ref([])
+// const paymentTermsSelect = ref('')
 
-const changePaymentTermsType = (value: string) => {
-  if (value) {
-    paymentTermsList.value = getIntDictOptions(DICT_TYPE[value])
-  } else {
-    paymentTermsList.value = []
-    paymentTermsSelect.value = ''
-    formData.value.paymentTerms = ''
-  }
-}
+// const changePaymentTermsType = (value: string) => {
+//   if (value) {
+//     paymentTermsList.value = getIntDictOptions(DICT_TYPE[value])
+//   } else {
+//     paymentTermsList.value = []
+//     paymentTermsSelect.value = ''
+//     formData.value.paymentTerms = ''
+//   }
+// }
 
-const changepaymentTermsSelect = (value: string) => {
-  formData.value.paymentTerms = value
-}
+// const changepaymentTermsSelect = (value: string) => {
+//   formData.value.paymentTerms = value
+// }
 </script>
