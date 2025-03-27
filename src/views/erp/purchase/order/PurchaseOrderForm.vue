@@ -129,7 +129,7 @@ import InspectionJsonForm from './components/InspectionJsonForm.vue'
 import EnableList from './components/EnableList.vue'
 import download from '@/utils/download'
 import { addRules } from '@/components/SmForm/src/utils'
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+import { getIntDictOptions, DICT_TYPE, getStrDictOptions } from '@/utils/dict'
 import { useSupplierChange } from '@/utils/operate/purchase'
 
 const { inspectionJsonFormRef, inspectionJsonTabsName } = useInspectionJson()
@@ -339,6 +339,34 @@ const createRequestFormOptions = () => {
         }
       },
       children: currencyList
+    },
+    {
+      type: 'select',
+      placeholder: '请选择装运港',
+      prop: 'portOfLoading',
+      label: '装运港',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
+    },
+    {
+      type: 'select',
+      placeholder: '请选择目的港',
+      prop: 'portOfDischarge',
+      label: '目的港',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
     },
 
     {

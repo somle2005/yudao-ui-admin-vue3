@@ -294,7 +294,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const createMergeFormOptions = () => {
     const currencyList = getCurrencyList()
 
-    // 缺少 出运港  目的港
     return [
       {
         type: 'date-picker',
