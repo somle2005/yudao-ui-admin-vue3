@@ -206,6 +206,7 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
+  erpPurchaseRequestItemNo: '源单单号', 
   supplierName: '供应商',
 
   auditStatus: {
@@ -412,7 +413,8 @@ const wrapList = [
   'reviewComment',
   'productName',
   'remark',
-  'declaredType'
+  'declaredType',
+  'erpPurchaseRequestItemNo'
 ]
 allOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
