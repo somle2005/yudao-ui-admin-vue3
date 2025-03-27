@@ -85,6 +85,7 @@ import { useForm } from './hooks/useForm'
 import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
 import { useOutData } from './components/hooks/outdata'
 import { PurchaseReturnApi } from '@/api/erp/purchase/return'
+import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -194,15 +195,15 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as PurchaseInVO
+    const data = formData.value as unknown as PurchaseOrderVO
     if (formType.value === 'create') {
-      await PurchaseInApi.createPurchaseIn(data)
+      await PurchaseOrderApi.createPurchaseOrder(data)
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
-      await PurchaseInApi.updatePurchaseIn(data)
+      await PurchaseOrderApi.updatePurchaseOrder(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
-      await PurchaseInApi.updatePurchaseInAuditStatus({
+      await PurchaseOrderApi.updatePurchaseOrderAuditStatus({
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
         inId: data.id,

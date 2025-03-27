@@ -135,28 +135,34 @@
             </el-form-item>
           </template>
         </el-table-column>
-
+        <!-- 
         <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
-              <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
-                <el-select
-                  :disabled="disabled"
-                  v-model="row.currencyId"
-                  placeholder="请选择币种"
-                  clearable
-                  filterable
-                  style="width: 100px"
-                  @change="currencyChange($event, row)"
-                >
-                  <el-option
-                    v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
-                    :key="dict.value"
-                    :label="dict.label"
-                    :value="dict.value"
-                  />
-                </el-select>
-              </el-form-item>
+              <el-select
+                :disabled="disabled"
+                v-model="row.currencyId"
+                placeholder="请选择币种"
+                clearable
+                filterable
+                style="width: 100px"
+                @change="currencyChange($event, row)"
+              >
+                <el-option
+                  v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </el-form-item>
+          </template>
+        </el-table-column> -->
+
+        <el-table-column label="币种" prop="currencyName" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.currencyName`" class="mb-0px!">
+              <el-text>{{ row.currencyName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>

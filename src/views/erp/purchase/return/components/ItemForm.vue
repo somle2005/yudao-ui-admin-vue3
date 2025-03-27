@@ -24,13 +24,18 @@
               :rules="formRules.productId"
               class="mb-0px!"
             >
-              <el-text> {{ row.productBarCode }}</el-text>
+              <el-text> {{ row.barCode }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="产品名称" width="180">
           <template #default="{ row }">
             <el-text>{{ row.productName }}</el-text>
+          </template>
+        </el-table-column>
+        <el-table-column label="报关品名" width="180">
+          <template #default="{ row }">
+            <el-text>{{ row.declaredType }}</el-text>
           </template>
         </el-table-column>
         <el-table-column label="单位" min-width="60">
@@ -94,6 +99,8 @@
             </el-form-item>
           </template>
         </el-table-column>
+
+        
 
         <el-table-column label="仓库" width="150">
           <template #default="{ row, $index }">
