@@ -8,11 +8,11 @@
       label-width="80px"
     >
       <el-form-item label="字典名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入字典名称" />
+        <el-input v-model.trim="formData.name" placeholder="请输入字典名称" />
       </el-form-item>
       <el-form-item label="字典类型" prop="type">
         <el-input
-          v-model="formData.type"
+          v-model.trim="formData.type"
           :disabled="typeof formData.id !== 'undefined'"
           placeholder="请输入参数名称"
         />

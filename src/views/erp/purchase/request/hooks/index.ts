@@ -12,6 +12,8 @@ import { FormOptions } from '@/components/SmForm/src/types/types'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { filterObjKey } from '@/utils/transformData'
+import { getStrDictOptions } from '@/utils/dict'
+import { useSupplierChange } from '@/utils/operate/purchase'
 
 /**
 
@@ -287,6 +289,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     return formOptions
   }
 
+  const supplierChange = useSupplierChange(supplierList, smFormRef)
+
   const createMergeFormOptions = () => {
     const currencyList = getCurrencyList()
 
@@ -353,7 +357,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           clearable: true,
           style: {
             width: '100%'
-          }
+          },
+          onChange: supplierChange
         },
         rules: [
           {
@@ -402,6 +407,34 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           style: { width: '100%' },
           clearable: true
         }
+      },
+      {
+        type: 'select',
+        placeholder: '请选择装运港',
+        prop: 'portOfLoading',
+        label: '装运港',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
+      },
+      {
+        type: 'select',
+        placeholder: '请选择目的港',
+        prop: 'portOfDischarge',
+        label: '目的港',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
       },
 
       {
@@ -561,7 +594,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         //   // })
         // })
 
-        // todo后续追 加出运港 目的港 等后端字段
         const queryData: any = filterObjKey(data, [
           'noTime',
           'purchaseEntityId',
@@ -570,7 +602,9 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           'supplierId',
           'items',
           'currencyId',
-          'currencyName'
+          'currencyName',
+          'portOfLoading',
+          'portOfDischarge'
         ])
         await PurchaseRequestApi.mergePurchaseRequest(queryData)
         message.success('合并采购成功')

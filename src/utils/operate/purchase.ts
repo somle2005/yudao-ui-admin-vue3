@@ -1,5 +1,5 @@
-import { CustomRuleCategoryApi } from "@/api/erp/logistic/custom-category"
-import { CustomProductApi } from "@/api/erp/logistic/custom-product"
+import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
+import { CustomProductApi } from '@/api/erp/logistic/custom-product'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 const message = useMessage() // 消息弹窗
@@ -84,9 +84,22 @@ export const getDeclaredType = async (val: any, row: any, list: any[]) => {
   }
 }
 
-export const currencyChange = (currencyId,row) => {
-  const currency = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).find((item) => item.value === currencyId)
-  if(currency) {
+export const currencyChange = (currencyId, row) => {
+  const currency = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).find(
+    (item) => item.value === currencyId
+  )
+  if (currency) {
     row.currencyName = currency.label
   }
+}
+
+// 供应商带出付款条款-联动表单回显
+export const useSupplierChange = (supplierList, smFormRef) => {
+  const supplierChange = (val: any) => {
+    const supplier: any = supplierList.value.find((item: any) => item.value === val)
+    if (!supplier) return
+    const modelValue = smFormRef.value.getFormData()
+    modelValue.paymentTerms = supplier.paymentTerms
+  }
+  return supplierChange
 }

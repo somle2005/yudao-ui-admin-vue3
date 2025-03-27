@@ -130,6 +130,7 @@ import EnableList from './components/EnableList.vue'
 import download from '@/utils/download'
 import { addRules } from '@/components/SmForm/src/utils'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+import { useSupplierChange } from '@/utils/operate/purchase'
 
 const { inspectionJsonFormRef, inspectionJsonTabsName } = useInspectionJson()
 const { completionJsonFormRef, completionJsonTabsName } = useCompletionJson()
@@ -213,6 +214,7 @@ const auditType = computed(() => formType.value === 'audit')
 const itemsFormdisabled = computed(() =>
   ['audit', 'detail', 'merge', 'generateContract'].includes(formType.value)
 )
+const supplierChange = useSupplierChange(supplierList, formRef)
 const createRequestFormOptions = () => {
   return [
     {
@@ -259,7 +261,8 @@ const createRequestFormOptions = () => {
         clearable: true,
         style: {
           width: '100%'
-        }
+        },
+        onChange: supplierChange
       },
       children: supplierList
     },

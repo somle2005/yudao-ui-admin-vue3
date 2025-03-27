@@ -17,6 +17,7 @@ export interface SupplierVO {
   bankName: string // 开户行
   bankAccount: string // 开户账号
   bankAddress: string // 开户地址
+  paymentTerms: string // 付款条款
 }
 
 // ERP 供应商 API
