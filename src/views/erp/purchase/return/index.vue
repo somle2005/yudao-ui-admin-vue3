@@ -112,7 +112,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:purchase-in:update']"
+          v-hasPermi="['erp:purchase-return:update']"
         >
           编辑
         </el-button>
@@ -120,7 +120,7 @@
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
-          v-hasPermi="['erp:purchase-in:audit']"
+          v-hasPermi="['erp:purchase-return:audit']"
           v-if="![5].includes(scope.row.auditStatus)"
         >
           审核
@@ -129,7 +129,7 @@
           link
           type="danger"
           @click="handleUpdateStatus(scope.row, false)"
-          v-hasPermi="['erp:purchase-in:audit']"
+          v-hasPermi="['erp:purchase-return:audit']"
           v-if="scope.row.auditStatus === 5"
         >
           反审核
@@ -138,7 +138,7 @@
           link
           type="danger"
           @click="handleDelete([scope.row.id])"
-          v-hasPermi="['erp:purchase-in:delete']"
+          v-hasPermi="['erp:purchase-return:delete']"
         >
           删除
         </el-button>
