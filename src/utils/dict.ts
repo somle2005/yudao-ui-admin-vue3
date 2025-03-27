@@ -214,14 +214,14 @@ export enum DICT_TYPE {
   CRM_PERMISSION_LEVEL = 'crm_permission_level', // CRM 数据权限的级别
   CRM_PRODUCT_UNIT = 'crm_product_unit', // CRM 产品单位
   CRM_FOLLOW_UP_TYPE = 'crm_follow_up_type', // CRM 跟进方式
-  CRM_CLIENT_TAG= 'crm_client_tag', // CRM 客户标签
+  CRM_CLIENT_TAG = 'crm_client_tag', // CRM 客户标签
 
   // ========== ERP - 企业资源计划模块  ==========
   ERP_AUDIT_STATUS = 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE = 'erp_stock_record_biz_type', // 库存明细的业务类型
   SYSTEM_FILED = 'system_field',
-  COUNTRY_CODE = 'country_code',    //国别代码
-  ERP_PATENT_TYPE = 'erp_patent_type',  //专利类型
+  COUNTRY_CODE = 'country_code', //国别代码
+  ERP_PATENT_TYPE = 'erp_patent_type', //专利类型
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
   ERP_ORDER_STATUS = 'erp_order_status', // 采购状态
@@ -234,7 +234,8 @@ export enum DICT_TYPE {
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
   ERP_EXECUTE_STATUS = 'erp_execute_status', // 采购执行状态
-
+  ERP_PORT_OF_LOADING = 'erp_port_of_loading', // 装运港
+  ERP_PORT_OF_DISCHARGE= 'erp_port_of_discharge', // 目的港
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台
@@ -246,7 +247,6 @@ export enum DICT_TYPE {
   AI_WRITE_FORMAT = 'ai_write_format', // AI 写作格式
   AI_WRITE_TONE = 'ai_write_tone', // AI 写作语气
   AI_WRITE_LANGUAGE = 'ai_write_language', // AI 写作语言
- 
 
   // ========== IOT - 物联网模块  ==========
   IOT_NET_TYPE = 'iot_net_type', // IOT 联网方式
