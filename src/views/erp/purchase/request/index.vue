@@ -565,7 +565,21 @@ const mergePurchase = async () => {
 
   let items: any = []
   // 如果不是审核状态的要进行剔除
-  const selectList: any = selectionList.value.filter((item: any) => item.status === auditType)
+  const selectList: any = cloneDeep(
+    selectionList.value.filter((item: any) => item.status === auditType)
+  )
+
+  selectList.forEach((item) => {
+    if (!item?.items?.length) return
+    const { applicant, applicantId, applicationDept, applicationDeptId } = item
+    item?.items.forEach((a) => {
+      a.applicant = applicant
+      a.applicantId = applicantId
+      a.applicationDept = applicationDept
+      a.applicationDeptId = applicationDeptId
+    })
+  })
+
   // 整单数据
   if (wholeOrderEnable.value) {
     selectList.forEach((item) => {

@@ -128,9 +128,43 @@
               v-model="row.expectArrivalDate"
               type="date"
               value-format="x"
-              placeholder="选择预计成交日期"
+              placeholder="请选择期望到货日期"
               class="!w-1/1"
             />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="mergeDisabled" label="交货日期" min-width="150">
+        <template #default="{ row, $index }">
+          <el-form-item
+            :prop="`${$index}.deliveryTime`"
+            :rules="formRules.deliveryTime"
+            class="mb-0px!"
+          >
+            <el-date-picker
+              :disabled="disabled"
+              v-model="row.deliveryTime"
+              type="date"
+              value-format="x"
+              placeholder="请选择交货日期"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="mergeDisabled" label="申请人" width="200">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
+            <el-text>{{ row.applicant }}</el-text>
+          </el-form-item>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="mergeDisabled" label="申请部门" width="200">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
+            <el-text>{{ row.applicationDept }}</el-text>
           </el-form-item>
         </template>
       </el-table-column>
@@ -337,6 +371,7 @@ const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
 // 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-SKU(产品名称-单位) 申请数量
 const formRules = reactive({
+  deliveryTime: [{ required: true, message: '交货日期不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
   orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],

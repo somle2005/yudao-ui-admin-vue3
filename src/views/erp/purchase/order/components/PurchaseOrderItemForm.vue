@@ -85,7 +85,7 @@
               :rules="formRules.declaredType"
               class="mb-0px!"
             >
-              <el-input :disabled="disabled" v-model="row.declaredType" />
+              <el-input :disabled="disabled" v-model.trim="row.declaredType" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -159,13 +159,20 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="币种" prop="currencyName" width="120">
+        <!-- 丁哥说只要有整单币种就可以了 -->
+        <!-- <el-table-column label="币种" prop="currencyName" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyName`" class="mb-0px!">
-              <el-text>{{ row.currencyName }}</el-text>
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.currencyName"
+                placeholder="请选择币种"
+                @change="currencyNameChange($event, row)"
+                :data="currencyList"
+              />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="仓库" width="150">
           <template #default="{ row, $index }">
@@ -307,7 +314,7 @@
         <el-table-column label="X码" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
-              <el-input v-model="row.xcode" :disabled="disabled" class="!w-100%" />
+              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -355,7 +362,7 @@
 </template>
 <script setup lang="ts">
 import { StockApi } from '@/api/erp/stock/stock'
-import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
+import { getCurrencyList, getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import {
   erpCountInputFormatter,
@@ -368,7 +375,7 @@ import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { defaultProps } from '@/utils/tree'
 import { updateModelValue } from '@/utils/high/index'
-import { getDeclaredType, currencyChange } from '@/utils/operate/purchase'
+import { getDeclaredType, currencyNameChange } from '@/utils/operate/purchase'
 
 const props = defineProps({
   items: {
@@ -401,6 +408,7 @@ const deptList: any = ref([])
 const userList: any = ref([])
 getUserList(userList)
 getDeptTree(deptList)
+const currencyList = getCurrencyList() // 币别列表
 
 /** 初始化设置入库项 */
 watch(

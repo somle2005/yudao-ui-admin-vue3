@@ -93,6 +93,15 @@ export const currencyChange = (currencyId, row) => {
   }
 }
 
+export const currencyNameChange = (currencyName, row) => {
+  const currency = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).find(
+    (item) => item.label === currencyName
+  )
+  if (currency) {
+    row.currencyId = currency.value
+  }
+}
+
 // 供应商带出付款条款-联动表单回显
 export const useSupplierChange = (supplierList, smFormRef) => {
   const supplierChange = (val: any) => {

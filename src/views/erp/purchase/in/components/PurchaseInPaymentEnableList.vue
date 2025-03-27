@@ -67,6 +67,7 @@ import { cloneDeep } from 'lodash-es'
 import { useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
 import { PurchaseOrderApi } from '@/api/erp/purchase/order'
 import { useSearchForm } from './hooks/search'
+import { currencyNameChange } from '@/utils/operate/purchase'
 
 // 暂时都是分行展示逻辑
 
@@ -193,11 +194,12 @@ const fieldMap = {
     label: '已收数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  currencyId: {
-    label: '币种',
-    slot: 'currencyId',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
-  },
+  currencyName: '币种',
+  // currencyId: {
+  //   label: '币种',
+  //   slot: 'currencyId',
+  //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  // },
 
   actTaxPrice: {
     label: '含税单价',

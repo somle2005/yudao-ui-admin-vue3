@@ -112,7 +112,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-
+        <!-- 
         <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
@@ -137,6 +137,14 @@
                   />
                 </el-select>
               </el-form-item>
+            </el-form-item>
+          </template>
+        </el-table-column> -->
+
+        <el-table-column label="币种" prop="currencyName" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.currencyName`" class="mb-0px!">
+              <el-text>{{ row.currencyName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -289,6 +297,7 @@ import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/co
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
+import { currencyNameChange } from '@/utils/operate/purchase'
 
 const props = defineProps({
   items: {
@@ -315,7 +324,7 @@ const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
-  currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
+  // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 // const defaultWarehouse = ref<WarehouseVO>(undefined) // 默认仓库
@@ -419,6 +428,7 @@ const handleAdd = () => {
     warehouseId: undefined,
     expectArrivalDate: undefined,
 
+    currencyName: undefined,
     currencyId: undefined,
     applicantId: undefined,
     applicantName: undefined,

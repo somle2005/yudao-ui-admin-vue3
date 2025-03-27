@@ -324,28 +324,28 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         },
         children: financeSubjectList
       },
-      {
-        type: 'date-picker',
-        placeholder: '请选择期望采购时间',
-        prop: 'orderTime',
-        label: '期望采购时间',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        },
-        rules: [
-          {
-            required: true,
-            message: '期望采购时间不能为空',
-            trigger: 'blur'
-          }
-        ]
-      },
+      // {
+      //   type: 'date-picker',
+      //   placeholder: '请选择期望采购时间',
+      //   prop: 'orderTime',
+      //   label: '期望采购时间',
+      //   attrs: {
+      //     clearable: true,
+      //     type: 'date',
+      //     'value-format': 'x',
+      //     class: '!w-1/1',
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   },
+      //   rules: [
+      //     {
+      //       required: true,
+      //       message: '期望采购时间不能为空',
+      //       trigger: 'blur'
+      //     }
+      //   ]
+      // },
       {
         type: 'select',
         placeholder: '请选择供应商',
@@ -396,17 +396,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         ],
         children: currencyList
       },
-
-      {
-        type: 'input',
-        label: '付款条款',
-        prop: 'paymentTerms',
-        placeholder: '请输入付款条款',
-        attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
       {
         type: 'select',
         placeholder: '请选择装运港',
@@ -436,6 +425,18 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
       },
 
+      { 
+        colConfig: { span: 24 },
+        type: 'input',
+        label: '付款条款',
+        prop: 'paymentTerms',
+        placeholder: '请输入付款条款',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+    
       {
         colConfig: { span: 24 },
         slot: 'items',
