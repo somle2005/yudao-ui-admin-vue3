@@ -116,46 +116,6 @@
       @selection-change="handleSelectionChange"
       @pagination="getList"
     >
-      <!-- <template #status="{ scope }">
-        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
-      </template> -->
-
-      <!-- <template #auditStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.auditStatus || ''" />
-      </template> -->
-
-      <!-- <template #executeStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_EXECUTE_STATUS" :value="scope.row.executeStatus || ''" />
-      </template> -->
-
-      <!-- <template #inStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_STORAGE_STATUS" :value="scope.row.inStatus || ''" />
-      </template> -->
-
-      <!-- <template #payStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_PAYMENT_STATUS" :value="scope.row.payStatus || ''" />
-      </template> -->
-
-      <!-- <template #offStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
-      </template> -->
-
-      <!-- <template #rowExecuteStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_EXECUTE_STATUS" :value="scope.row.rowExecuteStatus || ''" />
-      </template>
-
-      <template #rowInStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_STORAGE_STATUS" :value="scope.row.rowInStatus || ''" />
-      </template>
-
-      <template #rowPayStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_PAYMENT_STATUS" :value="scope.row.rowPayStatus || ''" />
-      </template>
-
-      <template #rowOffStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
-      </template> -->
-
       <template #currencyId="{ scope }">
         <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.currencyId || ''" />
       </template>
