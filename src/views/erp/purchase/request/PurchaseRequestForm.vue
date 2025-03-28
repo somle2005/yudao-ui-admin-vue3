@@ -17,6 +17,13 @@
           </el-tab-pane>
         </el-tabs>
       </template>
+      <template #fileUrl="{ model }">
+        <UploadFile
+          :is-show-tip="false"
+          v-model="model.fileUrl"
+          :limit="1"
+        />
+      </template>
     </SmForm>
     <div class="moreBtnList">
       <el-button @click="dialogVisible = false"> 取消</el-button>
@@ -46,30 +53,43 @@ import { usePurchaseRequestForm } from './hooks'
 import ItemsForm from './components/ItemsForm.vue'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
+import { computeDiscountPriceAndTotalPrice } from '@/utils/transformData'
 
 const resetFormData = () => {
-  return reactive({
+  // return reactive({
+  //   requestTime: undefined,
+  //   // applicant: undefined,
+  //   // applicationDept: undefined,
+  //   applicantId: undefined,
+  //   applicationDeptId: undefined,
+  //   supplierId: undefined,
+  //   deliveryDelivery: '',
+  //   items: [] as any
+  //   // productId: undefined,
+  //   // barCode: undefined
+  // })
+  return {
     requestTime: undefined,
-    // applicant: undefined,
-    // applicationDept: undefined,
     applicantId: undefined,
     applicationDeptId: undefined,
     supplierId: undefined,
     deliveryDelivery: '',
     items: [] as any
-    // productId: undefined,
-    // barCode: undefined
-  })
+  }
 }
 // eslint-disable-next-line prefer-const
-let formData = resetFormData()
+const formData = ref(resetFormData())
+
+
+
+
 
 const getResetFormData = () => {
-  formData = resetFormData()
+  formData.value = resetFormData()
 }
 
 const getFormData = () => {
-  return formData
+  return formData.value
 }
 
 const emit = defineEmits(['success'])
@@ -94,6 +114,26 @@ const changeAuditBtnType = (type) => {
   submitForm()
 }
 const submitFormDB = createDBFn(changeAuditBtnType)
+
+
+
+
+/** 计算 discountPrice、totalPrice 价格 */
+watch(
+  () => formData.value,
+  (val) => {
+    if (!val) {
+      return
+    }
+    console.log('进入val了',val)
+    // 编辑回显
+    computeDiscountPriceAndTotalPrice(smFormRef, formData.value)
+  },
+  { deep: true }
+)
+
+
+
 onMounted(() => {})
 onUnmounted(() => {})
 defineExpose({ open: openForm }) // 提供 open 方法，用于打开弹窗

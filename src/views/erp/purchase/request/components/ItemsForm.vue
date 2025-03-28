@@ -292,6 +292,31 @@
           </el-form-item>
         </template>
       </el-table-column> -->
+
+      <template v-if="mergeDisabled">
+        <el-table-column label="X码" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
+              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="箱率" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
+              <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" min-width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+      </template>
+
       <el-table-column v-if="!productDisabled" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
           <el-button :productDisabled="formData.length === 1" @click="handleDelete($index)" link
@@ -396,7 +421,6 @@ watch(
     if (!val || val.length === 0) {
       return
     }
-
     /**
      * 税额的计算
       单价 * (1+税率) = 含税单价
@@ -408,8 +432,17 @@ watch(
     税率，百分比-taxPercent-数字输入框(手动输入，保留小数点后两位。)
      */
 
-    // 循环处理
-    computeTaxPriceAndAllAmount(val)
+     const keyMap = {
+      // taxPrice: 'taxPrice',
+      // taxPercent: 'taxPercent',
+      // allAmount: 'allAmount',
+      // actTaxPrice: 'actTaxPrice',
+      // onePrice: 'productPrice',
+      applyCount: 'orderQuantity'
+    }
+
+    // 编辑回显
+    computeTaxPriceAndAllAmount(val, keyMap)
     // val.forEach((item) => {
     //   // 申请数量和税率都要有 才能计算出税额
     //   if (item.taxPercent && item.count && item.actTaxPrice) {
@@ -430,7 +463,7 @@ watch(
     //   // }
     // })
   },
-  { deep: true }
+  { deep: true, immediate: true }
 )
 
 /** 合计 */
