@@ -577,6 +577,7 @@ const mergePurchase = async () => {
       a.applicantId = applicantId
       a.applicationDept = applicationDept
       a.applicationDeptId = applicationDeptId
+      a.count = a.unOrderCount
     })
   })
 

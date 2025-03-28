@@ -180,10 +180,18 @@
               v-model="row.orderQuantity"
               controls-position="right"
               :min="0"
-              :max="row.approveCount"
+              :max="row.unOrderCount"
               class="!w-100%"
               @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
             />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="mergeDisabled" label="未订购数量" prop="unOrderCount" min-width="120">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.unOrderCount`" class="mb-0px!">
+            <el-text>{{ row.unOrderCount }}</el-text>
           </el-form-item>
         </template>
       </el-table-column>

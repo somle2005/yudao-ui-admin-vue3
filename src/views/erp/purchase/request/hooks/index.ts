@@ -132,11 +132,10 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         type: 'input',
         label: '单据编号',
         prop: 'no',
-        placeholder: '保存时自动生成',
+        placeholder: '请输入单据编号',
         attrs: {
           style: { width: '100%' },
           clearable: true,
-          disabled: true
         }
       },
       {
