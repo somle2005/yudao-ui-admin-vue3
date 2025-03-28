@@ -283,6 +283,14 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="价税合计" min-width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
+              <el-text>{{ row.allAmount }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <!-- <el-table-column label="优惠率%" width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.discountPercent`" class="mb-0px!">
@@ -311,7 +319,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="X码" width="120">
+        <el-table-column label="条码" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
               <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
@@ -362,7 +370,13 @@
 </template>
 <script setup lang="ts">
 import { StockApi } from '@/api/erp/stock/stock'
-import { getCurrencyList, getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
+import {
+  getCurrencyList,
+  getDeptTree,
+  getProductList,
+  getUserList,
+  getWarehouseList
+} from '@/commonData'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import {
   erpCountInputFormatter,

@@ -272,6 +272,14 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="价税合计" min-width="150">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.source`" class="mb-0px!">
+            <el-text>{{ row.allAmount }}</el-text>
+          </el-form-item>
+        </template>
+      </el-table-column>
+
       <!-- <el-table-column label="产品单价" fixed="right" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productPrice`" class="mb-0px!">
@@ -294,7 +302,7 @@
       </el-table-column> -->
 
       <template v-if="mergeDisabled">
-        <el-table-column label="X码" width="120">
+        <el-table-column label="条码" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
               <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
@@ -432,7 +440,7 @@ watch(
     税率，百分比-taxPercent-数字输入框(手动输入，保留小数点后两位。)
      */
 
-     const keyMap = {
+    const keyMap = {
       // taxPrice: 'taxPrice',
       // taxPercent: 'taxPercent',
       // allAmount: 'allAmount',

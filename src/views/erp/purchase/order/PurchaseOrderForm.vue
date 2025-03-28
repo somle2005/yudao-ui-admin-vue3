@@ -269,9 +269,9 @@ const createRequestFormOptions = () => {
 
     {
       type: 'select',
-      placeholder: '请选择财务主体',
+      placeholder: '请选择采购公司',
       prop: 'purchaseEntityId',
-      label: '财务主体',
+      label: '采购公司',
       attrs: {
         filterable: true,
         clearable: true,

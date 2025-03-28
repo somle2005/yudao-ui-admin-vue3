@@ -200,20 +200,20 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           }
         ]
       },
-      {
-        type: 'select',
-        placeholder: '请选择建议供应商',
-        prop: 'supplierId',
-        label: '建议供应商',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: supplierList
-      },
+      // {
+      //   type: 'select',
+      //   placeholder: '请选择建议供应商',
+      //   prop: 'supplierId',
+      //   label: '建议供应商',
+      //   attrs: {
+      //     filterable: true,
+      //     clearable: true,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   },
+      //   children: supplierList
+      // },
 
       // {
       //   type: 'select',
@@ -314,9 +314,9 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       },
       {
         type: 'select',
-        placeholder: '请选择财务主体',
+        placeholder: '请选择采购公司',
         prop: 'purchaseEntityId',
-        label: '财务主体',
+        label: '采购公司',
         attrs: {
           filterable: true,
           clearable: true,
