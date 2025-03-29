@@ -11,17 +11,6 @@
         :options="requestFormOptions"
         :getModelValue="getFormData"
       >
-        <!-- <template #primaryImageUrl="{ scope, model }">
-      <UploadImg v-model="model[scope.prop]" />
-    </template> -->
-        <!-- <template #action>
-      <div class="moreBtnList">
-        <el-button type="primary" @click="handleQuery"> 确定</el-button>
-      </div>
-    </template> -->
-        <!-- <template #items="{ scope, model }"> 
-       {{ console.log(scope, model, '打印scope-model') }}  -->
-
         <template #fileUrl="{ model, scope }">
           <UploadFile
             :disabled="scope?.attrs?.disabled"
@@ -48,30 +37,6 @@
                 :disabled="itemsFormdisabled"
                 :formType="formType"
               />
-              <!-- <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" /> -->
-            </el-tab-pane>
-          </el-tabs>
-        </template>
-
-        <template #inspectionJson>
-          <el-tabs v-model="inspectionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-            <el-tab-pane label="验货单" name="inspectionJson">
-              <InspectionJsonForm
-                ref="inspectionJsonFormRef"
-                :disabled="jsonDisabled"
-                :items="formData.inspectionJson"
-              />
-            </el-tab-pane>
-          </el-tabs>
-        </template>
-        <template #completionJson>
-          <el-tabs v-model="completionJsonTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-            <el-tab-pane label="完工单" name="completionJson">
-              <CompletionJsonForm
-                ref="completionJsonFormRef"
-                :disabled="jsonDisabled"
-                :items="formData.completionJson"
-              />
             </el-tab-pane>
           </el-tabs>
         </template>
@@ -95,19 +60,13 @@
 
     <!-- 可订单的申请列表 -->
     <EnableList ref="enableListRef" @success="addItem" />
-    <!-- <PurchaseRequestOrderEnableList
-    ref="purchaseRequestOrderEnableListRef"
-    @success="handlePurchaseRequestChange"
-  /> -->
   </div>
 </template>
 <script setup lang="ts">
 import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
 import PurchaseOrderItemForm from './components/PurchaseOrderItemForm.vue'
-import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
-import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
-import { PurchaseRequestVO } from '@/api/erp/purchase/request'
+import { SupplierVO } from '@/api/erp/purchase/supplier'
+import { AccountVO } from '@/api/erp/finance/account'
 import {
   getAccountList,
   getCurrencyList,
@@ -117,23 +76,21 @@ import {
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import {
   computeDiscountPriceAndTotalPrice,
+  computeList,
   distinctList,
-  filterObjKey
+  filterObjKey,
+  jsonToList,
+  listToJson
 } from '@/utils/transformData'
 import { AUDIT_TYPE, TAX_PERCENT } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
-import { useInspectionJson } from './hooks/useInspectionJson'
-import { useCompletionJson } from './hooks/useCompletionJson'
-import CompletionJsonForm from './components/CompletionJsonForm.vue'
-import InspectionJsonForm from './components/InspectionJsonForm.vue'
 import EnableList from './components/EnableList.vue'
 import download from '@/utils/download'
 import { addRules } from '@/components/SmForm/src/utils'
-import { getIntDictOptions, DICT_TYPE, getStrDictOptions } from '@/utils/dict'
+import { DICT_TYPE, getStrDictOptions } from '@/utils/dict'
 import { useSupplierChange } from '@/utils/operate/purchase'
-
-const { inspectionJsonFormRef, inspectionJsonTabsName } = useInspectionJson()
-const { completionJsonFormRef, completionJsonTabsName } = useCompletionJson()
+import { cloneDeep } from 'lodash-es'
+import { InfoKeyOpenFormData } from './hooks/injectKeys'
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -167,6 +124,8 @@ const initFormData = () => {
 }
 
 formData.value = initFormData()
+
+provide(InfoKeyOpenFormData, formData)
 
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -221,11 +180,10 @@ const createRequestFormOptions = () => {
       type: 'input',
       label: '单据编号',
       prop: 'no',
-      placeholder: '保存时自动生成',
+      placeholder: '请输入单据编号',
       attrs: {
         style: { width: '100%' },
-        clearable: true,
-        disabled: true
+        clearable: true
       }
     },
     {
@@ -281,39 +239,13 @@ const createRequestFormOptions = () => {
       },
       children: financeSubjectList
     },
-
-    {
-      type: 'date-picker',
-      placeholder: '请选择结算日期',
-      prop: 'settlementDate',
-      label: '结算日期',
-      attrs: {
-        clearable: true,
-        type: 'date',
-        'value-format': 'x',
-        class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
-      }
-    },
-
-    {
-      type: 'input',
-      label: '收货地址',
-      prop: 'address',
-      placeholder: '请输入收货地址',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
     {
       type: 'input',
       label: '付款条款',
       prop: 'paymentTerms',
       placeholder: '请输入付款条款',
       attrs: {
+        type: 'textarea',
         style: { width: '100%' },
         clearable: true
       }
@@ -367,6 +299,32 @@ const createRequestFormOptions = () => {
         }
       },
       children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
+    },
+    {
+      type: 'date-picker',
+      placeholder: '请选择结算日期',
+      prop: 'settlementDate',
+      label: '结算日期',
+      attrs: {
+        clearable: true,
+        type: 'date',
+        'value-format': 'x',
+        class: '!w-1/1',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+
+    {
+      type: 'input',
+      label: '收货地址',
+      prop: 'address',
+      placeholder: '请输入收货地址',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
     },
 
     {
@@ -514,28 +472,7 @@ const updateFormOptions = (formOptions) => {
 }
 
 const createDetailFormOptions = (formOptions) => {
-  const index = formOptions.length
-  const obj: any = {
-    prop: 'inspectionJson',
-    colConfig: { span: 24 },
-    slot: 'inspectionJson',
-    formItemConfig: {
-      class: 'common-form-items'
-    }
-  }
-  const obj1: any = {
-    prop: 'completionJson',
-    colConfig: { span: 24 },
-    slot: 'completionJson',
-    formItemConfig: {
-      class: 'common-form-items'
-    }
-  }
-  formOptions.splice(index, 0, obj, obj1)
-
-  const list = ['inspectionJson', 'completionJson']
   formOptions.forEach((item) => {
-    if (list.includes(item.prop)) return
     if (item.attrs) {
       item.attrs!.disabled = true
     } else {
@@ -706,6 +643,7 @@ const createGenerateContractFormOptions = (formOptions) => {
       prop: 'paymentTerms',
       placeholder: '请输入付款条款',
       attrs: {
+        type: 'textarea',
         style: { width: '100%' },
         clearable: true
       }
@@ -750,9 +688,6 @@ const getFormData = () => {
   return formData.value
 }
 
-const jsonList = ['inspectionJson', 'completionJson']
-const jsonDisabled = computed(() => formData.value.auditStatus === 5) // 审核不可以进行编辑
-
 // 合并 合并入库时列表勾选中传递的items数据
 const mergeSelectItemsData = (formData, data) => {
   // count-数量要能够修改不能超过原始值
@@ -775,27 +710,15 @@ const open = async (type: string, id?: number, data?: any) => {
     formLoading.value = true
     try {
       formData.value = await PurchaseOrderApi.getPurchaseOrder(id)
-      if (formData.value?.items?.length) {
-        // formData.value.items.forEach((item) => {
-        //   if (item.product) {
-        //     item.productName = item.product.name
-        //   }
-        // })
-      } else {
+      if (!formData.value?.items?.length) {
         formData.value.items = []
       }
-      jsonList.forEach((item) => {
-        if (formData.value[item]) {
-          formData.value[item] = JSON.parse(formData.value[item])
-        } else {
-          formData.value[item] = []
-        }
-      })
-
+      formData.value.items = jsonToList(formData.value.items, ['inspectionJson', 'completionJson'])
+      console.log(formData.value.items, 'formData.value.items')
       if (type === 'merge') {
         dialogTitle.value = '合并入库'
-        const formData = getFormData()
-        mergeSelectItemsData(formData, data)
+        const inFormData = getFormData()
+        mergeSelectItemsData(inFormData, data)
       }
       // 主动触发表单数据回显
       formRef.value.initForm()
@@ -837,6 +760,8 @@ const auditBtnType = ref(AUDIT_TYPE.agree)
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
+  formData.value.items = itemFormRef.value.formData
+
   // 校验表单
   await formRef.value.validate()
   await itemFormRef.value.validate()
@@ -844,25 +769,27 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    let data = formData.value as unknown as PurchaseOrderVO
+    let data = formData.value as unknown as PurchaseOrderVO as any
     if (itemFormRef?.value?.formData) {
-      data.items = itemFormRef.value.formData
+      data.items = cloneDeep(itemFormRef.value.formData)
     }
 
-    if (inspectionJsonFormRef?.value?.formData) {
-      data.inspectionJson = JSON.stringify(inspectionJsonFormRef.value.formData)
-      data.totalInspectionPassCount = inspectionJsonFormRef.value.formData.reduce(
-        (prev, cur) => prev + (cur.inspectionPassCount || 0),
-        0
-      )
-    } else {
-      data.inspectionJson = '[]'
-    }
-    if (completionJsonFormRef?.value?.formData) {
-      data.completionJson = JSON.stringify(completionJsonFormRef.value.formData)
-    } else {
-      data.completionJson = '[]'
-    }
+    // 详情-新增-编辑-内部有兜底转化[]为'[]'
+    const mapList = [
+      {
+        targetKey: 'totalInspectionPassCount',
+        computeKey: 'inspectionPassCount',
+        listKey: 'inspectionJson'
+      },
+      {
+        targetKey: 'totalCompletionCount',
+        computeKey: 'finishCount',
+        listKey: 'completionJson'
+      }
+    ]
+    // 需要深度拷贝不然同时并发 数组会转换成字符串然后报错
+    const items: any = computeList(mapList, cloneDeep(data.items))
+    data.items = listToJson(items, ['inspectionJson', 'completionJson'])
 
     if (formType.value === 'create') {
       await PurchaseOrderApi.createPurchaseOrder(data)

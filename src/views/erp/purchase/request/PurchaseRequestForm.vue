@@ -26,8 +26,6 @@
       </template>
     </SmForm>
     <div class="moreBtnList">
-      <el-button @click="dialogVisible = false"> 取消</el-button>
-
       <el-button
         v-if="!auditType"
         type="primary"
@@ -36,7 +34,7 @@
       >
         确定</el-button
       >
-
+      <el-button @click="dialogVisible = false"> 取消</el-button>
       <template v-if="auditType">
         <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
           不同意</el-button
@@ -56,18 +54,6 @@ import { AUDIT_TYPE } from '@/utils/constant'
 import { computeDiscountPriceAndTotalPrice } from '@/utils/transformData'
 
 const resetFormData = () => {
-  // return reactive({
-  //   requestTime: undefined,
-  //   // applicant: undefined,
-  //   // applicationDept: undefined,
-  //   applicantId: undefined,
-  //   applicationDeptId: undefined,
-  //   supplierId: undefined,
-  //   deliveryDelivery: '',
-  //   items: [] as any
-  //   // productId: undefined,
-  //   // barCode: undefined
-  // })
   return {
     requestTime: undefined,
     applicantId: undefined,
@@ -77,12 +63,8 @@ const resetFormData = () => {
     items: [] as any
   }
 }
-// eslint-disable-next-line prefer-const
+
 const formData = ref(resetFormData())
-
-
-
-
 
 const getResetFormData = () => {
   formData.value = resetFormData()
@@ -125,7 +107,6 @@ watch(
     if (!val) {
       return
     }
-    console.log('进入val了',val)
     // 编辑回显
     computeDiscountPriceAndTotalPrice(smFormRef, formData.value)
   },

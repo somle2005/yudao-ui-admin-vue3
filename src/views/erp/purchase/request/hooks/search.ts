@@ -71,8 +71,21 @@ export const useSearchForm = (handleQuery) => {
         // }
       },
     },
-
-
+    {
+      type: 'select',
+      placeholder: '请选择关闭状态',
+      prop: 'offStatus',
+      label: '关闭状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getDictOptions(DICT_TYPE.ERP_OFF_STATUS)
+    },
     {
       type: 'select',
       placeholder: '请选择审核状态',
@@ -86,10 +99,7 @@ export const useSearchForm = (handleQuery) => {
           width: '100%'
         }
       },
-      children: getDictOptions(DICT_TYPE.ERP_AUDIT_STATUS).map(item=>{
-        item.type = 'option'
-        return item
-      })
+      children: getDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)
     },
 
     {

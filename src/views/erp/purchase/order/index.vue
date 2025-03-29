@@ -206,7 +206,7 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
-  erpPurchaseRequestItemNo: '源单单号', 
+  // erpPurchaseRequestItemNo: '源单单号', 
   supplierName: '供应商',
 
   auditStatus: {
@@ -307,16 +307,16 @@ const fieldMap = {
   totalInspectionPassCount: {
     width: '250px',
     label: '总验货通过数',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   totalCompletionCount: {
     width: '250px',
     label: '总完工数',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
   waitInCount: {
-    label: '待收数量', // 待入库数量
+    label: '待收数量', // 待入库数量-待收数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   count: {
@@ -324,7 +324,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   inCount: {
-    label: '已收数量', // 采购入库数量
+    label: '已入库数量', // 采购入库数量-已收数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   returnCount: {

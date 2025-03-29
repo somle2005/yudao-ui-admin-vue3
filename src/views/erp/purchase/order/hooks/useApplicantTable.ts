@@ -2,6 +2,7 @@ import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/erp/purchase/reques
 import { getDeptTree, getUserList } from '@/commonData'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { getDictOptions } from '@/utils/dict'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList, resetQueryParams } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
@@ -138,7 +139,6 @@ export const useApplicantTable = () => {
     getList()
   }
 
-
   const selectionList = ref<PurchaseRequestVO[]>([])
   const handleSelectionChange = (rows: PurchaseRequestVO[]) => {
     selectionList.value = rows
@@ -179,8 +179,6 @@ export const useApplicantTable = () => {
       loading.value = false
     }
   }
-
-
 
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()
@@ -246,6 +244,21 @@ export const useApplicantTable = () => {
         //   width: '100%'
         // }
       }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择关闭状态',
+      prop: 'offStatus',
+      label: '关闭状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getDictOptions(DICT_TYPE.ERP_OFF_STATUS)
     },
     {
       type: 'select',

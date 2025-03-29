@@ -135,7 +135,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         placeholder: '请输入单据编号',
         attrs: {
           style: { width: '100%' },
-          clearable: true,
+          clearable: true
         }
       },
       {
@@ -297,6 +297,17 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
 
     return [
       {
+        type: 'input',
+        label: '单据编号',
+        prop: 'no',
+        placeholder: '请输入单据编号',
+        attrs: {
+          class: '!w-240px',
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
         type: 'date-picker',
         placeholder: '请选择单据日期',
         prop: 'noTime',
@@ -310,6 +321,28 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
             width: '100%'
           }
         }
+      },
+      {
+        type: 'select',
+        placeholder: '请选择供应商',
+        prop: 'supplierId',
+        label: '供应商',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          },
+          onChange: supplierChange
+        },
+        rules: [
+          {
+            required: true,
+            message: '供应商不能为空',
+            trigger: 'blur'
+          }
+        ],
+        children: supplierList
       },
       {
         type: 'select',
@@ -348,26 +381,15 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       //   ]
       // },
       {
-        type: 'select',
-        placeholder: '请选择供应商',
-        prop: 'supplierId',
-        label: '供应商',
+        type: 'input',
+        label: '付款条款',
+        prop: 'paymentTerms',
+        placeholder: '请输入付款条款',
         attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          },
-          onChange: supplierChange
-        },
-        rules: [
-          {
-            required: true,
-            message: '供应商不能为空',
-            trigger: 'blur'
-          }
-        ],
-        children: supplierList
+          type: 'textarea',
+          style: { width: '100%' },
+          clearable: true
+        }
       },
       {
         type: 'select',
@@ -425,13 +447,27 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         },
         children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
       },
+      {
+        type: 'date-picker',
+        placeholder: '请选择结算日期',
+        prop: 'settlementDate',
+        label: '结算日期',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
 
       {
-        colConfig: { span: 24 },
         type: 'input',
-        label: '付款条款',
-        prop: 'paymentTerms',
-        placeholder: '请输入付款条款',
+        label: '收货地址',
+        prop: 'address',
+        placeholder: '请输入收货地址',
         attrs: {
           style: { width: '100%' },
           clearable: true

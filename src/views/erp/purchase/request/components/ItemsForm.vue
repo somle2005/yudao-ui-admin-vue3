@@ -242,6 +242,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="单价" width="200">
+        <template #default="{ row }">
+          <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+        </template>
+      </el-table-column>
+
       <el-table-column label="参考单价" prop="referenceUnitPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">

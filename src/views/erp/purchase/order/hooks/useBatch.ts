@@ -16,7 +16,7 @@ export const useBatch = (selectionList, getList, wholeOrderEnable) => {
       })
     } else {
       ids = selectionList.value.map((item: any) => {
-        return { id: item.purchaseApplyItemId }
+        return { id: item.rowItemsId }
       })
     }
     return ids

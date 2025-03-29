@@ -16,6 +16,35 @@
             <el-text>{{ row.id }}</el-text>
           </template>
         </el-table-column>
+
+        <template v-if="formType === 'detail'">
+          <el-table-column label="验货单" width="200">
+            <template #default="{ $index }">
+              <el-button
+                :disabled="jsonDisabled"
+                type="primary"
+                plain
+                @click="openJsonList('inspectionJson', $index)"
+              >
+                验货单
+              </el-button>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="完工单" width="200">
+            <template #default="{ $index }">
+              <el-button
+                :disabled="jsonDisabled"
+                type="primary"
+                plain
+                @click="openJsonList('completionJson', $index)"
+              >
+                完工单
+              </el-button>
+            </template>
+          </el-table-column>
+        </template>
+
         <el-table-column label="SKU" width="180">
           <template #default="{ row, $index }">
             <el-form-item
@@ -135,8 +164,8 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <!-- 
-        <el-table-column label="币种" prop="currencyId" width="120">
+
+        <!-- <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
               <el-select
@@ -209,30 +238,6 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="采购入库数量" width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.inCount`" class="mb-0px!">
-            <el-input-number
-              v-model="row.inCount"
-              controls-position="right"
-              :min="1"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column label="申请数量" width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.applyCount`" class="mb-0px!">
-            <el-input-number
-              v-model="row.applyCount"
-              controls-position="right"
-              :min="1"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column> -->
         <el-table-column label="含税单价" width="120">
           <template #default="{ row, $index }">
             <el-form-item
@@ -291,20 +296,6 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="优惠率%" width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.discountPercent`" class="mb-0px!">
-            <el-input-number
-              v-model="row.discountPercent"
-              controls-position="right"
-              :min="0"
-              :precision="2"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column> -->
-
         <el-table-column label="交货日期" width="180">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deliveryTime`" class="mb-0px!">
@@ -349,7 +340,12 @@
         <el-table-column label="备注" min-width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-              <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
+              <el-input
+                v-model.trim="row.remark"
+                :disabled="disabled"
+                type="textarea"
+                placeholder="请输入备注"
+              />
             </el-form-item>
           </template>
         </el-table-column>
@@ -366,6 +362,9 @@
     <el-row justify="center" class="mt-3" v-if="!disabled">
       <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
     </el-row>
+
+    <InspectionJsonForm ref="inspectionJsonFormRef" :disabled="jsonDisabled" />
+    <CompletionJsonForm ref="completionJsonFormRef" :disabled="jsonDisabled" />
   </div>
 </template>
 <script setup lang="ts">
@@ -389,7 +388,10 @@ import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { defaultProps } from '@/utils/tree'
 import { updateModelValue } from '@/utils/high/index'
-import { getDeclaredType, currencyNameChange } from '@/utils/operate/purchase'
+import { getDeclaredType, currencyNameChange, currencyChange } from '@/utils/operate/purchase'
+import InspectionJsonForm from './InspectionJsonForm.vue'
+import CompletionJsonForm from './CompletionJsonForm.vue'
+import { InfoKeyOpenFormData } from '../hooks/injectKeys'
 
 const props = defineProps({
   items: {
@@ -422,7 +424,28 @@ const deptList: any = ref([])
 const userList: any = ref([])
 getUserList(userList)
 getDeptTree(deptList)
-const currencyList = getCurrencyList() // 币别列表
+const inspectionJsonFormRef = ref()
+const completionJsonFormRef = ref()
+
+const openFormData = inject(InfoKeyOpenFormData)
+const jsonDisabled = computed(() => {
+  return openFormData.value.auditStatus === 5
+}) // 审核不可以进行编辑
+
+
+const openJsonList = (type: string, index: number) => {
+  const row = formData.value[index]
+  const map = {
+    inspectionJson: () => {
+      inspectionJsonFormRef.value.open(row, formData, index, type)
+    },
+    completionJson: () => {
+      completionJsonFormRef.value.open(row, formData, index, type)
+    }
+  }
+
+  map[type]()
+}
 
 /** 初始化设置入库项 */
 watch(
@@ -506,7 +529,9 @@ const handleAdd = () => {
     containerRate: undefined,
     purchaseApplyItemId: undefined,
     erpPurchaseRequestItemNo: undefined,
-    count: undefined
+    count: undefined,
+    inspectionJson: [],
+    completionJson: []
     // inCount: undefined,
     // applyCount: undefined,
   }
@@ -542,49 +567,6 @@ const validate = () => {
   return formRef.value.validate()
 }
 defineExpose({ validate, formData })
-
-// const updateModelValue = (
-//   val,
-//   row,
-//   list,
-//   targetKey = 'id',
-//   transFormMap: { [key: string]: string }
-// ) => {
-//   if (!list?.length) return
-//   const item = list.find((item) => item[targetKey] === val)
-//   if (item) {
-//     for (let key in transFormMap) {
-//       row[key] = item[transFormMap[key]]
-//     }
-//     // row.productName = item.name
-//   }
-//   console.log(val, 'updateModelValue', row)
-// }
-
-// const getDeclaredType = async (val: any, row: any, list: any[]) => {
-//   // row.declaredType = '' // 前置置空 会有闪动
-
-//   const product = list.find((item) => item.id === val)
-//   if (!product) return
-
-//   const data = await CustomProductApi.getCustomProductPage({ productId: product.id })
-//   let customCategoryId
-
-//   if (data?.list?.length) {
-//     customCategoryId = data.list[0].customCategoryId
-//   }
-//   if (!customCategoryId) {
-//     row.declaredType = ''
-//     return
-//   }
-
-//   const customRuleCategoryData = await CustomRuleCategoryApi.getCustomRuleCategory(customCategoryId)
-//   if (customRuleCategoryData) {
-//     row.declaredType = customRuleCategoryData.declaredType
-//   } else {
-//     row.declaredType = ''
-//   }
-// }
 
 /** 初始化 */
 onMounted(async () => {

@@ -115,7 +115,6 @@ export const computeTaxPriceAndAllAmount = (
       // 税率-含税单价 其中一个没有单价变为空
       item[onePrice] = undefined
     }
-
   })
 
   // totalPrice 总价 = 含税单价 * 数量
@@ -179,5 +178,56 @@ export const filterObjKey = (queryParams: { [key: string]: any }, saveObjkeyList
     return map
   } catch (e) {
     console.log(e, '报错了')
+  }
+}
+
+export const listToJson = (list: any[], jsonList: string[]) => {
+  list.forEach((item) => {
+    jsonList.forEach((key) => {
+      if (item[key]) {
+        item[key] = JSON.stringify(item[key])
+      }
+    })
+  })
+  return list
+}
+
+export const jsonToList = (list: any[], jsonList: string[]) => {
+  list.forEach((item) => {
+    jsonList.forEach((key) => {
+      if (item[key]) {
+        item[key] = JSON.parse(item[key])
+      } else {
+        item[key] = []
+      }
+    })
+  })
+  return list
+}
+
+export const reduceVal = (computeKey: string, list: any[]) => {
+  if (!list?.length || !Array.isArray(list)) return null
+  return list.reduce((prev, cur) => prev + cur[computeKey], 0)
+}
+
+interface MapListObj {
+  targetKey: string
+  computeKey: string
+  listKey: string
+}
+
+export const computeList = (mapList: Array<MapListObj>, list: any[]) => {
+  if (!list?.length || !Array.isArray(list)) return list
+  try {
+    list.forEach((item) => {
+      mapList.forEach((sourceMap) => {
+        const { targetKey, computeKey, listKey } = sourceMap
+        if (!item[listKey]?.length) return
+        item[targetKey] = reduceVal(computeKey, item[listKey])
+      })
+    })
+    return list
+  } catch (e) {
+    console.log(e, '报错')
   }
 }
