@@ -538,7 +538,8 @@ const mergePurchase = async () => {
       a.applicantId = applicantId
       a.applicationDept = applicationDept
       a.applicationDeptId = applicationDeptId
-      a.count = a.unOrderCount
+      // 默认下单数量=未订购数量
+      a.orderQuantity = a.unOrderCount
     })
   })
 

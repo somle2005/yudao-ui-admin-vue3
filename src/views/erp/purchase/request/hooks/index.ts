@@ -92,10 +92,10 @@ const mergeSelectItemsData = (formData, data, smFormRef) => {
   })
   formData.items = data.items
 
-  formData.items.forEach((item) => {
-    // 默认下单数量等于批准数量
-    item.orderQuantity = item.approveCount
-  })
+  // formData.items.forEach((item) => {
+  //   // 默认下单数量等于批准数量
+  //   item.orderQuantity = item.approveCount
+  // })
 
   // nextTick(() => {
   //   const modelValue = smFormRef.value.getFormData()
