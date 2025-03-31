@@ -233,7 +233,6 @@
           </template>
         </el-table-column>
 
-        <!-- 暂时先不做最大值校验-合并入库的时候 叫做入库数量  -->
 
         <el-table-column v-if="!showOringinCount" label="数量" width="120">
           <template #default="{ row, $index }">
@@ -409,14 +408,12 @@ import {
   getUserList,
   getWarehouseList
 } from '@/commonData'
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import {
   erpCountInputFormatter,
   erpPriceInputFormatter,
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { cloneDeep } from 'lodash-es'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { defaultProps } from '@/utils/tree'

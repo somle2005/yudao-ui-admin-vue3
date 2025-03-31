@@ -171,15 +171,11 @@
 </template>
 
 <script setup lang="ts">
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
+import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/erp/purchase/order'
 import PurchaseOrderForm from './PurchaseOrderForm.vue'
-import { ProductApi, ProductVO } from '@/api/erp/product/product'
-import { UserVO } from '@/api/system/user'
-import * as UserApi from '@/api/system/user'
-import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { cloneDeep } from 'lodash-es'
@@ -463,9 +459,6 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const productList = ref<ProductVO[]>([]) // 产品列表
-const supplierList = ref<SupplierVO[]>([]) // 供应商列表
-const userList = ref<UserVO[]>([]) // 用户列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -621,16 +614,6 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 /** 初始化 **/
 onMounted(async () => {
   getList()
-  // // 加载列表 产品、仓库列表、供应商
-  // const [list1, product, supplier, user] = await Promise.all([
-  //   getList(),
-  //   ProductApi.getProductSimpleList(),
-  //   SupplierApi.getSupplierSimpleList(),
-  //   UserApi.getSimpleUserList()
-  // ])
-  // productList.value = product
-  // supplierList.value = supplier
-  // userList.value = user
 })
 
 const mergeOrder = async () => {

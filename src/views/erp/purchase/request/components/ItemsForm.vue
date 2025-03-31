@@ -210,7 +210,6 @@
       <el-table-column label="申请数量" prop="count" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
-            <!-- @change="(val) => (row.approveCount = val)" -->
             <el-input-number
               :disabled="productDisabled"
               v-model="row.count"
@@ -304,27 +303,6 @@
           </el-form-item>
         </template>
       </el-table-column>
-
-      <!-- <el-table-column label="产品单价" fixed="right" min-width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.productPrice`" class="mb-0px!">
-            <el-input-number
-              v-model="row.productPrice"
-              controls-position="right"
-              :min="0.01"
-              :precision="2"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="备注" min-width="150">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-            <el-input v-model="row.remark" placeholder="请输入备注" />
-          </el-form-item>
-        </template>
-      </el-table-column> -->
 
       <template v-if="mergeDisabled">
         <el-table-column label="条码" width="120">

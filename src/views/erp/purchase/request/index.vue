@@ -140,16 +140,6 @@
         >
           删除
         </el-button>
-
-        <!-- <el-button
-          link
-          type="primary"
-          @click="handleSubmitAudit([scope.row.id])"
-          v-hasPermi="['erp:purchase-request:audit']"
-        >
-          提交审核
-        </el-button> -->
-
         <el-button
           link
           type="primary"
@@ -169,35 +159,6 @@
         >
           反审核
         </el-button>
-
-        <!-- <el-button
-          link
-          type="primary"
-          @click="handleUpdateStatusEnable(scope.row, true)"
-          v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.rowOffStatus * 1 !== 1"
-        >
-          开启
-        </el-button>
-
-        <el-button
-          link
-          type="danger"
-          @click="handleUpdateStatusEnable(scope.row, false)"
-          v-hasPermi="['erp:purchase-request:enable']"
-          v-if="scope.row.rowOffStatus * 1 === 1"
-        >
-          关闭
-        </el-button> -->
-        <!-- <el-button
-          type="primary"
-          link
-          @click="mergePurchaseOne(scope.row)"
-          v-hasPermi="['erp:purchase-request:merge']"
-          v-if="scope.row.rowOrderStatus !== 1"
-        >
-          采购
-        </el-button> -->
       </template>
     </SmTable>
   </ContentWrap>
@@ -635,22 +596,6 @@ const handleSubmitAuditBatch = async () => {
 
     // 整单和分行都统一做去重处理 都是取申请单id
     let ids: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
-
-    // // 整单的时候用id做标记取出items里面所有的id
-    // if (wholeOrderEnable.value) {
-    //   selectList.forEach((item) => {
-    //     if (!item?.items?.length) return
-    //     item.items.forEach((item) => {
-    //       ids.push(item.id)
-    //     })
-    //   })
-    // } else {
-    //   // 分行的时候用purchaseOrderId做标记取出id
-    //   selectList.forEach((item) => {
-    //     ids.push(item.purchaseOrderId)
-    //   })
-    // }
-
     await PurchaseRequestApi.submitPurchaseAudit(ids)
     message.success('提交审核成功')
     // 刷新列表

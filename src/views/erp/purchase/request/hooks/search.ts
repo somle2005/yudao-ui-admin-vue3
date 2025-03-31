@@ -178,7 +178,6 @@ export const useSearchForm = (handleQuery) => {
   const events = {
     'keyup.enter': (e, item) => {
       handleQuery()
-      console.log(e, '回车事件出发了', item)
     }
   }
 

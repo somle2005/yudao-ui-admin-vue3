@@ -153,13 +153,13 @@ export const useApplicantTable = () => {
   const getList = async () => {
     queryParams.auditStatus = 5
     selectionList.value = []
+    list.value = []
     loading.value = true
     try {
       // 展示分行数据
       const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
       list.value = mergeItemsToList(data.list, {
         id: 'purchaseApplyItemId',
-        status: 'rowStatus',
         orderStatus: 'rowOrderStatus',
         offStatus: 'rowOffStatus'
       })
@@ -280,7 +280,6 @@ export const useApplicantTable = () => {
   const events = {
     'keyup.enter': (e, item) => {
       handleQuery()
-      console.log(e, '回车事件出发了', item)
     }
   }
 
@@ -307,7 +306,7 @@ export const useApplicantTable = () => {
     selectionList,
     handleSelectionChange,
     getList,
-    resetApplicantTable,
+    // resetApplicantTable,
     getSearchFormData,
     searchFormOptions,
     handleQuery,
