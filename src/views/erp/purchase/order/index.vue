@@ -207,8 +207,6 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   supplierName: '供应商',
-  portOfLoading: '装运港',
-  portOfDischarge: '目的港',
   auditStatus: {
     label: '审核状态',
     slot: 'auditStatus',
