@@ -557,7 +557,7 @@ const mergeLoading = ref(false)
 const mergePurchase = async () => {
   // 5已审核
   const auditType = 5
-  const hasAudit = selectionList.value.some((item: any) => item.status === auditType)
+  const hasAudit = selectionList.value.some((item: any) => item.auditStatus === auditType)
   if (!hasAudit) {
     message.error('选中行未包含审核单据，请检查')
     return
@@ -566,7 +566,7 @@ const mergePurchase = async () => {
   let items: any = []
   // 如果不是审核状态的要进行剔除
   const selectList: any = cloneDeep(
-    selectionList.value.filter((item: any) => item.status === auditType)
+    selectionList.value.filter((item: any) => item.auditStatus === auditType)
   )
 
   selectList.forEach((item) => {

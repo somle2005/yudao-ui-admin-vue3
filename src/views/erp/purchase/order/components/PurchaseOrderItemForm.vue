@@ -121,7 +121,7 @@
         <el-table-column label="英文品名" width="180">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
-              <el-input :disabled="productDisabled" v-model="row.declaredTypeEn" />
+              <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -159,6 +159,8 @@
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
               <el-tree-select
                 v-if="!row.erpPurchaseRequestItemNo"
+                filterable
+                clearable
                 :disabled="disabled"
                 v-model="row.applicationDeptId"
                 :data="deptList"
