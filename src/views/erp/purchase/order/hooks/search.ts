@@ -1,5 +1,6 @@
 import {
   getAccountList,
+  getDeptTree,
   getProductList,
   getSupplierList,
   getUserList,
@@ -12,7 +13,56 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const userList = getUserList()
   const productList = getProductList(null, { label: 'barCode', value: 'id' })
   const supplierList = getSupplierList()
+  const { deptList, defaultProps } = getDeptTree()
   const searchFormOptions = ref<Array<FormOptions>>([
+    {
+      type: 'date-picker',
+      placeholder: '请选择单据日期',
+      prop: 'noTime',
+      label: '单据日期',
+      attrs: {
+        clearable: true,
+        type: 'daterange',
+        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        'start-placeholder': '开始日期',
+        'end-placeholder': '结束日期',
+        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择申请人',
+      prop: 'applicantId',
+      label: '申请人',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: userList
+    },
+    {
+      type: 'tree-select',
+      placeholder: '请选择申请部门',
+      prop: 'applicationDeptId',
+      label: '申请部门',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        data: deptList,
+        props: defaultProps,
+        'check-strictly': true,
+        'node-key': 'id'
+      }
+    },
     // 订单单号
     {
       type: 'input',
@@ -53,24 +103,24 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: productList
     },
     // 订单时间
-    {
-      type: 'date-picker',
-      placeholder: '请选择采购时间',
-      prop: 'orderTime',
-      label: '采购时间',
-      attrs: {
-        clearable: true,
-        type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
-        'start-placeholder': '开始日期',
-        'end-placeholder': '结束日期',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
-        class: '!w-240px',
-        style: {
-          width: '100%'
-        }
-      }
-    },
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择采购时间',
+    //   prop: 'orderTime',
+    //   label: '采购时间',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'daterange',
+    //     'value-format': 'YYYY-MM-DD HH:mm:ss',
+    //     'start-placeholder': '开始日期',
+    //     'end-placeholder': '结束日期',
+    //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+    //     class: '!w-240px',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
 
     {
       type: 'select',
@@ -134,7 +184,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: getIntDictOptions(DICT_TYPE.ERP_STORAGE_STATUS)
-    },
+    }
   ])
 
   const events = {

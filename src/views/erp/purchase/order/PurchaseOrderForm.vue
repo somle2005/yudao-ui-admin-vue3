@@ -175,7 +175,7 @@ const itemsFormdisabled = computed(() =>
 )
 const supplierChange = useSupplierChange(supplierList, formRef)
 const createRequestFormOptions = () => {
-  return [
+  const list = [
     {
       type: 'input',
       label: '单据编号',
@@ -423,6 +423,9 @@ const createRequestFormOptions = () => {
       children: accountList
     }
   ]
+
+  addRules(list, ['purchaseEntityId', 'paymentTerms', 'supplierId', 'currencyName'])
+  return list
 }
 const requestFormOptions = ref(createRequestFormOptions())
 

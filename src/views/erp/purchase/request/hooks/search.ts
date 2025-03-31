@@ -8,7 +8,23 @@ export const useSearchForm = (handleQuery) => {
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()
   // const supplierProductList = getSupplierProductList()
+  const productList = getProductList(null, { label: 'barCode', value: 'id' })
   const searchFormOptions = ref<Array<FormOptions>>([
+    {
+      type: 'select',
+      placeholder: '请选择SKU',
+      prop: 'productId',
+      label: 'SKU',
+      attrs: {
+        clearable: true,
+        filterable: true,
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      },
+      children: productList
+    },
     {
       type: 'input',
       label: '单据编号',

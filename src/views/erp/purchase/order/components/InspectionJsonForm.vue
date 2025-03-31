@@ -38,6 +38,20 @@
             </el-form-item>
           </template>
         </el-table-column>
+        <el-table-column label="未通过数量" fixed="right" min-width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.noInspectionPassCount`" class="mb-0px!">
+              <el-input-number
+                v-model="row.noInspectionPassCount"
+                placeholder="请输入未通过数量"
+                controls-position="right"
+                :min="0"
+                :precision="0"
+                class="!w-100%"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button @click="handleDelete($index)" link>—</el-button>

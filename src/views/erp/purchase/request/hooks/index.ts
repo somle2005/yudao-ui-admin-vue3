@@ -16,6 +16,7 @@ import { filterObjKey } from '@/utils/transformData'
 import { getStrDictOptions } from '@/utils/dict'
 import { useSupplierChange } from '@/utils/operate/purchase'
 import { PurchaseOrderApi } from '@/api/erp/purchase/order'
+import { addRules } from '@/components/SmForm/src/utils'
 
 /**
 
@@ -295,8 +296,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const createMergeFormOptions = () => {
     const currencyList = getCurrencyList()
     const accountList = getAccountList()
-
-    return [
+    const list = [
       {
         type: 'input',
         label: '单据编号',
@@ -336,13 +336,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           },
           onChange: supplierChange
         },
-        rules: [
-          {
-            required: true,
-            message: '供应商不能为空',
-            trigger: 'blur'
-          }
-        ],
         children: supplierList
       },
       {
@@ -411,13 +404,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
             }
           }
         },
-        rules: [
-          {
-            required: true,
-            message: '币种不能为空',
-            trigger: 'blur'
-          }
-        ],
         children: currencyList
       },
       {
@@ -570,7 +556,10 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         },
         children: accountList
       }
-    ] as FormOptions[]
+    ]
+
+    addRules(list, ['purchaseEntityId', 'paymentTerms', 'supplierId', 'currencyName'])
+    return list as FormOptions[]
   }
 
   const updateFormOptions = (formOptions) => {

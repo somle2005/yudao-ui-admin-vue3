@@ -1,5 +1,5 @@
 <template>
-  <Dialog title="验货单" v-model="dialogVisible" width="1000">
+  <Dialog title="完工单" v-model="dialogVisible" width="1000">
     <el-form
       ref="formRef"
       :model="formData"

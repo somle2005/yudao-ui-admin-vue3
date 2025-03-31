@@ -12,12 +12,13 @@ export const addRules = (list: any[], requireList?: any[]) => {
         }
       ]
     })
-    return
+    return list
   }
 
   requireList.forEach((prop) => {
     const target = list.find((item) => item.prop === prop) as any
     if (!target) return
+    if (target.rules) return
     target.rules = [
       {
         required: true,
@@ -26,6 +27,7 @@ export const addRules = (list: any[], requireList?: any[]) => {
       }
     ]
   })
+  return list
 }
 
 export const useFormData = () => {
@@ -35,5 +37,3 @@ export const useFormData = () => {
     addRules
   }
 }
-
-
