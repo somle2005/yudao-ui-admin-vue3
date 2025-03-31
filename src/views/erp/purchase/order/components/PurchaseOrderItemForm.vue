@@ -467,8 +467,8 @@ const completionJsonFormRef = ref()
 
 const openFormData = inject(InfoKeyOpenFormData)
 const jsonDisabled = computed(() => {
-  return openFormData.value.auditStatus === 5
-}) // 审核不可以进行编辑
+  return openFormData.value.auditStatus !== 5
+}) // 已审核状态下进行编辑
 
 const openJsonList = (type: string, index: number) => {
   const row = formData.value[index]
