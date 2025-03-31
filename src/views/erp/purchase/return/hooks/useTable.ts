@@ -70,14 +70,14 @@ export const useTable = () => {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    // 报关品名 产品id里面有(能带出来吗)等后端
+    // 海关品名 产品id里面有(能带出来吗)等后端
 
     warehouseName: {
       label: '仓库',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    count: {
+    qty: {
       label: '数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },

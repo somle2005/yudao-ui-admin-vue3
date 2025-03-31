@@ -254,7 +254,7 @@ const addItem = (selectionList: any[]) => {
         productUnitName, //列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
         productPrice,
-        count,
+        qty,
         declaredType,
 
         taxPercent = TAX_PERCENT,
@@ -292,7 +292,7 @@ const addItem = (selectionList: any[]) => {
         productUnitName, //列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
         productPrice,
-        count,
+        qty,
         declaredType,
        
         taxPercent,

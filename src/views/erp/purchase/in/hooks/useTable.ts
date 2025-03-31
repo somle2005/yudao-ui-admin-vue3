@@ -18,7 +18,7 @@ import { cloneDeep } from 'lodash-es'
 成交金额-1
 SKU-1
 商品名称(产品名称)-1
-报关品名
+海关品名
 仓库-1
 数量 -产品数量-1
 含税单价-1
@@ -33,7 +33,7 @@ SKU-1
 审核时间-1
 
 暂无
-报关品名
+海关品名
  */
 
 export const useTable = () => {
@@ -114,10 +114,10 @@ export const useTable = () => {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    // 报关品名 产品id里面有(能带出来吗)等后端
+    // 海关品名 产品id里面有(能带出来吗)等后端
 
     declaredType: {
-      label: '报关品名',
+      label: '海关品名',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 

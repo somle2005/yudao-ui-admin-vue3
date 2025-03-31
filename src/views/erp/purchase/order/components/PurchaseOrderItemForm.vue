@@ -107,7 +107,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="报关品名" width="180">
+        <el-table-column label="海关品名" width="180">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.declaredType`"
@@ -118,7 +118,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="英文品名" width="180">
+        <el-table-column label="海关品名(英文)" width="180">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.declaredTypeEn`" :rules="formRules.declaredTypeEn" class="mb-0px!">
               <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
@@ -234,7 +234,7 @@
         </el-table-column>
 
 
-        <el-table-column v-if="!showOringinCount" label="数量" width="120">
+        <el-table-column v-if="!showOringinCount" label="下单数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.count`" class="mb-0px!">
               <el-input-number
@@ -262,7 +262,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column v-if="showOringinCount" label="数量" width="120">
+        <el-table-column v-if="showOringinCount" label="下单数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.count`" class="mb-0px!">
               <el-text>{{ row.originCount }}</el-text>
@@ -382,7 +382,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" fixed="right" label="操作" width="60">
+        <el-table-column v-if="showOperate" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link
               >—</el-button
@@ -443,6 +443,8 @@ const countDisabled = computed(() =>
   ['audit', 'detail', 'generateContract'].includes(props.formType)
 )
 const showOringinCount = computed(() => ['merge'].includes(props.formType))
+const showOperate = computed(() => !['detail','generateContract'].includes(props.formType))
+
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
@@ -452,8 +454,8 @@ const formRules = reactive({
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
-  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }],
-  declaredTypeEn: [{ required: true, message: '英文品名不能为空', trigger: 'blur' }]
+  declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表

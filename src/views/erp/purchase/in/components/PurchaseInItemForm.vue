@@ -53,7 +53,7 @@
             <el-text>{{ row.productUnitName }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column label="报关品名" width="180">
+        <el-table-column label="海关品名" width="180">
           <template #default="{ row }">
             <el-text>{{ row.declaredType }}</el-text>
           </template>
@@ -187,9 +187,9 @@
 
         <el-table-column label="数量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.count`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <el-input-number
-                v-model="row.count"
+                v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"
@@ -322,7 +322,7 @@ const formData: any = ref([])
 const formRules = reactive({
   // warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
-  count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
 })
@@ -363,14 +363,14 @@ watch(
       allAmount: 'allAmount',
       actTaxPrice: 'actTaxPrice',
       onePrice: 'productPrice',
-      applyCount: 'count'
+      applyCount: 'qty'
     }
 
     // 编辑回显
     computeTaxPriceAndAllAmount(val, keyMap)
     // 循环处理
     // val.forEach((item) => {
-    //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
+    //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
     //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
     //   if (item.totalProductPrice != null) {
     //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
@@ -391,10 +391,10 @@ const getSummaries = (param: SummaryMethodProps) => {
       sums[index] = '合计'
       return
     }
-    if (['count', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
+    if (['qty', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
       const sum = getSumValue(data.map((item) => Number(item[column.property])))
       sums[index] =
-        column.property === 'count' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
+        column.property === 'qty' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
     } else {
       sums[index] = ''
     }
@@ -416,7 +416,7 @@ const handleAdd = () => {
     model: undefined, // //列表要转化取item-product里面数据
 
     productPrice: undefined,
-    count: undefined,
+    qty: undefined,
     taxPercent: TAX_PERCENT,
     taxPrice: undefined,
     actTaxPrice: undefined,
@@ -463,8 +463,8 @@ const setStockCount = async (row: any) => {
   if (!row.productId) {
     return
   }
-  const count = await StockApi.getStockCount(row.productId)
-  row.stockCount = count || 0
+  const qty = await StockApi.getStockCount(row.productId)
+  row.stockCount = qty || 0
 }
 
 /** 表单校验 */

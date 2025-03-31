@@ -113,6 +113,7 @@
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['erp:purchase-return:update']"
+          v-if="scope.row.auditStatus !== 5"
         >
           编辑
         </el-button>
@@ -121,7 +122,7 @@
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
           v-hasPermi="['erp:purchase-return:audit']"
-          v-if="![5].includes(scope.row.auditStatus)"
+          v-if="[3].includes(scope.row.auditStatus)"
         >
           审核
         </el-button>

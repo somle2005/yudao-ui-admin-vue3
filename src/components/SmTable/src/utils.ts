@@ -5,10 +5,9 @@ export const toLine = (value: string) => {
   return value.replace(/(A-Z)g/, '-$1').toLocaleLowerCase()
 }
 
-
 export const transformTableOptions = (
   fieldMap: { [key: string]: any },
-  config?: { [key: string]: any },
+  config?: { [key: string]: any }
 ) => {
   const tableOption: Array<TableOptions> = []
 
@@ -22,8 +21,12 @@ export const transformTableOptions = (
     if (fieldMap[key] instanceof Object) {
       Object.assign(obj, fieldMap[key])
       // 打赏自动设置宽度的标记
-      if(!fieldMap.width) {
+      if (!fieldMap.width) {
         obj.noWidth = true
+      }
+      // 只能对时间字段-时间戳进行排序
+      if (fieldMap[key].formatter) {
+        obj.sortable = true
       }
     }
     tableOption.push(obj)
@@ -36,17 +39,15 @@ export const transformTableOptions = (
   //   }
   //   return prev + curWidth
   // },0)
-  if(window.innerWidth > 1200 && config?.noWidth) { 
-    tableOption.forEach(item => {
-      if(!item.noWidth) {
+  if (window.innerWidth > 1200 && config?.noWidth) {
+    tableOption.forEach((item) => {
+      if (!item.noWidth) {
         item.width = undefined
       }
     })
   }
   return tableOption
 }
-
-
 
 export const useTableData = () => {
   const tableOptions = ref<TableOptions[]>([])
@@ -55,6 +56,6 @@ export const useTableData = () => {
   return {
     allTableOptions,
     tableOptions,
-    transformTableOptions,
+    transformTableOptions
   }
 }

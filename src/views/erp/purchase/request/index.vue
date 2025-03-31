@@ -128,6 +128,7 @@
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['erp:purchase-request:update']"
+          v-if="scope.row.auditStatus !== 5"
         >
           编辑
         </el-button>
@@ -145,7 +146,7 @@
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
           v-hasPermi="['erp:purchase-request:audit']"
-          v-if="![5].includes(scope.row.auditStatus)"
+          v-if="[3].includes(scope.row.auditStatus)"
         >
           审核
         </el-button>
@@ -258,14 +259,14 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   declaredType: {
-    label: '报关品名',
+    label: '海关品名',
     slot: 'declaredType',
     width: '200px',
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   declaredTypeEn: {
-    label: '英文品名',
+    label: '海关品名(英文)',
     slot: 'declaredTypeEn',
     width: '200px',
     wrap: true,

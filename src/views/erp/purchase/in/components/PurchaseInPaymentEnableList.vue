@@ -165,7 +165,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
-  // 报关品名
+  // 海关品名
   containerRate: {
     label: '箱率',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items

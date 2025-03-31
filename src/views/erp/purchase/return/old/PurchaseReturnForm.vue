@@ -276,11 +276,11 @@ const handlePurchaseOrderChange = (order: PurchaseOrderVO) => {
   formData.value.fileUrl = order.fileUrl
   // 将订单项设置到退货单项
   order.items.forEach((item) => {
-    item.count = item.inCount - item.returnCount
+    item.qty = item.inCount - item.returnCount
     item.orderItemId = item.id
     item.id = undefined
   })
-  formData.value.items = order.items.filter((item) => item.count > 0)
+  formData.value.items = order.items.filter((item) => item.qty > 0)
 }
 
 /** 提交表单 */

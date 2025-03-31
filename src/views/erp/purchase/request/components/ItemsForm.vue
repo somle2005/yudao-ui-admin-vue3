@@ -67,7 +67,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="报关品名" width="180">
+      <el-table-column label="海关品名" width="180">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.declaredType`"
@@ -78,7 +78,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="英文品名" width="180">
+      <el-table-column label="海关品名(英文)" width="180">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.declaredTypeEn`"
@@ -420,8 +420,8 @@ const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
   orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],
-  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }],
-  declaredTypeEn: [{ required: true, message: '英文品名不能为空', trigger: 'blur' }]
+  declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表

@@ -86,11 +86,11 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="数量" prop="count" fixed="right" min-width="140">
+      <el-table-column label="数量" prop="qty" fixed="right" min-width="140">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
+          <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
             <el-input-number
-              v-model="row.count"
+              v-model="row.qty"
               controls-position="right"
               :min="0.001"
               :precision="3"
@@ -188,7 +188,7 @@ const formData = ref([])
 const formRules = reactive({
   warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
-  count: [{ required: true, message: '产品数量不能为空', trigger: 'blur' }]
+  qty: [{ required: true, message: '产品数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const warehouseList = ref<WarehouseVO[]>([]) // 仓库列表
@@ -220,7 +220,7 @@ watch(
     }
     // 循环处理
     val.forEach((item) => {
-      item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
+      item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
       item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
       if (item.totalProductPrice != null) {
         item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
@@ -241,10 +241,10 @@ const getSummaries = (param: SummaryMethodProps) => {
       sums[index] = '合计'
       return
     }
-    if (['count', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
+    if (['qty', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
       const sum = getSumValue(data.map((item) => Number(item[column.property])))
       sums[index] =
-        column.property === 'count' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
+        column.property === 'qty' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
     } else {
       sums[index] = ''
     }
@@ -262,7 +262,7 @@ const handleAdd = () => {
     productBarCode: undefined, // 产品条码
     productPrice: undefined,
     stockCount: undefined,
-    count: 1,
+    qty: 1,
     totalProductPrice: undefined,
     taxPercent: undefined,
     taxPrice: undefined,
@@ -282,8 +282,8 @@ const setStockCount = async (row: any) => {
   if (!row.productId) {
     return
   }
-  const count = await StockApi.getStockCount(row.productId)
-  row.stockCount = count || 0
+  const qty = await StockApi.getStockCount(row.productId)
+  row.stockCount = qty || 0
 }
 
 /** 表单校验 */
