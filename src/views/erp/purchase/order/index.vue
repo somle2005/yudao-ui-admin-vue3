@@ -312,7 +312,7 @@ const fieldMap = {
     label: '总验货通过数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  totalCompletionCount: {
+  totalCompletionPassCount: {
     width: '250px',
     label: '总完工数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items

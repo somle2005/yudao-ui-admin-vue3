@@ -792,7 +792,7 @@ const submitForm = async () => {
         listKey: 'inspectionJson'
       },
       {
-        targetKey: 'totalCompletionCount',
+        targetKey: 'totalCompletionPassCount',
         computeKey: 'finishCount',
         listKey: 'completionJson'
       }
