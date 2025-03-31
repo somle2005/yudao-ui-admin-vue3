@@ -79,8 +79,10 @@ export const getDeclaredType = async (val: any, row: any, list: any[]) => {
   const customRuleCategoryData = await CustomRuleCategoryApi.getCustomRuleCategory(customCategoryId)
   if (customRuleCategoryData) {
     row.declaredType = customRuleCategoryData.declaredType
+    row.declaredTypeEn = customRuleCategoryData.declaredTypeEn
   } else {
     row.declaredType = ''
+    row.declaredTypeEn = ''
   }
 }
 

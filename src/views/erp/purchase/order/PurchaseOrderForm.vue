@@ -897,6 +897,7 @@ const addItem = (selectionList) => {
         applicant,
         applicationDept,
         declaredType,
+        declaredTypeEn,
         productId,
         productBarCode,
         productName,
@@ -918,6 +919,7 @@ const addItem = (selectionList) => {
         departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName
         applicantName: applicant,
         declaredType,
+        declaredTypeEn,
         productId,
         productName,
         productBarCode,

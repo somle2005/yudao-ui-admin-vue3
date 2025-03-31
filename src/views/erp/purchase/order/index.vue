@@ -255,6 +255,10 @@ const fieldMap = {
     label: '报关品名',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
+  declaredTypeEn: {
+    label: '英文品名',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
 
   // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
   totalPrice: {
@@ -417,6 +421,7 @@ const wrapList = [
   'productName',
   'remark',
   'declaredType',
+  'declaredTypeEn',
   'erpPurchaseRequestItemNo'
 ]
 allOptions.forEach((item: any) => {
