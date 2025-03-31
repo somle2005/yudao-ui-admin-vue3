@@ -120,7 +120,7 @@
         </el-table-column>
         <el-table-column label="英文品名" width="180">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.declaredTypeEn`" :rules="formRules.declaredTypeEn" class="mb-0px!">
               <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
             </el-form-item>
           </template>
@@ -455,7 +455,8 @@ const formRules = reactive({
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
-  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }]
+  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '英文品名不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表

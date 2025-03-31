@@ -71,6 +71,7 @@
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.declaredType`"
+            :rules="formRules.declaredType"
             class="mb-0px!"
           >
             <el-input :disabled="productDisabled" v-model="row.declaredType" />
@@ -81,6 +82,7 @@
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.declaredTypeEn`"
+            :rules="formRules.declaredTypeEn"
             class="mb-0px!"
           >
             <el-input :disabled="productDisabled" v-model="row.declaredTypeEn" />
@@ -431,7 +433,8 @@ const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
   orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],
-  // declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }]
+  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '英文品名不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
