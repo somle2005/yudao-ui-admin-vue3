@@ -446,7 +446,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
             width: '100%'
           }
         },
-        children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
+        children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_DISCHARGE)
       },
       // {
       //   type: 'date-picker',
