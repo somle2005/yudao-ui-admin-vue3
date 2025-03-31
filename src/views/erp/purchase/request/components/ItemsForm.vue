@@ -450,8 +450,22 @@ watch(
       // allAmount: 'allAmount',
       // actTaxPrice: 'actTaxPrice',
       // onePrice: 'productPrice',
-      applyCount: 'orderQuantity'
+      applyCount: 'count'
     }
+
+    /**
+      新增-申请数量-count
+      审核-批准数量-approveCount
+      合并-下单数量-orderQuantity
+     */
+    const applyCountMap = {
+      create: 'count',
+      audit: 'approveCount',
+      merge: 'orderQuantity',
+      detail: 'count', // 详情只能看数量-和新增一样查看
+      update: 'count',
+    }
+    keyMap.applyCount = applyCountMap[props.formType] || 'count'
 
     // 编辑回显
     computeTaxPriceAndAllAmount(val, keyMap)
