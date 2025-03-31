@@ -675,7 +675,6 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         const formData = getFormData()
         const detailData = await PurchaseRequestApi.getPurchaseRequest(id)
         mergeDetail(formData, detailData, formType.value, smFormRef)
-        console.log(formData, '修改时获取的数据')
       } finally {
         formLoading.value = false
       }

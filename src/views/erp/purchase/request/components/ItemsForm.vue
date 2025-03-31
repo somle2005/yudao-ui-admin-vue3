@@ -221,11 +221,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="showAudit" label="批准数量" prop="approveCount" min-width="120">
+      <el-table-column v-if="approveCountShow" label="批准数量" prop="approveCount" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.approveCount`" class="mb-0px!">
             <el-input-number
-              :disabled="mergeDisabled"
+              :disabled="approveCountDisabled"
               v-model="row.approveCount"
               controls-position="right"
               :min="1"
@@ -288,21 +288,22 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="税额" prop="taxPrice" min-width="140">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-            {{ row.taxPrice }}
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="价税合计" min-width="150">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-            <el-text>{{ row.allAmount }}</el-text>
-          </el-form-item>
-        </template>
-      </el-table-column>
+      <template v-if="noCreate">
+        <el-table-column label="税额" prop="taxPrice" min-width="140">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
+              {{ row.taxPrice }}
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="价税合计" min-width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
+              <el-text>{{ row.allAmount }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+      </template>
 
       <template v-if="mergeDisabled">
         <el-table-column label="条码" width="120">
@@ -403,6 +404,14 @@ const disabled = computed(() => ['audit', 'detail'].includes(props.formType))
 const mergeDisabled = computed(() => props.formType === 'merge')
 const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')
 
+const approveCountDisabled = computed(() => !['audit'].includes(props.formType))
+const approveCountShow = computed(() =>
+  ['detail', 'update', 'merge', 'audit'].includes(props.formType)
+)
+
+// 非新增下才会展示税额-价税合计
+const noCreate = computed(() => !['create'].includes(props.formType))
+
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
 // 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-SKU(产品名称-单位) 申请数量
@@ -450,7 +459,7 @@ watch(
       // allAmount: 'allAmount',
       // actTaxPrice: 'actTaxPrice',
       // onePrice: 'productPrice',
-      applyCount: 'count'
+      applyCount: 'approveCount'
     }
 
     /**
@@ -459,13 +468,13 @@ watch(
       合并-下单数量-orderQuantity
      */
     const applyCountMap = {
-      create: 'count',
+      create: 'approveCount', // 新增的时候不展示 价税合计-税额- 数据无法计算传递null
       audit: 'approveCount',
       merge: 'orderQuantity',
-      detail: 'count', // 详情只能看数量-和新增一样查看
-      update: 'count',
+      detail: 'approveCount', // 详情只能看数量-和新增一样查看-详情展示批准数量
+      update: 'approveCount' // 展示批准数量-无法编辑
     }
-    keyMap.applyCount = applyCountMap[props.formType] || 'count'
+    keyMap.applyCount = applyCountMap[props.formType] || 'approveCount' // 新增没有值就不计算或者不传递
 
     // 编辑回显
     computeTaxPriceAndAllAmount(val, keyMap)
