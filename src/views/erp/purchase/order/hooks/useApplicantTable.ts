@@ -34,9 +34,9 @@ export const useApplicantTable = () => {
       width: '150px',
       wrap: true
     },
-    status: {
+    auditStatus: {
       label: '审核状态',
-      slot: 'status',
+      slot: 'auditStatus',
       width: '120px'
     },
     orderStatus: {
@@ -135,7 +135,6 @@ export const useApplicantTable = () => {
 
   const handleQuery = () => {
     queryParams.pageNo = 1
-    queryParams.status = 5
     getList()
   }
 
@@ -152,6 +151,7 @@ export const useApplicantTable = () => {
   }
 
   const getList = async () => {
+    queryParams.auditStatus = 5
     selectionList.value = []
     loading.value = true
     try {

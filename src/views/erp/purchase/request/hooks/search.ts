@@ -89,7 +89,7 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'select',
       placeholder: '请选择审核状态',
-      prop: 'status',
+      prop: 'auditStatus',
       label: '审核状态',
       attrs: {
         class: '!w-240px',

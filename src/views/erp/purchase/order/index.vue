@@ -450,7 +450,7 @@ const queryParams = reactive({
   supplierId: undefined,
   productId: undefined,
   noTime: [],
-  status: undefined,
+  auditStatus: undefined,
   remark: undefined,
   creator: undefined,
   inStatus: undefined,

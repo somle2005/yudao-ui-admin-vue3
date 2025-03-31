@@ -94,8 +94,8 @@
       @pagination="getList"
       @selection-change="handleSelectionChange"
     >
-      <template #status="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status || ''" />
+      <template #auditStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.auditStatus || ''" />
       </template>
 
       <template #orderStatus="{ scope }">
@@ -155,7 +155,7 @@
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
           v-hasPermi="['erp:purchase-request:audit']"
-          v-if="![5].includes(scope.row.status)"
+          v-if="![5].includes(scope.row.auditStatus)"
         >
           审核
         </el-button>
@@ -165,7 +165,7 @@
           type="danger"
           @click="handleUpdateStatus(scope.row, false)"
           v-hasPermi="['erp:purchase-request:audit']"
-          v-if="scope.row.status === 5"
+          v-if="scope.row.auditStatus === 5"
         >
           反审核
         </el-button>
@@ -245,9 +245,9 @@ const fieldMap = {
     width: '150px',
     wrap: true
   },
-  status: {
+  auditStatus: {
     label: '审核状态',
-    slot: 'status',
+    slot: 'auditStatus',
     width: '120px'
   },
   orderStatus: {
@@ -378,7 +378,7 @@ const queryParams = reactive({
   // supplierId: undefined,
   productId: undefined,
   requestTime: [],
-  status: undefined,
+  auditStatus: undefined,
   remark: undefined,
   applicant: undefined,
   creator: undefined,
@@ -416,7 +416,6 @@ const getList = async () => {
 
     itemsList.value = mergeItemsToList(data.list, {
       id: 'purchaseOrderId',
-      status: 'rowStatus',
       orderStatus: 'rowOrderStatus',
       offStatus: 'rowOffStatus'
     })
@@ -480,7 +479,6 @@ const handleUpdateStatus = async (row: any, reviewed: boolean) => {
     // 审核的二次确认
     await message.confirm(`确定反审核该申请吗？`)
     // 发起审核
-    // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
     await PurchaseRequestApi.updatePurchaseRequestAuditStatus({
       requestId,
       reviewed,
@@ -517,7 +515,6 @@ const handleUpdateStatusEnable = async (row: any, enable: boolean) => {
     // 开启的二次确认
     await message.confirm(`确定${enable ? '开启' : '关闭'}该申请吗？`)
     // 发起开启
-    // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
     await PurchaseRequestApi.updatePurchaseRequestStatusEnable({ itemIds, enable })
     message.success(`${enable ? '开启' : '关闭'}成功`)
     // 刷新列表
