@@ -207,12 +207,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="申请数量" prop="count" min-width="120">
+      <el-table-column label="申请数量" prop="qty" min-width="120">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
+          <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
             <el-input-number
               :disabled="productDisabled"
-              v-model="row.count"
+              v-model="row.qty"
               controls-position="right"
               :min="1"
               class="!w-100%"
@@ -229,7 +229,7 @@
               v-model="row.approveCount"
               controls-position="right"
               :min="1"
-              :max="row.count"
+              :max="row.qty"
               class="!w-100%"
               @change="(val) => changeValLimit(row, 'approveCount', 1, val)"
             />
@@ -361,7 +361,7 @@ import { getDeclaredType } from '@/utils/operate/purchase'
     items-商品信息-表格列(参照-采购订单-订单产品清单)
 
     商品id-productId-下拉框
-    申请数量-count-数字输入框(整数>0)
+    申请数量-qty-数字输入框(整数>0)
     仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
     批准数量-approveCount-数字输入框(整数>0)
     含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
@@ -418,7 +418,7 @@ const formData = ref<Array<any>>([])
 const formRules = reactive({
   deliveryTime: [{ required: true, message: '交货日期不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
-  count: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
+  qty: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
   orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],
   declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
   declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
@@ -463,7 +463,7 @@ watch(
     }
 
     /**
-      新增-申请数量-count
+      新增-申请数量-qty
       审核-批准数量-approveCount
       合并-下单数量-orderQuantity
      */
@@ -480,16 +480,16 @@ watch(
     computeTaxPriceAndAllAmount(val, keyMap)
     // val.forEach((item) => {
     //   // 申请数量和税率都要有 才能计算出税额
-    //   if (item.taxPercent && item.count && item.actTaxPrice) {
+    //   if (item.taxPercent && item.qty && item.actTaxPrice) {
     //     const taxPercent100 = item.taxPercent / 100.0
     //     // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
-    //     const scale = (taxPercent100 / (1 + taxPercent100)) * item.count
+    //     const scale = (taxPercent100 / (1 + taxPercent100)) * item.qty
     //     item.taxPrice = erpPriceMultiply(item.actTaxPrice, scale)
     //     // 价税合计 = 含税单价 * 申请数量。
-    //     item.allAmount = erpPriceMultiply(item.actTaxPrice, item.count)
+    //     item.allAmount = erpPriceMultiply(item.actTaxPrice, item.qty)
     //   }
 
-    //   // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
+    //   // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
     //   // item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
     //   // if (item.totalProductPrice != null) {
     //   //   item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
@@ -510,10 +510,10 @@ const getSummaries = (param: SummaryMethodProps) => {
       sums[index] = '价税合计'
       return
     }
-    if (['count', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
+    if (['qty', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
       // const sum = getSumValue(data.map((item) => Number(item[column.property])))
       // sums[index] =
-      //   column.property === 'count' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
+      //   column.property === 'qty' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
     } else {
       sums[index] = ''
     }
@@ -525,7 +525,7 @@ const getSummaries = (param: SummaryMethodProps) => {
 /** 新增按钮操作 */
 const handleAdd = () => {
   // 商品id-productId-下拉框
-  // 申请数量-count-数字输入框(整数>0)
+  // 申请数量-qty-数字输入框(整数>0)
   // 仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
   // 批准数量-approveCount-数字输入框(整数>0)
   // 含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
@@ -539,7 +539,7 @@ const handleAdd = () => {
   const row = {
     id: undefined,
     productId: undefined,
-    count: undefined, // 申请数量
+    qty: undefined, // 申请数量
     approveCount: undefined, // 批准数量
     warehouseId: undefined,
     actTaxPrice: undefined,
@@ -578,8 +578,8 @@ const setStockCount = async (row: any) => {
   if (!row.productId) {
     return
   }
-  const count = await StockApi.getStockCount(row.productId)
-  row.stockCount = count || 0
+  const qty = await StockApi.getStockCount(row.productId)
+  row.stockCount = qty || 0
 }
 
 /** 表单校验 */

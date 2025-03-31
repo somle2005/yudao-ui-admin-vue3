@@ -273,7 +273,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   productUnitName: '单位',
-  count: {
+  qty: {
     label: '申请数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },

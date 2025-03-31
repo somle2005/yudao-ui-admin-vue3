@@ -126,7 +126,7 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    count: {
+    qty: {
       label: '数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },

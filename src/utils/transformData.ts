@@ -87,7 +87,7 @@ export const computeTaxPriceAndAllAmount = (
   if (!list?.length) return list
   const {
     taxPercent = 'taxPercent',
-    applyCount = 'count',
+    applyCount = 'qty',
     actTaxPrice = 'actTaxPrice',
     allAmount = 'allAmount',
     taxPrice = 'taxPrice',

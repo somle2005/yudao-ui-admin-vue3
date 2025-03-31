@@ -236,10 +236,10 @@
 
         <el-table-column v-if="!showOringinCount" label="下单数量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.count`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <el-input-number
                 :disabled="countDisabled"
-                v-model="row.count"
+                v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"
@@ -250,10 +250,10 @@
 
         <el-table-column v-if="showOringinCount" label="入库数量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.count`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <el-input-number
                 :disabled="countDisabled"
-                v-model="row.count"
+                v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 :max="row.originCount"
@@ -264,7 +264,7 @@
         </el-table-column>
         <el-table-column v-if="showOringinCount" label="下单数量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.count`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <el-text>{{ row.originCount }}</el-text>
             </el-form-item>
           </template>
@@ -452,7 +452,7 @@ const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
-  count: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
   declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
   declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
@@ -509,7 +509,7 @@ watch(
       allAmount: 'allAmount',
       actTaxPrice: 'actTaxPrice',
       onePrice: 'productPrice',
-      applyCount: 'count'
+      applyCount: 'qty'
     }
 
     // 编辑回显
@@ -517,7 +517,7 @@ watch(
 
     // // 循环处理
     // val.forEach((item) => {
-    //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.count)
+    //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
     //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
     //   if (item.totalProductPrice != null) {
     //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
@@ -538,10 +538,10 @@ const getSummaries = (param: SummaryMethodProps) => {
       sums[index] = '合计'
       return
     }
-    if (['count', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
+    if (['qty', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
       const sum = getSumValue(data.map((item) => Number(item[column.property])))
       sums[index] =
-        column.property === 'count' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
+        column.property === 'qty' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
     } else {
       sums[index] = ''
     }
@@ -568,7 +568,7 @@ const handleAdd = () => {
     containerRate: undefined,
     purchaseApplyItemId: undefined,
     erpPurchaseRequestItemNo: undefined,
-    count: undefined,
+    qty: undefined,
     inspectionJson: [],
     completionJson: []
     // inCount: undefined,
@@ -597,8 +597,8 @@ const setStockCount = async (row: any) => {
   if (!row.productId) {
     return
   }
-  const count = await StockApi.getStockCount(row.productId)
-  row.stockCount = count || 0
+  const qty = await StockApi.getStockCount(row.productId)
+  row.stockCount = qty || 0
 }
 
 /** 表单校验 */

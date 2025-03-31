@@ -30,7 +30,7 @@ import { PurchaseOrderApi } from '@/api/erp/purchase/order'
 items-商品信息-表格列(参照-采购订单-订单产品清单)
 
 商品id-productId-下拉框
-申请数量-count-数字输入框(整数>0)
+申请数量-qty-数字输入框(整数>0)
 仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
 批准数量-approveCount-数字输入框(整数>0)
 含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
@@ -71,7 +71,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
   formData.items.forEach((item) => {
     // 批准数量默认值取申请数量
     if (formType === 'audit') {
-      item.approveCount = item.count
+      item.approveCount = item.qty
     }
     // item.taxPercent = item.taxPercent * 100
   })
