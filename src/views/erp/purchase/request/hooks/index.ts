@@ -15,6 +15,7 @@ import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { filterObjKey } from '@/utils/transformData'
 import { getStrDictOptions } from '@/utils/dict'
 import { useSupplierChange } from '@/utils/operate/purchase'
+import { PurchaseOrderApi } from '@/api/erp/purchase/order'
 
 /**
 
@@ -632,6 +633,18 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
   const getSelectData = (type) => {
     getSupplierList(supplierList)
     getFinanceSubjectList(financeSubjectList)
+    if (type === 'create') {
+      PurchaseRequestApi.getPurchaseRequestNo().then((res) => {
+        const modelValue = smFormRef.value.getFormData()
+        modelValue.no = res
+      })
+    }
+    if (type === 'merge') {
+      PurchaseOrderApi.getPurchaseOrderNo().then((res) => {
+        const modelValue = smFormRef.value.getFormData()
+        modelValue.no = res
+      })
+    }
     if (type !== 'merge') {
       getUserList(applicantList)
       getDeptTree(deptList)

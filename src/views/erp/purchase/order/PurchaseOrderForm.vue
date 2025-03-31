@@ -602,27 +602,27 @@ const createGenerateContractFormOptions = (formOptions) => {
       children: financeSubjectList
     },
 
-    {
-      type: 'select',
-      placeholder: '请选择币种',
-      prop: 'currencyName',
-      label: '币种',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        },
-        onChange: (val) => {
-          const item = currencyList.value.find((item) => item.label === val)
-          if (item) {
-            const formData = getFormData()
-            formData.currencyId = item.id
-          }
-        }
-      },
-      children: currencyList
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择币种',
+    //   prop: 'currencyName',
+    //   label: '币种',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     },
+    //     onChange: (val) => {
+    //       const item = currencyList.value.find((item) => item.label === val)
+    //       if (item) {
+    //         const formData = getFormData()
+    //         formData.currencyId = item.id
+    //       }
+    //     }
+    //   },
+    //   children: currencyList
+    // },
     {
       type: 'select',
       placeholder: '请选择采购合同模板',
@@ -705,6 +705,13 @@ const open = async (type: string, id?: number, data?: any) => {
   operateAudit(type)
   resetForm()
 
+  if (type === 'create') {
+    PurchaseOrderApi.getPurchaseOrderNo().then((res) => {
+      const modelValue = formRef.value.getFormData()
+      modelValue.no = res
+    })
+  }
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -714,7 +721,10 @@ const open = async (type: string, id?: number, data?: any) => {
         formData.value.items = []
       }
       formData.value.items = jsonToList(formData.value.items, ['inspectionJson', 'completionJson'])
-      console.log(formData.value.items, 'formData.value.items')
+      formData.value.items.forEach((item) => {
+        item.originCount = item.count
+      })
+
       if (type === 'merge') {
         dialogTitle.value = '合并入库'
         const inFormData = getFormData()

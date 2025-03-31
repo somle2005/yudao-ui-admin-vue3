@@ -206,7 +206,10 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
-  // erpPurchaseRequestItemNo: '源单单号', 
+  erpPurchaseRequestItemNo: {
+    label: '源单单号',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
   supplierName: '供应商',
 
   auditStatus: {
@@ -493,7 +496,7 @@ const getList = async () => {
       offStatus: 'rowOffStatus',
       executeStatus: 'rowExecuteStatus',
       inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus',
+      payStatus: 'rowPayStatus'
       // currencyName: 'itemCurrencyName',
     })
     // 后续需要补充itemsTotal

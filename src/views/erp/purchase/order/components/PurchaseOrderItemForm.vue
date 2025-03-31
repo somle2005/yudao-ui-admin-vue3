@@ -224,16 +224,40 @@
           </template>
         </el-table-column>
 
-        <!-- 暂时先不做最大值校验 -->
-        <el-table-column label="数量" width="120">
+        <!-- 暂时先不做最大值校验-合并入库的时候 叫做入库数量  -->
+
+        <el-table-column v-if="!showOringinCount" label="数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.count`" class="mb-0px!">
               <el-input-number
+                :disabled="countDisabled"
                 v-model="row.count"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"
               />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column v-if="showOringinCount" label="入库数量" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.count`" class="mb-0px!">
+              <el-input-number
+                :disabled="countDisabled"
+                v-model="row.count"
+                controls-position="right"
+                :min="1"
+                :max="row.originCount"
+                class="!w-100%"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="showOringinCount" label="数量" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.count`" class="mb-0px!">
+              <el-text>{{ row.originCount }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -407,6 +431,13 @@ const props = defineProps({
     default: ''
   }
 })
+
+// 合并入库的时候有入库数量
+const countDisabled = computed(() =>
+  ['audit', 'detail', 'generateContract'].includes(props.formType)
+)
+const showOringinCount = computed(() => ['merge'].includes(props.formType))
+
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
@@ -431,7 +462,6 @@ const openFormData = inject(InfoKeyOpenFormData)
 const jsonDisabled = computed(() => {
   return openFormData.value.auditStatus === 5
 }) // 审核不可以进行编辑
-
 
 const openJsonList = (type: string, index: number) => {
   const row = formData.value[index]

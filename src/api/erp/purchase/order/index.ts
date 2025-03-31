@@ -276,5 +276,9 @@ export const PurchaseOrderApi = {
       url: `/erp/purchase-order/generateContract`,
       data
     })
+  },
+  // 获得采购订单最大流水号
+  getPurchaseOrderNo: async () => {
+    return await request.get({ url: `/erp/purchase-order/getMaxSerialNo` })
   }
 }

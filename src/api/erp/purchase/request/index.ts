@@ -25,7 +25,6 @@ interface MergeItems {
    * 下单数量
    */
   orderQuantity: number
-  
 }
 interface PurchaseRequestMergeVO {
   /**
@@ -139,5 +138,9 @@ export const PurchaseRequestApi = {
       url: `/erp/purchase-request/submitAudit`,
       data
     })
+  },
+  // 获得ERP采购申请单NO流水号
+  getPurchaseRequestNo: async () => {
+    return await request.get({ url: `/erp/purchase-request/getMaxSerialNo` })
   }
 }

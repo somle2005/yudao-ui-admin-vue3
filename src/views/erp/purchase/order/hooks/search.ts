@@ -25,17 +25,17 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
-    // {
-    //   type: 'input',
-    //   label: '源单单号',
-    //   prop: 'erpPurchaseRequestItemNo',
-    //   placeholder: '请输入源单单号',
-    //   attrs: {
-    //     class: '!w-240px',
-    //     style: { width: '100%' },
-    //     clearable: true
-    //   }
-    // },
+    {
+      type: 'input',
+      label: '源单单号',
+      prop: 'erpPurchaseRequestItemNo',
+      placeholder: '请输入源单单号',
+      attrs: {
+        class: '!w-240px',
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
     // 产品用SKU
     {
       type: 'select',
