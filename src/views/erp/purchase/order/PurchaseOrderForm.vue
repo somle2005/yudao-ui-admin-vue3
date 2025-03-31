@@ -784,7 +784,7 @@ const submitForm = async () => {
       data.items = cloneDeep(itemFormRef.value.formData)
     }
 
-    // 详情-新增-编辑-内部有兜底转化[]为'[]'
+    // 详情-新增-编辑-内部有兜底转化[]为'[]'-主要是详情获取jsonToList进行了转化-所以这里也不进行判断-进行转化
     const mapList = [
       {
         targetKey: 'totalInspectionPassCount',
