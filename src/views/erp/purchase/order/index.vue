@@ -419,7 +419,9 @@ const wrapList = [
   'remark',
   'declaredType',
   'declaredTypeEn',
-  'erpPurchaseRequestItemNo'
+  'erpPurchaseRequestItemNo',
+  'portOfLoading',
+  'portOfDischarge'
 ]
 allOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
