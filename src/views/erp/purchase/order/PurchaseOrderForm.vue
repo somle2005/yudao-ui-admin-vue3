@@ -915,6 +915,7 @@ const addItem = (selectionList) => {
         taxPercent,
         taxPrice, //税额需要动态计算
         warehouseId,
+        expectArrivalDate,
         deliveryTime: expectArrivalDate,
         erpPurchaseRequestItemNo: no,
         applicantId,

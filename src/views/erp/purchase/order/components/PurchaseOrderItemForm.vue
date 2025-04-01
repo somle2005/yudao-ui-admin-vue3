@@ -139,6 +139,28 @@
             <el-text>{{ row.productUnitName }}</el-text>
           </template>
         </el-table-column>
+        <el-table-column label="仓库" width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
+              <el-select
+                :disabled="disabled"
+                v-model="row.warehouseId"
+                clearable
+                filterable
+                placeholder="请选择仓库"
+              >
+                <el-option
+                  v-for="item in warehouseList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <!-- 因为详情拿不到 未订购数量-统一让后端原子性判断报错。前端不做最大值限制 -->
 
         <el-table-column v-if="!showOringinCount" label="下单数量" width="120">
           <template #default="{ row, $index }">
@@ -214,26 +236,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="仓库" width="150">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <el-select
-                :disabled="disabled"
-                v-model="row.warehouseId"
-                clearable
-                filterable
-                placeholder="请选择仓库"
-              >
-                <el-option
-                  v-for="item in warehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </template>
-        </el-table-column>
+       
 
         <el-table-column label="含税单价" width="120">
           <template #default="{ row, $index }">
@@ -293,21 +296,18 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" min-width="150">
+        <el-table-column v-if="showCreate" label="期望到货日期" min-width="150">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-              <el-input
-                v-model.trim="row.remark"
-                :disabled="disabled"
-                type="textarea"
-                placeholder="请输入备注"
+            <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
+              <el-date-picker
+                disabled
+                v-model="row.expectArrivalDate"
+                type="date"
+                value-format="x"
+                placeholder="请选择期望到货日期"
+                class="!w-1/1"
               />
             </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column label="源单单号" width="200">
-          <template #default="{ row }">
-            <el-text>{{ row.erpPurchaseRequestItemNo }}</el-text>
           </template>
         </el-table-column>
 
@@ -326,7 +326,25 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
+        <el-table-column label="备注" min-width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input
+                v-model.trim="row.remark"
+                :disabled="disabled"
+                type="textarea"
+                placeholder="请输入备注"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="源单单号" width="200">
+          <template #default="{ row }">
+            <el-text>{{ row.erpPurchaseRequestItemNo }}</el-text>
+          </template>
+        </el-table-column>
+
+        <el-table-column v-if="!showCreate" label="编号" min-width="120">
           <template #default="{ row }">
             <el-text>{{ row.id }}</el-text>
           </template>
@@ -446,6 +464,7 @@ const countDisabled = computed(() =>
 )
 const showOringinCount = computed(() => ['merge'].includes(props.formType))
 const showOperate = computed(() => !['detail', 'generateContract'].includes(props.formType))
+const showCreate = computed(() => ['create'].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
