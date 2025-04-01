@@ -92,19 +92,19 @@
         />
       </el-form-item>
 
-      <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
+      <el-form-item label="海关品名(英文)" prop="declaredTypeEn">
         <el-input
           v-model="queryParams.declaredTypeEn"
-          placeholder="请输入申报品名（英文）"
+          placeholder="请输入海关品名(英文)"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="申报品名" prop="declaredType">
+      <el-form-item label="海关品名" prop="declaredType">
         <el-input
           v-model="queryParams.declaredType"
-          placeholder="请输入申报品名"
+          placeholder="请输入海关品名"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -253,8 +253,8 @@ const fieldMap = {
     label: 'hs编码',
     width: '180px'
   },
-  declaredTypeEn: '申报品名(英文)',
-  declaredType: '申报品名',
+  declaredTypeEn: '海关品名(英文)',
+  declaredType: '海关品名',
   taxRate: '税率',
   logisticAttribute: {
     label: '物流属性',

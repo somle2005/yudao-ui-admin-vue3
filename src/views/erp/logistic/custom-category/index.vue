@@ -35,19 +35,19 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="报关品名" prop="declaredType">
+      <el-form-item label="海关品名" prop="declaredType">
         <el-input
           v-model="queryParams.declaredType"
-          placeholder="请输入报关品名"
+          placeholder="请输入海关品名"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="英文品名" prop="declaredTypeEn">
+      <el-form-item label="海关品名(英文)" prop="declaredTypeEn">
         <el-input
           v-model="queryParams.declaredTypeEn"
-          placeholder="请输入英文品名"
+          placeholder="请输入海关品名(英文)"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"

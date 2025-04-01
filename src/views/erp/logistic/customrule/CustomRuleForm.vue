@@ -51,15 +51,15 @@
       <el-form-item v-if="multipleLimit" label="hs编码" prop="hscode">
         <el-input disabled v-model.trim="formData.hscode" placeholder="请输入hs编码" />
       </el-form-item>
-      <el-form-item v-if="multipleLimit" label="申报品名(英文)" prop="declaredTypeEn">
+      <el-form-item v-if="multipleLimit" label="海关品名(英文)" prop="declaredTypeEn">
         <el-input
           disabled
           v-model.trim="formData.declaredTypeEn"
-          placeholder="请输入申报品名（英文）"
+          placeholder="请输入海关品名(英文)"
         />
       </el-form-item>
-      <el-form-item v-if="multipleLimit" label="申报品名" prop="declaredType">
-        <el-input disabled v-model.trim="formData.declaredType" placeholder="请输入申报品名" />
+      <el-form-item v-if="multipleLimit" label="海关品名" prop="declaredType">
+        <el-input disabled v-model.trim="formData.declaredType" placeholder="请输入海关品名" />
       </el-form-item>
 
       <el-form-item label="申报金额" prop="declaredValue">
