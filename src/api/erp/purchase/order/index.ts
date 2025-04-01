@@ -201,6 +201,11 @@ export const PurchaseOrderApi = {
     return await request.put({ url: `/erp/purchase-order/update`, data })
   },
 
+  // 更新采购订单json属性-验货单-完工单
+  updateJsonPurchaseOrder: async (data: any) => {
+    return await request.put({ url: `/erp/purchase-order/updateJson`, data })
+  },
+
   // 更新采购订单的状态
   updatePurchaseOrderStatus: async (id: number, status: number) => {
     return await request.put({

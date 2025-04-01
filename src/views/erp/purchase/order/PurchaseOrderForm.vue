@@ -819,7 +819,7 @@ const submitForm = async () => {
       await PurchaseOrderApi.updatePurchaseOrder(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'detail') {
-      await PurchaseOrderApi.updatePurchaseOrder(data)
+      await PurchaseOrderApi.updateJsonPurchaseOrder(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'merge') {
       const { items } = data
