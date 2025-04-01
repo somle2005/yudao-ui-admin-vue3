@@ -341,7 +341,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       {
         type: 'select',
         placeholder: '请选择采购公司',
-        prop: 'purchaseEntityId',
+        prop: 'purchaseCompanyId',
         label: '采购公司',
         attrs: {
           filterable: true,
@@ -558,7 +558,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       }
     ]
 
-    addRules(list, ['purchaseEntityId', 'paymentTerms', 'supplierId', 'currencyName'])
+    addRules(list, ['purchaseCompanyId', 'paymentTerms', 'supplierId', 'currencyName'])
     return list as FormOptions[]
   }
 

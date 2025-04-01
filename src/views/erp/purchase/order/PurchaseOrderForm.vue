@@ -228,7 +228,7 @@ const createRequestFormOptions = () => {
     {
       type: 'select',
       placeholder: '请选择采购公司',
-      prop: 'purchaseEntityId',
+      prop: 'purchaseCompanyId',
       label: '采购公司',
       attrs: {
         filterable: true,
@@ -424,7 +424,7 @@ const createRequestFormOptions = () => {
     }
   ]
 
-  addRules(list, ['purchaseEntityId', 'paymentTerms', 'supplierId', 'currencyName'])
+  addRules(list, ['purchaseCompanyId', 'paymentTerms', 'supplierId', 'currencyName'])
   return list
 }
 const requestFormOptions = ref(createRequestFormOptions())
@@ -503,7 +503,7 @@ const createMergeFormOptions = (formOptions) => {
       }
     }
   }
-  const options = formOptions.filter((item) => item.prop !== 'purchaseEntityId')
+  const options = formOptions.filter((item) => item.prop !== 'purchaseCompanyId')
   const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
   options.splice(index, 0, obj)
   options.forEach((item) => {
