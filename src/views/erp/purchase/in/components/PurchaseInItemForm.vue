@@ -242,6 +242,13 @@
             </el-form-item>
           </template>
         </el-table-column>
+        <el-table-column label="价税合计" min-width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
+              <el-text>{{ row.allAmount }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
 
         <el-table-column label="箱率" width="120">
           <template #default="{ row, $index }">
@@ -323,7 +330,7 @@ const formRules = reactive({
   // warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
+  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }]
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
