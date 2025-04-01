@@ -329,9 +329,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="!productDisabled" align="center" fixed="right" label="操作" width="60">
+      <el-table-column v-if="showOperate" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
-          <el-button :productDisabled="formData.length === 1" @click="handleDelete($index)" link
+          <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link
             >—</el-button
           >
         </template>
@@ -403,6 +403,7 @@ const disabled = computed(() => ['audit', 'detail'].includes(props.formType))
 // 批准数量在merge下要禁用
 const mergeDisabled = computed(() => props.formType === 'merge')
 const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')
+const showOperate = computed(() => ['create', 'update'].includes(props.formType))
 
 const approveCountDisabled = computed(() => !['audit'].includes(props.formType))
 const approveCountShow = computed(() =>

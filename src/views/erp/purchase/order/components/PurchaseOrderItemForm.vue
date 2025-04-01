@@ -463,7 +463,7 @@ const countDisabled = computed(() =>
   ['audit', 'detail', 'generateContract'].includes(props.formType)
 )
 const showOringinCount = computed(() => ['merge'].includes(props.formType))
-const showOperate = computed(() => !['detail', 'generateContract'].includes(props.formType))
+const showOperate = computed(() => ['create', 'update'].includes(props.formType))
 const showCreate = computed(() => ['create'].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
