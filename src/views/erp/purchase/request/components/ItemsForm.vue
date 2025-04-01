@@ -11,11 +11,6 @@
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
-      <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
-        <template #default="{ row }">
-          <el-text>{{ row.id }}</el-text>
-        </template>
-      </el-table-column>
       <!-- <el-table-column label="SKU" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
@@ -66,6 +61,11 @@
           </el-form-item>
         </template>
       </el-table-column>
+      <el-table-column label="产品名称" min-width="120">
+        <template #default="{ row }">
+          <el-text>{{ row.productName }}</el-text>
+        </template>
+      </el-table-column>
 
       <el-table-column label="海关品名" width="180">
         <template #default="{ row, $index }">
@@ -90,11 +90,23 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="产品名称" min-width="120">
-        <template #default="{ row }">
-          <el-text>{{ row.productName }}</el-text>
-        </template>
-      </el-table-column>
+      <template v-if="mergeDisabled">
+        <el-table-column label="条码" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
+              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="箱率" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
+              <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+      </template>
+
       <el-table-column label="单位" min-width="60">
         <template #default="{ row }">
           <el-text>{{ row.productUnitName }}</el-text>
@@ -130,55 +142,6 @@
         </template>
       </el-table-column>
     -->
-
-      <el-table-column label="期望到货日期" min-width="150">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
-            <el-date-picker
-              :disabled="mergeDisabled"
-              v-model="row.expectArrivalDate"
-              type="date"
-              value-format="x"
-              placeholder="请选择期望到货日期"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column v-if="mergeDisabled" label="交货日期" min-width="150">
-        <template #default="{ row, $index }">
-          <el-form-item
-            :prop="`${$index}.deliveryTime`"
-            :rules="formRules.deliveryTime"
-            class="mb-0px!"
-          >
-            <el-date-picker
-              :disabled="disabled"
-              v-model="row.deliveryTime"
-              type="date"
-              value-format="x"
-              placeholder="请选择交货日期"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column v-if="mergeDisabled" label="申请人" width="200">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
-            <el-text>{{ row.applicant }}</el-text>
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="mergeDisabled" label="申请部门" width="200">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
-            <el-text>{{ row.applicationDept }}</el-text>
-          </el-form-item>
-        </template>
-      </el-table-column>
 
       <el-table-column v-if="mergeDisabled" label="下单数量" prop="orderQuantity" min-width="120">
         <template #default="{ row, $index }">
@@ -258,21 +221,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="参考单价" prop="referenceUnitPrice" min-width="140">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
-            <el-input-number
-              :disabled="disabled"
-              v-model="row.referenceUnitPrice"
-              controls-position="right"
-              :min="0.01"
-              :precision="2"
-              class="!w-100%"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
       <el-table-column label="税率%" prop="taxPercent" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
@@ -304,30 +252,82 @@
           </template>
         </el-table-column>
       </template>
+      <el-table-column label="参考单价" prop="referenceUnitPrice" min-width="140">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
+            <el-input-number
+              :disabled="disabled"
+              v-model="row.referenceUnitPrice"
+              controls-position="right"
+              :min="0.01"
+              :precision="2"
+              class="!w-100%"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
 
-      <template v-if="mergeDisabled">
-        <el-table-column label="条码" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
-              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column label="箱率" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-              <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column label="备注" min-width="150">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-              <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-      </template>
+      <el-table-column label="期望到货日期" min-width="150">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
+            <el-date-picker
+              :disabled="mergeDisabled"
+              v-model="row.expectArrivalDate"
+              type="date"
+              value-format="x"
+              placeholder="请选择期望到货日期"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="mergeDisabled" label="交货日期" min-width="150">
+        <template #default="{ row, $index }">
+          <el-form-item
+            :prop="`${$index}.deliveryTime`"
+            :rules="formRules.deliveryTime"
+            class="mb-0px!"
+          >
+            <el-date-picker
+              :disabled="disabled"
+              v-model="row.deliveryTime"
+              type="date"
+              value-format="x"
+              placeholder="请选择交货日期"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="mergeDisabled" label="备注" min-width="150">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+            <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
+          </el-form-item>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
+        <template #default="{ row }">
+          <el-text>{{ row.id }}</el-text>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="mergeDisabled" label="申请人" width="200">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
+            <el-text>{{ row.applicant }}</el-text>
+          </el-form-item>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="mergeDisabled" label="申请部门" width="200">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
+            <el-text>{{ row.applicationDept }}</el-text>
+          </el-form-item>
+        </template>
+      </el-table-column>
 
       <el-table-column v-if="!productDisabled" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
