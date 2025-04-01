@@ -322,7 +322,7 @@ const fieldMap = {
     label: '待收数量', // 待入库数量-待收数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  count: {
+  qty: {
     label: '下单数量', // 产品下单数量
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
