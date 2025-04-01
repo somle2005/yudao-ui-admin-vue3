@@ -11,6 +11,11 @@
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
+      <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
+        <template #default="{ row }">
+          <el-text>{{ row.id }}</el-text>
+        </template>
+      </el-table-column>
       <!-- <el-table-column label="SKU" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
@@ -308,11 +313,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
-        <template #default="{ row }">
-          <el-text>{{ row.id }}</el-text>
-        </template>
-      </el-table-column>
+
 
       <el-table-column v-if="mergeDisabled" label="申请人" width="200">
         <template #default="{ row, $index }">

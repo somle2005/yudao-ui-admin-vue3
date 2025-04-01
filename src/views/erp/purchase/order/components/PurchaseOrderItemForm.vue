@@ -11,6 +11,11 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column v-if="!showCreate" label="编号" min-width="120">
+          <template #default="{ row }">
+            <el-text>{{ row.id }}</el-text>
+          </template>
+        </el-table-column>
 
         <template v-if="formType === 'detail'">
           <el-table-column label="验货单" width="200">
@@ -344,11 +349,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="!showCreate" label="编号" min-width="120">
-          <template #default="{ row }">
-            <el-text>{{ row.id }}</el-text>
-          </template>
-        </el-table-column>
+
         <el-table-column label="申请人" width="200">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
