@@ -166,7 +166,7 @@
         <el-table-column label="仓库" width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <!-- <el-select
+              <el-select
                 :disabled="disabled"
                 v-model="row.warehouseId"
                 clearable
@@ -179,8 +179,8 @@
                   :label="item.name"
                   :value="item.id"
                 />
-              </el-select> -->
-              <el-text>{{ row.warehouseName }}</el-text>
+              </el-select>
+              <!-- <el-text>{{ row.warehouseName }}</el-text> -->
             </el-form-item>
           </template>
         </el-table-column>
