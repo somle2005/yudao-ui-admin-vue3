@@ -33,7 +33,7 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
 商品id-productId-下拉框
 申请数量-qty-数字输入框(整数>0)
 仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
-批准数量-approveCount-数字输入框(整数>0)
+批准数量-approvedQty-数字输入框(整数>0)
 含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
 价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
 参考单价-referenceUnitPrice-数字输入框(整数>0)
@@ -72,7 +72,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
   formData.items.forEach((item) => {
     // 批准数量默认值取申请数量
     if (formType === 'audit') {
-      item.approveCount = item.qty
+      item.approvedQty = item.qty
     }
     // item.taxPercent = item.taxPercent * 100
   })
@@ -95,7 +95,7 @@ const mergeSelectItemsData = (formData, data, smFormRef) => {
 
   // formData.items.forEach((item) => {
   //   // 默认下单数量等于批准数量
-  //   item.orderQuantity = item.approveCount
+  //   item.orderQuantity = item.approvedQty
   // })
 
   // nextTick(() => {
@@ -698,7 +698,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
           items: data.items.map((item) => {
             return {
               id: item.id,
-              approveCount: item.approveCount
+              approvedQty: item.approvedQty
             }
           }),
           reviewComment: data.reviewComment

@@ -888,7 +888,7 @@ const addItem = (selectionList) => {
     const selectList = selectionList.map((item: any) => {
       const {
         purchaseApplyItemId,
-        approveCount,
+        approvedQty,
         actTaxPrice,
         taxPercent = TAX_PERCENT,
         taxPrice,
@@ -910,7 +910,7 @@ const addItem = (selectionList) => {
       } = item
       const obj = {
         purchaseApplyItemId,
-        count: approveCount || 0,
+        count: approvedQty || 0,
         actTaxPrice,
         taxPercent,
         taxPrice, //税额需要动态计算

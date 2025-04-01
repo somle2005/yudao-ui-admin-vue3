@@ -184,17 +184,17 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="approveCountShow" label="批准数量" prop="approveCount" min-width="120">
+      <el-table-column v-if="approveCountShow" label="批准数量" prop="approvedQty" min-width="120">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.approveCount`" class="mb-0px!">
+          <el-form-item :prop="`${$index}.approvedQty`" class="mb-0px!">
             <el-input-number
               :disabled="approveCountDisabled"
-              v-model="row.approveCount"
+              v-model="row.approvedQty"
               controls-position="right"
               :min="1"
               :max="row.qty"
               class="!w-100%"
-              @change="(val) => changeValLimit(row, 'approveCount', 1, val)"
+              @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
             />
           </el-form-item>
         </template>
@@ -363,7 +363,7 @@ import { getDeclaredType } from '@/utils/operate/purchase'
     商品id-productId-下拉框
     申请数量-qty-数字输入框(整数>0)
     仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
-    批准数量-approveCount-数字输入框(整数>0)
+    批准数量-approvedQty-数字输入框(整数>0)
     含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
     价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
     参考单价-referenceUnitPrice-数字输入框(整数>0)
@@ -460,22 +460,22 @@ watch(
       // allAmount: 'allAmount',
       // actTaxPrice: 'actTaxPrice',
       // onePrice: 'productPrice',
-      applyCount: 'approveCount'
+      applyCount: 'approvedQty'
     }
 
     /**
       新增-申请数量-qty
-      审核-批准数量-approveCount
+      审核-批准数量-approvedQty
       合并-下单数量-orderQuantity
      */
     const applyCountMap = {
-      create: 'approveCount', // 新增的时候不展示 价税合计-税额- 数据无法计算传递null
-      audit: 'approveCount',
+      create: 'approvedQty', // 新增的时候不展示 价税合计-税额- 数据无法计算传递null
+      audit: 'approvedQty',
       merge: 'orderQuantity',
-      detail: 'approveCount', // 详情只能看数量-和新增一样查看-详情展示批准数量
-      update: 'approveCount' // 展示批准数量-无法编辑
+      detail: 'approvedQty', // 详情只能看数量-和新增一样查看-详情展示批准数量
+      update: 'approvedQty' // 展示批准数量-无法编辑
     }
-    keyMap.applyCount = applyCountMap[props.formType] || 'approveCount' // 新增没有值就不计算或者不传递
+    keyMap.applyCount = applyCountMap[props.formType] || 'approvedQty' // 新增没有值就不计算或者不传递
 
     // 编辑回显
     computeTaxPriceAndAllAmount(val, keyMap)
@@ -528,7 +528,7 @@ const handleAdd = () => {
   // 商品id-productId-下拉框
   // 申请数量-qty-数字输入框(整数>0)
   // 仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
-  // 批准数量-approveCount-数字输入框(整数>0)
+  // 批准数量-approvedQty-数字输入框(整数>0)
   // 含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
   // 价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
   // 参考单价-referenceUnitPrice-数字输入框(整数>0)
@@ -541,7 +541,7 @@ const handleAdd = () => {
     id: undefined,
     productId: undefined,
     qty: undefined, // 申请数量
-    approveCount: undefined, // 批准数量
+    approvedQty: undefined, // 批准数量
     warehouseId: undefined,
     actTaxPrice: undefined,
     referenceUnitPrice: undefined,

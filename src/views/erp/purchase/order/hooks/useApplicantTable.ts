@@ -77,7 +77,7 @@ export const useApplicantTable = () => {
     },
     productUnitName: '单位',
     count: '申请数量',
-    approveCount: '批准数量',
+    approvedQty: '批准数量',
     referenceUnitPrice: '参考单价',
     actTaxPrice: '含税单价',
     taxPrice: '税额',

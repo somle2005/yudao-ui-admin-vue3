@@ -240,7 +240,7 @@
       <!~~ <el-table-column
         label="入库数量"
         align="center"
-        prop="inboundClosedQty"
+        prop="inCount"
         :formatter="erpCountTableColumnFormatter"
       />
       <el-table-column
@@ -549,7 +549,7 @@ const { tableOptions, transformTableOptions } = useTableData()
 14-产品名称-有-(在items里面-productName)
 15-单位。-有-(在items里面-productUnitName)
 16-申请数量-有-(在items里面-后端无返回-count)
-17-批准数量-有-(在items里面-approveCount)
+17-批准数量-有-(在items里面-approvedQty)
 18-参考单价-(文档无描述)-(在items里面-referenceUnitPrice)
 19-含税单价-有-(在items里面-actTaxPrice)
 20-税额-(文档无描述)-(在items里面-taxPrice)
@@ -597,7 +597,7 @@ const fieldMap = {
   productName: '产品名称',
   productUnitName: '单位',
   count: '申请数量',
-  approveCount: '批准数量',
+  approvedQty: '批准数量',
   referenceUnitPrice: '参考单价',
   actTaxPrice: '含税单价',
   taxPrice: '税额',

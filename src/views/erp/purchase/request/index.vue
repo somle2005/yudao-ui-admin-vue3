@@ -277,7 +277,7 @@ const fieldMap = {
     label: '申请数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
-  approveCount: {
+  approvedQty: {
     label: '批准数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
@@ -455,7 +455,7 @@ const handleUpdateStatus = async (row: any, reviewed: boolean) => {
       items: items.map((item) => {
         return {
           id: item.id,
-          pass: item.approveCount
+          // pass: item.approvedQty
         }
       })
     })
