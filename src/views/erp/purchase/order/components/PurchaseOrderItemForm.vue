@@ -591,7 +591,7 @@ const handleAdd = () => {
     qty: undefined,
     inspectionJson: [],
     completionJson: []
-    // inCount: undefined,
+    // inboundClosedQty: undefined,
     // applyCount: undefined,
   }
   formData.value.push(row)

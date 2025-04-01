@@ -51,7 +51,7 @@ export const useApplicantTable = () => {
     },
 
     unOrderCount: '未订购数量',
-    orderedQuantity: '已订购数量',
+    orderClosedQty: '已订购数量',
     inQty: '已入库数量',
     // 改造别名
     rowOrderStatus: {

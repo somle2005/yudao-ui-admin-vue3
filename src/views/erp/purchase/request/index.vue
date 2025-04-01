@@ -226,12 +226,12 @@ const fieldMap = {
     label: '未订购数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   }, // 批准数量➖已订购数量后端计算返回
-  orderedQuantity: {
+  orderClosedQty: {
     label:'已订购数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
   // inQty: '已入库数量',
-  inCount: '已入库数量',
+  inboundClosedQty: '已入库数量',
   // 改造别名
   rowOrderStatus: {
     label: '行采购状态',

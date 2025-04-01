@@ -184,7 +184,7 @@
       <el-table-column
         label="入库数量"
         align="center"
-        prop="inCount"
+        prop="inboundClosedQty"
         :formatter="erpCountTableColumnFormatter"
       />
       <el-table-column
