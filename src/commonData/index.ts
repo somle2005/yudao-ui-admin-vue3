@@ -7,8 +7,11 @@ import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
-import {CustomRuleCategoryApi} from '@/api/erp/logistic/custom-category'
+import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
+import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { CustomProductApi } from '@/api/erp/logistic/custom-product'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 interface SelectProp {
   value: number
@@ -34,24 +37,30 @@ export const getDeptTree = (data?: any) => {
 }
 
 // 获取结算账户列表
-export const getAccountList = () => {
+export const getAccountList = (data?: any) => {
   const accountList = ref<AccountVO[]>([]) // 账户列表
   // 加载账户列表
   AccountApi.getAccountSimpleList().then((res) => {
-    accountList.value = res
+    accountList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = accountList.value
+    }
   })
   return accountList
 }
 
 // 供应商产品编号列表
 export const getSupplierProductList = (data?: any) => {
-  const supplierProductList = ref<SupplierProductVO[]>([]) // 账户列表
-  // 加载账户列表
+  const supplierProductList = ref<(SupplierProductVO & SelectProp)[]>([]) // 账户列表
+  // 加载商产品编号列表
   SupplierProductApi.getSupplierProductSimpleList().then((res) => {
     supplierProductList.value = res.map((item) => {
       item.label = item.code
       item.value = item.id
-      item.type = 'option'
       return item
     })
     if (data) {
@@ -61,28 +70,51 @@ export const getSupplierProductList = (data?: any) => {
   return supplierProductList
 }
 
+// 供应商列表
+export const getSupplierList = (data?: any) => {
+  const supplierList = ref<(SupplierVO & SelectProp)[]>([]) // 供应商列表
+  // 加载供应商列表
+  SupplierApi.getSupplierSimpleList().then((res) => {
+    supplierList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = supplierList.value
+    }
+  })
+  return supplierList
+}
+
 // 获取仓库下拉列表
-export const getWarehouseList = () => {
+export const getWarehouseList = (data?: any) => {
   const warehouseList = ref<WarehouseVO[]>([]) // 账户列表
   // 加载账户列表
   WarehouseApi.getWarehouseSimpleList().then((res) => {
     warehouseList.value = res.map((item) => {
       item.label = item.name
       item.value = item.id
-      item.type = 'option'
       return item
     })
+    if (data) {
+      data.value = warehouseList.value
+    }
   })
   return warehouseList
 }
 // 获取产品列表
-export const getProductList = (data?: any) => {
+export const getProductList = (data?: any, keyMap?: { [key: string]: any }) => {
   const productList = ref<ProductVO[]>([]) // 产品列表
   ProductApi.getProductSimpleList().then((res) => {
     productList.value = res.map((item) => {
       item.label = item.name + '  ' + item.barCode
       item.value = item.id
-      item.type = 'option'
+
+      if (keyMap) {
+        item.label = item[keyMap.label]
+        item.value = item[keyMap.value]
+      }
       return item
     })
     if (data) {
@@ -150,7 +182,6 @@ export const getUserList = (data?: any) => {
     userList.value = res.map((item) => {
       item.label = item.nickname
       item.value = item.id
-      item.type = 'option'
       return item
     })
     if (data) {
@@ -167,7 +198,6 @@ export const getCustomRuleCategoryList = (data?: any) => {
     customRuleCategoryList.value = res.map((item) => {
       item.label = item.combinedValue
       item.value = item.customCategoryId
-      item.type = 'option'
       return item
     })
     if (data) {
@@ -177,6 +207,22 @@ export const getCustomRuleCategoryList = (data?: any) => {
   return customRuleCategoryList
 }
 
+// 获取财务主体列表
+export const getFinanceSubjectList = (data?: any) => {
+  const financeSubjectList = ref<FinanceSubjectVO[]>([]) // 账户列表
+  // 加载财务主体列表
+  FinanceSubjectApi.getFinanceSubjectSimpleList().then((res) => {
+    financeSubjectList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = financeSubjectList.value
+    }
+  })
+  return financeSubjectList
+}
 
 // 查询海关管理中，与海关分类-产品 列表
 export const getCustomProductList = (data?: any) => {
@@ -192,4 +238,18 @@ export const getCustomProductList = (data?: any) => {
     }
   })
   return customProduct
+}
+
+
+// 获取币种列表
+export const getCurrencyList = (data?) => {
+  const list = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
+    item.id = item.value
+    item.value = item.label
+    return item
+  })
+  if(data) {
+    data.value = list
+  }
+  return ref(list)
 }

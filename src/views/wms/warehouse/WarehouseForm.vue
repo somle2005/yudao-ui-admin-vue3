@@ -29,7 +29,6 @@
 <script setup lang="ts">
 import { WarehouseApi, WarehouseVO } from '@/api/wms/warehouse'
 import { addProperty } from '@/components/SmForm/src/utils'
-import { WAROUSE_LIST } from '@/utils/constant/wms'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 
@@ -77,6 +76,8 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await WarehouseApi.getWarehouse(id)
+      // 主动触发表单数据回显
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }
@@ -181,11 +182,11 @@ const createRequestFormOptions = () => {
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true,
+        clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_MODE)
     },
-  
+
     {
       requiredFlag: true,
       type: 'input',
@@ -242,7 +243,7 @@ const createRequestFormOptions = () => {
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true,
+        clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.COUNTRY_CODE).map((item: any) => {
         item.value = item.label
