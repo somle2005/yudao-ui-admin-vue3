@@ -162,7 +162,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:purchase-return:create']"
+          v-hasPermi="['srm:purchase-return:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -171,7 +171,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:purchase-return:export']"
+          v-hasPermi="['srm:purchase-return:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -179,7 +179,7 @@
           type="danger"
           plain
           @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['erp:purchase-return:delete']"
+          v-hasPermi="['srm:purchase-return:delete']"
           :disabled="selectionList.length === 0"
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
@@ -245,7 +245,7 @@
           <el-button
             link
             @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['erp:purchase-return:query']"
+            v-hasPermi="['srm:purchase-return:query']"
           >
             详情
           </el-button>
@@ -253,7 +253,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:purchase-return:update']"
+            v-hasPermi="['srm:purchase-return:update']"
             :disabled="scope.row.status === 20"
           >
             编辑
@@ -262,7 +262,7 @@
             link
             type="primary"
             @click="handleUpdateStatus(scope.row.id, 20)"
-            v-hasPermi="['erp:purchase-return:update-status']"
+            v-hasPermi="['srm:purchase-return:update-status']"
             v-if="scope.row.status === 10"
           >
             审批
@@ -271,7 +271,7 @@
             link
             type="danger"
             @click="handleUpdateStatus(scope.row.id, 10)"
-            v-hasPermi="['erp:purchase-return:update-status']"
+            v-hasPermi="['srm:purchase-return:update-status']"
             v-else
           >
             反审批
@@ -280,7 +280,7 @@
             link
             type="danger"
             @click="handleDelete([scope.row.id])"
-            v-hasPermi="['erp:purchase-return:delete']"
+            v-hasPermi="['srm:purchase-return:delete']"
           >
             删除
           </el-button>

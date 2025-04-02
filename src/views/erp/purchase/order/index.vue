@@ -19,7 +19,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:purchase-order:create']"
+          v-hasPermi="['srm:purchase-order:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -28,7 +28,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:purchase-order:export']"
+          v-hasPermi="['srm:purchase-order:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -38,7 +38,7 @@
           type="primary"
           plain
           @click="handleUpdateStatusEnableBatch(true)"
-          v-hasPermi="['erp:purchase-order:enable']"
+          v-hasPermi="['srm:purchase-order:enable']"
         >
           开启
         </el-button>
@@ -47,7 +47,7 @@
           :disabled="disabledBtn"
           plain
           @click="handleUpdateStatusEnableBatch(false)"
-          v-hasPermi="['erp:purchase-order:enable']"
+          v-hasPermi="['srm:purchase-order:enable']"
         >
           关闭
         </el-button>
@@ -57,7 +57,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['erp:purchase-order:submitAudit']"
+          v-hasPermi="['srm:purchase-order:submitAudit']"
         >
           提交审核
         </el-button>
@@ -67,7 +67,7 @@
           type="primary"
           plain
           @click="mergeOrder"
-          v-hasPermi="['erp:purchase-order:merge']"
+          v-hasPermi="['srm:purchase-order:merge']"
         >
           合并入库
         </el-button>
@@ -77,7 +77,7 @@
           type="primary"
           plain
           @click="generateContractOrder"
-          v-hasPermi="['erp:purchase-order:generateContract']"
+          v-hasPermi="['srm:purchase-order:generateContract']"
         >
           生成采购合同
         </el-button>
@@ -93,7 +93,7 @@
           type="danger"
           plain
           @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['erp:purchase-order:delete']"
+          v-hasPermi="['srm:purchase-order:delete']"
           :disabled="selectionList.length === 0"
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
@@ -124,7 +124,7 @@
         <el-button
           link
           @click="openForm('detail', scope.row.id)"
-          v-hasPermi="['erp:purchase-order:query']"
+          v-hasPermi="['srm:purchase-order:query']"
         >
           详情
         </el-button>
@@ -132,7 +132,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:purchase-order:update']"
+          v-hasPermi="['srm:purchase-order:update']"
           v-if="scope.row.auditStatus !== 5"
         >
           编辑
@@ -141,7 +141,7 @@
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
-          v-hasPermi="['erp:purchase-order:audit']"
+          v-hasPermi="['srm:purchase-order:audit']"
           v-if="[3].includes(scope.row.auditStatus)"
         >
           审核
@@ -150,7 +150,7 @@
           link
           type="danger"
           @click="handleUpdateStatus(scope.row, false)"
-          v-hasPermi="['erp:purchase-order:audit']"
+          v-hasPermi="['srm:purchase-order:audit']"
           v-if="scope.row.auditStatus === 5"
         >
           反审核
@@ -159,7 +159,7 @@
           link
           type="danger"
           @click="handleDelete([scope.row.id])"
-          v-hasPermi="['erp:purchase-order:delete']"
+          v-hasPermi="['srm:purchase-order:delete']"
         >
           删除
         </el-button>

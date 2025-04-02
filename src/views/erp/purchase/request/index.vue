@@ -17,7 +17,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:purchase-request:create']"
+          v-hasPermi="['srm:purchase-request:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -26,7 +26,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:purchase-request:export']"
+          v-hasPermi="['srm:purchase-request:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -37,7 +37,7 @@
           plain
           @click="mergePurchase"
           :loading="mergeLoading"
-          v-hasPermi="['erp:purchase-request:merge']"
+          v-hasPermi="['srm:purchase-request:merge']"
         >
           合并采购
         </el-button>
@@ -47,7 +47,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['erp:purchase-request:submitAudit']"
+          v-hasPermi="['srm:purchase-request:submitAudit']"
         >
           提交审核
         </el-button>
@@ -57,7 +57,7 @@
           type="primary"
           plain
           @click="handleUpdateStatusEnableBatch(true)"
-          v-hasPermi="['erp:purchase-request:enable']"
+          v-hasPermi="['srm:purchase-request:enable']"
         >
           开启
         </el-button>
@@ -66,7 +66,7 @@
           :disabled="disabledBtn"
           plain
           @click="handleUpdateStatusEnableBatch(false)"
-          v-hasPermi="['erp:purchase-request:enable']"
+          v-hasPermi="['srm:purchase-request:enable']"
         >
           关闭
         </el-button>
@@ -118,7 +118,7 @@
         <el-button
           link
           @click="openForm('detail', scope.row.id)"
-          v-hasPermi="['erp:purchase-request:query']"
+          v-hasPermi="['srm:purchase-request:query']"
         >
           详情
         </el-button>
@@ -127,7 +127,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:purchase-request:update']"
+          v-hasPermi="['srm:purchase-request:update']"
           v-if="scope.row.auditStatus !== 5"
         >
           编辑
@@ -137,7 +137,7 @@
           link
           type="danger"
           @click="handleDelete([scope.row.id])"
-          v-hasPermi="['erp:purchase-request:delete']"
+          v-hasPermi="['srm:purchase-request:delete']"
         >
           删除
         </el-button>
@@ -145,7 +145,7 @@
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
-          v-hasPermi="['erp:purchase-request:audit']"
+          v-hasPermi="['srm:purchase-request:audit']"
           v-if="[3].includes(scope.row.auditStatus)"
         >
           审核
@@ -155,7 +155,7 @@
           link
           type="danger"
           @click="handleUpdateStatus(scope.row, false)"
-          v-hasPermi="['erp:purchase-request:audit']"
+          v-hasPermi="['srm:purchase-request:audit']"
           v-if="scope.row.auditStatus === 5"
         >
           反审核

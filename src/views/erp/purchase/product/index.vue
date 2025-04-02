@@ -82,7 +82,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:supplier-product:create']"
+          v-hasPermi="['srm:supplier-product:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -91,7 +91,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:supplier-product:export']"
+          v-hasPermi="['srm:supplier-product:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -133,7 +133,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:supplier-product:update']"
+            v-hasPermi="['srm:supplier-product:update']"
           >
             编辑
           </el-button>
@@ -141,7 +141,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:supplier-product:delete']"
+            v-hasPermi="['srm:supplier-product:delete']"
           >
             删除
           </el-button>
