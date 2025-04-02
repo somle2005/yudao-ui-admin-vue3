@@ -103,10 +103,10 @@
         </el-table-column>
 
         <el-table-column label="海关品名" width="180">
+          <!-- :rules="formRules.declaredType" -->
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.declaredType`"
-              :rules="formRules.declaredType"
               class="mb-0px!"
             >
               <el-input :disabled="disabled" v-model.trim="row.declaredType" />
@@ -114,10 +114,10 @@
           </template>
         </el-table-column>
         <el-table-column label="海关品名(英文)" width="180">
+          <!-- :rules="formRules.declaredTypeEn" -->
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.declaredTypeEn`"
-              :rules="formRules.declaredTypeEn"
               class="mb-0px!"
             >
               <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
@@ -475,8 +475,8 @@ const formRules = reactive({
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
-  declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
-  declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
+  // declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
+  // declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
