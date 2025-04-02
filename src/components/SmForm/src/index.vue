@@ -18,8 +18,8 @@
         >
           <component
             v-if="showType(item)"
-            :is="`el-${item.type}`"
-            :placeholder="item.placeholder"
+            :is="getComponentType(item)"
+            :placeholder="getPlaceholder(item.placeholder)"
             v-model.trim="model[item.prop!]"
             v-bind="item.attrs"
             v-on="item.events || {}"
@@ -47,7 +47,7 @@
             v-bind="item.attrs"
             :is="`el-${item.type}`"
             v-model="model[item.prop!]"
-            :placeholder="item.placeholder"
+            :placeholder="getPlaceholder(item.placeholder)"
           >
             <component
               :is="`el-${child.componentType || 'option'}`"
@@ -87,8 +87,8 @@
             >
               <component
                 v-if="showType(item)"
-                :is="`el-${item.type}`"
-                :placeholder="item.placeholder"
+                :is="getComponentType(item)"
+                :placeholder="getPlaceholder(item.placeholder)"
                 v-model.trim="model[item.prop!]"
                 v-bind="item.attrs"
                 v-on="item.events || {}"
@@ -119,7 +119,7 @@
                 v-bind="item.attrs"
                 :is="`el-${item.type}`"
                 v-model="model[item.prop!]"
-                :placeholder="item.placeholder"
+                :placeholder="getPlaceholder(item.placeholder)"
               >
                 <component
                   :is="`el-${child.componentType || 'option'}`"
@@ -148,6 +148,12 @@ import { FormInstance, FormOptions } from './types/types'
 import { cloneDeep } from 'lodash-es'
 import { UploadFile, UploadFiles, UploadRawFile } from 'element-plus'
 // import E from "wangeditor"
+
+const getComponentType = (item) => {
+  const { type, componentType } = item
+  if (componentType) return componentType
+  return `el-${type}` // `el-${item.type}`
+}
 
 const dealEvents = (e: any, item: any, type: string) => {
   const events = item.events && item.events[type]
@@ -210,6 +216,10 @@ const getOutFormData = () => {
   return unref(props.getModelValue())
 }
 
+const getPlaceholder = (placeholder?: string) => {
+  return placeholder || ''
+}
+
 // 初始化表单
 const initForm = () => {
   if (props.options && props.options.length) {
@@ -232,7 +242,7 @@ const initForm = () => {
 //     nextTick(() => {
 //       if (document.getElementById('editor')) {
 //         const editor = new E('#editor')
-//         editor.config.placeholder = item.placeholder!
+//         editor.config.placeholder = getPlaceholder(item.placeholder)!
 //         editor.create()
 //         // 初始化富文本的内容
 //         editor.txt.html(item.value)
@@ -262,8 +272,14 @@ const resetFields = () => {
 }
 // 表单验证方法
 const validate = () => {
+  return form.value!.validate()
+}
+
+// 拿到更细颗粒度-内部那些错误有问题
+const validateFn = () => {
   return form.value!.validate
 }
+
 // 获取表单数据
 const getFormData = () => {
   return model.value
@@ -273,7 +289,9 @@ const getFormData = () => {
 defineExpose({
   resetFields,
   validate,
-  getFormData
+  validateFn,
+  getFormData,
+  initForm
 })
 
 onMounted(() => {

@@ -214,21 +214,20 @@ export enum DICT_TYPE {
   CRM_PERMISSION_LEVEL = 'crm_permission_level', // CRM 数据权限的级别
   CRM_PRODUCT_UNIT = 'crm_product_unit', // CRM 产品单位
   CRM_FOLLOW_UP_TYPE = 'crm_follow_up_type', // CRM 跟进方式
-  CRM_CLIENT_TAG= 'crm_client_tag', // CRM 客户标签
+  CRM_CLIENT_TAG = 'crm_client_tag', // CRM 客户标签
 
   // ========== ERP - 企业资源计划模块  ==========
   ERP_AUDIT_STATUS = 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE = 'erp_stock_record_biz_type', // 库存明细的业务类型
   SYSTEM_FILED = 'system_field',
-  COUNTRY_CODE = 'country_code',    //国别代码
-  ERP_PATENT_TYPE = 'erp_patent_type',  //专利类型
+  COUNTRY_CODE = 'country_code', //国别代码
+  ERP_PATENT_TYPE = 'erp_patent_type', //专利类型
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
   SRP_ORDER_STATUS = 'srp_order_status', // 采购状态
   ERP_OFF_STATUS = 'erp_off_status', // 开关状态
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
   REPORT_MAP = 'report_map', // 报表地图
-  
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台
@@ -240,7 +239,6 @@ export enum DICT_TYPE {
   AI_WRITE_FORMAT = 'ai_write_format', // AI 写作格式
   AI_WRITE_TONE = 'ai_write_tone', // AI 写作语气
   AI_WRITE_LANGUAGE = 'ai_write_language', // AI 写作语言
- 
 
   // ========== IOT - 物联网模块  ==========
   IOT_NET_TYPE = 'iot_net_type', // IOT 联网方式
@@ -253,5 +251,10 @@ export enum DICT_TYPE {
   IOT_PRODUCT_FUNCTION_TYPE = 'iot_product_function_type', // IOT 产品功能类型
   IOT_DATA_TYPE = 'iot_data_type', // IOT 数据类型
   IOT_UNIT_TYPE = 'iot_unit_type', // IOT 单位类型
-  IOT_RW_TYPE = 'iot_rw_type' // IOT 读写类型
+  IOT_RW_TYPE = 'iot_rw_type', // IOT 读写类型
+
+  // ========== WMS  ==========
+  WMS_STOCK_TYPE = 'wms_stock_type', // 库存类型-存货类型
+  WMS_WAREHOUSE_AREA_PARTITION_TYPE = 'wms_warehouse_area_partition_type', // 分区类型
+  WMS_VALID_STATUS = 'wms_valid_status' // WMS通用的对象有效状态
 }

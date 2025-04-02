@@ -32,7 +32,9 @@ export interface FormOptions {
     | 'transfer'
     | 'upload'
     | 'editor'
-    | 'tree-select'
+    | 'tree-select',
+  // 自定义组件非ElementPlus组件
+  componentType?:  'sm-remote-select'
   // 表单项的值
   value?: any
   // 表单项label
