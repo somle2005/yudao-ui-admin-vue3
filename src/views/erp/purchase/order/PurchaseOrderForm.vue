@@ -731,8 +731,8 @@ const open = async (type: string, id?: number, data?: any) => {
       if (type === 'generateContract') {
         formData.value.signingPlace = '浙江宁波'
         formData.value.signingDate = formData.value.noTime
-        formData.value.partyAId = formData.value.supplierId
-        formData.value.partyBId = formData.value.purchaseCompanyId
+        formData.value.partyAId = formData.value.purchaseCompanyId
+        formData.value.partyBId = formData.value.supplierId
       }
 
       if (type === 'merge') {
