@@ -728,6 +728,13 @@ const open = async (type: string, id?: number, data?: any) => {
         item.originCount = item.count
       })
 
+      if (type === 'generateContract') {
+        formData.value.signingPlace = '浙江宁波'
+        formData.value.signingDate = formData.value.noTime
+        formData.value.partyAId = formData.value.supplierId
+        formData.value.partyBId = formData.value.purchaseCompanyId
+      }
+
       if (type === 'merge') {
         dialogTitle.value = '合并入库'
         const inFormData = getFormData()
