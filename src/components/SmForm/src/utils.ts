@@ -37,3 +37,19 @@ export const useFormData = () => {
     addRules
   }
 }
+
+// 根据 例如requiredFlag属性进行对应的操作-这样 字段多次修改都统一处理了
+export const addProperty = (list: any[]) => {
+  list.forEach((item: any) => {
+    if (item.requiredFlag && !item.rules) {
+      item.rules = [
+        {
+          required: true,
+          message: `${item.label}不能为空`,
+          trigger: 'blur'
+        }
+      ]
+    }
+  })
+  return list
+}
