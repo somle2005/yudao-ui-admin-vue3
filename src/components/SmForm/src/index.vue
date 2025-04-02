@@ -45,13 +45,13 @@
         >
           <component
             v-bind="item.attrs"
-            :is="`el-${item.type}`"
+            :is="getComponentType(item)"
             v-model="model[item.prop!]"
             :placeholder="getPlaceholder(item.placeholder)"
           >
             <component
-              :is="`el-${child.componentType || 'option'}`"
               v-for="(child, i) in item.children"
+              :is="getComponentType(child)"
               :key="i"
               :label="child.label"
               :value="child.value"
@@ -117,13 +117,13 @@
             >
               <component
                 v-bind="item.attrs"
-                :is="`el-${item.type}`"
+                :is="getComponentType(item)"
                 v-model="model[item.prop!]"
                 :placeholder="getPlaceholder(item.placeholder)"
               >
                 <component
-                  :is="`el-${child.componentType || 'option'}`"
                   v-for="(child, i) in item.children"
+                  :is="getComponentType(child)"
                   v-bind="child.attrs"
                   :key="i"
                   :label="child.label"
@@ -152,7 +152,7 @@ import { UploadFile, UploadFiles, UploadRawFile } from 'element-plus'
 const getComponentType = (item) => {
   const { type, componentType } = item
   if (componentType) return componentType
-  return `el-${type}` // `el-${item.type}`
+  return type ? `el-${type}` : 'el-option' // `el-${item.type}` `el-${child.componentType || 'option'}`
 }
 
 const dealEvents = (e: any, item: any, type: string) => {
