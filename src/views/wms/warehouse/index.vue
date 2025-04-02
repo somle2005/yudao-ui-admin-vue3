@@ -1,98 +1,24 @@
 <template>
+  
   <ContentWrap>
     <!-- 搜索工作栏 -->
-    <el-form
+    <SmForm
       class="-mb-15px"
-      :model="queryParams"
       ref="queryFormRef"
       :inline="true"
       label-width="68px"
+      v-model="queryParams"
+      :options="searchFormOptions"
+      :getModelValue="getSearchFormData"
     >
-      <el-form-item label="代码" prop="code">
-        <el-input
-          v-model="queryParams.code"
-          placeholder="请输入代码"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入名称"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="归属的仓库ID" prop="warehouseId">
-        <el-input
-          v-model="queryParams.warehouseId"
-          placeholder="请输入归属的仓库ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="存货类型 ; WarehouseAreaStockType : 1-拣货 , 2-存储" prop="stockType">
-        <el-select
-          v-model="queryParams.stockType"
-          placeholder="请选择存货类型 ; WarehouseAreaStockType : 1-拣货 , 2-存储"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="分区类型 ; WarehouseAreaPartitionType : 1-标准品 , 2-不良品" prop="partitionType">
-        <el-select
-          v-model="queryParams.partitionType"
-          placeholder="请选择分区类型 ; WarehouseAreaPartitionType : 1-标准品 , 2-不良品"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态，WMS通用的对象有效状态 ; ValidStatus : 0-不可用 , 1-可用" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="请选择状态，WMS通用的对象有效状态 ; ValidStatus : 0-不可用 , 1-可用"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="优先级" prop="priority">
-        <el-input
-          v-model="queryParams.priority"
-          placeholder="请输入优先级"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker
-          v-model="queryParams.createTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
-      </el-form-item>
-      <el-form-item>
+      <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
         <el-button
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['wms:warehouse-zone:create']"
+          v-hasPermi="['wms:warehouse:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -101,92 +27,137 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['wms:warehouse-zone:export']"
+          v-hasPermi="['wms:warehouse:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-      </el-form-item>
-    </el-form>
+      </template>
+    </SmForm>
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="主键" align="center" prop="id" />
-      <el-table-column label="代码" align="center" prop="code" />
-      <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="归属的仓库ID" align="center" prop="warehouseId" />
-      <el-table-column label="存货类型 ; WarehouseAreaStockType : 1-拣货 , 2-存储" align="center" prop="stockType" />
-      <el-table-column label="分区类型 ; WarehouseAreaPartitionType : 1-标准品 , 2-不良品" align="center" prop="partitionType" />
-      <el-table-column label="状态，WMS通用的对象有效状态 ; ValidStatus : 0-不可用 , 1-可用" align="center" prop="status" />
-      <el-table-column label="优先级" align="center" prop="priority" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="操作" align="center" min-width="120px">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['wms:warehouse-zone:update']"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['wms:warehouse-zone:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页 -->
-    <Pagination
+  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
       :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
-    />
+    >
+      <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['wms:warehouse:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['wms:warehouse:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <WarehouseZoneForm ref="formRef" @success="getList" />
+  <WarehouseForm ref="formRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { WarehouseZoneApi, WarehouseZoneVO } from '@/api/wms/warehouse/index'
-import WarehouseZoneForm from './WarehouseZoneForm.vue'
+import { WarehouseApi, WarehouseVO } from '@/api/wms/warehouse'
+import WarehouseForm from './WarehouseForm.vue'
+import { useTableData } from '@/components/SmTable/src/utils'
+import { useSearchForm } from './hooks/search'
 
-/** 库区 列表 */
-defineOptions({ name: 'WmsWarehouseZone' })
+const { tableOptions, transformTableOptions } = useTableData()
+
+const fieldMap = {
+  mode: {
+    label: '仓库属性',
+    slot: 'mode',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_MODE }
+  },
+  status: {
+    label: '状态',
+    slot: 'status',
+    dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
+  },
+  code: '仓库代码',
+  name: '仓库名称',
+  companyName: '公司名称',
+  country: '国家编码',
+  province: '省/州',
+  city: '城市',
+  addressLine1: '地址1',
+  addressLine2: '地址2',
+  postcode: '邮编',
+  contactPerson: '联系人',
+  contactPhone: '联系电话',
+  isSync: {
+    label: '库存同步',
+    slot: 'isSync',
+    dictAttrs: { type: DICT_TYPE.COMMON_ENABLE_STATUS }
+  },
+  updateTime: {
+    label: '更新时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  updater: '更新人',
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  creator: '创建人',
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '180px'
+  }
+}
+tableOptions.value = transformTableOptions(fieldMap)
+
+/** 仓库 列表 */
+defineOptions({ name: 'WmsWarehouse' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<WarehouseZoneVO[]>([]) // 列表的数据
+const list = ref<WarehouseVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
+  mode: undefined,
   code: undefined,
   name: undefined,
-  warehouseId: undefined,
-  stockType: undefined,
-  partitionType: undefined,
-  status: undefined,
-  priority: undefined,
-  createTime: [],
+  externalStorageId: undefined,
+  externalStorageCode: undefined,
+  companyName: undefined,
+  country: undefined,
+  province: undefined,
+  city: undefined,
+  addressLine1: undefined,
+  addressLine2: undefined,
+  postcode: undefined,
+  contactPerson: undefined,
+  contactPhone: undefined,
+  isSync: undefined,
+  createTime: []
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -195,7 +166,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await WarehouseZoneApi.getWarehouseZonePage(queryParams)
+    const data = await WarehouseApi.getWarehousePage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -227,7 +198,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await WarehouseZoneApi.deleteWarehouseZone(id)
+    await WarehouseApi.deleteWarehouse(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -241,13 +212,15 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await WarehouseZoneApi.exportWarehouseZone(queryParams)
-    download.excel(data, '库区.xls')
+    const data = await WarehouseApi.exportWarehouse(queryParams)
+    download.excel(data, '仓库.xls')
   } catch {
   } finally {
     exportLoading.value = false
   }
 }
+
+const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 /** 初始化 **/
 onMounted(() => {

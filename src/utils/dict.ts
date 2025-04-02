@@ -113,6 +113,7 @@ export enum DICT_TYPE {
   TERMINAL = 'terminal', // 终端
   DATE_INTERVAL = 'date_interval', // 数据间隔
   COMMON_BOOLEAN_STATUS = 'common_boolean_status',
+  COMMON_ENABLE_STATUS = 'common_enable_status', // 通用开启状态
 
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_SEX = 'system_user_sex',
@@ -256,5 +257,6 @@ export enum DICT_TYPE {
   // ========== WMS  ==========
   WMS_STOCK_TYPE = 'wms_stock_type', // 库存类型-存货类型
   WMS_WAREHOUSE_AREA_PARTITION_TYPE = 'wms_warehouse_area_partition_type', // 分区类型
-  WMS_VALID_STATUS = 'wms_valid_status' // WMS通用的对象有效状态
+  WMS_VALID_STATUS = 'wms_valid_status', // WMS通用的对象有效状态
+  WMS_WAREHOUSE_MODE = 'wms_warehouse_mode', // 仓库经营方式-仓库属性
 }

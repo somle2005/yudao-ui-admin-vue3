@@ -1,46 +1,54 @@
 import request from '@/config/axios'
 
-// 库区 VO
-export interface WarehouseZoneVO {
+// 仓库 VO
+export interface WarehouseVO {
   id: number // 主键
+  mode: number // 属性/模式 : 0-自营;1-三方;2-平台；
   code: string // 代码
   name: string // 名称
-  warehouseId: number // 归属的仓库ID
-  stockType: number // 存货类型 ; WarehouseAreaStockType : 1-拣货 , 2-存储
-  partitionType: number // 分区类型 ; WarehouseAreaPartitionType : 1-标准品 , 2-不良品
-  status: number // 状态，WMS通用的对象有效状态 ; ValidStatus : 0-不可用 , 1-可用
-  priority: number // 优先级
+  externalStorageId: number // 外部存储ID
+  externalStorageCode: string // 外部存储代码
+  companyName: string // 公司名称
+  country: string // 国家
+  province: string // 省/州
+  city: string // 市
+  addressLine1: string // 详细地址1
+  addressLine2: string // 详细地址2
+  postcode: string // 邮编
+  contactPerson: string // 联系人
+  contactPhone: string // 联系的话
+  isSync: number // 库存同步：0-关闭；1-开启；
 }
 
-// 库区 API
-export const WarehouseZoneApi = {
-  // 查询库区分页
-  getWarehouseZonePage: async (params: any) => {
-    return await request.get({ url: `/wms/warehouse-zone/page`, params })
+// 仓库 API
+export const WarehouseApi = {
+  // 查询仓库分页
+  getWarehousePage: async (params: any) => {
+    return await request.get({ url: `/wms/warehouse/page`, params })
   },
 
-  // 查询库区详情
-  getWarehouseZone: async (id: number) => {
-    return await request.get({ url: `/wms/warehouse-zone/get?id=` + id })
+  // 查询仓库详情
+  getWarehouse: async (id: number) => {
+    return await request.get({ url: `/wms/warehouse/get?id=` + id })
   },
 
-  // 新增库区
-  createWarehouseZone: async (data: WarehouseZoneVO) => {
-    return await request.post({ url: `/wms/warehouse-zone/create`, data })
+  // 新增仓库
+  createWarehouse: async (data: WarehouseVO) => {
+    return await request.post({ url: `/wms/warehouse/create`, data })
   },
 
-  // 修改库区
-  updateWarehouseZone: async (data: WarehouseZoneVO) => {
-    return await request.put({ url: `/wms/warehouse-zone/update`, data })
+  // 修改仓库
+  updateWarehouse: async (data: WarehouseVO) => {
+    return await request.put({ url: `/wms/warehouse/update`, data })
   },
 
-  // 删除库区
-  deleteWarehouseZone: async (id: number) => {
-    return await request.delete({ url: `/wms/warehouse-zone/delete?id=` + id })
+  // 删除仓库
+  deleteWarehouse: async (id: number) => {
+    return await request.delete({ url: `/wms/warehouse/delete?id=` + id })
   },
 
-  // 导出库区 Excel
-  exportWarehouseZone: async (params) => {
-    return await request.download({ url: `/wms/warehouse-zone/export-excel`, params })
+  // 导出仓库 Excel
+  exportWarehouse: async (params) => {
+    return await request.download({ url: `/wms/warehouse/export-excel`, params })
   },
-}
+}

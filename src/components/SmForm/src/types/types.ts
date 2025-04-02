@@ -91,6 +91,7 @@ export interface FormOptions {
   formItemConfig?: {
     [key: string]: any
   },
+  requiredFlag?: boolean // 用户带上rules统一处理
 }
 
 export interface ValidateFieldCallback {
