@@ -43,4 +43,9 @@ export const WarehouseZoneApi = {
   exportWarehouseZone: async (params) => {
     return await request.download({ url: `/wms/warehouse-zone/export-excel`, params })
   },
-}
+
+  // 获得库区精简列表
+  getWarehouseZoneSimpleList: async () => {
+    return await request.get({ url: '/wms/warehouse-zone/simple-list' })
+  }
+}
