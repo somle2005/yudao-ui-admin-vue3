@@ -64,6 +64,8 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await WarehouseBinApi.getWarehouseBin(id)
+      // 主动触发表单数据回显
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }
@@ -104,7 +106,6 @@ const resetForm = () => {
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
-
   const list = [
     {
       requiredFlag: true,
