@@ -5,6 +5,42 @@ export const toLine = (value: string) => {
   return value.replace(/(A-Z)g/, '-$1').toLocaleLowerCase()
 }
 
+const resolveConfig = (tableOption, config) => {
+  // 有些是计算属性computed 需要拿到接口后才能拿到 所以 暂定1200
+  // const totalWidth = tableOption.reduce((prev, cur) => {
+  //   let curWidth = 0
+  //   if(cur?.width) {
+  //     curWidth = Number(cur.width.replace('px', ''))
+  //   }
+  //   return prev + curWidth
+  // },0)
+  if (window.innerWidth > 1200 && config?.noWidth) {
+    tableOption.forEach((item) => {
+      if (!item.noWidth) {
+        item.width = undefined
+      }
+    })
+  }
+
+  if (config?.allWrap) {
+    tableOption.forEach((item) => {
+      const allWrapIgnoreList = config.allWrapIgnoreList || []
+      allWrapIgnoreList.push(...['operate'])
+      if (allWrapIgnoreList.includes(item.prop)) return
+
+      const propertyList = ['dictAttrs']
+      const flag = propertyList.some((a) => item[a])
+      if (flag) return
+
+      item.slot = item.prop
+      item.wrap = true
+      if (!item.noWidth) {
+        item.width = '200px'
+      }
+    })
+  }
+}
+
 export const transformTableOptions = (
   fieldMap: { [key: string]: any },
   config?: { [key: string]: any }
@@ -31,21 +67,9 @@ export const transformTableOptions = (
     }
     tableOption.push(obj)
   }
-  // 有些是计算属性computed 需要拿到接口后才能拿到 所以 暂定1200
-  // const totalWidth = tableOption.reduce((prev, cur) => {
-  //   let curWidth = 0
-  //   if(cur?.width) {
-  //     curWidth = Number(cur.width.replace('px', ''))
-  //   }
-  //   return prev + curWidth
-  // },0)
-  if (window.innerWidth > 1200 && config?.noWidth) {
-    tableOption.forEach((item) => {
-      if (!item.noWidth) {
-        item.width = undefined
-      }
-    })
-  }
+
+  resolveConfig(tableOption, config)
+
   return tableOption
 }
 
