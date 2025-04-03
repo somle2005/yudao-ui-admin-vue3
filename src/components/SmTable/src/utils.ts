@@ -39,6 +39,19 @@ const resolveConfig = (tableOption, config) => {
       }
     })
   }
+
+  if (config?.wrapList) {
+    const wrapList = config.wrapList
+    tableOption.forEach((item) => {
+      if (wrapList.includes(item.prop)) {
+        item.slot = item.prop
+        item.wrap = true
+        if (!item.noWidth) {
+          item.width = '200px'
+        }
+      }
+    })
+  }
 }
 
 export const transformTableOptions = (

@@ -4,6 +4,24 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 export const useSearchForm = (handleQuery, queryParams) => {
   const searchFormOptions = ref<Array<FormOptions>>([
     {
+      type: 'date-picker',
+      placeholder: '请选择创建时间',
+      prop: 'createTime',
+      label: '创建时间',
+      attrs: {
+        clearable: true,
+        type: 'daterange',
+        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        'start-placeholder': '开始日期',
+        'end-placeholder': '结束日期',
+        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
       type: 'select',
       label: '仓库属性',
       prop: 'mode',

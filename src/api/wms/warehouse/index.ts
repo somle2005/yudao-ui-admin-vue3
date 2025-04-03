@@ -51,4 +51,9 @@ export const WarehouseApi = {
   exportWarehouse: async (params) => {
     return await request.download({ url: `/wms/warehouse/export-excel`, params })
   },
+
+  // 获取仓库精简信息列表
+  getWarehouseSimpleList: async () => {
+    return await request.get({ url: '/wms/warehouse/simple-list' })
+  }
 }

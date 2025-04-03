@@ -17,7 +17,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['wms:warehouse:create']"
+          v-hasPermi="['wms:warehouse-zone:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -26,7 +26,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['wms:warehouse:export']"
+          v-hasPermi="['wms:warehouse-zone:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -51,7 +51,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['wms:warehouse:update']"
+          v-hasPermi="['wms:warehouse-zone:update']"
         >
           编辑
         </el-button>
@@ -59,7 +59,7 @@
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
-          v-hasPermi="['wms:warehouse:delete']"
+          v-hasPermi="['wms:warehouse-zone:delete']"
         >
           删除
         </el-button>
@@ -68,99 +68,82 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <WarehouseForm ref="formRef" @success="getList" />
+  <WarehouseZoneForm ref="formRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { WarehouseApi, WarehouseVO } from '@/api/wms/warehouse'
-import WarehouseForm from './WarehouseForm.vue'
-import { useTableData } from '@/components/SmTable/src/utils'
+import { WarehouseZoneApi, WarehouseZoneVO } from '@/api/wms/warehouse-zone'
+import WarehouseZoneForm from './WarehouseZoneForm.vue'
 import { useSearchForm } from './hooks/search'
-import { DICT_TYPE } from '@/utils/dict'
-
+import { useTableData } from '@/components/SmTable/src/utils'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  code: '仓库代码',
-  name: '仓库名称',
-  mode: {
-    label: '仓库属性',
-    slot: 'mode',
-    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_MODE }
+  warhouseName: '仓库名称',
+  code: '库区代码',
+  name: '库区名称',
+  stockType: {
+    label: '存货类型',
+    slot: 'stockType',
+    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
+  },
+  partitionType: {
+    label: '分区类型',
+    slot: 'partitionType',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_AREA_PARTITION_TYPE }
   },
   status: {
     label: '状态',
     slot: 'status',
     dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
   },
-  companyName: '公司名称',
-  country: '国家编码',
-  province: '省/州',
-  city: '城市',
-  addressLine1: '地址1',
-  addressLine2: '地址2',
-  postcode: '邮编',
-  contactPerson: '联系人',
-  contactPhone: '联系电话',
-  isSync: {
-    label: '库存同步',
-    slot: 'isSync',
-    dictAttrs: { type: DICT_TYPE.COMMON_ENABLE_STATUS }
+  priority: {
+    label: '优先级',
+    width: '100px'
   },
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
-    width: '180px'
+    width: '200px'
   },
   updaterName: '更新人',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
-    width: '180px'
+    width: '200px'
   },
   creatorName: '创建人',
   operate: {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '180px'
+    width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, {
-  allWrap: true,
-  allWrapIgnoreList: ['createTime', 'updateTime', 'mode']
-})
+tableOptions.value = transformTableOptions(fieldMap, { noWidth: true, wrapList: ['warhouseName','code','name'] })
 
-/** 仓库 列表 */
-defineOptions({ name: 'WmsWarehouse' })
+/** 库区 列表 */
+defineOptions({ name: 'WmsWarehouseZone' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<WarehouseVO[]>([]) // 列表的数据
+const list = ref<WarehouseZoneVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  mode: undefined,
   code: undefined,
   name: undefined,
-  externalStorageId: undefined,
-  externalStorageCode: undefined,
-  companyName: undefined,
-  country: undefined,
-  province: undefined,
-  city: undefined,
-  addressLine1: undefined,
-  addressLine2: undefined,
-  postcode: undefined,
-  contactPerson: undefined,
-  contactPhone: undefined,
-  isSync: undefined,
+  warehouseId: undefined,
+  stockType: undefined,
+  partitionType: undefined,
+  status: undefined,
+  priority: undefined,
   createTime: []
 })
 const queryFormRef = ref() // 搜索的表单
@@ -170,7 +153,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await WarehouseApi.getWarehousePage(queryParams)
+    const data = await WarehouseZoneApi.getWarehouseZonePage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -202,7 +185,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await WarehouseApi.deleteWarehouse(id)
+    await WarehouseZoneApi.deleteWarehouseZone(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -216,8 +199,8 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await WarehouseApi.exportWarehouse(queryParams)
-    download.excel(data, '仓库.xls')
+    const data = await WarehouseZoneApi.exportWarehouseZone(queryParams)
+    download.excel(data, '库区.xls')
   } catch {
   } finally {
     exportLoading.value = false

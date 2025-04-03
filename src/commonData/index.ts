@@ -12,6 +12,7 @@ import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { CustomProductApi } from '@/api/erp/logistic/custom-product'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { WarehouseApi as WmsWarehouseApi, WarehouseVO as WmsWarehouseVO } from '@/api/wms/warehouse'
 
 interface SelectProp {
   value: number
@@ -240,7 +241,6 @@ export const getCustomProductList = (data?: any) => {
   return customProduct
 }
 
-
 // 获取币种列表
 export const getCurrencyList = (data?) => {
   const list = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
@@ -248,8 +248,25 @@ export const getCurrencyList = (data?) => {
     item.value = item.label
     return item
   })
-  if(data) {
+  if (data) {
     data.value = list
   }
   return ref(list)
+}
+
+// 获取WMS仓库下拉列表
+export const getWMSWarehouseList = (data?: any) => {
+  const warehouseList = ref<WmsWarehouseVO[]>([]) // 账户列表
+  // 加载账户列表
+  WmsWarehouseApi.getWarehouseSimpleList().then((res) => {
+    warehouseList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = warehouseList.value
+    }
+  })
+  return warehouseList
 }
