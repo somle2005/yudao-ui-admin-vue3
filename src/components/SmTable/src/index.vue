@@ -37,13 +37,13 @@
             <template v-if="scope.row.rowEdit">
               <el-input v-model="scope.row[item.prop!]" size="small" />
             </template>
+            
+            <template v-else-if="item.dictAttrs">
+              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
+            </template>
 
             <template v-else-if="item.wrap">
               <div :class="['slot-wrap', `slot-${item.prop}`]">{{ scope.row[item.prop!] }}</div>
-            </template>
-
-            <template v-else-if="item.dictAttrs">
-              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
             </template>
 
             <template v-else>
