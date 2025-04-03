@@ -43,7 +43,7 @@
             </template>
 
             <template v-else-if="item.dictAttrs">
-              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] || ''" />
+              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
             </template>
 
             <template v-else>
@@ -210,7 +210,13 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['confirm', 'cancel', 'update:editRowType', 'row-click','oneSelectionChange'])
+const emits = defineEmits([
+  'confirm',
+  'cancel',
+  'update:editRowType',
+  'row-click',
+  'oneSelectionChange'
+])
 
 // 当前被点击的单元格的标识
 const currentEdit = ref<string>('')
