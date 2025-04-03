@@ -86,6 +86,24 @@ export const transformTableOptions = (
   return tableOption
 }
 
+export const assignItem = (item: { [key: string]: any }, parentItem, itemKey: string) => {
+  for (const key in item) {
+    // key首字母大写
+    parentItem[itemKey + key[0].toUpperCase() + key.slice(1)] = item[key]
+  }
+}
+
+export const getItemProp = (list: any[], itemKeyList: string[]) => {
+  list.forEach((item) => {
+    itemKeyList.forEach((key) => {
+      const targetItem = item[key]
+      if (!targetItem) return
+      assignItem(targetItem, item, key)
+    })
+  })
+  return list
+}
+
 export const useTableData = () => {
   const tableOptions = ref<TableOptions[]>([])
   const allTableOptions = ref<TableOptions[]>([])
@@ -93,6 +111,7 @@ export const useTableData = () => {
   return {
     allTableOptions,
     tableOptions,
-    transformTableOptions
+    transformTableOptions,
+    getItemProp
   }
 }

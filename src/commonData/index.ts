@@ -12,7 +12,6 @@ import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { CustomProductApi } from '@/api/erp/logistic/custom-product'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
-import { WarehouseApi as WmsWarehouseApi, WarehouseVO as WmsWarehouseVO } from '@/api/wms/warehouse'
 
 interface SelectProp {
   value: number

@@ -79,10 +79,10 @@ import WarehouseZoneForm from './WarehouseZoneForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 
-const { tableOptions, transformTableOptions } = useTableData()
+const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 
 const fieldMap = {
-  warhouseName: '仓库名称',
+  warehouseName: '仓库名称',
   code: '库区代码',
   name: '库区名称',
   stockType: {
@@ -154,7 +154,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await WarehouseZoneApi.getWarehouseZonePage(queryParams)
-    list.value = data.list
+    list.value = getItemProp(data.list,['warehouse'])
     total.value = data.total
   } finally {
     loading.value = false
