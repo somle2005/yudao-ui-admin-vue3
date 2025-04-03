@@ -1,4 +1,4 @@
-import { getWMSWarehouseList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 

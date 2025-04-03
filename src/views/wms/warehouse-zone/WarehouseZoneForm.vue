@@ -19,7 +19,7 @@
 </template>
 <script setup lang="ts">
 import { WarehouseZoneApi, WarehouseZoneVO } from '@/api/wms/warehouse-zone'
-import { getWMSWarehouseList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
