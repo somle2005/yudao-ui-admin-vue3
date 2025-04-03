@@ -11,11 +11,11 @@ export const useSearchForm = (handleQuery, queryParams) => {
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true,
+        clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_MODE)
     },
-  
+
     {
       type: 'input',
       label: '仓库代码',
@@ -69,7 +69,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true,
+        clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.COUNTRY_CODE).map((item: any) => {
         item.value = item.label
@@ -158,6 +158,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
   searchFormOptions.value.forEach((item) => {
     item.events = events
+    if (item.attrs) {
+      item.attrs.class = '!w-240px'
+    }
   })
   const getSearchFormData = () => {
     return queryParams

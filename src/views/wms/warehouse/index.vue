@@ -1,12 +1,11 @@
 <template>
-  
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
       v-model="queryParams"
       :options="searchFormOptions"
       :getModelValue="getSearchFormData"
@@ -79,6 +78,8 @@ import { WarehouseApi, WarehouseVO } from '@/api/wms/warehouse'
 import WarehouseForm from './WarehouseForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
+import { DICT_TYPE } from '@/utils/dict'
+
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -128,7 +129,10 @@ const fieldMap = {
     width: '180px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap)
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  allWrapIgnoreList: ['createTime', 'updateTime', 'mode']
+})
 
 /** 仓库 列表 */
 defineOptions({ name: 'WmsWarehouse' })
