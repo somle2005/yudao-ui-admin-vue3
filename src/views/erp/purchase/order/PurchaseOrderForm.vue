@@ -582,6 +582,7 @@ const createGenerateContractFormOptions = (formOptions) => {
       prop: 'partyAId',
       label: '甲方',
       attrs: {
+        disabled: true,
         filterable: true,
         clearable: true,
         style: {
@@ -596,6 +597,7 @@ const createGenerateContractFormOptions = (formOptions) => {
       prop: 'partyBId',
       label: '乙方',
       attrs: {
+        disabled: true,
         filterable: true,
         clearable: true,
         style: {
@@ -646,6 +648,7 @@ const createGenerateContractFormOptions = (formOptions) => {
       prop: 'paymentTerms',
       placeholder: '请输入付款条款',
       attrs: {
+        disabled: true,
         type: 'textarea',
         style: { width: '100%' },
         clearable: true
