@@ -20,7 +20,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择入库单类型',
-      prop: 'status',
+      prop: 'type',
       label: '入库单类型',
       attrs: {
         filterable: true,

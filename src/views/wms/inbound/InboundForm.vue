@@ -19,7 +19,7 @@
           >选择入库项</el-button
         > -->
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="退货产品清单" name="item">
+          <el-tab-pane label="入库产品清单" name="item">
             <ItemForm ref="itemFormRef" :items="formData.itemList" :formType="formType" />
           </el-tab-pane>
         </el-tabs>
@@ -38,9 +38,14 @@ import { getWMSWarehouseList } from '@/commonData/wms'
 import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
+import ItemForm from './components/ItemForm.vue'
+
+// import { useOutData } from './components/hooks/outdata'
 
 /** 入库单 表单 */
 defineOptions({ name: 'InboundForm' })
+
+// const { addItemRef, openAddItem } = useOutData()
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -76,6 +81,7 @@ const WMSWarehouseList: any = ref([])
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
+const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -97,7 +103,7 @@ const createRequestFormOptions = () => {
       requiredFlag: true,
       type: 'select',
       placeholder: '请选择入库单类型',
-      prop: 'status',
+      prop: 'type',
       label: '入库单类型',
       attrs: {
         filterable: true,
@@ -130,7 +136,7 @@ const createRequestFormOptions = () => {
       placeholder: '请输入参考号',
       attrs: {
         style: { width: '100%' },
-        clearable: true,
+        clearable: true
       }
     },
     {
@@ -140,7 +146,7 @@ const createRequestFormOptions = () => {
       placeholder: '请输入跟踪号',
       attrs: {
         style: { width: '100%' },
-        clearable: true,
+        clearable: true
       }
     },
     {
