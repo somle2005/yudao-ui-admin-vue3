@@ -81,6 +81,24 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'date-picker',
+      placeholder: '请选择创建时间',
+      prop: 'createTime',
+      label: '创建时间',
+      attrs: {
+        clearable: true,
+        type: 'daterange',
+        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        'start-placeholder': '开始日期',
+        'end-placeholder': '结束日期',
+        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'date-picker',
       placeholder: '请选择预计到货时间',
       prop: 'planArrivalTime',
       label: '预计到货时间',
