@@ -210,5 +210,10 @@ const validate = () => {
 defineExpose({ validate, formData })
 
 /** 初始化 */
-onMounted(() => {})
+onMounted(() => {
+  // 默认添加一个
+  if (formData.value.length === 0) {
+    handleAdd()
+  }
+})
 </script>
