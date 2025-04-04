@@ -39,6 +39,7 @@ import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
+import { cloneDeep } from 'lodash-es'
 
 // import { useOutData } from './components/hooks/outdata'
 
@@ -273,10 +274,14 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async () => {
   // 校验表单
   await formRef.value.validate()
+  await itemFormRef.value.validate()
   // 提交请求
   formLoading.value = true
   try {
     const data = formData.value as unknown as InboundVO
+    if (itemFormRef?.value?.formData) {
+      data.itemList = cloneDeep(itemFormRef.value.formData)
+    }
     if (formType.value === 'create') {
       await InboundApi.createInbound(data)
       message.success(t('common.createSuccess'))

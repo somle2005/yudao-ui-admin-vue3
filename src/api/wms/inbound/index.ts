@@ -17,6 +17,7 @@ export interface InboundVO {
   actualArrivalTime: Date // 实际到货时间
   creatorComment: string // 特别说明，创建方专用
   initAge: number // 初始库龄
+  itemList: any[] // 详情清单
 }
 
 // 入库单 API
@@ -50,4 +51,4 @@ export const InboundApi = {
   exportInbound: async (params) => {
     return await request.download({ url: `/wms/inbound/export-excel`, params })
   },
-}
+}
