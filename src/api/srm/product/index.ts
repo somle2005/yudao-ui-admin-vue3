@@ -20,36 +20,36 @@ export interface SupplierProductVO {
 export const SupplierProductApi = {
   // 查询ERP 供应商产品分页
   getSupplierProductPage: async (params: any) => {
-    return await request.get({ url: `/erp/supplier-product/page`, params })
+    return await request.get({ url: `/srm/supplier-product/page`, params })
   },
 
   // 查询ERP 供应商产品简列表
   getSupplierProductSimpleList: async () => {
-    return await request.get({ url: `/erp/supplier-product/simple-list` })
+    return await request.get({ url: `/srm/supplier-product/simple-list` })
   },
 
   // 查询ERP 供应商产品详情
   getSupplierProduct: async (id: number) => {
-    return await request.get({ url: `/erp/supplier-product/get?id=` + id })
+    return await request.get({ url: `/srm/supplier-product/get?id=` + id })
   },
 
   // 新增ERP 供应商产品
   createSupplierProduct: async (data: SupplierProductVO) => {
-    return await request.post({ url: `/erp/supplier-product/create`, data })
+    return await request.post({ url: `/srm/supplier-product/create`, data })
   },
 
   // 修改ERP 供应商产品
   updateSupplierProduct: async (data: SupplierProductVO) => {
-    return await request.put({ url: `/erp/supplier-product/update`, data })
+    return await request.put({ url: `/srm/supplier-product/update`, data })
   },
 
   // 删除ERP 供应商产品
   deleteSupplierProduct: async (id: number) => {
-    return await request.delete({ url: `/erp/supplier-product/delete?id=` + id })
+    return await request.delete({ url: `/srm/supplier-product/delete?id=` + id })
   },
 
   // 导出ERP 供应商产品 Excel
   exportSupplierProduct: async (params) => {
-    return await request.download({ url: `/erp/supplier-product/export-excel`, params })
+    return await request.download({ url: `/srm/supplier-product/export-excel`, params })
   }
 }

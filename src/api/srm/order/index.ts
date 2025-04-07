@@ -183,33 +183,33 @@ interface PurchaseOrderContractDTO {
 export const PurchaseOrderApi = {
   // 查询采购订单分页
   getPurchaseOrderPage: async (params: any) => {
-    return await request.get({ url: `/erp/purchase-order/page`, params })
+    return await request.get({ url: `/srm/purchase-order/page`, params })
   },
 
   // 查询采购订单详情
   getPurchaseOrder: async (id: number) => {
-    return await request.get({ url: `/erp/purchase-order/get?id=` + id })
+    return await request.get({ url: `/srm/purchase-order/get?id=` + id })
   },
 
   // 新增采购订单
   createPurchaseOrder: async (data: PurchaseOrderVO) => {
-    return await request.post({ url: `/erp/purchase-order/create`, data })
+    return await request.post({ url: `/srm/purchase-order/create`, data })
   },
 
   // 修改采购订单
   updatePurchaseOrder: async (data: PurchaseOrderVO) => {
-    return await request.put({ url: `/erp/purchase-order/update`, data })
+    return await request.put({ url: `/srm/purchase-order/update`, data })
   },
 
   // 更新采购订单json属性-验货单-完工单
   updateJsonPurchaseOrder: async (data: any) => {
-    return await request.put({ url: `/erp/purchase-order/updateJson`, data })
+    return await request.put({ url: `/srm/purchase-order/updateJson`, data })
   },
 
   // 更新采购订单的状态
   updatePurchaseOrderStatus: async (id: number, status: number) => {
     return await request.put({
-      url: `/erp/purchase-order/update-status`,
+      url: `/srm/purchase-order/update-status`,
       params: {
         id,
         status
@@ -220,7 +220,7 @@ export const PurchaseOrderApi = {
   // 删除采购订单
   deletePurchaseOrder: async (ids: number[]) => {
     return await request.delete({
-      url: `/erp/purchase-order/delete`,
+      url: `/srm/purchase-order/delete`,
       params: {
         ids: ids.join(',')
       }
@@ -229,7 +229,7 @@ export const PurchaseOrderApi = {
 
   // 导出采购订单 Excel
   exportPurchaseOrder: async (params: any) => {
-    return await request.download({ url: `/erp/purchase-order/export-excel`, params })
+    return await request.download({ url: `/srm/purchase-order/export-excel`, params })
   },
 
   // 审核/反审核采购订单
@@ -240,7 +240,7 @@ export const PurchaseOrderApi = {
     reviewComment?: string
   }) => {
     return await request.post({
-      url: `/erp/purchase-order/auditStatus`,
+      url: `/srm/purchase-order/auditStatus`,
       data
     })
   },
@@ -248,7 +248,7 @@ export const PurchaseOrderApi = {
   // 关闭/启用采购订单
   updatePurchaseOrderStatusEnable: async (data: { items: any[]; enable: boolean }) => {
     return await request.put({
-      url: `/erp/purchase-order/enableStatus`,
+      url: `/srm/purchase-order/enableStatus`,
       data
     })
   },
@@ -256,7 +256,7 @@ export const PurchaseOrderApi = {
   // 采购单提交审核
   submitPurchaseOrderAudit: async (data: { orderIds: any[] }) => {
     return await request.post({
-      url: `/erp/purchase-order/submitAudit`,
+      url: `/srm/purchase-order/submitAudit`,
       data
     })
   },
@@ -264,7 +264,7 @@ export const PurchaseOrderApi = {
   // 采购单合并入库
   mergePurchaseOrder: async (data: PurchaseOrderMergeVO) => {
     return await request.post({
-      url: `/erp/purchase-order/merge`,
+      url: `/srm/purchase-order/merge`,
       data
     })
   },
@@ -272,18 +272,18 @@ export const PurchaseOrderApi = {
   // 查询采购合同模板
   getPurchaseOrderTemplateList: async () => {
     return await request.get({
-      url: `/erp/purchase-order/getTemplateList`
+      url: `/srm/purchase-order/getTemplateList`
     })
   },
   // 生成采购合同
   generatePurchaseOrderContract: async (data: PurchaseOrderContractDTO) => {
     return await request.downloadPost({
-      url: `/erp/purchase-order/generateContract`,
+      url: `/srm/purchase-order/generateContract`,
       data
     })
   },
   // 获得采购订单最大流水号
   getPurchaseOrderNo: async () => {
-    return await request.get({ url: `/erp/purchase-order/getMaxSerialNo` })
+    return await request.get({ url: `/srm/purchase-order/getMaxSerialNo` })
   }
 }

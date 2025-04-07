@@ -47,28 +47,28 @@ interface PurchaseRequestMergeVO {
 export const PurchaseRequestApi = {
   // 查询ERP采购申请单分页
   getPurchaseRequestPage: async (params: any) => {
-    return await request.get({ url: `/erp/purchase-request/page`, params })
+    return await request.get({ url: `/srm/purchase-request/page`, params })
   },
 
   // 查询ERP采购申请单详情
   getPurchaseRequest: async (id: number) => {
-    return await request.get({ url: `/erp/purchase-request/get?id=` + id })
+    return await request.get({ url: `/srm/purchase-request/get?id=` + id })
   },
 
   // 新增ERP采购申请单
   createPurchaseRequest: async (data: PurchaseRequestVO) => {
-    return await request.post({ url: `/erp/purchase-request/create`, data })
+    return await request.post({ url: `/srm/purchase-request/create`, data })
   },
 
   // 修改ERP采购申请单
   updatePurchaseRequest: async (data: PurchaseRequestVO) => {
-    return await request.put({ url: `/erp/purchase-request/update`, data })
+    return await request.put({ url: `/srm/purchase-request/update`, data })
   },
 
   // // 更新采购订单的状态
   // updatePurchaseRequestStatus: async (id: number, status: number) => {
   //   return await request.put({
-  //     url: `/erp/purchase-request/update-status`,
+  //     url: `/srm/purchase-request/update-status`,
   //     params: {
   //       id,
   //       status
@@ -85,7 +85,7 @@ export const PurchaseRequestApi = {
     reviewComment?: string
   }) => {
     return await request.post({
-      url: `/erp/purchase-request/auditStatus`,
+      url: `/srm/purchase-request/auditStatus`,
       data
     })
   },
@@ -97,7 +97,7 @@ export const PurchaseRequestApi = {
     enable: boolean
   }) => {
     return await request.put({
-      url: `/erp/purchase-request/enableStatus`,
+      url: `/srm/purchase-request/enableStatus`,
       data
     })
   },
@@ -105,7 +105,7 @@ export const PurchaseRequestApi = {
   // 删除采购订单
   deletePurchaseRequest: async (ids: number[]) => {
     return await request.delete({
-      url: `/erp/purchase-request/delete`,
+      url: `/srm/purchase-request/delete`,
       params: {
         ids: ids.join(',')
       }
@@ -114,12 +114,12 @@ export const PurchaseRequestApi = {
 
   // 导出ERP采购申请单 Excel
   exportPurchaseRequest: async (params) => {
-    return await request.download({ url: `/erp/purchase-request/export-excel`, params })
+    return await request.download({ url: `/srm/purchase-request/export-excel`, params })
   },
   // 合并ERP采购申请单 批量
   mergePurchaseRequest: async (data: PurchaseRequestMergeVO) => {
     return await request.post({
-      url: `/erp/purchase-request/merge`,
+      url: `/srm/purchase-request/merge`,
       data
     })
   },
@@ -127,7 +127,7 @@ export const PurchaseRequestApi = {
   // 合并ERP采购申请单 单个
   mergePurchaseRequestOne: async (data: { requestId: number }) => {
     return await request.post({
-      url: `/erp/purchase-request/procurement`,
+      url: `/srm/purchase-request/procurement`,
       data
     })
   },
@@ -135,12 +135,12 @@ export const PurchaseRequestApi = {
   // 提交审核
   submitPurchaseAudit: async (data: number[]) => {
     return await request.put({
-      url: `/erp/purchase-request/submitAudit`,
+      url: `/srm/purchase-request/submitAudit`,
       data
     })
   },
   // 获得ERP采购申请单NO流水号
   getPurchaseRequestNo: async () => {
-    return await request.get({ url: `/erp/purchase-request/getMaxSerialNo` })
+    return await request.get({ url: `/srm/purchase-request/getMaxSerialNo` })
   }
 }

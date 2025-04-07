@@ -19,28 +19,28 @@ export interface PurchaseInVO {
 export const PurchaseInApi = {
   // 查询采购入库分页
   getPurchaseInPage: async (params: any) => {
-    return await request.get({ url: `/erp/purchase-in/page`, params })
+    return await request.get({ url: `/srm/purchase-in/page`, params })
   },
 
   // 查询采购入库详情
   getPurchaseIn: async (id: number) => {
-    return await request.get({ url: `/erp/purchase-in/get?id=` + id })
+    return await request.get({ url: `/srm/purchase-in/get?id=` + id })
   },
 
   // 新增采购入库
   createPurchaseIn: async (data: PurchaseInVO) => {
-    return await request.post({ url: `/erp/purchase-in/create`, data })
+    return await request.post({ url: `/srm/purchase-in/create`, data })
   },
 
   // 修改采购入库
   updatePurchaseIn: async (data: PurchaseInVO) => {
-    return await request.put({ url: `/erp/purchase-in/update`, data })
+    return await request.put({ url: `/srm/purchase-in/update`, data })
   },
 
   // 更新采购入库的状态
   updatePurchaseInStatus: async (id: number, status: number) => {
     return await request.put({
-      url: `/erp/purchase-in/update-status`,
+      url: `/srm/purchase-in/update-status`,
       params: {
         id,
         status
@@ -51,7 +51,7 @@ export const PurchaseInApi = {
   // 删除采购入库
   deletePurchaseIn: async (ids: number[]) => {
     return await request.delete({
-      url: `/erp/purchase-in/delete`,
+      url: `/srm/purchase-in/delete`,
       params: {
         ids: ids.join(',')
       }
@@ -60,7 +60,7 @@ export const PurchaseInApi = {
 
   // 导出采购入库 Excel
   exportPurchaseIn: async (params: any) => {
-    return await request.download({ url: `/erp/purchase-in/export-excel`, params })
+    return await request.download({ url: `/srm/purchase-in/export-excel`, params })
   },
 
   // 审核/反审核采购入库
@@ -71,7 +71,7 @@ export const PurchaseInApi = {
     reviewComment?: string
   }) => {
     return await request.post({
-      url: `/erp/purchase-in/auditStatus`,
+      url: `/srm/purchase-in/auditStatus`,
       data
     })
   },
@@ -79,7 +79,7 @@ export const PurchaseInApi = {
   // 采购入库提交审核
   submitPurchaseInAudit: async (data: { inIds: number[] }) => {
     return await request.put({
-      url: `/erp/purchase-in/submitAudit`,
+      url: `/srm/purchase-in/submitAudit`,
       data
     })
   },
@@ -87,7 +87,7 @@ export const PurchaseInApi = {
   // 采购入库切换付款状态
   changePurchaseInPayStatus: async (data: { inItemIds: number[]; pass: boolean }) => {
     return await request.post({
-      url: `/erp/purchase-in/changePayStatus`,
+      url: `/srm/purchase-in/changePayStatus`,
       data
     })
   }
