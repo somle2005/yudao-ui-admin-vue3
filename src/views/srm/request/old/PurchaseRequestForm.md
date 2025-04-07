@@ -10,22 +10,40 @@
     >
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="付款单号" prop="no">
+          <el-form-item label="申请单号" prop="no">
             <el-input disabled v-model="formData.no" placeholder="保存时自动生成" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="付款时间" prop="paymentTime">
+          <el-form-item label="申请时间" prop="requestTime">
             <el-date-picker
-              v-model="formData.paymentTime"
+              v-model="formData.requestTime"
               type="date"
               value-format="x"
-              placeholder="选择付款时间"
+              placeholder="选择申请时间"
               class="!w-1/1"
             />
           </el-form-item>
         </el-col>
         <el-col :span="8">
+          <el-form-item label="申请人" prop="applicant">
+            <el-select
+              v-model="formData.applicant"
+              clearable
+              filterable
+              placeholder="请选择申请人"
+              class="!w-1/1"
+            >
+              <el-option
+                v-for="item in userList"
+                :key="item.id"
+                :label="item.nickname"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!-- <el-col :span="8">
           <el-form-item label="供应商" prop="supplierId">
             <el-select
               v-model="formData.supplierId"
@@ -42,25 +60,7 @@
               />
             </el-select>
           </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="财务人员" prop="financeUserId">
-            <el-select
-              v-model="formData.financeUserId"
-              clearable
-              filterable
-              placeholder="请选择财务人员"
-              class="!w-1/1"
-            >
-              <el-option
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.nickname"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="16">
           <el-form-item label="备注" prop="remark">
             <el-input
@@ -80,61 +80,11 @@
       <!-- 子表的表单 -->
       <ContentWrap>
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
-          <el-tab-pane label="采购入库、退货单" name="item">
-            <FinancePaymentItemForm
-              ref="itemFormRef"
-              :supplier-id="formData.supplierId"
-              :items="formData.items"
-              :disabled="disabled"
-            />
+          <el-tab-pane label="申请产品清单" name="item">
+            <PurchaseRequestItemForm ref="itemFormRef" :items="formData.items" :disabled="disabled" />
           </el-tab-pane>
         </el-tabs>
       </ContentWrap>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="付款账户" prop="accountId">
-            <el-select
-              v-model="formData.accountId"
-              clearable
-              filterable
-              placeholder="请选择结算账户"
-              class="!w-1/1"
-            >
-              <el-option
-                v-for="item in accountList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="合计付款" prop="totalPrice">
-            <el-input disabled v-model="formData.totalPrice" :formatter="erpPriceInputFormatter" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="优惠金额" prop="discountPrice">
-            <el-input-number
-              v-model="formData.discountPrice"
-              controls-position="right"
-              :precision="2"
-              placeholder="请输入优惠金额"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="实际付款">
-            <el-input
-              disabled
-              v-model="formData.paymentPrice"
-              :formatter="erpPriceInputFormatter"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
     </el-form>
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading" v-if="!disabled">
@@ -145,15 +95,15 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { FinancePaymentApi, FinancePaymentVO } from '@/api/erp/finance/payment'
-import FinancePaymentItemForm from './components/FinancePaymentItemForm.vue'
+import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/srm/request'
+import PurchaseRequestItemForm from './components/PurchaseRequestItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 
-/** ERP 付款单表单 */
-defineOptions({ name: 'FinancePaymentForm' })
+/** ERP 采购申请表单 */
+defineOptions({ name: 'PurchaseRequestForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -164,21 +114,18 @@ const formLoading = ref(false) // 表单的加载中：1）修改时的数据加
 const formType = ref('') // 表单的类型：create - 新增；update - 修改；detail - 详情
 const formData = ref({
   id: undefined,
-  supplierId: undefined,
+  // supplierId: undefined,
+  applicant: undefined,
   accountId: undefined,
-  financeUserId: undefined,
-  paymentTime: undefined,
+  requestTime: undefined,
   remark: undefined,
   fileUrl: '',
-  totalPrice: 0,
-  discountPrice: 0,
-  paymentPrice: 0,
   items: [],
-  no: undefined // 订单单号，后端返回
+  no: undefined // 申请单号，后端返回
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
-  paymentTime: [{ required: true, message: '订单时间不能为空', trigger: 'blur' }]
+  requestTime: [{ required: true, message: '申请时间不能为空', trigger: 'blur' }]
 })
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -190,19 +137,7 @@ const userList = ref<UserApi.UserVO[]>([]) // 用户列表
 const subTabsName = ref('item')
 const itemFormRef = ref()
 
-/** 计算 discountPrice、totalPrice 价格 */
-watch(
-  () => formData.value,
-  (val) => {
-    if (!val) {
-      return
-    }
-    const totalPrice = val.items.reduce((prev, curr) => prev + curr.paymentPrice, 0)
-    formData.value.totalPrice = totalPrice
-    formData.value.paymentPrice = totalPrice - val.discountPrice
-  },
-  { deep: true }
-)
+
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -214,7 +149,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await FinancePaymentApi.getFinancePayment(id)
+      formData.value = await PurchaseRequestApi.getPurchaseRequest(id)
     } finally {
       formLoading.value = false
     }
@@ -241,12 +176,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as FinancePaymentVO
+    const data = formData.value as unknown as PurchaseRequestVO
     if (formType.value === 'create') {
-      await FinancePaymentApi.createFinancePayment(data)
+      await PurchaseRequestApi.createPurchaseRequest(data)
       message.success(t('common.createSuccess'))
     } else {
-      await FinancePaymentApi.updateFinancePayment(data)
+      await PurchaseRequestApi.updatePurchaseRequest(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -263,15 +198,14 @@ const resetForm = () => {
     id: undefined,
     supplierId: undefined,
     accountId: undefined,
-    financeUserId: undefined,
-    paymentTime: undefined,
+    requestTime: undefined,
     remark: undefined,
     fileUrl: undefined,
-    totalPrice: 0,
+    discountPercent: 0,
     discountPrice: 0,
-    paymentPrice: 0,
-    items: [],
-    no: undefined
+    totalPrice: 0,
+    depositPrice: 0,
+    items: []
   }
   formRef.value?.resetFields()
 }

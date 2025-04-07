@@ -272,7 +272,7 @@ import FinancePaymentForm from './FinancePaymentForm.vue'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
 import { erpPriceTableColumnFormatter } from '@/utils'
-import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 
 /** ERP 付款单列表 */

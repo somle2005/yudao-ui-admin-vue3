@@ -78,9 +78,9 @@ import { ProductVO } from '@/api/erp/product/product'
 import { erpPriceInputFormatter, getSumValue } from '@/utils'
 import PurchaseInPaymentEnableList from '@/views/erp/purchase/in/components/PurchaseInPaymentEnableList.vue'
 import PurchaseReturnRefundEnableList from '@/views/erp/purchase/return/components/PurchaseReturnRefundEnableList.vue'
-import { PurchaseInVO } from '@/api/erp/purchase/in'
+import { PurchaseInVO } from '@/api/srm/in'
 import { ErpBizType } from '@/utils/constants'
-import { PurchaseReturnVO } from '@/api/erp/purchase/return'
+import { PurchaseReturnVO } from '@/api/srm/return'
 
 const props = defineProps<{
   items: undefined

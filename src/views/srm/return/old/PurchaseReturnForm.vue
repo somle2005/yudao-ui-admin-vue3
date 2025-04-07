@@ -1,5 +1,5 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1080">
+  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1440">
     <el-form
       ref="formRef"
       :model="formData"
@@ -10,19 +10,30 @@
     >
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="付款单号" prop="no">
+          <el-form-item label="退货单号" prop="no">
             <el-input disabled v-model="formData.no" placeholder="保存时自动生成" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="付款时间" prop="paymentTime">
+          <el-form-item label="退货时间" prop="returnTime">
             <el-date-picker
-              v-model="formData.paymentTime"
+              v-model="formData.returnTime"
               type="date"
               value-format="x"
-              placeholder="选择付款时间"
+              placeholder="选择退货时间"
               class="!w-1/1"
             />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="关联订单" prop="orderNo">
+            <el-input v-model="formData.orderNo" readonly>
+              <template #append>
+                <el-button @click="openPurchaseOrderReturnEnableList">
+                  <Icon icon="ep:search" /> 选择
+                </el-button>
+              </template>
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -31,6 +42,7 @@
               v-model="formData.supplierId"
               clearable
               filterable
+              disabled
               placeholder="请选择供应商"
               class="!w-1/1"
             >
@@ -38,24 +50,6 @@
                 v-for="item in supplierList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="财务人员" prop="financeUserId">
-            <el-select
-              v-model="formData.financeUserId"
-              clearable
-              filterable
-              placeholder="请选择财务人员"
-              class="!w-1/1"
-            >
-              <el-option
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.nickname"
                 :value="item.id"
               />
             </el-select>
@@ -80,10 +74,9 @@
       <!-- 子表的表单 -->
       <ContentWrap>
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px">
-          <el-tab-pane label="采购入库、退货单" name="item">
-            <FinancePaymentItemForm
+          <el-tab-pane label="退货产品清单" name="item">
+            <PurchaseReturnItemForm
               ref="itemFormRef"
-              :supplier-id="formData.supplierId"
               :items="formData.items"
               :disabled="disabled"
             />
@@ -92,7 +85,49 @@
       </ContentWrap>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="付款账户" prop="accountId">
+          <el-form-item label="优惠率（%）" prop="discountPercent">
+            <el-input-number
+              v-model="formData.discountPercent"
+              controls-position="right"
+              :min="0"
+              :precision="2"
+              placeholder="请输入优惠率"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="退款优惠" prop="discountPrice">
+            <el-input
+              disabled
+              v-model="formData.discountPrice"
+              :formatter="erpPriceInputFormatter"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="优惠后金额">
+            <el-input
+              disabled
+              :model-value="formData.totalPrice - formData.otherPrice"
+              :formatter="erpPriceInputFormatter"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="其它费用" prop="otherPrice">
+            <el-input-number
+              v-model="formData.otherPrice"
+              controls-position="right"
+              :min="0"
+              :precision="2"
+              placeholder="请输入其它费用"
+              class="!w-1/1"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="结算账户" prop="accountId">
             <el-select
               v-model="formData.accountId"
               clearable
@@ -110,28 +145,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="合计付款" prop="totalPrice">
+          <el-form-item label="应退金额" prop="totalPrice">
             <el-input disabled v-model="formData.totalPrice" :formatter="erpPriceInputFormatter" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="优惠金额" prop="discountPrice">
-            <el-input-number
-              v-model="formData.discountPrice"
-              controls-position="right"
-              :precision="2"
-              placeholder="请输入优惠金额"
-              class="!w-1/1"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="实际付款">
-            <el-input
-              disabled
-              v-model="formData.paymentPrice"
-              :formatter="erpPriceInputFormatter"
-            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -143,17 +158,25 @@
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
+
+  <!-- 可退货的订单列表 -->
+  <PurchaseOrderReturnEnableList
+    ref="purchaseOrderReturnEnableListRef"
+    @success="handlePurchaseOrderChange"
+  />
 </template>
 <script setup lang="ts">
-import { FinancePaymentApi, FinancePaymentVO } from '@/api/erp/finance/payment'
-import FinancePaymentItemForm from './components/FinancePaymentItemForm.vue'
+import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
+import PurchaseReturnItemForm from './components/PurchaseReturnItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
-import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
-import * as UserApi from '@/api/system/user'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
+import PurchaseOrderReturnEnableList from '@/views/erp/purchase/order/components/PurchaseOrderReturnEnableList.vue'
+import { PurchaseOrderVO } from '@/api/srm/order'
+import * as UserApi from '@/api/system/user'
 
-/** ERP 付款单表单 */
-defineOptions({ name: 'FinancePaymentForm' })
+/** ERP 采购退货表单 */
+defineOptions({ name: 'PurchaseReturnForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -166,19 +189,20 @@ const formData = ref({
   id: undefined,
   supplierId: undefined,
   accountId: undefined,
-  financeUserId: undefined,
-  paymentTime: undefined,
+  returnTime: undefined,
   remark: undefined,
   fileUrl: '',
-  totalPrice: 0,
+  discountPercent: 0,
   discountPrice: 0,
-  paymentPrice: 0,
+  totalPrice: 0,
+  otherPrice: 0,
+  orderNo: undefined,
   items: [],
-  no: undefined // 订单单号，后端返回
+  no: undefined // 退货单号，后端返回
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
-  paymentTime: [{ required: true, message: '订单时间不能为空', trigger: 'blur' }]
+  returnTime: [{ required: true, message: '退货时间不能为空', trigger: 'blur' }]
 })
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -197,9 +221,12 @@ watch(
     if (!val) {
       return
     }
-    const totalPrice = val.items.reduce((prev, curr) => prev + curr.paymentPrice, 0)
-    formData.value.totalPrice = totalPrice
-    formData.value.paymentPrice = totalPrice - val.discountPrice
+    // 计算
+    const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
+    const discountPrice =
+      val.discountPercent != null ? erpPriceMultiply(totalPrice, val.discountPercent / 100.0) : 0
+    formData.value.discountPrice = discountPrice
+    formData.value.totalPrice = totalPrice - discountPrice + val.otherPrice
   },
   { deep: true }
 )
@@ -214,7 +241,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await FinancePaymentApi.getFinancePayment(id)
+      formData.value = await PurchaseReturnApi.getPurchaseReturn(id)
     } finally {
       formLoading.value = false
     }
@@ -232,6 +259,30 @@ const open = async (type: string, id?: number) => {
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
+/** 打开【可退货的订单列表】弹窗 */
+const purchaseOrderReturnEnableListRef = ref() // 可退货的订单列表 Ref
+const openPurchaseOrderReturnEnableList = () => {
+  purchaseOrderReturnEnableListRef.value.open()
+}
+
+const handlePurchaseOrderChange = (order: PurchaseOrderVO) => {
+  // 将订单设置到退货单
+  formData.value.orderId = order.id
+  formData.value.orderNo = order.no
+  formData.value.supplierId = order.supplierId
+  formData.value.accountId = order.accountId
+  formData.value.discountPercent = order.discountPercent
+  formData.value.remark = order.remark
+  formData.value.fileUrl = order.fileUrl
+  // 将订单项设置到退货单项
+  order.items.forEach((item) => {
+    item.qty = item.inCount - item.returnCount
+    item.orderItemId = item.id
+    item.id = undefined
+  })
+  formData.value.items = order.items.filter((item) => item.qty > 0)
+}
+
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
@@ -241,12 +292,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as FinancePaymentVO
+    const data = formData.value as unknown as PurchaseReturnVO
     if (formType.value === 'create') {
-      await FinancePaymentApi.createFinancePayment(data)
+      await PurchaseReturnApi.createPurchaseReturn(data)
       message.success(t('common.createSuccess'))
     } else {
-      await FinancePaymentApi.updateFinancePayment(data)
+      await PurchaseReturnApi.updatePurchaseReturn(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -263,15 +314,14 @@ const resetForm = () => {
     id: undefined,
     supplierId: undefined,
     accountId: undefined,
-    financeUserId: undefined,
-    paymentTime: undefined,
+    returnTime: undefined,
     remark: undefined,
     fileUrl: undefined,
-    totalPrice: 0,
+    discountPercent: 0,
     discountPrice: 0,
-    paymentPrice: 0,
-    items: [],
-    no: undefined
+    totalPrice: 0,
+    otherPrice: 0,
+    items: []
   }
   formRef.value?.resetFields()
 }
