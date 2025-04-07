@@ -17,6 +17,7 @@ import { getStrDictOptions } from '@/utils/dict'
 import { useSupplierChange } from '@/utils/operate/purchase'
 import { PurchaseOrderApi } from '@/api/srm/order'
 import { addRules } from '@/components/SmForm/src/utils'
+import { getPaymentTermsList } from '@/commonData/srm'
 
 /**
 
@@ -293,6 +294,8 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
 
   const supplierChange = useSupplierChange(supplierList, smFormRef)
 
+
+  const paymentTermsList: any = ref([])
   const createMergeFormOptions = () => {
     const currencyList = getCurrencyList()
     const accountList = getAccountList()
@@ -375,14 +378,19 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       //   ]
       // },
       {
-        type: 'input',
-        label: '付款条款',
+        type: 'cascader',
+        placeholder: '请选择付款条款',
         prop: 'paymentTerms',
-        placeholder: '请输入付款条款',
+        label: '付款条款',
         attrs: {
-          type: 'textarea',
-          style: { width: '100%' },
-          clearable: true
+          'show-all-levels': false,
+          props: { emitPath: false },
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          },
+          options: paymentTermsList
         }
       },
       {
@@ -633,6 +641,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         const modelValue = smFormRef.value.getFormData()
         modelValue.no = res
       })
+      getPaymentTermsList(paymentTermsList)
     }
     if (type !== 'merge') {
       getUserList(applicantList)

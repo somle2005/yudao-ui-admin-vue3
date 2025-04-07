@@ -16,6 +16,11 @@ export const PaymentTermApi = {
     return await request.get({ url: `/srm/payment-term/page`, params })
   },
 
+  // 查询付款条款精简列表
+  getPaymentTermSimpleList: async () => {
+    return await request.get({ url: `/srm/payment-term/simple-list` })
+  },
+
   // 查询付款条款详情
   getPaymentTerm: async (id: number) => {
     return await request.get({ url: `/srm/payment-term/get?id=` + id })
@@ -39,5 +44,5 @@ export const PaymentTermApi = {
   // 导出付款条款 Excel
   exportPaymentTerm: async (params) => {
     return await request.download({ url: `/srm/payment-term/export-excel`, params })
-  },
-}
+  }
+}

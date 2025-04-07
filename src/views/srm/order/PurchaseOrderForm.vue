@@ -82,6 +82,7 @@ import {
   jsonToList,
   listToJson
 } from '@/utils/transformData'
+import { getPaymentTermsList } from '@/commonData/srm'
 import { AUDIT_TYPE, TAX_PERCENT } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import EnableList from './components/EnableList.vue'
@@ -133,7 +134,8 @@ const supplierList = ref<SupplierVO[]>([]) // 供应商列表
 const accountList = ref<AccountVO[]>([]) // 账户列表
 const financeSubjectList = ref<FinanceSubjectVO[]>([])
 const templateList = ref<any[]>([]) // 模板列表
-const currencyList = getCurrencyList() // 币别列表
+const currencyList: any = ref([]) // 币别列表
+const paymentTermsList: any = ref([])
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -239,15 +241,21 @@ const createRequestFormOptions = () => {
       },
       children: financeSubjectList
     },
+
     {
-      type: 'input',
-      label: '付款条款',
+      type: 'cascader',
+      placeholder: '请选择付款条款',
       prop: 'paymentTerms',
-      placeholder: '请输入付款条款',
+      label: '付款条款',
       attrs: {
-        type: 'textarea',
-        style: { width: '100%' },
-        clearable: true
+        'show-all-levels': false,
+        props: { emitPath: false },
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        },
+        options: paymentTermsList
       }
     },
 
@@ -642,16 +650,21 @@ const createGenerateContractFormOptions = (formOptions) => {
       },
       children: templateList
     },
+
     {
-      type: 'input',
-      label: '付款条款',
+      type: 'cascader',
+      placeholder: '请选择付款条款',
       prop: 'paymentTerms',
-      placeholder: '请输入付款条款',
+      label: '付款条款',
       attrs: {
-        disabled: true,
-        type: 'textarea',
-        style: { width: '100%' },
-        clearable: true
+        'show-all-levels': false,
+        props: { emitPath: false },
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        },
+        options: paymentTermsList
       }
     }
   ]
@@ -711,6 +724,22 @@ const open = async (type: string, id?: number, data?: any) => {
   operateAudit(type)
   resetForm()
 
+  getPaymentTermsList(paymentTermsList)
+  getCurrencyList(currencyList)
+  // 加载供应商列表
+  getSupplierList(supplierList)
+  // 加载账户列表
+  getAccountList(accountList)
+  getFinanceSubjectList(financeSubjectList)
+  PurchaseOrderApi.getPurchaseOrderTemplateList().then((res) => {
+    templateList.value = res.map((item) => {
+      return {
+        label: item,
+        value: item
+      }
+    })
+  })
+
   if (type === 'create') {
     PurchaseOrderApi.getPurchaseOrderNo().then((res) => {
       const modelValue = formRef.value.getFormData()
@@ -749,21 +778,6 @@ const open = async (type: string, id?: number, data?: any) => {
       formLoading.value = false
     }
   }
-
-  getCurrencyList(currencyList)
-  // 加载供应商列表
-  getSupplierList(supplierList)
-  // 加载账户列表
-  getAccountList(accountList)
-  getFinanceSubjectList(financeSubjectList)
-  PurchaseOrderApi.getPurchaseOrderTemplateList().then((res) => {
-    templateList.value = res.map((item) => {
-      return {
-        label: item,
-        value: item
-      }
-    })
-  })
 
   // const defaultAccount = accountList.value.find((item) => item.defaultStatus)
   // if (defaultAccount) {
