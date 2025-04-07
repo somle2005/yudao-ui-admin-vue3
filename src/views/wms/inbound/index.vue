@@ -244,14 +244,15 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 
 const router = useRouter()
 const toReceivebound = (row) => {
-  router.push({
-    path: `/wms/receivebound`,
-    query:{
+  window.getRouteQuery = () => {
+    return {
       no: row.no,
       id: row.id
     }
+  }
+  router.push({
+    path: `/wms/receivebound`,
   })
-  console.log(row,'点击入库单跳转')
 }
 
 /** 初始化 **/

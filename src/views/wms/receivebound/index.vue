@@ -46,13 +46,6 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-      <template #no="{ scope }">
-        <div class="slot-wrap">
-          <el-link type="primary" target="_blank" @click="toReceivebound(scope.row)">
-            {{ scope.row.no }}
-          </el-link>
-        </div>
-      </template>
       <template #operate="{ scope }">
         <el-button
           link
@@ -73,8 +66,6 @@
       </template>
     </SmTable>
   </ContentWrap>
-
-
 </template>
 
 <script setup lang="ts">
@@ -161,7 +152,7 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  no: '',
   type: undefined,
   warehouseId: undefined,
   status: undefined,
@@ -240,20 +231,15 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-const router = useRouter()
-const toReceivebound = (row) => {
-  router.push({
-    path: `/wms/receivebound`,
-    query:{
-      no: row.no,
-      id: row.id
-    }
-  })
-  console.log(row,'点击入库单跳转')
-}
-
-/** 初始化 **/
-onMounted(() => {
+onActivated(() => {
+  const routeQuery = window.getRouteQuery()
+  const { no } = routeQuery
+  queryParams.no = no
   getList()
 })
+
+/** 初始化 **/
+// onMounted(() => {
+//   getList()
+// })
 </script>
