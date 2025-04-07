@@ -31,20 +31,20 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
     },
-    {
-      type: 'select',
-      placeholder: '请选择状态',
-      prop: 'status',
-      label: '状态',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_STATUS)
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择状态',
+    //   prop: 'status',
+    //   label: '状态',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_STATUS)
+    // },
     {
       type: 'input',
       label: '参考号',

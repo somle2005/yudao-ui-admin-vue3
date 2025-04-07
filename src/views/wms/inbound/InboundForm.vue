@@ -40,6 +40,8 @@ import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
 import { cloneDeep } from 'lodash-es'
+import { getDeptTree, getFinanceSubjectList } from '@/commonData'
+import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 
 // import { useOutData } from './components/hooks/outdata'
 
@@ -78,6 +80,13 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
+const financeSubjectList = ref<FinanceSubjectVO[]>([])
+let { defaultProps, deptList } = {
+  defaultProps: {},
+  deptList: [] as any
+}
+
+
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -115,12 +124,28 @@ const createRequestFormOptions = () => {
       },
       children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
     },
+    // {
+    //   requiredFlag: true,
+    //   type: 'select',
+    //   placeholder: '请选择状态',
+    //   prop: 'status',
+    //   label: '状态',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_STATUS)
+    // },
+
     {
       requiredFlag: true,
       type: 'select',
-      placeholder: '请选择状态',
-      prop: 'status',
-      label: '状态',
+      placeholder: '请选择财务公司',
+      prop: 'companyId',
+      label: '财务公司',
       attrs: {
         filterable: true,
         clearable: true,
@@ -128,8 +153,24 @@ const createRequestFormOptions = () => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_STATUS)
+      children: financeSubjectList
     },
+    {
+      requiredFlag: true,
+      type: 'tree-select',
+      placeholder: '请选择申请部门',
+      prop: 'applicationDeptId',
+      label: '申请部门',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        data: deptList,
+        props: defaultProps,
+        'check-strictly': true,
+        'node-key': 'id'
+      }
+    },
+
     {
       type: 'input',
       label: '参考号',
@@ -243,6 +284,11 @@ const open = async (type: string, id?: number) => {
   formType.value = type
   resetForm()
 
+  const  deptObj =  getDeptTree() 
+  defaultProps = deptObj.defaultProps
+  deptList = deptObj.deptList
+
+  getFinanceSubjectList(financeSubjectList)
   getWMSWarehouseList(WMSWarehouseList)
 
   const formTypeOperate = {

@@ -90,11 +90,11 @@ const fieldMap = {
     slot: 'type',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
-  status: {
-    label: '状态',
-    slot: 'status',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  },
+  // status: {
+  //   label: '状态',
+  //   slot: 'status',
+  //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+  // },
   shippingMethod: {
     label: '运输方式',
     slot: 'shippingMethod',
