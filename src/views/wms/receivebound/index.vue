@@ -74,15 +74,13 @@
     </SmTable>
   </ContentWrap>
 
-  <!-- 表单弹窗：添加/修改 -->
-  <InboundForm ref="formRef" @success="getList" />
+
 </template>
 
 <script setup lang="ts">
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
-import InboundForm from './InboundForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 
@@ -151,8 +149,8 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, { allWrap: true, allWrapIgnoreList: ['no'] })
 
-/** 入库单 列表 */
-defineOptions({ name: 'WmsInbound' })
+/** 收货管理 列表 */
+defineOptions({ name: 'WmsReceivebound' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
