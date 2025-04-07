@@ -46,7 +46,7 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { CustomProductApi, CustomProductVO } from '@/api/erp/logistic/custom-product'
+import { CustomProductApi, CustomProductVO } from '@/api/tms/custom-product'
 import { getCustomRuleCategoryList, getProductList } from '@/commonData'
 
 /** 海关管理中，与海关分类-产品。中间联系表。 表单 */

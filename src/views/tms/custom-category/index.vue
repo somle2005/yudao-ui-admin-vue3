@@ -175,13 +175,13 @@ import download from '@/utils/download'
 import {
   CustomRuleCategoryApi,
   CustomRuleCategoryVO
-} from '@/api/erp/logistic/custom-category'
+} from '@/api/tms/custom-category'
 import CustomRuleCategoryForm from './CustomRuleCategoryForm.vue'
 import CustomRuleCategoryItemList from './components/CustomRuleCategoryItemList.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 /** 海关品类 列表 */
-defineOptions({ name: 'ErpCustomRuleCategory' })
+defineOptions({ name: 'TmsCustomRuleCategory' })
 
 
 
