@@ -262,4 +262,5 @@ export enum DICT_TYPE {
   WMS_INBOUND_TYPE = 'wms_inbound_type', // 入库单类型
   WMS_INBOUND_STATUS = 'wms_inbound_status', // 入库单状态
   WMS_SHIPPING_METHOD = 'wms_shipping_method', // 运输方式
+  WMS_INBOUND_AUDIT_STATUS = 'wms_inbound_audit_status', // 入库单审批状态
 }

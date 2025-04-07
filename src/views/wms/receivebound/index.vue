@@ -79,11 +79,7 @@ const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
 
 const fieldMap = {
-  no: {
-    label: '入库单号',
-    slot: 'no',
-    width: '200px'
-  },
+  no: '入库单号',
   warehouseName: '仓库名称',
 
   type: {
@@ -91,11 +87,16 @@ const fieldMap = {
     slot: 'type',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
-  // status: {
-  //   label: '状态',
-  //   slot: 'status',
-  //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  // },
+  status: {
+    label: '状态',
+    slot: 'status',
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+  },
+  auditStatus: {
+    label: '审核状态',
+    slot: 'auditStatus',
+    dictAttrs: { type:  DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
+  },
   shippingMethod: {
     label: '运输方式',
     slot: 'shippingMethod',
@@ -138,7 +139,7 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true, allWrapIgnoreList: ['no'] })
+tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
 
 /** 收货管理 列表 */
 defineOptions({ name: 'WmsReceivebound' })
@@ -155,7 +156,7 @@ const queryParams = reactive({
   no: '',
   type: undefined,
   warehouseId: undefined,
-  status: undefined,
+  status: undefined, // 带审批
   sourceBillId: undefined,
   sourceBillNo: undefined,
   sourceBillType: undefined,
@@ -173,6 +174,7 @@ const exportLoading = ref(false) // 导出的加载中
 
 /** 查询列表 */
 const getList = async () => {
+  queryParams.auditStatus = 1 // 1待审批
   loading.value = true
   try {
     const data = await InboundApi.getInboundPage(queryParams)
