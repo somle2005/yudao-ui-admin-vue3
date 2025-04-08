@@ -51,4 +51,27 @@ export const InboundApi = {
   exportInbound: async (params) => {
     return await request.download({ url: `/wms/inbound/export-excel`, params })
   },
+
+  // 入库单提交审核
+  submitInboundAudit: async (data: { billIdList: number[] }) => {
+    return await request.put({
+      url: `/wms/inbound/submit`,
+      data
+    })
+  },
+
+  // 同意审核入库单
+  agreeInboundAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inbound/agree`,
+      data
+    })
+  },
+  // 不同意审核入库单
+  rejectInboundAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inbound/reject`,
+      data
+    })
+  }
 }

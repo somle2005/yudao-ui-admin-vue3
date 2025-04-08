@@ -54,6 +54,15 @@
         >
           详情
         </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="handleUpdateStatus(scope.row, true)"
+          v-hasPermi="['wms:inbound:audit']"
+          v-if="[3].includes(scope.row.auditStatus)"
+        >
+          审核
+        </el-button>
         <!-- <el-button
           link
           type="primary"
@@ -190,6 +199,36 @@ const handleExport = async () => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+/** 审核/反审核操作 */
+const handleUpdateStatus = async (row: any, reviewed: boolean) => {
+  // 审核点击同意不同意按钮进行区分调用 接口
+  // const { id, items = [] } = row
+  // /**
+  //     1、提交审核状态太多-直接出现
+  //     2、很多情况都会出现 审核按钮 只要不是已审核就出现
+  //     3、已审核状态 出现 反审核按钮
+  //  */
+  // // 执行审核操作
+  // if (reviewed) {
+  //   openForm('audit', id)
+  //   return
+  // }
+  // try {
+  //   // 审核的二次确认
+  //   await message.confirm(`确定反审核该申请吗？`)
+  //   // 发起审核
+  //   // await PurchaseRequestApi.updatePurchaseRequestStatus(id, status)
+  //   await PurchaseOrderApi.updatePurchaseOrderAuditStatus({
+  //     reviewed,
+  //     pass: true,
+  //     orderIds: [id]
+  //   })
+  //   message.success('反审核成功')
+  //   // 刷新列表
+  //   await getList()
+  // } catch {}
+}
 
 /** 初始化 **/
 onMounted(() => {

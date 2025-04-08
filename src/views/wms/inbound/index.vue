@@ -30,6 +30,15 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['wms:inbound:submitAudit']"
+        >
+          提交审核
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -44,6 +53,7 @@
       :total="total"
       v-model:currentPage="queryParams.pageNo"
       v-model:pageSize="queryParams.pageSize"
+      @selection-change="handleSelectionChange"
       @pagination="getList"
     >
       <template #no="{ scope }">
@@ -85,6 +95,7 @@ import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import InboundForm from './InboundForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { useBatch } from './hooks/useBatch'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -110,7 +121,7 @@ const fieldMap = {
   auditStatus: {
     label: '审核状态',
     slot: 'auditStatus',
-    dictAttrs: { type:  DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },
   shippingMethod: {
     label: '运输方式',
@@ -135,6 +146,7 @@ const fieldMap = {
     width: '200px'
   },
   creatorComment: '特别说明',
+  comment: '审批意见',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -256,9 +268,17 @@ const toReceivebound = (row) => {
     }
   }
   router.push({
-    path: `/wms/receivebound`,
+    path: `/wms/receivebound`
   })
 }
+
+/** 选中操作 */
+const selectionList = ref<any[]>([])
+const handleSelectionChange = (rows: any[]) => {
+  selectionList.value = rows
+}
+
+const { disabledBtn, handleSubmitAuditBatch } = useBatch(selectionList, getList)
 
 /** 初始化 **/
 onMounted(() => {
