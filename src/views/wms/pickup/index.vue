@@ -49,6 +49,13 @@
       <template #operate="{ scope }">
         <el-button
           link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['wms:pickup:query']"
+        >
+          详情
+        </el-button>
+        <!-- <el-button
+          link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:pickup:update']"
@@ -62,7 +69,7 @@
           v-hasPermi="['wms:pickup:delete']"
         >
           删除
-        </el-button>
+        </el-button> -->
       </template>
     </SmTable>
   </ContentWrap>
@@ -76,29 +83,14 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { PickupApi, PickupVO } from '@/api/wms/pickup'
 import PickupForm from './PickupForm.vue'
-import { useTableData } from '@/components/SmTable/src/utils'
+import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  // 对象-product-inbound-warehouse-bin
-
-  // mode: {
-  //   label: '仓库属性',
-  //   slot: 'mode',
-  //   dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_MODE }
-  // },
-  inboundStatus: {
-    label: '入库状态 ',
-    slot: 'inboundStatus',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  },
-  actualQty: '实际入库量',
-  age: '库龄',
-  outboundAvailableQty: '批次剩余库存',
-  planQty: '计划入库量',
-  shelvedQty: '已上架量',
+  no: '单据编号',
+  warehouseName: '仓库名称',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -111,14 +103,14 @@ const fieldMap = {
     width: '200px'
   },
   creator: '创建人',
-  // operate: {
-  //   label: '操作',
-  //   slot: 'operate',
-  //   fixed: 'right',
-  //   width: '200px'
-  // }
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '200px'
+  }
 }
-tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
+tableOptions.value = transformTableOptions(fieldMap, { noWidth: true, wrapList:['no','warehouseName'] })
 
 /** 拣货单 列表 */
 defineOptions({ name: 'WmsPickup' })
@@ -144,7 +136,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PickupApi.getPickupPage(queryParams)
-    list.value = data.list
+    list.value = getItemProp(data.list, ['warehouse'])
     total.value = data.total
   } finally {
     loading.value = false

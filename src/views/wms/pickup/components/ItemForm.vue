@@ -23,22 +23,7 @@
               class="mb-0px!"
               :disabled="disabled"
             >
-              <SmSelect
-                :disabled="disabled"
-                v-model="row.productId"
-                placeholder="请选择SKU"
-                @change="
-                  (val) =>
-                    updateModelValue(val, row, productList, 'id', {
-                      productName: 'name',
-                      barCode: 'barCode',
-                      productUnitName: 'unitName',
-                      productUnitId: 'unitId'
-                    })
-                "
-                :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
-              />
+              <el-text>{{ row.productBarCode }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -58,9 +43,9 @@
 
         <el-table-column label="拣货数量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.quantity`" :rules="formRules.quantity" class="mb-0px!">
+            <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <el-input-number
-                v-model="row.quantity"
+                v-model="row.qty"
                 controls-position="right"
                 :min="0"
                 class="!w-100%"
@@ -69,7 +54,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" fixed="right" label="操作" width="60">
+        <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
               —
@@ -78,9 +63,9 @@
         </el-table-column>
       </el-table>
     </el-form>
-    <el-row justify="center" class="mt-3" v-if="!disabled">
+    <!-- <el-row justify="center" class="mt-3" v-if="!disabled">
       <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -91,8 +76,6 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { getProductList } from '@/commonData'
-import { updateModelValue } from '@/utils/high/index'
 import { getWarehouseBinList } from '@/commonData/wms'
 
 const props = defineProps({
@@ -124,16 +107,16 @@ const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
   binId: [{ required: true, message: '库位不能为空', trigger: 'blur' }],
-  quantity: [{ required: true, message: '拣货数量不能为空', trigger: 'blur' }]
+  qty: [{ required: true, message: '拣货数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
-const productList = getProductList() // 产品列表
 const warehouseBinList: any = ref([])
+getWarehouseBinList({}, warehouseBinList)
 
 watch(
   () => props.warehouseId,
   (val) => {
-    getWarehouseBinList({ warehouseId: val }, warehouseBinList)
+    // getWarehouseBinList({ warehouseId: val }, warehouseBinList)
   }
 )
 
@@ -187,7 +170,7 @@ const handleAdd = () => {
     inboundId: undefined,
     inboundItemId: undefined,
     binId: undefined,
-    quantity: undefined
+    qty: undefined
   }
   formData.value.push(row)
 }
@@ -211,12 +194,4 @@ const validate = () => {
   return formRef.value.validate()
 }
 defineExpose({ validate, formData })
-
-/** 初始化 */
-onMounted(() => {
-  // 默认添加一个
-  if (formData.value.length === 0) {
-    handleAdd()
-  }
-})
 </script>
