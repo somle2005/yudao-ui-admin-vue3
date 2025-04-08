@@ -11,6 +11,25 @@ export interface WarehouseBinVO {
   status: number // 状态，WMS通用的对象有效状态 ; ValidStatus : 0-不可用 , 1-可用
 }
 
+export interface WarehouseBinSimpleVO {
+  /**
+   * 代码
+   */
+  code?: string
+  /**
+   * 名称
+   */
+  name?: string
+  /**
+   * 归属的仓库ID
+   */
+  warehouseId?: number
+  /**
+   * 库区ID
+   */
+  zoneId?: number
+}
+
 // 库位 API
 export const WarehouseBinApi = {
   // 查询库位分页
@@ -42,4 +61,9 @@ export const WarehouseBinApi = {
   exportWarehouseBin: async (params) => {
     return await request.download({ url: `/wms/warehouse-bin/export-excel`, params })
   },
+
+  // 获得库位置精简列表
+  getWarehouseBinSimpleList: async (params: WarehouseBinSimpleVO) => {
+    return await request.get({ url: '/wms/warehouse-bin/simple-list', params })
+  }
 }

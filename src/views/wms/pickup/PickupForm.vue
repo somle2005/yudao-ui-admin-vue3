@@ -20,7 +20,7 @@
         > -->
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="拣货产品清单" name="item">
-            <ItemForm ref="itemFormRef" :items="formData.itemList" :formType="formType" />
+            <ItemForm ref="itemFormRef" :items="formData.itemList" :formType="formType" :warehouseId="warehouseId" />
           </el-tab-pane>
         </el-tabs>
       </template>
@@ -34,7 +34,7 @@
 </template>
 <script setup lang="ts">
 import { PickupApi, PickupVO } from '@/api/wms/pickup'
-import { getWMSWarehouseList } from '@/commonData/wms'
+import { getWarehouseBinList, getWMSWarehouseList } from '@/commonData/wms'
 import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { cloneDeep } from 'lodash-es'
@@ -123,6 +123,8 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 
+const warehouseId = ref()
+
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
   const list = [
@@ -135,7 +137,10 @@ const createRequestFormOptions = () => {
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true
+        clearable: true,
+        onChange: (val: any) => {
+          warehouseId.value = val
+        }
       },
       children: WMSWarehouseList
     },

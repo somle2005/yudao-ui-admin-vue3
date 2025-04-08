@@ -1,4 +1,5 @@
 import { WarehouseApi as WmsWarehouseApi, WarehouseVO as WmsWarehouseVO } from '@/api/wms/warehouse'
+import { WarehouseBinApi, WarehouseBinVO } from '@/api/wms/warehouse-bin'
 import { WarehouseZoneApi, WarehouseZoneVO } from '@/api/wms/warehouse-zone'
 
 interface SelectProp {
@@ -41,4 +42,21 @@ export const getWarehouseZoneList = (data?: any) => {
     }
   })
   return warehouseZoneList
+}
+
+// 获得库位精简列表
+export const getWarehouseBinList = (params: any, data?: any) => {
+  const warehouseBinList = ref<(WarehouseBinVO & SelectProp)[]>([])
+
+  WarehouseBinApi.getWarehouseBinSimpleList(params).then((res) => {
+    warehouseBinList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = warehouseBinList.value
+    }
+  })
+  return warehouseBinList
 }

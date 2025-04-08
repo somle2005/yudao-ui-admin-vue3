@@ -43,6 +43,19 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="库位" width="180">
+          <template #default="{ row, $index }">
+            <el-form-item
+              :prop="`${$index}.binId`"
+              :rules="formRules.binId"
+              class="mb-0px!"
+              :disabled="disabled"
+            >
+              <SmSelect v-model="row.binId" placeholder="请选择库位" :data="warehouseBinList" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column label="拣货数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.quantity`" :rules="formRules.quantity" class="mb-0px!">
@@ -80,7 +93,7 @@ import {
 } from '@/utils'
 import { getProductList } from '@/commonData'
 import { updateModelValue } from '@/utils/high/index'
-
+import { getWarehouseBinList } from '@/commonData/wms'
 
 const props = defineProps({
   items: {
@@ -97,6 +110,10 @@ const props = defineProps({
   formType: {
     type: String,
     default: ''
+  },
+  warehouseId: {
+    type: Number,
+    default: null
   }
 })
 
@@ -106,10 +123,19 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
+  binId: [{ required: true, message: '库位不能为空', trigger: 'blur' }],
   quantity: [{ required: true, message: '拣货数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
+const warehouseBinList: any = ref([])
+
+watch(
+  () => props.warehouseId,
+  (val) => {
+    getWarehouseBinList({ warehouseId: val }, warehouseBinList)
+  }
+)
 
 /** 初始化设置入库项 */
 watch(
