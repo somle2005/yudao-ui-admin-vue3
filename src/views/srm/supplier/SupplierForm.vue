@@ -197,7 +197,7 @@ const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData: any = ref({})
-const paymentTermsList = getPaymentTermsList()
+const paymentTermsList: any = ref([])
 
 const initFormData = () => {
   return {
@@ -238,6 +238,7 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+  getPaymentTermsList(paymentTermsList)
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
