@@ -932,11 +932,11 @@ const submitForm = async () => {
         'currencyId',
         'partyAId',
         'partyBId',
-        'paymentTerms'
+        'paymentTerms',
       ])
       queryData = transformPaymentTerms(queryData)
       const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract(queryData)
-      download.pdf(downLoadData, '采购合同.pdf')
+      download.pdf(downLoadData, `${data.no}.pdf`)
       message.success('生成采购合同成功')
     }
     dialogVisible.value = false
