@@ -153,17 +153,17 @@
               v-model.trim="formData.paymentTerms"
               placeholder="请输入付款条款"
             /> -->
-            <!-- <SmSelect
+            <SmSelect
               v-model="formData.paymentTerms"
               placeholder="请选择付款条款"
               :data="paymentTermsList"
-            /> -->
-            <el-cascader
+            />
+            <!-- <el-cascader
               :options="paymentTermsList"
               :props="{ emitPath: false }"
               :show-all-levels="false"
               v-model="formData.paymentTerms"
-            />
+            /> -->
           </el-form-item>
         </el-col>
 

@@ -378,21 +378,35 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       //   ]
       // },
       {
-        type: 'cascader',
+        type: 'select',
         placeholder: '请选择付款条款',
         prop: 'paymentTerms',
         label: '付款条款',
         attrs: {
-          'show-all-levels': false,
-          props: { emitPath: false },
           filterable: true,
           clearable: true,
           style: {
             width: '100%'
-          },
-          options: paymentTermsList
-        }
+          }
+        },
+        children: paymentTermsList
       },
+      // {
+      //   type: 'cascader',
+      //   placeholder: '请选择付款条款',
+      //   prop: 'paymentTerms',
+      //   label: '付款条款',
+      //   attrs: {
+      //     'show-all-levels': false,
+      //     props: { emitPath: false },
+      //     filterable: true,
+      //     clearable: true,
+      //     style: {
+      //       width: '100%'
+      //     },
+      //     options: paymentTermsList
+      //   }
+      // },
       {
         type: 'select',
         placeholder: '请选择币种',

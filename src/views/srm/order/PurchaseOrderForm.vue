@@ -242,21 +242,35 @@ const createRequestFormOptions = () => {
       children: financeSubjectList
     },
 
+    // {
+    //   type: 'cascader',
+    //   placeholder: '请选择付款条款',
+    //   prop: 'paymentTerms',
+    //   label: '付款条款',
+    //   attrs: {
+    //     'show-all-levels': false,
+    //     props: { emitPath: false },
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     },
+    //     options: paymentTermsList
+    //   }
+    // },
     {
-      type: 'cascader',
+      type: 'select',
       placeholder: '请选择付款条款',
       prop: 'paymentTerms',
       label: '付款条款',
       attrs: {
-        'show-all-levels': false,
-        props: { emitPath: false },
         filterable: true,
         clearable: true,
         style: {
           width: '100%'
-        },
-        options: paymentTermsList
-      }
+        }
+      },
+      children: paymentTermsList
     },
 
     {
@@ -651,27 +665,41 @@ const createGenerateContractFormOptions = (formOptions) => {
       children: templateList
     },
 
+    // {
+    //   type: 'cascader',
+    //   placeholder: '请选择付款条款',
+    //   prop: 'paymentTerms',
+    //   label: '付款条款',
+    //   attrs: {
+    //     'show-all-levels': false,
+    //     props: { emitPath: false },
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     },
+    //     options: paymentTermsList
+    //   }
+    // }
     {
-      type: 'cascader',
+      type: 'select',
       placeholder: '请选择付款条款',
       prop: 'paymentTerms',
       label: '付款条款',
       attrs: {
-        'show-all-levels': false,
-        props: { emitPath: false },
         filterable: true,
         clearable: true,
         style: {
           width: '100%'
-        },
-        options: paymentTermsList
-      }
+        }
+      },
+      children: paymentTermsList
     }
   ]
 
   addRules(printOptions)
 
-  return printOptions.concat(options)
+  return printOptions.concat(options) as any[]
 }
 
 const operateAudit = (type) => {
@@ -794,6 +822,30 @@ const openEnableList = () => {
 
 const auditBtnType = ref(AUDIT_TYPE.agree)
 
+const transformPaymentTerms = (queryData) => {
+  const data = cloneDeep(queryData)
+  const { templateName, paymentTerms } = data
+  if (!templateName) return data
+
+  const paymentTermItem = paymentTermsList.value.find((item) => item.label === paymentTerms)
+  if (!paymentTermItem) return data
+
+  let key = ''
+  const list = [
+    { key: '中文', value: 'paymentTermCnForeign' },
+    { key: '英文', value: 'paymentTermEnForeign' },
+    { key: '合同模板', value: 'paymentTermCn' }
+  ]
+  list.forEach((item) => {
+    if (templateName.includes(item.key)) {
+      key = item.value
+    }
+  })
+
+  data.paymentTerms = paymentTermItem[key]
+  return data
+}
+
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
@@ -871,7 +923,7 @@ const submitForm = async () => {
       message.success('合并入库成功')
     } else if (formType.value === 'generateContract') {
       data.orderId = data.id
-      const queryData: any = filterObjKey(data, [
+      let queryData: any = filterObjKey(data, [
         'templateName',
         'orderId',
         'signingPlace',
@@ -882,6 +934,7 @@ const submitForm = async () => {
         'partyBId',
         'paymentTerms'
       ])
+      queryData = transformPaymentTerms(queryData)
       const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract(queryData)
       download.pdf(downLoadData, '采购合同.pdf')
       message.success('生成采购合同成功')
