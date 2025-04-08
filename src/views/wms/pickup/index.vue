@@ -21,7 +21,7 @@
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
-        <el-button
+        <!-- <el-button
           type="success"
           plain
           @click="handleExport"
@@ -29,7 +29,7 @@
           v-hasPermi="['wms:pickup:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
+        </el-button> -->
       </template>
     </SmForm>
   </ContentWrap>
@@ -96,13 +96,13 @@ const fieldMap = {
     formatter: dateFormatter,
     width: '200px'
   },
-  updater: '更新人',
+  updaterName: '更新人',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
     width: '200px'
   },
-  creator: '创建人',
+  creatorName: '创建人',
   operate: {
     label: '操作',
     slot: 'operate',

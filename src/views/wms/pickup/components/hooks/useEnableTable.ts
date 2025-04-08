@@ -30,18 +30,18 @@ export const useEnableTable = () => {
       dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
     },
 
-    creator: '创建人',
+    updateTime: {
+      label: '更新时间',
+      formatter: dateFormatter,
+      width: '200px'
+    },
+    updaterName: '更新人',
     createTime: {
       label: '创建时间',
       formatter: dateFormatter,
       width: '200px'
     },
-    updater: '更新人',
-    updateTime: {
-      label: '创建时间',
-      formatter: dateFormatter,
-      width: '200px'
-    }
+    creatorName: '创建人',
   }
   tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
 
