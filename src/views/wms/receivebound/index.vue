@@ -95,7 +95,7 @@ const fieldMap = {
   auditStatus: {
     label: '审核状态',
     slot: 'auditStatus',
-    dictAttrs: { type:  DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },
   shippingMethod: {
     label: '运输方式',
@@ -234,9 +234,11 @@ const handleExport = async () => {
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 onActivated(() => {
-  const routeQuery = window.getRouteQuery()
-  const { no } = routeQuery
-  queryParams.no = no
+  const routeQuery = window?.getRouteQuery()
+  if (routeQuery) {
+    const { no } = routeQuery
+    queryParams.no = no
+  }
   getList()
 })
 
