@@ -34,7 +34,7 @@
           link
           type="primary"
           @click="openForm(OPERATE_MAP['update-actual-quantity'], scope.row.id)"
-          v-hasPermi="['wms:receivebound:update-actual-quantity']"
+          v-hasPermi="['wms:inbound:update']"
         >
           收货
         </el-button>
@@ -42,7 +42,7 @@
           link
           type="warning"
           @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
-          v-hasPermi="['wms:receivebound:abandon']"
+          v-hasPermi="['wms:inbound:abandon']"
         >
           作废
         </el-button>
@@ -50,7 +50,7 @@
           link
           type="danger"
           @click="openForm(OPERATE_MAP['force-finish'], scope.row.id)"
-          v-hasPermi="['wms:receivebound:force-finish']"
+          v-hasPermi="['wms:inbound:force-finish']"
         >
           强制完成
         </el-button>
@@ -100,12 +100,12 @@ const fieldMap = {
   },
 
   arrivalPlanTime: {
-    label: '实际到货时间',
+    label: '预计到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },
   arrivalActualTime: {
-    label: '计到货时间',
+    label: '实际到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },

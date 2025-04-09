@@ -239,7 +239,7 @@ const updateActualQuantityFormOptions = () => {
 }
 
 const abandonFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.prop === 'initAge') + 1
+  const index = formOptions.findIndex((item) => item.slot === 'items')
 
   const obj: any = {
     type: 'input',
@@ -260,7 +260,7 @@ const abandonFormOptions = (formOptions) => {
 }
 
 const forceFinishFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.prop === 'initAge') + 1
+  const index = formOptions.findIndex((item) => item.slot === 'items')
 
   const obj: any = {
     type: 'input',
@@ -344,7 +344,9 @@ const submitForm = async () => {
       data.itemList = cloneDeep(itemFormRef.value.formData)
     }
     if (formType.value === OPERATE_MAP['update-actual-quantity']) {
-      const queryData = data.itemList.map((item) => filterObjKey(item, ['actualQty', 'id', 'inboundId']))
+      const queryData = data.itemList.map((item) =>
+        filterObjKey(item, ['actualQty', 'id', 'inboundId'])
+      )
       await InboundItemApi.updateInboundItemActualQuantity(queryData)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.abandon) {

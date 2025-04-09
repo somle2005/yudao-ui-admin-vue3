@@ -35,7 +35,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['wms:inbound:submitAudit']"
+          v-hasPermi="['wms:inbound:submit']"
         >
           提交审核
         </el-button>
@@ -65,6 +65,14 @@
         </div>
       </template>
       <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('audit', scope.row.id)"
+          v-hasPermi="['wms:inbound:agree', 'wms:inbound:reject']"
+        >
+          审核
+        </el-button>
         <el-button
           link
           type="primary"

@@ -18,6 +18,7 @@ export interface InboundVO {
   creatorComment: string // 特别说明，创建方专用
   initAge: number // 初始库龄
   itemList: any[] // 详情清单
+  comment?: string // 审批意见
 }
 
 // 入库单 API

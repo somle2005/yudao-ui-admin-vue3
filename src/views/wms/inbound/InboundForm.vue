@@ -20,14 +20,40 @@
         > -->
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="入库产品清单" name="item">
-            <ItemForm ref="itemFormRef" :items="formData.itemList" :formType="formType" />
+            <ItemForm
+              ref="itemFormRef"
+              :items="formData.itemList"
+              :formType="formType"
+              :disabled="itemsFormdisabled"
+            />
           </el-tab-pane>
         </el-tabs>
       </template>
     </SmForm>
 
     <template #footer>
-      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button v-if="!auditType" @click="submitFormDB" type="primary" :disabled="formLoading"
+        >确 定</el-button
+      >
+      <template v-if="auditType">
+        <el-button
+          v-hasPermi="['wms:inbound:reject']"
+          type="danger"
+          :disabled="formLoading"
+          @click="submitFormDB(AUDIT_TYPE.reject)"
+        >
+          不同意</el-button
+        >
+
+        <el-button
+          v-hasPermi="['wms:inbound:agree']"
+          type="primary"
+          :disabled="formLoading"
+          @click="submitFormDB(AUDIT_TYPE.agree)"
+        >
+          同意</el-button
+        >
+      </template>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
@@ -35,13 +61,15 @@
 <script setup lang="ts">
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import { getWMSWarehouseList } from '@/commonData/wms'
-import { addProperty } from '@/components/SmForm/src/utils'
+import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
+import { AUDIT_TYPE } from '@/utils/constant'
+import { getLastListProp } from '@/utils/transformData'
 
 // import { useOutData } from './components/hooks/outdata'
 
@@ -86,12 +114,11 @@ let { defaultProps, deptList } = {
   deptList: [] as any
 }
 
-
-
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
-const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
+const itemsFormdisabled = computed(() => ['detail', 'audit'].includes(formType.value))
+const auditType = computed(() => formType.value === 'audit')
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -266,6 +293,26 @@ const updateFormOptions = (formOptions) => {
   return formOptions
 }
 
+const auditFormOptions = (formOptions) => {
+  addDisabled(formOptions)
+  const index = formOptions.findIndex((item) => item.slot === 'items')
+  const obj: any = {
+    type: 'input',
+    placeholder: '审核意见',
+    prop: 'comment',
+    label: '审核意见',
+    attrs: {
+      clearable: true,
+      class: '!w-1/1',
+      style: {
+        width: '100%'
+      }
+    }
+  }
+  formOptions.splice(index, 0, obj)
+  return formOptions
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -273,7 +320,7 @@ const open = async (type: string, id?: number) => {
   formType.value = type
   resetForm()
 
-  const  deptObj =  getDeptTree() 
+  const deptObj = getDeptTree()
   defaultProps = deptObj.defaultProps
   deptList = deptObj.deptList
 
@@ -286,6 +333,9 @@ const open = async (type: string, id?: number) => {
     },
     update: () => {
       requestFormOptions.value = updateFormOptions(createRequestFormOptions())
+    },
+    audit: () => {
+      requestFormOptions.value = auditFormOptions(createRequestFormOptions())
     }
   }
   formTypeOperate[type]()
@@ -294,7 +344,9 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await InboundApi.getInbound(id)
+      const data = await InboundApi.getInbound(id)
+      data.comment = getLastListProp(data.approvalHistoryList, 'comment')
+      formData.value  = data
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {
@@ -306,7 +358,7 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
-const submitForm = async () => {
+const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
   await itemFormRef.value.validate()
@@ -320,9 +372,16 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await InboundApi.createInbound(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await InboundApi.updateInbound(data)
       message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'audit') {
+      if (type === AUDIT_TYPE.agree) {
+        await InboundApi.agreeInboundAuditStatus({ billId: data.id, comment: data.comment })
+      } else if (type === AUDIT_TYPE.reject) {
+        await InboundApi.rejectInboundAuditStatus({ billId: data.id, comment: data.comment })
+      }
+      message.success('审核成功')
     }
     dialogVisible.value = false
     // 发送操作成功的事件

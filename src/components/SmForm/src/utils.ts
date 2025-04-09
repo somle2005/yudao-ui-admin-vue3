@@ -53,3 +53,28 @@ export const addProperty = (list: any[]) => {
   })
   return list
 }
+
+export const addDisabled = (list: any[], disabledList?: any[]) => {
+  // 空数组就是全部都是禁用项
+  const resolveItem = (item: any) => {
+    if (item.attrs) {
+      item.attrs.disabled = true
+    } else {
+      item.attrs = {
+        disabled: true
+      }
+    }
+  }
+  if (!disabledList?.length) {
+    list.forEach((item) => {
+      resolveItem(item)
+    })
+    return list
+  }
+  disabledList.forEach((prop) => {
+    const target = list.find((item) => item.prop === prop) as any
+    if (!target) return
+    resolveItem(target)
+  })
+  return list
+}
