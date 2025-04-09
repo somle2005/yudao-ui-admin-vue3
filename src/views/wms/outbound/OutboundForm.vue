@@ -168,10 +168,10 @@ const createRequestFormOptions = () => {
 items里面
 1-outboundId-入库单ID-哪里来？
 2-productId-标准产品ID
-3-actualQuantity-实际出库量
+3-actualQty-实际出库量
 4-sourceItemId-来源详情ID-哪里来？
 5-outboundStatus-出库状态
-6-planQuantity-计划出库量
+6-planQty-计划出库量
 
 
 */

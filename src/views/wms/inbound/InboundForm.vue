@@ -70,8 +70,8 @@ const initFormData = () => {
     referNo: undefined,
     traceNo: undefined,
     shippingMethod: undefined,
-    planArrivalTime: undefined,
-    actualArrivalTime: undefined,
+    arrivalPlanTime: undefined,
+    arrivalActualTime: undefined,
     creatorComment: undefined,
     initAge: undefined,
     itemList: []
@@ -159,7 +159,7 @@ const createRequestFormOptions = () => {
       requiredFlag: true,
       type: 'tree-select',
       placeholder: '请选择申请部门',
-      prop: 'applicationDeptId',
+      prop: 'deptId',
       label: '申请部门',
       attrs: {
         filterable: true,
@@ -168,17 +168,6 @@ const createRequestFormOptions = () => {
         props: defaultProps,
         'check-strictly': true,
         'node-key': 'id'
-      }
-    },
-
-    {
-      type: 'input',
-      label: '参考号',
-      prop: 'referNo',
-      placeholder: '请输入参考号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
       }
     },
     {
@@ -210,7 +199,7 @@ const createRequestFormOptions = () => {
       requiredFlag: true,
       type: 'date-picker',
       placeholder: '请选择预计到货时间',
-      prop: 'planArrivalTime',
+      prop: 'arrivalPlanTime',
       label: '预计到货时间',
       attrs: {
         clearable: true,
@@ -257,23 +246,23 @@ const createRequestFormOptions = () => {
 }
 
 const updateFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.prop === 'planArrivalTime') + 1
-  const obj: any = {
-    type: 'date-picker',
-    placeholder: '请选择预实际到货时间',
-    prop: 'actualArrivalTime',
-    label: '预实际到货时间',
-    attrs: {
-      clearable: true,
-      type: 'date',
-      'value-format': 'x',
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  formOptions.splice(index, 0, obj)
+  // const index = formOptions.findIndex((item) => item.prop === 'arrivalPlanTime') + 1
+  // const obj: any = {
+  //   type: 'date-picker',
+  //   placeholder: '请选择预实际到货时间',
+  //   prop: 'arrivalActualTime',
+  //   label: '预实际到货时间',
+  //   attrs: {
+  //     clearable: true,
+  //     type: 'date',
+  //     'value-format': 'x',
+  //     class: '!w-1/1',
+  //     style: {
+  //       width: '100%'
+  //     }
+  //   }
+  // }
+  // formOptions.splice(index, 0, obj)
   return formOptions
 }
 

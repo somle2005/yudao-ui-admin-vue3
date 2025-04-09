@@ -45,9 +45,9 @@
 
         <el-table-column label="实际出库量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.actualQuantity`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
-                v-model="row.actualQuantity"
+                v-model="row.actualQty"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"
@@ -58,9 +58,9 @@
 
         <el-table-column label="计划出库量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.planQuantity`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
               <el-input-number
-                v-model="row.planQuantity"
+                v-model="row.planQty"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"

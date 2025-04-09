@@ -128,19 +128,18 @@ const fieldMap = {
     slot: 'shippingMethod',
     dictAttrs: { type: DICT_TYPE.WMS_SHIPPING_METHOD }
   },
-  referNo: '参考号',
   traceNo: '跟踪号',
   initAge: {
     label: '初始库龄',
     width: '100px'
   },
 
-  planArrivalTime: {
+  arrivalPlanTime: {
     label: '实际到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },
-  actualArrivalTime: {
+  arrivalActualTime: {
     label: '计到货时间',
     formatter: dateFormatter2,
     width: '200px'
@@ -190,8 +189,8 @@ const queryParams = reactive({
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,
-  planArrivalTime: [],
-  actualArrivalTime: [],
+  arrivalPlanTime: [],
+  arrivalActualTime: [],
   creatorComment: undefined,
   initAge: undefined,
   createTime: []

@@ -109,12 +109,12 @@ const fieldMap = {
     width: '100px'
   },
 
-  planArrivalTime: {
+  arrivalPlanTime: {
     label: '实际到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },
-  actualArrivalTime: {
+  arrivalActualTime: {
     label: '计到货时间',
     formatter: dateFormatter2,
     width: '200px'
@@ -163,8 +163,8 @@ const queryParams = reactive({
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,
-  planArrivalTime: [],
-  actualArrivalTime: [],
+  arrivalPlanTime: [],
+  arrivalActualTime: [],
   creatorComment: undefined,
   initAge: undefined,
   createTime: []
@@ -234,7 +234,7 @@ const handleExport = async () => {
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 onActivated(() => {
-  const routeQuery = window?.getRouteQuery()
+  const routeQuery = window.getRouteQuery && window.getRouteQuery()
   if (routeQuery) {
     const { no } = routeQuery
     queryParams.no = no

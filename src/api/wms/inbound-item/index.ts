@@ -6,9 +6,9 @@ export interface InboundItemVO {
   inboundId: number // 入库单ID
   productId: number // 标准产品ID
   productSku: string // 标准产品SKU
-  planQuantity: number // 计划入库量
-  actualQuantity: number // 实际入库量
-  leftQuantity: number // 批次剩余库存，出库后的剩余库存量
+  planqty: number // 计划入库量
+  actualqty: number // 实际入库量
+  leftqty: number // 批次剩余库存，出库后的剩余库存量
   sourceItemId: number // 来源详情ID
 }
 

@@ -61,16 +61,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'input',
-      label: '参考号',
-      prop: 'referNo',
-      placeholder: '请输入参考号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true,
-      }
-    },
-    {
-      type: 'input',
       label: '跟踪号',
       prop: 'traceNo',
       placeholder: '请输入跟踪号',
@@ -114,7 +104,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'date-picker',
       placeholder: '请选择预计到货时间',
-      prop: 'planArrivalTime',
+      prop: 'arrivalPlanTime',
       label: '预计到货时间',
       attrs: {
         clearable: true,

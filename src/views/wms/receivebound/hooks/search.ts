@@ -98,7 +98,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'date-picker',
       placeholder: '请选择预计到货时间',
-      prop: 'planArrivalTime',
+      prop: 'arrivalPlanTime',
       label: '预计到货时间',
       attrs: {
         clearable: true,

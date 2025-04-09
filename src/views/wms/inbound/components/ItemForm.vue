@@ -46,12 +46,12 @@
         <el-table-column label="计划入库量" width="120">
           <template #default="{ row, $index }">
             <el-form-item
-              :prop="`${$index}.planQuantity`"
-              :rules="formRules.planQuantity"
+              :prop="`${$index}.planQty`"
+              :rules="formRules.planQty"
               class="mb-0px!"
             >
               <el-input-number
-                v-model="row.planQuantity"
+                v-model="row.planQty"
                 controls-position="right"
                 :min="0"
                 class="!w-100%"
@@ -60,11 +60,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="updateShow" label="实际入库量" width="120">
+        <!-- <el-table-column v-if="updateShow" label="实际入库量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.actualQuantity`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
-                v-model="row.actualQuantity"
+                v-model="row.actualQty"
                 controls-position="right"
                 :min="0"
                 class="!w-100%"
@@ -74,11 +74,11 @@
         </el-table-column>
         <el-table-column v-if="updateShow" label="批次剩余库存" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.leftQuantity`" class="mb-0px!">
-              <el-text>{{ row.leftQuantity }}</el-text>
+            <el-form-item :prop="`${$index}.leftQty`" class="mb-0px!">
+              <el-text>{{ row.leftQty }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
@@ -129,7 +129,7 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
-  planQuantity: [{ required: true, message: '计划入库量不能为空', trigger: 'blur' }]
+  planQty: [{ required: true, message: '计划入库量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
@@ -181,9 +181,9 @@ const handleAdd = () => {
     // id: undefined,
     // inboundId: undefined,
     productId: undefined,
-    planQuantity: undefined,
-    actualQuantity: undefined
-    // leftQuantity: undefined,
+    planQty: undefined,
+    actualQty: undefined
+    // leftQty: undefined,
     // sourceItemId:undefined,
   }
   formData.value.push(row)
