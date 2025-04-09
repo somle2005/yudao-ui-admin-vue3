@@ -31,7 +31,7 @@
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
         <el-button
-          :disabled="disabledBtn"
+          :disabled="oneSelectionDisabled"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -47,6 +47,7 @@
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
+      isSelection
       :loading="loading"
       :options="tableOptions"
       :data="list"
@@ -96,6 +97,7 @@ import InboundForm from './InboundForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
+import { getLastListProp } from '@/utils/transformData'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -203,7 +205,10 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await InboundApi.getInboundPage(queryParams)
-    list.value = getItemProp(data.list, ['warehouse'])
+    list.value = getItemProp(data.list, ['warehouse']).map((item: any) => {
+      item.comment = getLastListProp(item.approvalHistoryList, 'comment')
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false
@@ -278,6 +283,8 @@ const handleSelectionChange = (rows: any[]) => {
 }
 
 const { disabledBtn, handleSubmitAuditBatch } = useBatch(selectionList, getList)
+// 暂时提交审核是单选
+const oneSelectionDisabled = computed(() => selectionList.value.length !== 1)
 
 /** 初始化 **/
 onMounted(() => {

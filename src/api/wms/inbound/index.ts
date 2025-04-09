@@ -53,7 +53,7 @@ export const InboundApi = {
   },
 
   // 入库单提交审核
-  submitInboundAudit: async (data: { billIdList: number[] }) => {
+  submitInboundAudit: async (data: { billId: number }) => {
     return await request.put({
       url: `/wms/inbound/submit`,
       data
@@ -71,6 +71,21 @@ export const InboundApi = {
   rejectInboundAuditStatus: async (data: { billId: number; comment?: string }) => {
     return await request.put({
       url: `/wms/inbound/reject`,
+      data
+    })
+  },
+
+  // 强制完成入库单
+  forceFinishInbound: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inbound/force-finish`,
+      data
+    })
+  },
+  // 作废入库单
+  abandonInbound: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inbound/abandon`,
       data
     })
   }

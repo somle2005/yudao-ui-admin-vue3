@@ -231,3 +231,12 @@ export const computeList = (mapList: Array<MapListObj>, list: any[]) => {
     console.log(e, '报错')
   }
 }
+
+export const getLastListProp = (list: any[], prop: string) => {
+  if (!list?.length) return
+  try {
+    return list[list.length - 1][prop]
+  } catch (e) {
+    console.log(e, '报错')
+  }
+}

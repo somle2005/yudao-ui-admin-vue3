@@ -27,6 +27,22 @@ export interface InboundPickupPendingVO {
   pageSize: number
 }
 
+export interface InboundItemActualQuantityVO {
+  /**
+   * 实际入库量
+   */
+  actualQty?: number;
+  /**
+   * 主键
+   */
+  id: number;
+  /**
+   * 入库单ID
+   */
+  inboundId?: number;
+}
+
+
 // 入库单详情 API
 export const InboundItemApi = {
   // 查询入库单详情分页
@@ -62,5 +78,9 @@ export const InboundItemApi = {
   // 待上架的入库明细
   getPickupPendingPage: async (params: InboundPickupPendingVO) => {
     return await request.get({ url: `/wms/inbound-item/pickup-pending`, params })
-  }
+  },
+  // 设置实际入库量
+  updateInboundItemActualQuantity: async (data: Array<InboundItemActualQuantityVO>) => {
+    return await request.put({ url: `/wms/inbound-item/update-actual-quantity`, data })
+  },
 }
