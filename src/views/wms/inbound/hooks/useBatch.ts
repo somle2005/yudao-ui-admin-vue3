@@ -10,7 +10,7 @@ export const useBatch = (selectionList, getList) => {
       // 整单和分行都统一做去重处理 都是取申请单id
       const billIdList: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
 
-      await InboundApi.submitInboundAudit({ billIdList })
+      await InboundApi.submitInboundAudit({ billId: billIdList[0] })
       message.success('提交审核成功')
       // 刷新列表
       await getList()
@@ -18,8 +18,6 @@ export const useBatch = (selectionList, getList) => {
       console.log('提交审核报错', e)
     }
   }
-
-
 
   const disabledBtn = computed(() => selectionList.value.length === 0)
 

@@ -115,11 +115,11 @@ const fieldMap = {
     slot: 'type',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
-  status: {
-    label: '状态',
-    slot: 'status',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  },
+  // status: {
+  //   label: '状态',
+  //   slot: 'status',
+  //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+  // },
   auditStatus: {
     label: '审核状态',
     slot: 'auditStatus',
@@ -137,12 +137,12 @@ const fieldMap = {
   },
 
   arrivalPlanTime: {
-    label: '实际到货时间',
+    label: '预计到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },
   arrivalActualTime: {
-    label: '计到货时间',
+    label: '实际到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },
@@ -266,9 +266,13 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 const router = useRouter()
 const toReceivebound = (row) => {
   window.getRouteQuery = () => {
-    return {
-      no: row.no,
-      id: row.id
+    try {
+      return {
+        no: row.no,
+        id: row.id
+      }
+    } finally {
+      window.getRouteQuery = null as any
     }
   }
   router.push({

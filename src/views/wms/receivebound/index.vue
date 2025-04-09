@@ -167,7 +167,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await InboundApi.getInboundPage(queryParams)
-    list.value = getItemProp(data.list, ['warehouse','product'])
+    list.value = getItemProp(data.list, ['warehouse', 'product'])
     total.value = data.total
   } finally {
     loading.value = false
