@@ -16,6 +16,7 @@
           type="primary"
           @click="openAddItem"
           style="margin-bottom: 10px"
+          v-hasPermi="['wms:inbound-item:query']"
           >选择拣货项</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
@@ -122,10 +123,11 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await PickupApi.createPickup(data)
       message.success(t('common.createSuccess'))
-    } else if (formType.value === 'update') {
-      await PickupApi.updatePickup(data)
-      message.success(t('common.updateSuccess'))
-    }
+    } 
+    // else if (formType.value === 'update') {
+    //   await PickupApi.updatePickup(data)
+    //   message.success(t('common.updateSuccess'))
+    // }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')

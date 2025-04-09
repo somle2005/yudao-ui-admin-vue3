@@ -57,6 +57,6 @@ declare global {
   }
 
   interface Window {
-    getRouteQuery: () => Record<string, string> 
+    getRouteQuery: () => Record<string, any> 
   }
 }

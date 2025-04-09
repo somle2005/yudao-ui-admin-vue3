@@ -34,7 +34,7 @@
           link
           type="primary"
           @click="openForm(OPERATE_MAP['update-actual-quantity'], scope.row.id)"
-          v-hasPermi="['wms:inbound:update']"
+          v-hasPermi="['wms:inbound-item:update']"
         >
           收货
         </el-button>
@@ -54,6 +54,14 @@
         >
           强制完成
         </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm(OPERATE_MAP['update-actual-quantityAndPickup'], scope.row.id)"
+          v-if="hasAllPermission(['wms:inbound-item:update', 'wms:pickup:create'])"
+        >
+          收货并上架
+        </el-button>
       </template>
     </SmTable>
   </ContentWrap>
@@ -70,6 +78,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { OPERATE_MAP } from './constant'
 import OpenForm from './OpenForm.vue'
 import { cloneDeep } from 'lodash-es'
+import { hasAllPermission } from '@/directives/permission/hasPermi'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -126,7 +135,7 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '200px'
+    width: '300px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
@@ -210,18 +219,9 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-onActivated(() => {
-  const routeQuery = window.getRouteQuery && window.getRouteQuery()
-  if (routeQuery) {
-    const { no } = routeQuery
-    queryParams.no = no
-    queryFormRef.value.initForm()
-  }
-  getList()
-})
 
 /** 初始化 **/
-// onMounted(() => {
-//   getList()
-// })
+onMounted(() => {
+  getList()
+})
 </script>

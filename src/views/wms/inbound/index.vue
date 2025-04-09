@@ -65,11 +65,13 @@
         </div>
       </template>
       <template #operate="{ scope }">
+        <!-- 待审核才出现 -->
         <el-button
           link
           type="primary"
           @click="openForm('audit', scope.row.id)"
           v-hasPermi="['wms:inbound:agree', 'wms:inbound:reject']"
+          v-if="scope.row.auditStatus === 1"
         >
           审核
         </el-button>

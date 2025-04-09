@@ -310,6 +310,9 @@ const open = async (type: string, id?: number) => {
     },
     [OPERATE_MAP['force-finish']]: () => {
       requestFormOptions.value = forceFinishFormOptions(updateActualQuantityFormOptions())
+    },
+    [OPERATE_MAP['update-actual-quantityAndPickup']]: () => {
+      requestFormOptions.value = updateActualQuantityFormOptions()
     }
   }
   formTypeOperate[type]()
@@ -330,6 +333,7 @@ const open = async (type: string, id?: number) => {
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
+const router = useRouter()
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
@@ -355,6 +359,26 @@ const submitForm = async () => {
     } else if (formType.value === OPERATE_MAP['force-finish']) {
       await InboundApi.forceFinishInbound({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
+    } else if (formType.value === OPERATE_MAP['update-actual-quantityAndPickup']) {
+      const queryData = data.itemList.map((item) =>
+        filterObjKey(item, ['actualQty', 'id', 'inboundId'])
+      )
+      await InboundItemApi.updateInboundItemActualQuantity(queryData)
+      const toPickup = () => {
+        window.getRouteQuery = () => {
+          try {
+            return {
+              routeJump: true
+            }
+          } finally {
+            window.getRouteQuery = null as any
+          }
+        }
+        router.push({
+          path: `/wms/pickup`
+        })
+      }
+      setTimeout(() => toPickup(), 500)
     }
     dialogVisible.value = false
     // 发送操作成功的事件
