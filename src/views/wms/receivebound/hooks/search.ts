@@ -43,16 +43,16 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
     },
-    {
-      type: 'input',
-      label: '参考号',
-      prop: 'referNo',
-      placeholder: '请输入参考号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true,
-      }
-    },
+    // {
+    //   type: 'input',
+    //   label: '参考号',
+    //   prop: 'referNo',
+    //   placeholder: '请输入参考号',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true,
+    //   }
+    // },
     {
       type: 'input',
       label: '跟踪号',

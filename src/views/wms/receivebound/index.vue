@@ -13,23 +13,6 @@
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button
-          type="primary"
-          plain
-          @click="openForm('create')"
-          v-hasPermi="['wms:inbound:create']"
-        >
-          <Icon icon="ep:plus" class="mr-5px" /> 新增
-        </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['wms:inbound:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -50,22 +33,32 @@
         <el-button
           link
           type="primary"
-          @click="openForm('update', scope.row.id)"
-          v-hasPermi="['wms:inbound:update']"
+          @click="openForm(OPERATE_MAP['update-actual-quantity'], scope.row.id)"
+          v-hasPermi="['wms:receivebound:update-actual-quantity']"
         >
-          编辑
+          收货
+        </el-button>
+        <el-button
+          link
+          type="warning"
+          @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
+          v-hasPermi="['wms:receivebound:abandon']"
+        >
+          作废
         </el-button>
         <el-button
           link
           type="danger"
-          @click="handleDelete(scope.row.id)"
-          v-hasPermi="['wms:inbound:delete']"
+          @click="openForm(OPERATE_MAP['force-finish'], scope.row.id)"
+          v-hasPermi="['wms:receivebound:force-finish']"
         >
-          删除
+          强制完成
         </el-button>
       </template>
     </SmTable>
   </ContentWrap>
+  <!-- 表单弹窗：添加/修改 -->
+  <OpenForm ref="formRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
@@ -74,6 +67,8 @@ import download from '@/utils/download'
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { OPERATE_MAP } from './constant'
+import OpenForm from './OpenForm.vue'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -87,11 +82,6 @@ const fieldMap = {
     slot: 'type',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
-  status: {
-    label: '状态',
-    slot: 'status',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  },
   auditStatus: {
     label: '审核状态',
     slot: 'auditStatus',
@@ -102,7 +92,6 @@ const fieldMap = {
     slot: 'shippingMethod',
     dictAttrs: { type: DICT_TYPE.WMS_SHIPPING_METHOD }
   },
-  referNo: '参考号',
   traceNo: '跟踪号',
   initAge: {
     label: '初始库龄',
@@ -156,7 +145,7 @@ const queryParams = reactive({
   no: '',
   type: undefined,
   warehouseId: undefined,
-  status: undefined, // 带审批
+  auditStatus: 1, // 待审批
   sourceBillId: undefined,
   sourceBillNo: undefined,
   sourceBillType: undefined,
@@ -178,7 +167,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await InboundApi.getInboundPage(queryParams)
-    list.value = getItemProp(data.list, ['warehouse'])
+    list.value = getItemProp(data.list, ['warehouse','product'])
     total.value = data.total
   } finally {
     loading.value = false
@@ -201,19 +190,6 @@ const resetQuery = () => {
 const formRef = ref()
 const openForm = (type: string, id?: number) => {
   formRef.value.open(type, id)
-}
-
-/** 删除按钮操作 */
-const handleDelete = async (id: number) => {
-  try {
-    // 删除的二次确认
-    await message.delConfirm()
-    // 发起删除
-    await InboundApi.deleteInbound(id)
-    message.success(t('common.delSuccess'))
-    // 刷新列表
-    await getList()
-  } catch {}
 }
 
 /** 导出按钮操作 */
