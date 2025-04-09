@@ -69,6 +69,7 @@ import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { OPERATE_MAP } from './constant'
 import OpenForm from './OpenForm.vue'
+import { cloneDeep } from 'lodash-es'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -214,6 +215,7 @@ onActivated(() => {
   if (routeQuery) {
     const { no } = routeQuery
     queryParams.no = no
+    queryFormRef.value.initForm()
   }
   getList()
 })
