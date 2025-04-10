@@ -15,7 +15,7 @@
       <el-table :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="SKU" width="180">
+        <el-table-column label="产品编码" width="180">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -26,7 +26,7 @@
               <SmSelect
                 :disabled="disabled"
                 v-model="row.productId"
-                placeholder="请选择SKU"
+                placeholder="请选择产品编码"
                 @change="
                   (val) =>
                     updateModelValue(val, row, productList, 'id', {
@@ -118,7 +118,7 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   // warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
-  productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
+  productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]

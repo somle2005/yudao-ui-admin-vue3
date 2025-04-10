@@ -15,7 +15,7 @@
       <el-table :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="SKU" width="180">
+        <el-table-column label="产品编码" width="180">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -105,7 +105,7 @@ const updateShow = computed(() => props.formType === 'update')
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
-  productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
+  productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   binId: [{ required: true, message: '库位不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '拣货数量不能为空', trigger: 'blur' }]
 })
