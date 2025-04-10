@@ -229,7 +229,6 @@ export enum DICT_TYPE {
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
   REPORT_MAP = 'report_map', // 报表地图
   ERP_PAYMENT_STATUS = 'erp_payment_status', // 采购付款状态
-  ERP_STORAGE_STATUS = 'erp_storage_status', // 采购入库状态
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
@@ -262,5 +261,6 @@ export enum DICT_TYPE {
 
   // ========== SRM - 采购模块  ==========
   SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态
-  SRM_EXECUTE_STATUS='srm_execute_status', // SRM 执行状态 
+  SRM_EXECUTE_STATUS = 'srm_execute_status', // SRM 执行状态
+  SRM_STORAGE_STATUS = 'srm_storage_status' // SRM 采购入库状态
 }

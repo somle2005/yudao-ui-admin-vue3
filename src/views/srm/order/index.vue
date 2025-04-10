@@ -222,7 +222,7 @@ const fieldMap = {
   inStatus: {
     label: '入库状态',
     slot: 'inStatus',
-    dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS }
+    dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
   },
   payStatus: {
     label: '付款状态',
@@ -271,7 +271,7 @@ const fieldMap = {
   rowInStatus: {
     label: '行入库状态',
     slot: 'rowInStatus',
-    dictAttrs: { type: DICT_TYPE.ERP_STORAGE_STATUS },
+    dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowPayStatus: {
