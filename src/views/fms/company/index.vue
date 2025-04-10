@@ -191,7 +191,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['fms:finance-subject:create']"
+          v-hasPermi="['fms:company:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -200,7 +200,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['fms:finance-subject:export']"
+          v-hasPermi="['fms:company:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -229,7 +229,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['fms:finance-subject:update']"
+          v-hasPermi="['fms:company:update']"
         >
           编辑
         </el-button>
@@ -237,7 +237,7 @@
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
-          v-hasPermi="['fms:finance-subject:delete']"
+          v-hasPermi="['fms:company:delete']"
         >
           删除
         </el-button>
@@ -253,7 +253,7 @@
 import { getBoolDictOptions, DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject'
+import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject/company'
 import FinanceSubjectForm from './FinanceSubjectForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 

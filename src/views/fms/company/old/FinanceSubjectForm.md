@@ -66,7 +66,7 @@
 </template>
 <script setup lang="ts">
 import { getBoolDictOptions, DICT_TYPE } from '@/utils/dict'
-import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject'
+import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject/company'
 
 /** Erp财务主体 表单 */
 defineOptions({ name: 'FinanceSubjectForm' })

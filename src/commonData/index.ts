@@ -8,7 +8,7 @@ import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/pr
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
-import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject'
+import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject/company'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import {CustomRuleCategoryApi} from '@/api/tms/custom-category'
 import { CustomProductApi } from '@/api/tms/custom-product'
