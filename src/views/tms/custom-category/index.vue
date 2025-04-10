@@ -35,19 +35,19 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="报关品名" prop="declaredType">
+      <el-form-item label="海关品名" prop="declaredType">
         <el-input
           v-model="queryParams.declaredType"
-          placeholder="请输入报关品名"
+          placeholder="请输入海关品名"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="英文品名" prop="declaredTypeEn">
+      <el-form-item label="海关品名(英文)" prop="declaredTypeEn">
         <el-input
           v-model="queryParams.declaredTypeEn"
-          placeholder="请输入英文品名"
+          placeholder="请输入海关品名(英文)"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -60,7 +60,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['tms:custom-category:create']"
+          v-hasPermi="['erp:custom-category:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -69,7 +69,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['tms:custom-category:export']"
+          v-hasPermi="['erp:custom-category:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -133,7 +133,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['tms:custom-category:update']"
+            v-hasPermi="['erp:custom-category:update']"
           >
             编辑
           </el-button>
@@ -141,7 +141,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['tms:custom-category:delete']"
+            v-hasPermi="['erp:custom-category:delete']"
           >
             删除
           </el-button>
@@ -175,13 +175,13 @@ import download from '@/utils/download'
 import {
   CustomRuleCategoryApi,
   CustomRuleCategoryVO
-} from '@/api/erp/logistic/custom-category'
+} from '@/api/tms/custom-category'
 import CustomRuleCategoryForm from './CustomRuleCategoryForm.vue'
 import CustomRuleCategoryItemList from './components/CustomRuleCategoryItemList.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 /** 海关品类 列表 */
-defineOptions({ name: 'ErpCustomRuleCategory' })
+defineOptions({ name: 'TmsCustomRuleCategory' })
 
 
 

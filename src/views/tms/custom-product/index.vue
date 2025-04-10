@@ -85,7 +85,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:custom-product:create']"
+          v-hasPermi="['tms:custom-product:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -94,7 +94,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:custom-product:export']"
+          v-hasPermi="['tms:custom-product:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -142,7 +142,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:custom-product:update']"
+            v-hasPermi="['tms:custom-product:update']"
           >
             编辑
           </el-button>
@@ -150,7 +150,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:custom-product:delete']"
+            v-hasPermi="['tms:custom-product:delete']"
           >
             删除
           </el-button>
@@ -173,10 +173,10 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { CustomProductApi, CustomProductVO } from '@/api/erp/logistic/custom-product'
+import { CustomProductApi, CustomProductVO } from '@/api/tms/custom-product'
 import CustomProductForm from './CustomProductForm.vue'
 import { getProductList } from '@/commonData'
-import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
+import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
 
 const productList = getProductList()
 const customRuleCategoryList = ref([]) // 海关分类
@@ -193,7 +193,7 @@ CustomRuleCategoryApi.getCustomRuleCategorySimpleList().then((res: any) => {
 })
 
 /** 海关管理中，与海关分类-产品。中间联系表。 列表 */
-defineOptions({ name: 'ErpCustomProduct' })
+defineOptions({ name: 'TmsCustomProduct' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化

@@ -42,7 +42,7 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { CustomRuleCategoryApi, CustomRuleCategoryVO } from '@/api/erp/logistic/custom-category'
+import { CustomRuleCategoryApi, CustomRuleCategoryVO } from '@/api/tms/custom-category'
 import CustomRuleCategoryItemForm from './components/CustomRuleCategoryItemForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 

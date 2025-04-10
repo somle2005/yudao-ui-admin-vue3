@@ -7,11 +7,11 @@ import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
-import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject'
-import { CustomProductApi } from '@/api/erp/logistic/custom-product'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import {CustomRuleCategoryApi} from '@/api/tms/custom-category'
+import { CustomProductApi } from '@/api/tms/custom-product'
 
 interface SelectProp {
   value: number

@@ -13,6 +13,7 @@
           v-model="queryParams.countryCode"
           placeholder="请选择国家编码"
           clearable
+          filterable
           class="!w-240px"
         >
           <el-option
@@ -25,14 +26,7 @@
       </el-form-item>
 
       <el-form-item label="SKU" prop="barCode">
-        <!-- <el-input
-          v-model="queryParams.barCode"
-          placeholder="请输入SKU"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        /> -->
-        <el-select
+        <!-- <el-select
           v-model.trim="queryParams.barCode"
           clearable
           filterable
@@ -46,6 +40,21 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
+          />
+        </el-select> -->
+        <el-select
+          v-model.trim="queryParams.productId"
+          clearable
+          filterable
+          placeholder="请选择SKU"
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in productList"
+            :key="item.id"
+            :label="item.barCode"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
@@ -83,19 +92,19 @@
         />
       </el-form-item>
 
-      <el-form-item label="申报品名（英文）" prop="declaredTypeEn">
+      <el-form-item label="海关品名(英文)" prop="declaredTypeEn">
         <el-input
           v-model="queryParams.declaredTypeEn"
-          placeholder="请输入申报品名（英文）"
+          placeholder="请输入海关品名(英文)"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="申报品名" prop="declaredType">
+      <el-form-item label="海关品名" prop="declaredType">
         <el-input
           v-model="queryParams.declaredType"
-          placeholder="请输入申报品名"
+          placeholder="请输入海关品名"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -116,32 +125,6 @@
           />
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="供应商产品" prop="supplierProductId">
-        <el-select
-          v-model="queryParams.supplierProductId"
-          clearable
-          filterable
-          placeholder="请选择供应商产品"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in supplierProductList"
-            :key="item.id"
-            :label="item.code"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item> -->
-      <!-- <el-form-item label="类型" prop="type">
-        <el-select class="!w-240px" v-model="queryParams.type" placeholder="请选择类型">
-          <el-option
-            v-for="item in type"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item> -->
       <el-form-item class="ml-70px">
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -149,7 +132,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:custom-rule:create']"
+          v-hasPermi="['tms:custom-rule:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -158,7 +141,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:custom-rule:export']"
+          v-hasPermi="['tms:custom-rule:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -166,104 +149,8 @@
     </el-form>
   </ContentWrap>
 
-  <!-- 列表 -->
-  <!--  <ContentWrap>
-    <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-
-      <el-table-column label="SKU" align="center" prop="product-barCode" />
-      <el-table-column label="国家编码" align="center" prop="countryCode">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
-        </template>
-      </el-table-column>
-      <el-table-column label="产品名称" align="center" prop="product-name" />
-      
-      
-      <el-table-column
-        label="图片"
-        align="center"
-        prop="primaryImageUrl"
-        width="110px"
-      >
-        <template #default="scope">
-          <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
-        </template>
-      </el-table-column>
-      <el-table-column label="材料" align="center" prop="material" />
-
-      <!~~ <el-table-column
-        label="供应商产品编码"
-        align="center"
-        prop="supplierProductCode"
-        :min-width="columnMinWidth"
-      /> ~~>
-
-    
-      <!~~ <el-table-column label="类型" align="center" prop="type" /> ~~>
-
-      <!~~ <el-table-column label="申报金额" align="center" prop="declaredValue" />
-      <el-table-column label="申报金额币种" align="center" prop="declaredValueCurrencyCode">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.declaredValueCurrencyCode" />
-        </template>
-      </el-table-column> ~~>
-
-      <el-table-column label="hs编码" align="center" prop="hscode" />
-      <el-table-column label="申报品名(英文)" align="center" prop="declaredTypeEn" />
-      <el-table-column label="申报品名" align="center" prop="declaredType" />
-
-      <el-table-column label="税率" align="center" prop="taxRate" />
-      <el-table-column label="物流属性" align="center" prop="logisticAttribute">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.ERP_LOGISTIC_ATTRIBUTE" :value="scope.row.logisticAttribute" />
-        </template>
-      </el-table-column>
-      <el-table-column label="FBA条形码" align="center" prop="fbaBarCode" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-    
-      <el-table-column label="操作" align="center" min-width="180px">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="copyForm(scope.row.id)"
-            v-hasPermi="['erp:custom-rule:create']"
-          >
-            复制
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:custom-rule:update']"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:custom-rule:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!~~ 分页 ~~>
-    <Pagination
-      :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
-  </ContentWrap>-->
+  
+  
 
   <!-- isSelection -->
   <ContentWrap :bodyStyle="{ padding: '20px','padding-bottom':0 }">
@@ -296,7 +183,7 @@
           link
           type="primary"
           @click="copyForm(scope.row.id)"
-          v-hasPermi="['erp:custom-rule:create']"
+          v-hasPermi="['tms:custom-rule:create']"
         >
           复制
         </el-button>
@@ -304,7 +191,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:custom-rule:update']"
+          v-hasPermi="['tms:custom-rule:update']"
         >
           编辑
         </el-button>
@@ -312,7 +199,7 @@
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
-          v-hasPermi="['erp:custom-rule:delete']"
+          v-hasPermi="['tms:custom-rule:delete']"
         >
           删除
         </el-button>
@@ -327,17 +214,19 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
+import { CustomRuleApi, CustomRuleVO } from '@/api/tms/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
 // import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { getProductNameList } from '@/commonData'
+// import { getProductNameList } from '@/commonData'
 import { insertSearchVal } from '@/utils/high'
+import { getProductList } from '@/commonData'
 
-const { productSkuList } = getProductNameList()
+// const { productSkuList } = getProductNameList()
+const productList = getProductList()
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -364,8 +253,8 @@ const fieldMap = {
     label: 'hs编码',
     width: '180px'
   },
-  declaredTypeEn: '申报品名(英文)',
-  declaredType: '申报品名',
+  declaredTypeEn: '海关品名(英文)',
+  declaredType: '海关品名',
   taxRate: '税率',
   logisticAttribute: {
     label: '物流属性',
@@ -389,7 +278,7 @@ const fieldMap = {
 tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
 
 /** ERP 海关规则 列表 */
-defineOptions({ name: 'ErpCustomRule' })
+defineOptions({ name: 'TmsCustomRule' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -412,11 +301,12 @@ const queryParams = reactive({
   barCode: undefined,
   hscode: undefined,
   createTime: [] as string[],
-  fbaBarCode: undefined
+  fbaBarCode: undefined,
+  productId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
+// const supplierProductList = ref<SupplierProductVO[]>([]) // 供应商列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -435,7 +325,7 @@ const getList = async () => {
   } finally {
     loading.value = false
   }
-  supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
+  // supplierProductList.value = await SupplierProductApi.getSupplierProductSimpleList()
 }
 
 /** 搜索按钮操作 */
@@ -490,7 +380,7 @@ const copyForm = (id?: number) => {
 }
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
-const insertBarcode = insertSearchVal(productSkuList)
+// const insertBarcode = insertSearchVal(productSkuList)
 
 const createTimeChange = (val: any) => {
   queryParams.createTime = val

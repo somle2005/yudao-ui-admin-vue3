@@ -151,8 +151,8 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { CustomRuleApi, CustomRuleVO } from '@/api/erp/logistic/customrule'
 import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
+import { CustomRuleApi, CustomRuleVO } from '@/api/tms/customrule'
 import { getProductList } from '@/commonData'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 // import { type } from '../constant/index'

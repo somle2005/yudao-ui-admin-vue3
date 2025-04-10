@@ -30,7 +30,7 @@
 </template>
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
-import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
+import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
 import { DICT_TYPE } from '@/utils/dict'
 
 const { t } = useI18n() // 国际化
