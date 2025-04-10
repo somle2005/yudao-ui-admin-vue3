@@ -99,7 +99,7 @@
       </template>
 
       <template #orderStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
+        <dict-tag :type="DICT_TYPE.SRM_ORDER_STATUS" :value="scope.row.orderStatus || ''" />
       </template>
 
       <template #offStatus="{ scope }">
@@ -107,7 +107,7 @@
       </template>
 
       <template #rowOrderStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
+        <dict-tag :type="DICT_TYPE.SRM_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
       </template>
 
       <template #rowOffStatus="{ scope }">
