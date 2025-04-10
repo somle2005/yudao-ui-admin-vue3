@@ -156,7 +156,7 @@ const createRequestFormOptions = () => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_STOCK_TYPE)
+      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_ZONE_STOCK_TYPE)
     },
     {
       requiredFlag: true,
@@ -171,7 +171,7 @@ const createRequestFormOptions = () => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_AREA_PARTITION_TYPE)
+      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_ZONE_PARTITION_TYPE)
     },
 
     {

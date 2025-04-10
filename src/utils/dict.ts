@@ -255,12 +255,15 @@ export enum DICT_TYPE {
   IOT_RW_TYPE = 'iot_rw_type', // IOT 读写类型
 
   // ========== WMS  ==========
-  WMS_STOCK_TYPE = 'wms_stock_type', // 库存类型-存货类型
-  WMS_WAREHOUSE_AREA_PARTITION_TYPE = 'wms_warehouse_area_partition_type', // 分区类型
   WMS_VALID_STATUS = 'wms_valid_status', // WMS通用的对象有效状态
   WMS_WAREHOUSE_MODE = 'wms_warehouse_mode', // 仓库经营方式-仓库属性
   WMS_INBOUND_TYPE = 'wms_inbound_type', // 入库单类型
   WMS_INBOUND_STATUS = 'wms_inbound_status', // 入库单状态
   WMS_SHIPPING_METHOD = 'wms_shipping_method', // 运输方式
   WMS_INBOUND_AUDIT_STATUS = 'wms_inbound_audit_status', // 入库单审批状态
+  WMS_WAREHOUSE_ZONE_STOCK_TYPE = "wms_warehouse_zone_stock_type", // WMS存货类型
+  WMS_WAREHOUSE_ZONE_PARTITION_TYPE = 'wms_warehouse_zone_partition_type', // WMS分区类型
+
+  
+  
 }
