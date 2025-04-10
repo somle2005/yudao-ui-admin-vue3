@@ -73,7 +73,7 @@ import {
   getFinanceSubjectList,
   getSupplierList
 } from '@/commonData'
-import { FinanceSubjectVO } from '@/api/fms/subject'
+import { FinanceSubjectVO } from '@/api/fms/subject/company'
 import {
   computeDiscountPriceAndTotalPrice,
   computeList,
