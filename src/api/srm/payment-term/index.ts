@@ -3,8 +3,8 @@ import request from '@/config/axios'
 // 付款条款 VO
 export interface PaymentTermVO {
   id: number // 主键
-  paymentTermCn: string // 人民币采购条款（中文）
-  paymentTermCnForeign: string // 外币采购条款（中文）
+  paymentTermZh: string // 人民币采购条款（中文）
+  paymentTermZhForeign: string // 外币采购条款（中文）
   paymentTermEnForeign: string // 外币采购条款（英文）
   remark: string // 备注
 }

@@ -5,14 +5,14 @@ import { PaymentTermApi } from '@/api/srm/payment-term'
 //   const paymentTermList = ref<any[]>([])
 //   PaymentTermApi.getPaymentTermSimpleList().then((res: any) => {
 //     paymentTermList.value = res.map((item) => {
-//       const { paymentTermCn, paymentTermEnForeign, paymentTermCnForeign } = item
-//       item.label = paymentTermCn
-//       item.value = paymentTermCn
+//       const { paymentTermZh, paymentTermEnForeign, paymentTermZhForeign } = item
+//       item.label = paymentTermZh
+//       item.value = paymentTermZh
 //       // item.value = item.id
 //       item.children = [
 //         { label: paymentTermEnForeign, value: paymentTermEnForeign },
-//         { label: paymentTermCnForeign, value: paymentTermCnForeign },
-//         { label: paymentTermCn, value: paymentTermCn },
+//         { label: paymentTermZhForeign, value: paymentTermZhForeign },
+//         { label: paymentTermZh, value: paymentTermZh },
 //       ]
 //       return item
 //     })
@@ -28,9 +28,9 @@ export const getPaymentTermsList = (data?: any) => {
   const paymentTermList = ref<any[]>([])
   PaymentTermApi.getPaymentTermSimpleList().then((res: any) => {
     paymentTermList.value = res.map((item) => {
-      const { paymentTermCn } = item
-      item.label = paymentTermCn
-      item.value = paymentTermCn
+      const { paymentTermZh } = item
+      item.label = paymentTermZh
+      item.value = paymentTermZh
       return item
     })
     if (data) {

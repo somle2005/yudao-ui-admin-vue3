@@ -19,18 +19,18 @@
           class="!w-220px"
         />
       </el-form-item>
-      <el-form-item label="人民币采购条款" prop="paymentTermCn">
+      <el-form-item label="人民币采购条款" prop="paymentTermZh">
         <el-input
-          v-model="queryParams.paymentTermCn"
+          v-model="queryParams.paymentTermZh"
           placeholder="请输入人民币采购条款"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="外币采购条款(中文)" prop="paymentTermCnForeign">
+      <el-form-item label="外币采购条款(中文)" prop="paymentTermZhForeign">
         <el-input
-          v-model="queryParams.paymentTermCnForeign"
+          v-model="queryParams.paymentTermZhForeign"
           placeholder="请输入外币采购条款(中文)"
           clearable
           @keyup.enter="handleQuery"
@@ -90,8 +90,8 @@
         :formatter="dateFormatter"
         width="180px"
       />
-      <el-table-column label="人民币采购条款" align="center" prop="paymentTermCn" />
-      <el-table-column label="外币采购条款(中文)" align="center" prop="paymentTermCnForeign" />
+      <el-table-column label="人民币采购条款" align="center" prop="paymentTermZh" />
+      <el-table-column label="外币采购条款(中文)" align="center" prop="paymentTermZhForeign" />
       <el-table-column label="外币采购条款(英文)" align="center" prop="paymentTermEnForeign" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" min-width="120px">
@@ -147,8 +147,8 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   createTime: [],
-  paymentTermCn: undefined,
-  paymentTermCnForeign: undefined,
+  paymentTermZh: undefined,
+  paymentTermZhForeign: undefined,
   paymentTermEnForeign: undefined,
   remark: undefined,
 })

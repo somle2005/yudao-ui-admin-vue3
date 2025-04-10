@@ -832,9 +832,9 @@ const transformPaymentTerms = (queryData) => {
 
   let key = ''
   const list = [
-    { key: '中文', value: 'paymentTermCnForeign' },
+    { key: '中文', value: 'paymentTermZhForeign' },
     { key: '英文', value: 'paymentTermEnForeign' },
-    { key: '合同模板', value: 'paymentTermCn' }
+    { key: '合同模板', value: 'paymentTermZh' }
   ]
   list.forEach((item) => {
     if (templateName.includes(item.key)) {

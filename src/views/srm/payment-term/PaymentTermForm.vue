@@ -7,17 +7,17 @@
       label-width="150px"
       v-loading="formLoading"
     >
-      <el-form-item label="人民币采购条款" prop="paymentTermCn">
+      <el-form-item label="人民币采购条款" prop="paymentTermZh">
         <el-input
           type="textarea"
-          v-model="formData.paymentTermCn"
+          v-model="formData.paymentTermZh"
           placeholder="请输入人民币采购条款"
         />
       </el-form-item>
-      <el-form-item label="外币采购条款(中文)" prop="paymentTermCnForeign">
+      <el-form-item label="外币采购条款(中文)" prop="paymentTermZhForeign">
         <el-input
           type="textarea"
-          v-model="formData.paymentTermCnForeign"
+          v-model="formData.paymentTermZhForeign"
           placeholder="请输入外币采购条款(中文)"
         />
       </el-form-item>
@@ -53,13 +53,13 @@ const formLoading = ref(false) // 表单的加载中：1）修改时的数据加
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
-  paymentTermCn: undefined,
-  paymentTermCnForeign: undefined,
+  paymentTermZh: undefined,
+  paymentTermZhForeign: undefined,
   paymentTermEnForeign: undefined,
   remark: undefined
 })
 const formRules = reactive({
-  paymentTermCn: [{ required: true, message: '人民币采购条款不能为空', trigger: 'blur' }]
+  paymentTermZh: [{ required: true, message: '人民币采购条款不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 
@@ -109,8 +109,8 @@ const submitForm = async () => {
 const resetForm = () => {
   formData.value = {
     id: undefined,
-    paymentTermCn: undefined,
-    paymentTermCnForeign: undefined,
+    paymentTermZh: undefined,
+    paymentTermZhForeign: undefined,
     paymentTermEnForeign: undefined,
     remark: undefined
   }
