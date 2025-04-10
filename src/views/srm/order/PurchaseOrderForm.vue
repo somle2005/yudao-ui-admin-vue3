@@ -66,14 +66,14 @@
 import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/srm/order'
 import PurchaseOrderItemForm from './components/PurchaseOrderItemForm.vue'
 import { SupplierVO } from '@/api/srm/supplier'
-import { AccountVO } from '@/api/erp/finance/account'
+import { AccountVO } from '@/api/fms/account'
 import {
   getAccountList,
   getCurrencyList,
   getFinanceSubjectList,
   getSupplierList
 } from '@/commonData'
-import { FinanceSubjectVO } from '@/api/erp/finance/subject'
+import { FinanceSubjectVO } from '@/api/fms/subject'
 import {
   computeDiscountPriceAndTotalPrice,
   computeList,

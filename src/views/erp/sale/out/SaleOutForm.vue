@@ -180,7 +180,7 @@
 import { SaleOutApi, SaleOutVO } from '@/api/erp/sale/out'
 import SaleOutItemForm from './components/SaleOutItemForm.vue'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import SaleOrderOutEnableList from '@/views/erp/sale/order/components/SaleOrderOutEnableList.vue'
 import { SaleOrderVO } from '@/api/erp/sale/order'

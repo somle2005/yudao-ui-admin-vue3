@@ -283,7 +283,7 @@
 import { getBoolDictOptions, DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
+import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/subject'
 import FinanceSubjectForm from './FinanceSubjectForm.vue'
 
 /** Erp财务主体 列表 */

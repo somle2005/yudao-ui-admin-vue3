@@ -145,12 +145,12 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { FinancePaymentApi, FinancePaymentVO } from '@/api/erp/finance/payment'
+import { FinancePaymentApi, FinancePaymentVO } from '@/api/fms/payment'
 import FinancePaymentItemForm from './components/FinancePaymentItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 
 /** ERP 付款单表单 */
 defineOptions({ name: 'FinancePaymentForm' })

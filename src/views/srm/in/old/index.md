@@ -321,7 +321,7 @@ import {
   erpPriceTableColumnFormatter
 } from '@/utils'
 import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { useTable } from './hooks/useTable'
 

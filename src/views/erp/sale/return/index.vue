@@ -316,7 +316,7 @@ import {
 } from '@/utils'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
 import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 
 /** ERP 销售退货列表 */
 defineOptions({ name: 'ErpSaleReturn' })

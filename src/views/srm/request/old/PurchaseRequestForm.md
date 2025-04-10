@@ -100,7 +100,7 @@ import PurchaseRequestItemForm from './components/PurchaseRequestItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 
 /** ERP 采购申请表单 */
 defineOptions({ name: 'PurchaseRequestForm' })

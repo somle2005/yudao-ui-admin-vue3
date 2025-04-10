@@ -267,13 +267,13 @@
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { FinanceReceiptApi, FinanceReceiptVO } from '@/api/erp/finance/receipt'
+import { FinanceReceiptApi, FinanceReceiptVO } from '@/api/fms/receipt'
 import FinanceReceiptForm from './FinanceReceiptForm.vue'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
 import { erpPriceTableColumnFormatter } from '@/utils'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 
 /** ERP 收款单列表 */
 defineOptions({ name: 'FmsReceipt' })

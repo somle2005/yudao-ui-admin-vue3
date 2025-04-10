@@ -169,7 +169,7 @@ import PurchaseOrderItemForm from './components/PurchaseOrderItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 import { PurchaseRequestVO } from '@/api/srm/request'
 
 /** ERP 销售订单表单 */

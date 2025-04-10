@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 
 /** ERP 结算 表单 */
 defineOptions({ name: 'AccountForm' })

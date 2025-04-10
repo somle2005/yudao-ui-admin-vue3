@@ -145,11 +145,11 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { FinanceReceiptApi, FinanceReceiptVO } from '@/api/erp/finance/receipt'
+import { FinanceReceiptApi, FinanceReceiptVO } from '@/api/fms/receipt'
 import FinanceReceiptItemForm from './components/FinanceReceiptItemForm.vue'
 import { erpPriceInputFormatter } from '@/utils'
 import * as UserApi from '@/api/system/user'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
 
 /** ERP 收款单表单 */

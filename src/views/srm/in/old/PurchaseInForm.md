@@ -164,7 +164,7 @@
 <script setup lang="ts">
 import { PurchaseInApi, PurchaseInVO } from '@/api/srm/in'
 import PurchaseInItemForm from './components/PurchaseInItemForm.vue'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import PurchaseOrderInEnableList from '@/views/erp/purchase/order/components/PurchaseOrderInEnableList.vue'
 import { PurchaseOrderVO } from '@/api/srm/order'

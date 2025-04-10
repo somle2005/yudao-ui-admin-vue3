@@ -267,13 +267,13 @@
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { FinancePaymentApi, FinancePaymentVO } from '@/api/erp/finance/payment'
+import { FinancePaymentApi, FinancePaymentVO } from '@/api/fms/payment'
 import FinancePaymentForm from './FinancePaymentForm.vue'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
 import { erpPriceTableColumnFormatter } from '@/utils'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 
 /** ERP 付款单列表 */
 defineOptions({ name: 'FmsPayment' })

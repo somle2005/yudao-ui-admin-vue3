@@ -156,7 +156,7 @@
 import { SaleOrderApi, SaleOrderVO } from '@/api/erp/sale/order'
 import SaleOrderItemForm from './components/SaleOrderItemForm.vue'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import * as UserApi from '@/api/system/user'
 
