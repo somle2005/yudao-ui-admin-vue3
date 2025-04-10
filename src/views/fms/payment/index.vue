@@ -132,7 +132,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:finance-payment:create']"
+          v-hasPermi="['fms:finance-payment:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -141,7 +141,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:finance-payment:export']"
+          v-hasPermi="['fms:finance-payment:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -149,7 +149,7 @@
           type="danger"
           plain
           @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['erp:finance-payment:delete']"
+          v-hasPermi="['fms:finance-payment:delete']"
           :disabled="selectionList.length === 0"
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
@@ -208,7 +208,7 @@
           <el-button
             link
             @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['erp:finance-payment:query']"
+            v-hasPermi="['fms:finance-payment:query']"
           >
             详情
           </el-button>
@@ -216,7 +216,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:finance-payment:update']"
+            v-hasPermi="['fms:finance-payment:update']"
             :disabled="scope.row.status === 20"
           >
             编辑
@@ -225,7 +225,7 @@
             link
             type="primary"
             @click="handleUpdateStatus(scope.row.id, 20)"
-            v-hasPermi="['erp:finance-payment:update-status']"
+            v-hasPermi="['fms:finance-payment:update-status']"
             v-if="scope.row.status === 10"
           >
             审批
@@ -234,7 +234,7 @@
             link
             type="danger"
             @click="handleUpdateStatus(scope.row.id, 10)"
-            v-hasPermi="['erp:finance-payment:update-status']"
+            v-hasPermi="['fms:finance-payment:update-status']"
             v-else
           >
             反审批
@@ -243,7 +243,7 @@
             link
             type="danger"
             @click="handleDelete([scope.row.id])"
-            v-hasPermi="['erp:finance-payment:delete']"
+            v-hasPermi="['fms:finance-payment:delete']"
           >
             删除
           </el-button>

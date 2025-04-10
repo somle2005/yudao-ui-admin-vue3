@@ -191,7 +191,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:finance-subject:create']"
+          v-hasPermi="['fms:finance-subject:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -200,7 +200,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:finance-subject:export']"
+          v-hasPermi="['fms:finance-subject:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -251,7 +251,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:finance-subject:update']"
+            v-hasPermi="['fms:finance-subject:update']"
           >
             编辑
           </el-button>
@@ -259,7 +259,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:finance-subject:delete']"
+            v-hasPermi="['fms:finance-subject:delete']"
           >
             删除
           </el-button>

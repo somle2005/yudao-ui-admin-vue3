@@ -22,36 +22,36 @@ export interface FinanceSubjectVO {
 export const FinanceSubjectApi = {
   // 查询Erp财务主体分页
   getFinanceSubjectPage: async (params: any) => {
-    return await request.get({ url: `/erp/finance-subject/page`, params })
+    return await request.get({ url: `/fms/finance-subject/page`, params })
   },
 
   // 查询结算账户精简列表
   getFinanceSubjectSimpleList: async () => {
-    return await request.get({ url: `/erp/finance-subject/simple-list` })
+    return await request.get({ url: `/fms/finance-subject/simple-list` })
   },
 
   // 查询Erp财务主体详情
   getFinanceSubject: async (id: number) => {
-    return await request.get({ url: `/erp/finance-subject/get?id=` + id })
+    return await request.get({ url: `/fms/finance-subject/get?id=` + id })
   },
 
   // 新增Erp财务主体
   createFinanceSubject: async (data: FinanceSubjectVO) => {
-    return await request.post({ url: `/erp/finance-subject/create`, data })
+    return await request.post({ url: `/fms/finance-subject/create`, data })
   },
 
   // 修改Erp财务主体
   updateFinanceSubject: async (data: FinanceSubjectVO) => {
-    return await request.put({ url: `/erp/finance-subject/update`, data })
+    return await request.put({ url: `/fms/finance-subject/update`, data })
   },
 
   // 删除Erp财务主体
   deleteFinanceSubject: async (id: number) => {
-    return await request.delete({ url: `/erp/finance-subject/delete?id=` + id })
+    return await request.delete({ url: `/fms/finance-subject/delete?id=` + id })
   },
 
   // 导出Erp财务主体 Excel
   exportFinanceSubject: async (params) => {
-    return await request.download({ url: `/erp/finance-subject/export-excel`, params })
+    return await request.download({ url: `/fms/finance-subject/export-excel`, params })
   }
 }
