@@ -1,7 +1,7 @@
 <template>
   <!-- scroll max-height="500px" -->
   <Dialog width="800px" class="productForm-dialog" :title="dialogTitle" v-model="dialogVisible">
-    <div class="editBtn" v-if="formDisabled">
+    <div class="editBtn" v-if="formDisabled" v-hasPermi="['erp:product:query']">
       <el-button type="primary" @click="detailEdit">编辑</el-button>
     </div>
     <el-form

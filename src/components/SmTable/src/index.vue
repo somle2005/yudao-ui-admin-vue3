@@ -6,11 +6,22 @@
       :stripe="stripe"
       :showOverflowTooltip="showOverflowTooltip"
       :data="tableData"
+      :border="border"
       v-bind="TableAttrs()"
       @row-click="rowClick"
       class="SmTable-el-table"
     >
       <el-table-column v-if="isSelection" fixed="left" width="30" label="选择" type="selection" />
+      <!-- 后期可以补充oneSelectionAttrs进行扩展 -->
+      <el-table-column v-if="oneSelection" fixed="left" align="center" width="40">
+        <template #default="scope">
+          <el-radio
+            :value="scope.row.id"
+            v-model="currentRowValue"
+            @change="handleCurrentChange(scope.row)"
+          />
+        </template>
+      </el-table-column>
       <template v-for="(item, index) in tableOption" :key="index">
         <el-table-column
           v-if="item.prop && !item.action"
@@ -25,6 +36,10 @@
           <template v-if="item.slot" #default="scope">
             <template v-if="scope.row.rowEdit">
               <el-input v-model="scope.row[item.prop!]" size="small" />
+            </template>
+            
+            <template v-else-if="item.dictAttrs">
+              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
             </template>
 
             <template v-else-if="item.wrap">
@@ -104,24 +119,22 @@ const pageAttrs = () => {
   pageProps.forEach((item) => {
     obj[item] = pageAttrs[item]
   })
-  console.log(pageAttrs, 'useAttrs-useAttrs')
+  // console.log(pageAttrs, 'useAttrs-useAttrs')
   return obj
   // return Object.assign({ total: 0 }, pageAttrs)
 }
 
 const TableAttrs = () => {
   const attrs = useAttrs() || {}
-  const obj:any = {}
+  const obj: any = {}
   const filterAttrs = ['style']
-  for(let key in attrs) {
+  for (let key in attrs) {
     if (!filterAttrs.includes(key)) {
       obj[key] = attrs[key]
     }
   }
   return obj
 }
-
-
 
 const columnItem = (item) => {
   const list = ['label', 'prop', 'width', 'align', 'formatter']
@@ -135,6 +148,11 @@ const columnItem = (item) => {
 }
 
 const props = defineProps({
+  // 是否开启单选
+  oneSelection: {
+    type: Boolean,
+    default: false
+  },
   // 是否开启选择列
   isSelection: {
     type: Boolean,
@@ -154,6 +172,11 @@ const props = defineProps({
   data: {
     type: Array,
     required: true
+  },
+  // 是否开启
+  border: {
+    type: Boolean,
+    default: true
   },
   // 是否为斑马纹
   stripe: {
@@ -187,7 +210,13 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['confirm', 'cancel', 'update:editRowType', 'row-click'])
+const emits = defineEmits([
+  'confirm',
+  'cancel',
+  'update:editRowType',
+  'row-click',
+  'oneSelectionChange'
+])
 
 // 当前被点击的单元格的标识
 const currentEdit = ref<string>('')
@@ -255,6 +284,14 @@ const rowClick = (row: any, column: any) => {
   //   // 重置按钮的标识
   //   if (!row.rowEdit) emits('update:editRowType', '')
   // }
+}
+
+/** 选中行 */
+const currentRowValue = ref(undefined) // 选中行的 value
+const currentRow = ref(undefined) // 选中行
+const handleCurrentChange = (row) => {
+  currentRow.value = row
+  emits('oneSelectionChange', row)
 }
 </script>
 

@@ -5,9 +5,45 @@ export const toLine = (value: string) => {
   return value.replace(/(A-Z)g/, '-$1').toLocaleLowerCase()
 }
 
+const resolveConfig = (tableOption, config) => {
+  // 有些是计算属性computed 需要拿到接口后才能拿到 所以 暂定1200
+  // const totalWidth = tableOption.reduce((prev, cur) => {
+  //   let curWidth = 0
+  //   if(cur?.width) {
+  //     curWidth = Number(cur.width.replace('px', ''))
+  //   }
+  //   return prev + curWidth
+  // },0)
+  if (window.innerWidth > 1200 && config?.noWidth) {
+    tableOption.forEach((item) => {
+      if (!item.noWidth) {
+        item.width = undefined
+      }
+    })
+  }
+
+  if (config?.allWrap) {
+    tableOption.forEach((item) => {
+      const allWrapIgnoreList = config.allWrapIgnoreList || []
+      allWrapIgnoreList.push(...['operate'])
+      if (allWrapIgnoreList.includes(item.prop)) return
+
+      const propertyList = ['dictAttrs']
+      const flag = propertyList.some((a) => item[a])
+      if (flag) return
+
+      item.slot = item.prop
+      item.wrap = true
+      if (!item.noWidth) {
+        item.width = '200px'
+      }
+    })
+  }
+}
+
 export const transformTableOptions = (
   fieldMap: { [key: string]: any },
-  config?: { [key: string]: any },
+  config?: { [key: string]: any }
 ) => {
   const tableOption: Array<TableOptions> = []
 
@@ -21,43 +57,20 @@ export const transformTableOptions = (
     if (fieldMap[key] instanceof Object) {
       Object.assign(obj, fieldMap[key])
       // 打赏自动设置宽度的标记
-      if(!fieldMap.width) {
+      if (!fieldMap.width) {
         obj.noWidth = true
+      }
+      // 只能对时间字段-时间戳进行排序
+      if (fieldMap[key].formatter) {
+        obj.sortable = true
       }
     }
     tableOption.push(obj)
   }
-  // 有些是计算属性computed 需要拿到接口后才能拿到 所以 暂定1200
-  // const totalWidth = tableOption.reduce((prev, cur) => {
-  //   let curWidth = 0
-  //   if(cur?.width) {
-  //     curWidth = Number(cur.width.replace('px', ''))
-  //   }
-  //   return prev + curWidth
-  // },0)
-  if(window.innerWidth > 1200 && config?.noWidth) { 
-    tableOption.forEach(item => {
-      if(!item.noWidth) {
-        item.width = undefined
-      }
-    })
-  }
-  return tableOption
-}
 
-export const dealTableField = (data, tableOptions) => {
-  // 传递过来的数据已经排好序了
-  const list = data.filter((item) => item.isEnable)
-  const filterData: any = []
-  list.forEach((item) => {
-    const source = tableOptions.find((option) => option.prop === item.prop)
-    if (!source) return
-    const obj = Object.assign(source, item)
-    filterData.push(obj)
-  })
-  // console.log(data,'获取原先传递的数据格式-tableOptions数据', tableOptions)
-  // console.log(filterData,'filterData')
-  return filterData
+  resolveConfig(tableOption, config)
+
+  return tableOption
 }
 
 export const useTableData = () => {
@@ -67,7 +80,6 @@ export const useTableData = () => {
   return {
     allTableOptions,
     tableOptions,
-    transformTableOptions,
-    dealTableField
+    transformTableOptions
   }
 }

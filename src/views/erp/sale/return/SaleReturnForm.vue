@@ -180,7 +180,7 @@
 import { SaleReturnApi, SaleReturnVO } from '@/api/erp/sale/return'
 import SaleReturnItemForm from './components/SaleReturnItemForm.vue'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
-import { AccountApi, AccountVO } from '@/api/erp/finance/account'
+import { AccountApi, AccountVO } from '@/api/fms/account'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import SaleOrderReturnEnableList from '@/views/erp/sale/order/components/SaleOrderReturnEnableList.vue'
 import { SaleOrderVO } from '@/api/erp/sale/order'

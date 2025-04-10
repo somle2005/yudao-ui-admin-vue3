@@ -61,13 +61,12 @@ const emits = defineEmits(['closeDialog'])
 const closeDialog = () => {
   emits('closeDialog')
 }
-
 </script>
 
 <template>
   <ElDialog
     v-bind="getBindValue"
-    :close-on-click-modal="true"
+    :close-on-click-modal="false"
     :fullscreen="isFullscreen"
     :width="width"
     destroy-on-close
@@ -75,7 +74,7 @@ const closeDialog = () => {
     draggable
     class="com-dialog"
     :show-close="false"
-    @close ="closeDialog"
+    @close="closeDialog"
   >
     <template #header="{ close }">
       <div class="relative h-54px flex items-center justify-between pl-15px pr-15px">

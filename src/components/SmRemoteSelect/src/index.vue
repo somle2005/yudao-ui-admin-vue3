@@ -33,8 +33,28 @@ defineOptions({ name: 'SmRemoteSelect' })
           :keyMap="{value: 'id', label: 'barCode'}"
           searchKey="barCode"
           @keyup.enter="()=>console.log('enter')"
-          
+          class="!w-240px"
         />
+  测试v-bind="item.attrs" 是否能够生效
+    const obj = {
+    componentType: 'sm-remote-select',
+    prop: 'productId',
+    attrs: {
+    api:ProductApi.getProductSimpleList,
+    keyMap:{value: 'id', label: 'barCode'},
+     placeholder:"请选择SKU",
+     clearable: false, // 能够生效
+     class:"!w-240px",
+    },
+    events: {
+      'keyup.enter': (e, item) => {
+        handleQuery()
+        console.log(e, '回车事件出发了', item)
+      }
+    }
+  }
+  }
+  // 测试事件events可以生效 接口api可以监听调用  clearable class可以进行item.attrs进行透传生效 且每次打开弹窗都会初始化接口请求数据
  */
 
 const props = defineProps({
@@ -119,8 +139,6 @@ watch(
 watch(
   () => bindVal.value,
   (val) => {
-
-
     // 后端如果没有做existList 这里需要并发请求 确保id一定在回显数据里面
     const { api, idKey } = props
     // 初始化的时候回显加数据
@@ -128,7 +146,7 @@ watch(
       .then((res) => {
         const keyMap = props.keyMap
         const { label, value } = keyMap
-        const target  = res[0]
+        const target = res[0]
         target.label = target[label]
         target.value = target[value]
         selectList.value.unshift(target)
@@ -173,7 +191,7 @@ const remoteMethod = (query) => {
         return item
       })
 
-      appendSearch(query) 
+      appendSearch(query)
     })
     .catch((e) => {
       console.log(e, '数据加载报错')
