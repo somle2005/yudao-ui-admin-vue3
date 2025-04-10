@@ -383,7 +383,7 @@
           link
           type="primary"
           @click="handleUpdateStatus(scope.row.id, 20,true)"
-          v-hasPermi="['srm:purchase-request:audit-status']"
+          v-hasPermi="['srm:purchase-request:review-status']"
           v-if="![5,20].includes(scope.row.status)"
         >
           审核
@@ -393,7 +393,7 @@
           link
           type="danger"
           @click="handleUpdateStatus(scope.row.id,5,false)"
-          v-hasPermi="['srm:purchase-request:audit-status']"
+          v-hasPermi="['srm:purchase-request:review-status']"
           v-if="scope.row.status === 20"
         >
           反审核
