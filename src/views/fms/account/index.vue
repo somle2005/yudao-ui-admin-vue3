@@ -135,7 +135,7 @@ import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 import AccountForm from './AccountForm.vue'
 
 /** ERP 结算账户 列表 */
-defineOptions({ name: 'ErpAccount' })
+defineOptions({ name: 'FmsAccount' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化

@@ -13,18 +13,18 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="付款单号" prop="no">
+      <el-form-item label="收款单号" prop="no">
         <el-input
           v-model="queryParams.no"
-          placeholder="请输入付款单号"
+          placeholder="请输入收款单号"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="付款时间" prop="paymentTime">
+      <el-form-item label="收款时间" prop="receiptTime">
         <el-date-picker
-          v-model="queryParams.paymentTime"
+          v-model="queryParams.receiptTime"
           value-format="YYYY-MM-DD HH:mm:ss"
           type="daterange"
           start-placeholder="开始日期"
@@ -81,12 +81,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="付款账户" prop="accountId">
+      <el-form-item label="收款账户" prop="accountId">
         <el-select
           v-model="queryParams.accountId"
           clearable
           filterable
-          placeholder="请选择付款账户"
+          placeholder="请选择收款账户"
           class="!w-240px"
         >
           <el-option
@@ -132,7 +132,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:finance-payment:create']"
+          v-hasPermi="['erp:finance-receipt:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -141,7 +141,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:finance-payment:export']"
+          v-hasPermi="['erp:finance-receipt:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -149,7 +149,7 @@
           type="danger"
           plain
           @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['erp:finance-payment:delete']"
+          v-hasPermi="['erp:finance-receipt:delete']"
           :disabled="selectionList.length === 0"
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
@@ -168,20 +168,20 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column width="30" label="选择" type="selection" />
-      <el-table-column min-width="180" label="付款单号" align="center" prop="no" />
+      <el-table-column min-width="180" label="收款单号" align="center" prop="no" />
       <el-table-column label="供应商" align="center" prop="supplierName" />
       <el-table-column
-        label="付款时间"
+        label="收款时间"
         align="center"
-        prop="paymentTime"
+        prop="receiptTime"
         :formatter="dateFormatter2"
         width="120px"
       />
       <el-table-column label="创建人" align="center" prop="creatorName" />
       <el-table-column label="财务人员" align="center" prop="financeUserName" />
-      <el-table-column label="付款账户" align="center" prop="accountName" />
+      <el-table-column label="收款账户" align="center" prop="accountName" />
       <el-table-column
-        label="合计付款"
+        label="合计收款"
         align="center"
         prop="totalPrice"
         :formatter="erpPriceTableColumnFormatter"
@@ -193,9 +193,9 @@
         :formatter="erpPriceTableColumnFormatter"
       />
       <el-table-column
-        label="实际付款"
+        label="实际收款"
         align="center"
-        prop="paymentPrice"
+        prop="receiptPrice"
         :formatter="erpPriceTableColumnFormatter"
       />
       <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">
@@ -208,7 +208,7 @@
           <el-button
             link
             @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['erp:finance-payment:query']"
+            v-hasPermi="['erp:finance-receipt:query']"
           >
             详情
           </el-button>
@@ -216,7 +216,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:finance-payment:update']"
+            v-hasPermi="['erp:finance-receipt:update']"
             :disabled="scope.row.status === 20"
           >
             编辑
@@ -225,7 +225,7 @@
             link
             type="primary"
             @click="handleUpdateStatus(scope.row.id, 20)"
-            v-hasPermi="['erp:finance-payment:update-status']"
+            v-hasPermi="['erp:finance-receipt:update-status']"
             v-if="scope.row.status === 10"
           >
             审批
@@ -234,7 +234,7 @@
             link
             type="danger"
             @click="handleUpdateStatus(scope.row.id, 10)"
-            v-hasPermi="['erp:finance-payment:update-status']"
+            v-hasPermi="['erp:finance-receipt:update-status']"
             v-else
           >
             反审批
@@ -243,7 +243,7 @@
             link
             type="danger"
             @click="handleDelete([scope.row.id])"
-            v-hasPermi="['erp:finance-payment:delete']"
+            v-hasPermi="['erp:finance-receipt:delete']"
           >
             删除
           </el-button>
@@ -260,35 +260,35 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <FinancePaymentForm ref="formRef" @success="getList" />
+  <FinanceReceiptForm ref="formRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { FinancePaymentApi, FinancePaymentVO } from '@/api/erp/finance/payment'
-import FinancePaymentForm from './FinancePaymentForm.vue'
+import { FinanceReceiptApi, FinanceReceiptVO } from '@/api/erp/finance/receipt'
+import FinanceReceiptForm from './FinanceReceiptForm.vue'
 import { UserVO } from '@/api/system/user'
 import * as UserApi from '@/api/system/user'
 import { erpPriceTableColumnFormatter } from '@/utils'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { AccountApi, AccountVO } from '@/api/erp/finance/account'
 
-/** ERP 付款单列表 */
-defineOptions({ name: 'ErpPurchaseOrder' })
+/** ERP 收款单列表 */
+defineOptions({ name: 'FmsReceipt' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<FinancePaymentVO[]>([]) // 列表的数据
+const list = ref<FinanceReceiptVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   no: undefined,
-  paymentTime: [],
+  receiptTime: [],
   supplierId: undefined,
   creator: undefined,
   financeUserId: undefined,
@@ -307,7 +307,7 @@ const accountList = ref<AccountVO[]>([]) // 账户列表
 const getList = async () => {
   loading.value = true
   try {
-    const data = await FinancePaymentApi.getFinancePaymentPage(queryParams)
+    const data = await FinanceReceiptApi.getFinanceReceiptPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -339,7 +339,7 @@ const handleDelete = async (ids: number[]) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await FinancePaymentApi.deleteFinancePayment(ids)
+    await FinanceReceiptApi.deleteFinanceReceipt(ids)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -351,9 +351,9 @@ const handleDelete = async (ids: number[]) => {
 const handleUpdateStatus = async (id: number, status: number) => {
   try {
     // 审批的二次确认
-    await message.confirm(`确定${status === 20 ? '审批' : '反审批'}该付款单吗？`)
+    await message.confirm(`确定${status === 20 ? '审批' : '反审批'}该收款单吗？`)
     // 发起审批
-    await FinancePaymentApi.updateFinancePaymentStatus(id, status)
+    await FinanceReceiptApi.updateFinanceReceiptStatus(id, status)
     message.success(`${status === 20 ? '审批' : '反审批'}成功`)
     // 刷新列表
     await getList()
@@ -367,8 +367,8 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await FinancePaymentApi.exportFinancePayment(queryParams)
-    download.excel(data, '付款单.xls')
+    const data = await FinanceReceiptApi.exportFinanceReceipt(queryParams)
+    download.excel(data, '收款单.xls')
   } catch {
   } finally {
     exportLoading.value = false
@@ -376,8 +376,8 @@ const handleExport = async () => {
 }
 
 /** 选中操作 */
-const selectionList = ref<FinancePaymentVO[]>([])
-const handleSelectionChange = (rows: FinancePaymentVO[]) => {
+const selectionList = ref<FinanceReceiptVO[]>([])
+const handleSelectionChange = (rows: FinanceReceiptVO[]) => {
   selectionList.value = rows
 }
 

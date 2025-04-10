@@ -308,7 +308,7 @@ tableOptions.value.forEach((item) => {
 })
 
 /** Erp财务主体 列表 */
-defineOptions({ name: 'ErpFinanceSubject' })
+defineOptions({ name: 'FmsSubject' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化

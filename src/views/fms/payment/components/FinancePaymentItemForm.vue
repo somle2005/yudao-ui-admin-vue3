@@ -62,22 +62,22 @@
     <el-button @click="handleOpenPurchaseReturn" round>+ 添加采购退货单</el-button>
   </el-row>
 
-  <!-- 可付款的【采购入库单】列表 -->
+<!--  <!~~ 可付款的【采购入库单】列表 ~~>
   <PurchaseInPaymentEnableList
     ref="purchaseInPaymentEnableListRef"
     @success="handleAddPurchaseIn"
   />
-  <!-- 可付款的【采购入库单】列表 -->
+  <!~~ 可付款的【采购入库单】列表 ~~>
   <PurchaseReturnRefundEnableList
     ref="purchaseReturnRefundEnableListRef"
     @success="handleAddPurchaseReturn"
-  />
+  />-->
 </template>
 <script setup lang="ts">
 import { ProductVO } from '@/api/erp/product/product'
 import { erpPriceInputFormatter, getSumValue } from '@/utils'
-import PurchaseInPaymentEnableList from '@/views/erp/purchase/in/components/PurchaseInPaymentEnableList.vue'
-import PurchaseReturnRefundEnableList from '@/views/erp/purchase/return/components/PurchaseReturnRefundEnableList.vue'
+// import PurchaseInPaymentEnableList from '@/views/erp/purchase/in/components/PurchaseInPaymentEnableList.vue'
+// import PurchaseReturnRefundEnableList from '@/views/erp/purchase/return/components/PurchaseReturnRefundEnableList.vue'
 import { PurchaseInVO } from '@/api/srm/in'
 import { ErpBizType } from '@/utils/constants'
 import { PurchaseReturnVO } from '@/api/srm/return'
