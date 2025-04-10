@@ -95,7 +95,7 @@
       @selection-change="handleSelectionChange"
     >
       <template #auditStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.auditStatus || ''" />
+        <dict-tag :type="DICT_TYPE.SRM_AUDIT_STATUS" :value="scope.row.auditStatus || ''" />
       </template>
 
       <template #orderStatus="{ scope }">

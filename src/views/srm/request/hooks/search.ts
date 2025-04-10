@@ -115,7 +115,7 @@ export const useSearchForm = (handleQuery) => {
           width: '100%'
         }
       },
-      children: getDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)
+      children: getDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
     },
 
     {

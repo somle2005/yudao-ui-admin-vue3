@@ -150,7 +150,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)
+      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
     },
     // refundStatus退款状态
   ])

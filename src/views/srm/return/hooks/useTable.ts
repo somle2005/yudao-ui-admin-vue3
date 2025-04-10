@@ -50,13 +50,13 @@ export const useTable = () => {
     auditStatus: {
       label: '审核状态',
       slot: 'auditStatus',
-      dictAttrs: { type: DICT_TYPE.ERP_AUDIT_STATUS }
+      dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
     refundStatus: {
       label: '退款状态', // 缺后端字典
       slot: 'refundStatus',
-      dictAttrs: { type: DICT_TYPE.ERP_AUDIT_STATUS }
+      dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
     

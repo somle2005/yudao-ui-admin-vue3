@@ -217,7 +217,6 @@ export enum DICT_TYPE {
   CRM_CLIENT_TAG = 'crm_client_tag', // CRM 客户标签
 
   // ========== ERP - 企业资源计划模块  ==========
-  ERP_AUDIT_STATUS = 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE = 'erp_stock_record_biz_type', // 库存明细的业务类型
   SYSTEM_FILED = 'system_field',
   COUNTRY_CODE = 'country_code', //国别代码
@@ -262,10 +261,6 @@ export enum DICT_TYPE {
   SRM_STORAGE_STATUS = 'srm_storage_status', // SRM 采购入库状态
   SRM_ORDER_STATUS = 'srm_order_status', // SRM 采购订购状态
   SRM_PAYMENT_STATUS = 'srm_payment_status', // SRM 采购付款状态
-  SRM_OFF_STATUS = 'srm_off_status', //   SRM 开关状态
-
-
-
-
+  SRM_OFF_STATUS = 'srm_off_status', // SRM 开关状态
+  SRM_AUDIT_STATUS = 'srm_audit_status' // SRM 审批状态
 }
-

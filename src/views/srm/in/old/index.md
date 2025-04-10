@@ -139,7 +139,7 @@
           class="!w-240px"
         >
           <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)"
+            v-for="dict in getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -243,7 +243,7 @@
       </el-table-column>
       <el-table-column label="审核状态" align="center" fixed="right" width="90" prop="status">
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status" />
+          <dict-tag :type="DICT_TYPE.SRM_AUDIT_STATUS" :value="scope.row.status" />
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" fixed="right" width="220">
