@@ -57,7 +57,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['srm:purchase-order:submitAudit']"
+          v-hasPermi="['srm:purchase-order:submit-audit']"
         >
           提交审核
         </el-button>
@@ -77,7 +77,7 @@
           type="primary"
           plain
           @click="generateContractOrder"
-          v-hasPermi="['srm:purchase-order:generateContract']"
+          v-hasPermi="['srm:purchase-order:generate-contract']"
         >
           生成采购合同
         </el-button>
@@ -141,7 +141,7 @@
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
-          v-hasPermi="['srm:purchase-order:audit']"
+          v-hasPermi="['srm:purchase-order:review']"
           v-if="[3].includes(scope.row.auditStatus)"
         >
           审核
@@ -150,7 +150,7 @@
           link
           type="danger"
           @click="handleUpdateStatus(scope.row, false)"
-          v-hasPermi="['srm:purchase-order:audit']"
+          v-hasPermi="['srm:purchase-order:review']"
           v-if="scope.row.auditStatus === 5"
         >
           反审核
