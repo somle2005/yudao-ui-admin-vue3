@@ -227,7 +227,7 @@ const fieldMap = {
   payStatus: {
     label: '付款状态',
     slot: 'payStatus',
-    dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
+    dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
   },
   offStatus: {
     label: '关闭状态',
@@ -277,7 +277,7 @@ const fieldMap = {
   rowPayStatus: {
     label: '行付款状态',
     slot: 'rowPayStatus',
-    dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS },
+    dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowOffStatus: {

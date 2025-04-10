@@ -52,7 +52,7 @@ export const useTable = () => {
     payStatus: {
       label: '付款状态',
       slot: 'payStatus',
-      dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS }
+      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
     },
     reconciliationStatus: {
       label: '对账状态',
@@ -61,7 +61,7 @@ export const useTable = () => {
     rowPayStatus: {
       label: '行付款状态',
       slot: 'rowPayStatus',
-      dictAttrs: { type: DICT_TYPE.ERP_PAYMENT_STATUS },
+      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
     // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
