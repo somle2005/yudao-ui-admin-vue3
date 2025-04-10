@@ -126,9 +126,9 @@ const updateActualQuantityFormOptions = () => {
     {
       requiredFlag: true,
       type: 'select',
-      placeholder: '请选择财务公司',
+      placeholder: '请选择库存主体',
       prop: 'companyId',
-      label: '财务公司',
+      label: '库存主体',
       attrs: {
         filterable: true,
         clearable: true,

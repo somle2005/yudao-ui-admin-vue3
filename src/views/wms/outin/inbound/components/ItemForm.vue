@@ -15,7 +15,7 @@
       <el-table :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="180">
+        <el-table-column label="产品编码" width="250">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -45,17 +45,53 @@
 
         <el-table-column label="计划入库量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.planQty`"
-              :rules="formRules.planQty"
-              class="mb-0px!"
-            >
+            <el-form-item :prop="`${$index}.planQty`" :rules="formRules.planQty" class="mb-0px!">
               <el-input-number
                 v-model="row.planQty"
                 controls-position="right"
                 :min="0"
                 class="!w-100%"
               />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        
+        <el-table-column v-if="auditShow" label="实际入库量" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
+              <el-input-number
+                v-model="row.actualQty"
+                controls-position="right"
+                :min="0"
+                class="!w-100%"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="库存归属" width="250">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.deptId`">
+              <el-tree-select
+                class="!w-100%"
+                v-model="row.deptId"
+                :data="deptList"
+                :props="defaultProps"
+                check-strictly
+                node-key="id"
+                placeholder="请选择库存归属"
+                filterable
+                clearable
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="备注" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input v-model="row.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -90,7 +126,7 @@
       </el-table>
     </el-form>
     <el-row justify="center" class="mt-3" v-if="!disabled">
-      <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
+      <el-button @click="handleAdd" round>+ 添加入库产品</el-button>
     </el-row>
   </div>
 </template>
@@ -102,7 +138,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { getProductList } from '@/commonData'
+import { getProductList,getDeptTree } from '@/commonData'
 import { updateModelValue } from '@/utils/high/index'
 
 const props = defineProps({
@@ -123,7 +159,8 @@ const props = defineProps({
   }
 })
 
-const updateShow = computed(() => props.formType === 'update')
+const { deptList, defaultProps } = getDeptTree()
+const auditShow = computed(() => props.formType === 'audit')
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])

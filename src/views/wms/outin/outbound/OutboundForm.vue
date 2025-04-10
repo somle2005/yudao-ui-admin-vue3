@@ -158,7 +158,7 @@ const createRequestFormOptions = () => {
 10-不良品数量-必填-缺少
 11-备注-缺少
 12-状态（主页)-系统打出-必填- 找不到字段-难道是 outboundStatus出库状态 
-13-库存主体-带出/选择   companyId-库存财务公司ID 这个数据哪里拉出来
+13-库存主体-带出/选择   companyId-库存库存主体ID 这个数据哪里拉出来
 14-dept-库存归属-带出/选择  deptId-库存归属部门ID 这个数据哪里拉出来
 
 13-操作人-系统带出

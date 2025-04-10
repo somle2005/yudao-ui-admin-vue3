@@ -69,7 +69,8 @@ import { cloneDeep } from 'lodash-es'
 import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { AUDIT_TYPE } from '@/utils/constant'
-import { getLastListProp } from '@/utils/transformData'
+import { filterObjKey, getLastListProp } from '@/utils/transformData'
+import { InboundItemApi } from '@/api/wms/inbound-item'
 
 // import { useOutData } from './components/hooks/outdata'
 
@@ -109,10 +110,6 @@ const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
 const financeSubjectList = ref<FinanceSubjectVO[]>([])
-let { defaultProps, deptList } = {
-  defaultProps: {},
-  deptList: [] as any
-}
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -170,9 +167,9 @@ const createRequestFormOptions = () => {
     {
       requiredFlag: true,
       type: 'select',
-      placeholder: '请选择财务公司',
+      placeholder: '请选择库存主体',
       prop: 'companyId',
-      label: '财务公司',
+      label: '库存主体',
       attrs: {
         filterable: true,
         clearable: true,
@@ -181,21 +178,6 @@ const createRequestFormOptions = () => {
         }
       },
       children: financeSubjectList
-    },
-    {
-      requiredFlag: true,
-      type: 'tree-select',
-      placeholder: '请选择申请部门',
-      prop: 'deptId',
-      label: '申请部门',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        data: deptList,
-        props: defaultProps,
-        'check-strictly': true,
-        'node-key': 'id'
-      }
     },
     {
       type: 'input',
@@ -208,7 +190,6 @@ const createRequestFormOptions = () => {
       }
     },
     {
-      requiredFlag: true,
       type: 'select',
       placeholder: '请选择运输方式',
       prop: 'shippingMethod',
@@ -309,10 +290,6 @@ const open = async (type: string, id?: number) => {
   formType.value = type
   resetForm()
 
-  const deptObj = getDeptTree()
-  defaultProps = deptObj.defaultProps
-  deptList = deptObj.deptList
-
   getFinanceSubjectList(financeSubjectList)
   getWMSWarehouseList(WMSWarehouseList)
 
@@ -335,7 +312,7 @@ const open = async (type: string, id?: number) => {
     try {
       const data = await InboundApi.getInbound(id)
       data.comment = getLastListProp(data.approvalHistoryList, 'comment')
-      formData.value  = data
+      formData.value = data
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {
@@ -354,7 +331,7 @@ const submitForm = async (type?: string) => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as InboundVO
+    const data = formData.value as unknown as InboundVO as any
     if (itemFormRef?.value?.formData) {
       data.itemList = cloneDeep(itemFormRef.value.formData)
     }
@@ -366,6 +343,10 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
       if (type === AUDIT_TYPE.agree) {
+        const queryData = data.itemList.map((item) =>
+          filterObjKey(item, ['actualQty', 'id', 'inboundId'])
+        )
+        await InboundItemApi.updateInboundItemActualQuantity(queryData)
         await InboundApi.agreeInboundAuditStatus({ billId: data.id, comment: data.comment })
       } else if (type === AUDIT_TYPE.reject) {
         await InboundApi.rejectInboundAuditStatus({ billId: data.id, comment: data.comment })
