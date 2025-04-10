@@ -7,7 +7,6 @@
       v-loading="formLoading"
       label-width="0px"
       :inline-message="true"
-      :disabled="disabled"
     >
       <!-- show-summary :summary-method="getSummaries" -->
       <!-- sourceItemId-来源详情ID  -->
@@ -21,7 +20,6 @@
               :prop="`${$index}.productId`"
               :rules="formRules.productId"
               class="mb-0px!"
-              :disabled="disabled"
             >
               <SmSelect
                 :disabled="disabled"
@@ -43,10 +41,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="计划入库量" width="120">
+        <el-table-column label="数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" :rules="formRules.planQty" class="mb-0px!">
               <el-input-number
+                :disabled="disabled"
                 v-model="row.planQty"
                 controls-position="right"
                 :min="0"
@@ -56,8 +55,7 @@
           </template>
         </el-table-column>
 
-        
-        <el-table-column v-if="auditShow" label="实际入库量" width="120">
+        <!-- <el-table-column v-if="auditShow" label="实际入库量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
@@ -68,12 +66,13 @@
               />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="库存归属" width="250">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
+                :disabled="disabled"
                 class="!w-100%"
                 v-model="row.deptId"
                 :data="deptList"
@@ -91,7 +90,12 @@
         <el-table-column label="备注" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-              <el-input v-model="row.remark" placeholder="请输入备注" type="textarea" />
+              <el-input
+                :disabled="disabled"
+                v-model="row.remark"
+                placeholder="请输入备注"
+                type="textarea"
+              />
             </el-form-item>
           </template>
         </el-table-column>
@@ -138,7 +142,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { getProductList,getDeptTree } from '@/commonData'
+import { getProductList, getDeptTree } from '@/commonData'
 import { updateModelValue } from '@/utils/high/index'
 
 const props = defineProps({
@@ -166,7 +170,7 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  planQty: [{ required: true, message: '计划入库量不能为空', trigger: 'blur' }]
+  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
