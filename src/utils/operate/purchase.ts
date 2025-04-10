@@ -1,5 +1,5 @@
-import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
-import { CustomProductApi } from '@/api/erp/logistic/custom-product'
+import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
+import { CustomProductApi } from '@/api/tms/custom-product'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 const message = useMessage() // 消息弹窗
