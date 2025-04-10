@@ -190,7 +190,7 @@ export const useTable = () => {
     // rowOffStatus: {
     //   label: '行关闭状态',
     //   slot: 'rowOffStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_OFF_STATUS },
+    //   dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
 

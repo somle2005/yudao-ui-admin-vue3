@@ -258,7 +258,7 @@ export const useApplicantTable = () => {
           width: '100%'
         }
       },
-      children: getDictOptions(DICT_TYPE.ERP_OFF_STATUS)
+      children: getDictOptions(DICT_TYPE.SRM_OFF_STATUS)
     },
     {
       type: 'select',

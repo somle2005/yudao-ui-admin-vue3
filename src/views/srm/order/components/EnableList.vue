@@ -40,7 +40,7 @@
         </template>
 
         <template #offStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.offStatus || ''" />
+          <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.offStatus || ''" />
         </template>
 
         <template #rowOrderStatus="{ scope }">
@@ -48,7 +48,7 @@
         </template>
 
         <template #rowOffStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+          <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
         </template>
       </SmTable>
     </ContentWrap>

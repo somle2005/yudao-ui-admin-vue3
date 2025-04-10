@@ -224,7 +224,6 @@ export enum DICT_TYPE {
   ERP_PATENT_TYPE = 'erp_patent_type', //专利类型
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
-  ERP_OFF_STATUS = 'erp_off_status', // 开关状态
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
   REPORT_MAP = 'report_map', // 报表地图
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
@@ -263,5 +262,10 @@ export enum DICT_TYPE {
   SRM_STORAGE_STATUS = 'srm_storage_status', // SRM 采购入库状态
   SRM_ORDER_STATUS = 'srm_order_status', // SRM 采购订购状态
   SRM_PAYMENT_STATUS = 'srm_payment_status', // SRM 采购付款状态
+  SRM_OFF_STATUS = 'srm_off_status', //   SRM 开关状态
+
+
+
+
 }
 
