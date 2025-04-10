@@ -131,13 +131,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
         min: 0
       }
     },
-    {
-      colConfig: { span: 24 },
-      slot: 'items',
-      formItemConfig: {
-        class: 'common-form-items'
-      }
-    }
   ])
 
   const events = {

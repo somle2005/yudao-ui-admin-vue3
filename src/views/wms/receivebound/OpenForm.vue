@@ -205,17 +205,6 @@ const updateActualQuantityFormOptions = () => {
       }
     },
     {
-      type: 'input-number',
-      label: '初始库龄',
-      prop: 'initAge',
-      placeholder: '请输入初始库龄',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true,
-        min: 0
-      }
-    },
-    {
       colConfig: { span: 24 },
       slot: 'items',
       formItemConfig: {
