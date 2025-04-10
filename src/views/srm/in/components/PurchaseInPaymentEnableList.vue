@@ -105,7 +105,7 @@ const fieldMap = {
   executeStatus: {
     label: '执行状态',
     slot: 'executeStatus',
-    dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS }
+    dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS }
   },
   inStatus: {
     label: '入库状态',
@@ -132,7 +132,7 @@ const fieldMap = {
   rowExecuteStatus: {
     label: '行执行状态',
     slot: 'rowExecuteStatus',
-    dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS },
+    dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   rowInStatus: {

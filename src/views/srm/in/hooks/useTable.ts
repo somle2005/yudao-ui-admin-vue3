@@ -172,7 +172,7 @@ export const useTable = () => {
     // rowExecuteStatus: {
     //   label: '行执行状态',
     //   slot: 'rowExecuteStatus',
-    //   dictAttrs: { type: DICT_TYPE.ERP_EXECUTE_STATUS },
+    //   dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
     // rowInStatus: {

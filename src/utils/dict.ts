@@ -233,9 +233,8 @@ export enum DICT_TYPE {
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
-  ERP_EXECUTE_STATUS = 'erp_execute_status', // 采购执行状态
   ERP_PORT_OF_LOADING = 'erp_port_of_loading', // 装运港
-  ERP_PORT_OF_DISCHARGE= 'erp_port_of_discharge', // 目的港
+  ERP_PORT_OF_DISCHARGE = 'erp_port_of_discharge', // 目的港
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台
@@ -259,5 +258,9 @@ export enum DICT_TYPE {
   IOT_PRODUCT_FUNCTION_TYPE = 'iot_product_function_type', // IOT 产品功能类型
   IOT_DATA_TYPE = 'iot_data_type', // IOT 数据类型
   IOT_UNIT_TYPE = 'iot_unit_type', // IOT 单位类型
-  IOT_RW_TYPE = 'iot_rw_type' // IOT 读写类型
+  IOT_RW_TYPE = 'iot_rw_type', // IOT 读写类型
+
+  // ========== SRM - 采购模块  ==========
+  SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态
+  SRM_EXECUTE_STATUS='srm_execute_status', // SRM 执行状态 
 }
