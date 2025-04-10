@@ -192,11 +192,6 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 
 onActivated(() => {
   const routeQuery = window.getRouteQuery && window.getRouteQuery()
-  if (routeQuery?.no) {
-    const { no } = routeQuery
-    queryParams.no = no
-    queryFormRef.value.initForm()
-  }
   if (routeQuery?.routeJump) {
     setTimeout(() => openForm('create'), 500)
   }

@@ -220,8 +220,14 @@ const handleExport = async () => {
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 
-/** 初始化 **/
-onMounted(() => {
+onActivated(() => {
+  const routeQuery = window.getRouteQuery && window.getRouteQuery()
+  if (routeQuery?.no) {
+    const { no } = routeQuery
+    queryParams.no = no
+    queryFormRef.value.initForm()
+  }
   getList()
 })
+
 </script>
