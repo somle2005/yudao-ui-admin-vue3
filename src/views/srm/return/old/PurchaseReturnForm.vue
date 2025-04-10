@@ -171,7 +171,7 @@ import PurchaseReturnItemForm from './components/PurchaseReturnItemForm.vue'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { AccountApi, AccountVO } from '@/api/fms/account'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
-import PurchaseOrderReturnEnableList from '@/views/erp/purchase/order/components/PurchaseOrderReturnEnableList.vue'
+import PurchaseOrderReturnEnableList from '@/views/srm/order/components/PurchaseOrderReturnEnableList.vue'
 import { PurchaseOrderVO } from '@/api/srm/order'
 import * as UserApi from '@/api/system/user'
 
