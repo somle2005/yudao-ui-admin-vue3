@@ -8,16 +8,28 @@
       v-loading="formLoading"
     >
       <el-form-item label="人民币采购条款" prop="paymentTermCn">
-        <el-input v-model="formData.paymentTermCn" placeholder="请输入人民币采购条款" />
+        <el-input
+          type="textarea"
+          v-model="formData.paymentTermCn"
+          placeholder="请输入人民币采购条款"
+        />
       </el-form-item>
       <el-form-item label="外币采购条款(中文)" prop="paymentTermCnForeign">
-        <el-input v-model="formData.paymentTermCnForeign" placeholder="请输入外币采购条款(中文)" />
+        <el-input
+          type="textarea"
+          v-model="formData.paymentTermCnForeign"
+          placeholder="请输入外币采购条款(中文)"
+        />
       </el-form-item>
       <el-form-item label="外币采购条款(英文)" prop="paymentTermEnForeign">
-        <el-input v-model="formData.paymentTermEnForeign" placeholder="请输入外币采购条款(英文)" />
+        <el-input
+          type="textarea"
+          v-model="formData.paymentTermEnForeign"
+          placeholder="请输入外币采购条款(英文)"
+        />
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input v-model="formData.remark" placeholder="请输入备注" />
+        <el-input type="textarea" v-model="formData.remark" placeholder="请输入备注" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -44,10 +56,10 @@ const formData = ref({
   paymentTermCn: undefined,
   paymentTermCnForeign: undefined,
   paymentTermEnForeign: undefined,
-  remark: undefined,
+  remark: undefined
 })
 const formRules = reactive({
-  paymentTermCn: [{ required: true, message: '人民币采购条款不能为空', trigger: 'blur' }],
+  paymentTermCn: [{ required: true, message: '人民币采购条款不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 
@@ -100,7 +112,7 @@ const resetForm = () => {
     paymentTermCn: undefined,
     paymentTermCnForeign: undefined,
     paymentTermEnForeign: undefined,
-    remark: undefined,
+    remark: undefined
   }
   formRef.value?.resetFields()
 }
