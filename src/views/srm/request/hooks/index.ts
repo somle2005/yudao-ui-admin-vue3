@@ -25,7 +25,7 @@ import { getPaymentTermsList } from '@/commonData/srm'
 
 申请人-applicant-下拉框(数据来源-/system/user/simple-list)
 申请部门-applicationDept-下拉框(数据来源-参照产品信息-部门下拉框)
-单据日期-requestTime-时间下拉单选(参照采购订单-订单时间)
+单据日期-billTime-时间下拉单选(参照采购订单-订单时间)
 供应商编号-supplierId-下拉框
 
 
@@ -69,7 +69,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
   for (const key in detail) {
     formData[key] = detail[key]
   }
-  // formData.requestTime = formatTime(formData.requestTime)
+  // formData.billTime = formatTime(formData.billTime)
   formData.items.forEach((item) => {
     // 批准数量默认值取申请数量
     if (formType === 'audit') {
@@ -84,7 +84,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
       modelValue[key] = formData[key]
     }
   })
-  // modelValue.requestTime = dayjs(1739016534000).format('YYYY-MM-DD HH:mm:ss')
+  // modelValue.billTime = dayjs(1739016534000).format('YYYY-MM-DD HH:mm:ss')
 }
 
 // 合并 合并采购时列表勾选中传递的items数据
@@ -144,7 +144,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       {
         type: 'date-picker',
         placeholder: '请选择单据日期',
-        prop: 'requestTime',
+        prop: 'billTime',
         label: '单据日期',
         attrs: {
           clearable: true,

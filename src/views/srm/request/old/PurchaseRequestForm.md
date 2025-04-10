@@ -15,9 +15,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="申请时间" prop="requestTime">
+          <el-form-item label="申请时间" prop="billTime">
             <el-date-picker
-              v-model="formData.requestTime"
+              v-model="formData.billTime"
               type="date"
               value-format="x"
               placeholder="选择申请时间"
@@ -117,7 +117,7 @@ const formData = ref({
   // supplierId: undefined,
   applicant: undefined,
   accountId: undefined,
-  requestTime: undefined,
+  billTime: undefined,
   remark: undefined,
   fileUrl: '',
   items: [],
@@ -125,7 +125,7 @@ const formData = ref({
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
-  requestTime: [{ required: true, message: '申请时间不能为空', trigger: 'blur' }]
+  billTime: [{ required: true, message: '申请时间不能为空', trigger: 'blur' }]
 })
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -198,7 +198,7 @@ const resetForm = () => {
     id: undefined,
     supplierId: undefined,
     accountId: undefined,
-    requestTime: undefined,
+    billTime: undefined,
     remark: undefined,
     fileUrl: undefined,
     discountPercent: 0,

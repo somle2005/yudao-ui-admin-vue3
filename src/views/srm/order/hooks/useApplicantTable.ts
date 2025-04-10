@@ -16,7 +16,7 @@ export const useApplicantTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
 
   const fieldMap = {
-    requestTime: {
+    billTime: {
       label: '单据日期',
       formatter: dateFormatter2, // 年月日-金蝶
       width: '180px'
@@ -121,7 +121,7 @@ export const useApplicantTable = () => {
   //   //   no: undefined,
   //   //   // supplierId: undefined,
   //   //   productId: undefined,
-  //   //   requestTime: [],
+  //   //   billTime: [],
   //   //   status: 5,
   //   //   remark: undefined,
   //   //   applicant: undefined,
@@ -197,7 +197,7 @@ export const useApplicantTable = () => {
     {
       type: 'date-picker',
       placeholder: '请选择单据日期',
-      prop: 'requestTime',
+      prop: 'billTime',
       label: '单据日期',
       attrs: {
         clearable: true,

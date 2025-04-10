@@ -189,7 +189,7 @@ const { tableOptions, transformTableOptions } = useTableData()
 const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 
 const fieldMap = {
-  requestTime: {
+  billTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '180px'
@@ -346,7 +346,7 @@ const queryParams = reactive({
   no: undefined,
   // supplierId: undefined,
   productId: undefined,
-  requestTime: [],
+  billTime: [],
   auditStatus: undefined,
   remark: undefined,
   applicant: undefined,

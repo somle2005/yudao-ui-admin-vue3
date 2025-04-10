@@ -39,7 +39,7 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'date-picker',
       placeholder: '请选择单据日期',
-      prop: 'requestTime',
+      prop: 'billTime',
       label: '单据日期',
       attrs: {
         clearable: true,

@@ -55,7 +55,7 @@ import { computeDiscountPriceAndTotalPrice } from '@/utils/transformData'
 
 const resetFormData = () => {
   return {
-    requestTime: undefined,
+    billTime: undefined,
     applicantId: undefined,
     applicationDeptId: undefined,
     supplierId: undefined,

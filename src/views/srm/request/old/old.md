@@ -33,9 +33,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="申请时间" prop="requestTime">
+      <el-form-item label="申请时间" prop="billTime">
         <el-date-picker
-          v-model="queryParams.requestTime"
+          v-model="queryParams.billTime"
           value-format="YYYY-MM-DD HH:mm:ss"
           type="daterange"
           start-placeholder="开始日期"
@@ -225,7 +225,7 @@
       <el-table-column
         label="申请时间"
         align="center"
-        prop="requestTime"
+        prop="billTime"
         :formatter="dateFormatter2"
         width="120px"
       />
@@ -532,7 +532,7 @@ import itemsForm from './itemsForm.vue'
 const { tableOptions, transformTableOptions } = useTableData()
 
 /**
-1-单据日期-有-requestTime
+1-单据日期-有-billTime
 2-单据编号-有-no
 3-申请人-有-applicant
 4-申请部门-有-applicationDept
@@ -561,7 +561,7 @@ const { tableOptions, transformTableOptions } = useTableData()
  */
 
 const fieldMap = {
-  requestTime: {
+  billTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '180px'
@@ -641,7 +641,7 @@ const queryParams = reactive({
   no: undefined,
   // supplierId: undefined,
   productId: undefined,
-  requestTime: [],
+  billTime: [],
   status: undefined,
   remark: undefined,
   applicant: undefined,
@@ -677,7 +677,7 @@ const getList = async () => {
     //     applicant: 'string',
     //     applicantName: '芋道',
     //     applicationDept: 'string',
-    //     requestTime: '2019-08-24T14:15:22.123Z',
+    //     billTime: '2019-08-24T14:15:22.123Z',
     //     status: 2,
     //     offStatus: 1,
     //     orderStatus: 1,
@@ -830,7 +830,7 @@ onMounted(async () => {
 
 const resetFormData = () => {
   return reactive({
-    requestTime: undefined,
+    billTime: undefined,
     applicant: undefined,
     applicationDept: undefined,
     supplierId: undefined,
