@@ -8,6 +8,7 @@ import { ElTreeSelect } from 'element-plus'
 import { SmRemoteSelect } from './SmRemoteSelect'
 import { SmRadioGroup } from './SmRadioGroup'
 import { SmSelect } from './SmSelect'
+import { SmRange } from './SmRange'
 
 
 export const setupGlobCom = (app: App<Element>): void => {
@@ -19,5 +20,6 @@ export const setupGlobCom = (app: App<Element>): void => {
   app.component('SmRemoteSelect', SmRemoteSelect)
   app.component('SmRadioGroup', SmRadioGroup)
   app.component('SmSelect', SmSelect)
+  app.component('SmRange', SmRange)
   // app.component('ElDatePicker', ElDatePicker)
 }
