@@ -5,7 +5,6 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const searchFormOptions = ref<Array<FormOptions>>([
-
     {
       type: 'input',
       label: '入库单号',
@@ -13,8 +12,23 @@ export const useSearchForm = (handleQuery, queryParams) => {
       placeholder: '请输入入库单号',
       attrs: {
         style: { width: '100%' },
-        clearable: true,
+        clearable: true
       }
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择状态',
+      prop: 'auditStatus',
+      label: '状态',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_AUDIT_STATUS)
     },
 
     {
@@ -60,7 +74,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
       placeholder: '请输入跟踪号',
       attrs: {
         style: { width: '100%' },
-        clearable: true,
+        clearable: true
       }
     },
     {
@@ -119,7 +133,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
         style: { width: '100%' },
         clearable: true
       }
-    },
+    }
     // {
     //   type: 'input-number',
     //   label: '初始库龄',

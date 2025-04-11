@@ -173,7 +173,6 @@ const exportLoading = ref(false) // 导出的加载中
 
 /** 查询列表 */
 const getList = async () => {
-  queryParams.auditStatus = 1 // 1待审批
   loading.value = true
   try {
     const data = await InboundApi.getInboundPage(queryParams)
