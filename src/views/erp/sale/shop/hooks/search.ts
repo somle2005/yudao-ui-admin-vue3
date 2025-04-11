@@ -3,25 +3,16 @@ import { getIntDictOptions } from '@/utils/dict'
 
 
 export const useSearchForm = (handleQuery, queryParams) => {
-
+  const platformList = getIntDictOptions(DICT_TYPE.ERP_SALES_PLATFORM).map((item: any) => {
+    item.value = item.label
+    return item
+  })
   const searchFormOptions = ref<Array<FormOptions>>([
-    // {
-    //   type: 'input',
-    //   label: '平台',
-    //   prop: 'platform',
-    //   placeholder: '请输入平台',
-    //   attrs: {
-    //     class: '!w-240px',
-    //     style: { width: '100%' },
-    //     clearable: true
-    //   }
-    // },
     {
       type: 'input',
-      label: '店铺名称',
-      // prop: 'name',
-      prop: 'account',
-      placeholder: '请输入店铺名称',
+      label: '店铺别名',
+      prop: 'name',
+      placeholder: '请输入店铺别名',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
@@ -30,9 +21,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      placeholder: '请选择状态',
-      prop: 'status',
-      label: '状态',
+      placeholder: '请选择平台',
+      prop: 'platformCode',
+      label: '平台',
       // formItemConfig: {
       //   class: '!w-240px',
       // },
@@ -44,7 +35,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.ERP_OFF_STATUS)
+      children: platformList
     },
     {
       type: 'select',
@@ -64,11 +55,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: getIntDictOptions(DICT_TYPE.ERP_SHOP_TYPE)
     },
-
-
-    
-
-    
   ])
 
   const events = {

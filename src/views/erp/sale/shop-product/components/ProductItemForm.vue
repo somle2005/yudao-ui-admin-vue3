@@ -33,9 +33,9 @@
       </el-table-column>
       <el-table-column align="center" label="数量" min-width="100">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.quantity`" :rules="formRules.quantity" class="mb-0px!">
+          <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
             <el-input-number
-              v-model="row.quantity"
+              v-model="row.qty"
               placeholder="请输入数量"
               controls-position="right"
               :min="1"
@@ -67,7 +67,7 @@ const props = defineProps({
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<any[]>([])
 const formRules = reactive({
-  quantity: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
+  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref<InstanceType<typeof ElForm>>() // 表单 Ref
 /** 初始化设置入库项 */

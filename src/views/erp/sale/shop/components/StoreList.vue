@@ -47,6 +47,7 @@ const getList = () => {
       const typeMap = {
         // '线上',
         0: () => {
+          item.platform = '线上'
           if (map[item.platform]) {
             map[item.platform].accountTotal += 1
           } else {

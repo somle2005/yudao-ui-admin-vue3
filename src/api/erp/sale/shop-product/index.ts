@@ -1,7 +1,7 @@
 import request from '@/config/axios'
 
 
-// ERP 店铺产品 VO
+// OMS 店铺产品 VO
 export interface ShopProductVO {
   /**
    * 店铺代码
@@ -83,36 +83,36 @@ export interface ErpProductRespSimpleVO {
 }
 
 
-// ERP 店铺产品 API
+// OMS 店铺产品 API
 export const ShopProductApi = {
   // 查询店铺产品分页
   getShopProductPage: async (params: any) => {
-    return await request.get({ url: `/erp/shop-product/page`, params })
+    return await request.get({ url: `/oms/shop-product/page`, params })
   },
   
   // 查询店铺产品详情
   getShopProduct: async (id: number) => {
-    return await request.get({ url: `/erp/shop-product/get?id=` + id })
+    return await request.get({ url: `/oms/shop-product/get?id=` + id })
   },
 
   // 新增店铺产品
   createShopProduct: async (data: ShopProductVO) => {
-    return await request.post({ url: `/erp/shop-product/create`, data })
+    return await request.post({ url: `/oms/shop-product/create`, data })
   },
 
   // 修改店铺产品
   updateShopProduct: async (data: ShopProductVO) => {
-    return await request.put({ url: `/erp/shop-product/update`, data })
+    return await request.put({ url: `/oms/shop-product/update`, data })
   },
 
   // 删除店铺产品
   deleteShopProduct: async (id: number) => {
-    return await request.delete({ url: `/erp/shop-product/delete?id=` + id })
+    return await request.delete({ url: `/oms/shop-product/delete?id=` + id })
   },
 
   // 查询店铺清单
   getShopProductList: async (params?: any) => {
-    return await request.get({ url: `/erp/shop-product/list`, params })
+    return await request.get({ url: `/oms/shop-product/list`, params })
   },
   // 导出店铺产品 Excel
   exportShopProduct: async (params: any) => {

@@ -21,7 +21,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
 import { createDBFn } from '@/utils/decorate'
 
-/** ERP 平台店铺 */
+/** OMS 平台店铺 */
 defineOptions({ name: 'ShopForm' })
 
 const { t } = useI18n() // 国际化
@@ -37,13 +37,8 @@ const initFormData = () => {
   return {
     name: undefined,
     code: undefined,
-    remark: undefined,
-    status: 1,
-    sort: undefined,
-    createTime: undefined,
     type: 1, //0线上1线下
-    platform: undefined,
-    account: undefined
+    platform: undefined
   }
 }
 
@@ -62,7 +57,7 @@ const initRequestFormOptions = () => {
     {
       type: 'select',
       placeholder: '请选择平台',
-      prop: 'platform',
+      prop: 'platformCode',
       label: '平台',
       attrs: {
         filterable: true,
@@ -84,11 +79,9 @@ const initRequestFormOptions = () => {
     },
     {
       type: 'input',
-      // label: '平台账户',
-      label: '店铺名称',
-      prop: 'account',
-      // placeholder: '请输入平台账户',
-      placeholder: '请输入店铺名称',
+      label: '店铺别名',
+      prop: 'name',
+      placeholder: '请输入店铺别名',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
@@ -97,30 +90,29 @@ const initRequestFormOptions = () => {
       rules: [
         {
           required: true,
-          message: '平台账户不能为空',
+          message: '店铺别名不能为空',
           trigger: 'blur'
         }
       ]
     },
     {
       type: 'input',
-      label: '店铺代码',
+      label: '店铺编码',
       prop: 'code',
-      placeholder: '请输入店铺代码',
+      placeholder: '请输入店铺编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
-        clearable: true,
-        disabled: true
+        clearable: true
       },
       rules: [
         {
           required: true,
-          message: '店铺代码不能为空',
+          message: '店铺编码不能为空',
           trigger: 'blur'
         }
       ]
-    }
+    },
 
     // {
     //   type: 'input',
@@ -158,7 +150,7 @@ const initRequestFormOptions = () => {
     //     }
     //   ]
     // },
-
+    //
     // {
     //   type: 'select',
     //   placeholder: '请选择状态',
@@ -222,25 +214,24 @@ const initRequestFormOptions = () => {
     //     }
     //   ]
     // },
-    // // 备注放最后
-    // {
-    //   type: 'input',
-    //   label: '备注',
-    //   prop: 'remark',
-    //   placeholder: '请输入备注',
-    //   attrs: {
-    //     style: { width: '100%' },
-    //     clearable: true,
-    //     disabled: true
-    //   },
-    //   rules: [
-    //     {
-    //       required: true,
-    //       message: '备注不能为空',
-    //       trigger: 'blur'
-    //     }
-    //   ]
-    // }
+
+    {
+      type: 'input',
+      label: '店铺编码',
+      prop: 'code',
+      placeholder: '请输入店铺编码',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      },
+      rules: [
+        {
+          required: true,
+          message: '店铺编码不能为空',
+          trigger: 'blur'
+        }
+      ]
+    }
   ]
 }
 
@@ -284,8 +275,8 @@ const submitForm = async () => {
     const data = formData.value as unknown as ShopVO
     data.countryCode = undefined
     if (formType.value === 'create') {
-      data.code = data.account
-      data.name = data.account
+      data.code = data.code
+      data.name = data.name
       await ShopApi.createShop(data)
       message.success(t('common.createSuccess'))
     } else {

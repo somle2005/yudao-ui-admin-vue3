@@ -205,7 +205,7 @@ export const getShopList = (data?: any) => {
     const arr: any = []
     // 去重account
     res.map((item) => {
-      const account = item.account
+      const account = item.name
       if (account && !map[account]) {
         map[account] = 1
         arr.push(item)
@@ -213,8 +213,8 @@ export const getShopList = (data?: any) => {
     })
     // 使用acount模糊搜索
     shopList.value = arr.map((item) => {
-      item.label = item.account
-      item.value = item.account
+      item.label = item.name
+      item.value = item.name
       return item
     })
     if (data) {

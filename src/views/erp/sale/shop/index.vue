@@ -26,7 +26,7 @@
               plain
               @click="openForm('create')"
               v-if="clickShopItem.type === 1"
-              v-hasPermi="['erp:shop:create']"
+              v-hasPermi="['oms:shop:create']"
             >
               <Icon icon="ep:plus" class="mr-5px" /> 新增
             </el-button>
@@ -66,7 +66,7 @@
               link
               type="primary"
               @click="openForm('update', scope.row.id)"
-              v-hasPermi="['erp:shop:update']"
+              v-hasPermi="['oms:shop:update']"
             >
               编辑
             </el-button>
@@ -74,7 +74,7 @@
               link
               type="danger"
               @click="handleDelete(scope.row.id)"
-              v-hasPermi="['erp:shop:delete']"
+              v-hasPermi="['oms:shop:delete']"
             >
               删除
             </el-button>
@@ -102,42 +102,35 @@ import { cloneDeep } from 'lodash-es'
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  // name: {
-  //   label: '店铺名称',
-  //   width: '180px',
-  //   slot: 'name',
-  //   wrap: true
-  // },
-  // code: {
-  //   label: '店铺代码',
-  //   width: '180px',
-  //   slot: 'code',
-  //   wrap: true
-  // },
-  platform: {
+  platformCode: {
     label: '平台',
     width: '180px'
   },
-  // account: '平台账户',
-  account: '店铺名称',
-  // countryCode: {
-  //   label: '国家编码',
-  //   slot: 'countryCode',
-  //   width: '180px'
-  // },
-  status: {
-    label: '状态',
-    slot: 'status',
+  name:  {
+    label: '店铺名称',
     width: '180px'
   },
-  type: {
-    label: '类型',
-    slot: 'type',
+
+  platformShopName: {
+    label: '平台店铺名称',
     width: '180px'
   },
-  remark: '备注',
+  code: {
+    label: '店铺编码',
+    width: '180px'
+  },
+
+  platformShopCode: {
+    label: '平台店铺编码',
+    width: '180px'
+  },
   createTime: {
     label: '创建时间',
+    formatter: dateFormatter,
+    width: '180px'
+  },
+  updateTime: {
+    label: '更新时间',
     formatter: dateFormatter,
     width: '180px'
   },
@@ -150,8 +143,8 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
 
-/** ERP 平台店铺 列表 */
-defineOptions({ name: 'ErpShop' })
+/** OMS 平台店铺 列表 */
+defineOptions({ name: 'OmsShop' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -236,14 +229,7 @@ const clickShop = async (item: any) => {
   loading.value = true
   try {
     const query: any = cloneDeep(queryParams)
-    // 线下不查platforem
-    if (item.type === 1) {
-      query.platform = undefined
-      query.type = 1
-    } else {
-      query.platform = item.platform
-    }
-
+    query.type = item.type
     const data = await ShopApi.getShopPage(query)
     list.value = data.list
     total.value = data.total

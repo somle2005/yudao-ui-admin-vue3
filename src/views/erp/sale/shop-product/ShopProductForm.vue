@@ -3,11 +3,11 @@
     <el-form ref="formRef" :model="formData" :inline="true" label-width="100px">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="店铺SKU" prop="name">
+          <el-form-item label="平台SKU" prop="platformCode">
             <el-input
               class="!w-240px"
-              v-model="formData.name"
-              placeholder="请输入店铺SKU"
+              v-model="formData.platformCode"
+              placeholder="请输入平台SKU"
               :disabled="disabled"
             />
           </el-form-item>
@@ -142,7 +142,7 @@ import { useProductItemForm } from './hooks/useProductItemForm'
 import { cloneDeep } from 'lodash-es'
 import { getDeptTree, getProductNameList, getShopList } from '@/commonData'
 import { defaultProps } from '@/utils/tree'
-/** ERP 店铺产品 */
+/** OMS 店铺产品 */
 defineOptions({ name: 'ShopProductForm' })
 
 const shopList = ref<any[]>([])
@@ -415,7 +415,7 @@ const submitForm = async () => {
         productId: item.productId,
         remark: item.remark,
         createTime: item.createTime,
-        quantity: item.quantity
+        qty: item.qty
       }
       return obj
     })

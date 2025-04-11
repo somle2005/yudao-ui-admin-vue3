@@ -8,35 +8,45 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const deptList = ref([])
   getShopList(shopList)
   getDeptTree(deptList)
+  const platformList = getIntDictOptions(DICT_TYPE.ERP_SALES_PLATFORM).map((item: any) => {
+    item.value = item.label
+    return item
+  })
   const searchFormOptions = ref<Array<FormOptions>>([
+    // {
+    //   type: 'input',
+    //   label: '店铺SKU',
+    //   prop: 'name',
+    //   placeholder: '请输入店铺SKU',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     style: { width: '100%' },
+    //     clearable: true
+    //   }
+    // },
     {
-      type: 'input',
-      label: '店铺SKU',
-      prop: 'name',
-      placeholder: '请输入店铺SKU',
-      attrs: {
-        class: '!w-240px',
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'input',
+      type: 'select',
+      placeholder: '请选择平台',
+      prop: 'platformCode',
       label: '平台',
-      prop: 'platform',
-      placeholder: '请输入平台',
+      // formItemConfig: {
+      //   class: '!w-240px',
+      // },
       attrs: {
         class: '!w-240px',
-        style: { width: '100%' },
-        clearable: true
-      }
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: platformList
     },
     {
       type: 'select',
-      placeholder: '请选择店铺名称',
-      // prop: 'shopId',
-      prop: 'account',
-      label: '店铺名称',
+      placeholder: '请选择店铺别名',
+      prop: 'shopName',
+      label: '店铺别名',
       attrs: {
         class: '!w-240px',
         filterable: true,
@@ -65,46 +75,35 @@ export const useSearchForm = (handleQuery, queryParams) => {
         // }
       }
     },
-    // {
-    //   type: 'input',
-    //   label: '店铺名称',
-    //   prop: 'account',
-    //   placeholder: '请输入店铺名称',
-    //   attrs: {
-    //     class: '!w-240px',
-    //     style: { width: '100%' },
-    //     clearable: true
-    //   }
-    // },
     {
       type: 'input',
-      label: 'SKU编码',
-      prop: 'barCode',
+      label: '平台SKU',
+      prop: 'platformProductCode',
       placeholder: '请输入SKU编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
         clearable: true
       }
-    },
-    {
-      type: 'select',
-      placeholder: '请选择状态',
-      prop: 'status',
-      label: '状态',
-      // formItemConfig: {
-      //   class: '!w-240px',
-      // },
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.ERP_PRODUCT_LISTING_STATUS)
     }
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择状态',
+    //   prop: 'status',
+    //   label: '状态',
+    //   // formItemConfig: {
+    //   //   class: '!w-240px',
+    //   // },
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.ERP_PRODUCT_LISTING_STATUS)
+    // }
   ])
 
   const events = {

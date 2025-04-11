@@ -23,7 +23,7 @@
               type="primary"
               plain
               @click="openForm('create')"
-              v-hasPermi="['erp:shop-product:create']"
+              v-hasPermi="['oms:shop-product:create']"
             >
               <Icon icon="ep:plus" class="mr-5px" /> 新增
             </el-button>
@@ -43,36 +43,36 @@
           v-model:pageSize="queryParams.pageSize"
           @pagination="getList"
         >
-          <template #image="{ scope }">
-            <el-image :src="scope.row.image" class="w-64px h-64px" />
-          </template>
-          <template #status="{ scope }">
-            <dict-tag
-              :type="DICT_TYPE.ERP_PRODUCT_LISTING_STATUS"
-              :value="scope.row.status + '' || ''"
-            />
-          </template>
+<!--          <template #image="{ scope }">-->
+<!--            <el-image :src="scope.row.image" class="w-64px h-64px" />-->
+<!--          </template>-->
+<!--          <template #status="{ scope }">-->
+<!--            <dict-tag-->
+<!--              :type="DICT_TYPE.ERP_PRODUCT_LISTING_STATUS"-->
+<!--              :value="scope.row.status + '' || ''"-->
+<!--            />-->
+<!--          </template>-->
 
-          <template #name="{ scope }">
-            <div class="slot-wrap">
-              <el-link type="primary" :href="scope.row.url" target="_blank">{{
-                scope.row.name
-              }}</el-link>
-            </div>
-          </template>
+<!--          <template #name="{ scope }">-->
+<!--            <div class="slot-wrap">-->
+<!--              <el-link type="primary" :href="scope.row.url" target="_blank">{{-->
+<!--                scope.row.name-->
+<!--              }}</el-link>-->
+<!--            </div>-->
+<!--          </template>-->
 
-          <template #SKUQuantity="{ scope }">
-            <div :key="item" v-for="item in scope.row.SKUQuantity" class="slot-wrap">
-              {{ item }}
-            </div>
-          </template>
+<!--          <template #SKUQuantity="{ scope }">-->
+<!--            <div :key="item" v-for="item in scope.row.SKUQuantity" class="slot-wrap">-->
+<!--              {{ item }}-->
+<!--            </div>-->
+<!--          </template>-->
 
           <template #operate="{ scope }">
             <el-button
               link
               type="primary"
               @click="openForm('update', scope.row.id)"
-              v-hasPermi="['erp:shop-product:update']"
+              v-hasPermi="['oms:shop-product:update']"
             >
               编辑
             </el-button>
@@ -80,7 +80,7 @@
               link
               type="danger"
               @click="handleDelete(scope.row.id)"
-              v-hasPermi="['erp:shop-product:delete']"
+              v-hasPermi="['oms:shop-product:delete']"
             >
               删除
             </el-button>
@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { DICT_TYPE } from '@/utils/dict'
+// import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import ShopProductForm from './ShopProductForm.vue'
@@ -106,33 +106,27 @@ import { useTableData } from '@/components/SmTable/src/utils'
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  image: {
-    label: '产品图',
-    width: '100px',
-    // fixed: 'left',
-    slot: 'image'
-  },
-  name: {
-    label: '店铺SKU',
-    width: '180px',
-    slot: 'name'
-    // wrap: true
-  },
-  // shopCode: {
-  //   label: '店铺代码',
-  //   width: '180px',
-  //   slot: 'shopCode',
-  //   wrap: true
-  // },
-  shopPlatform: {
-    label: '平台',
+  platform: {
+    label: '所属平台',
     width: '180px'
   },
-  account: {
-    label: '店铺名称',
+  shopProductCode: {
+    label: '平台SKU',
+    width: '180px'
+  },
+  name: {
+    label: '平台产品名称',
+    width: '180px'
+  },
+  platformShopName: {
+    label: '平台店铺名称',
     width: '180px',
-    slot: 'account',
+    slot: 'platformShopName',
     wrap: true
+  },
+  shopName: {
+    label: '店铺别名',
+    width: '180px'
   },
   deptName: {
     label: '部门',
@@ -140,32 +134,17 @@ const fieldMap = {
     slot: 'deptName',
     wrap: true
   },
-  SKUQuantity: {
-    label: 'SKU * 数量',
-    width: '250px',
-    slot: 'SKUQuantity'
-  },
-  // shopName: {
-  //   label: '店铺名称',
-  //   width: '180px',
-  //   slot: 'shopName',
-  //   wrap: true
-  // },
-  status: {
-    label: '状态',
-    slot: 'status',
-    width: '180px'
+  qty: {
+    label: '可售数量',
+    width: '250px'
   },
   price: '售价',
   currency: '币种',
-  remark: '备注',
-  creator: '创建人',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
     width: '180px'
   },
-  updater: '更新人',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -181,8 +160,8 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap)
 
-/** ERP 店铺产品 列表 */
-defineOptions({ name: 'ErpShopProduct' })
+/** OMS 店铺产品 列表 */
+defineOptions({ name: 'OmsShopProduct' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -195,7 +174,7 @@ const queryParams = reactive({
   pageSize: 10,
   shopId: undefined,
   platform: undefined,
-  status: undefined
+  shopName: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -208,19 +187,12 @@ const getList = async () => {
     
     try {
       list.value = data.list.map((item) => {
-        item.shopName = item.shop.name
-        item.shopPlatform = item.shop.platform
-        item.account = item.shop.account
-
-        item.SKUQuantity = []
-        if (item?.items?.length) {
-          item.items.forEach((a) => {
-            const product = a.product
-            if (product) {
-              item.SKUQuantity.push(`${product.barCode} * ${a.quantity}`)
-            }
-          })
+        if (item.shop !== null) {
+          item.platformShopName = item.shop.platformShopName
+          item.platform = item.shop.platformCode
+          item.shopName = item.shop.name
         }
+        item.shopProductCode = item.code
         return item
       })
     } catch (e) {
