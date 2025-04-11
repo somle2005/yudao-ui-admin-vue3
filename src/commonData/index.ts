@@ -1,17 +1,17 @@
-import { AccountApi } from '@/api/erp/finance/account'
+import { AccountApi } from '@/api/fms/account'
 import { AccountVO } from '@/api/mp/account'
 import { defaultProps, handleTree } from '@/utils/tree'
 import { getSimpleDeptList } from '@/api/system/dept'
-import { SupplierProductApi, SupplierProductVO } from '@/api/erp/purchase/product'
+import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
 import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
-import { CustomRuleCategoryApi } from '@/api/erp/logistic/custom-category'
-import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
-import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/erp/finance/subject'
-import { CustomProductApi } from '@/api/erp/logistic/custom-product'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
+import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/company'
+import {CustomRuleCategoryApi} from '@/api/tms/custom-category'
+import { CustomProductApi } from '@/api/tms/custom-product'
 
 interface SelectProp {
   value: number
@@ -95,6 +95,7 @@ export const getWarehouseList = (data?: any) => {
     warehouseList.value = res.map((item) => {
       item.label = item.name
       item.value = item.id
+
       return item
     })
     if (data) {
@@ -241,6 +242,7 @@ export const getCustomProductList = (data?: any) => {
   return customProduct
 }
 
+
 // 获取币种列表
 export const getCurrencyList = (data?) => {
   const list = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
@@ -253,4 +255,3 @@ export const getCurrencyList = (data?) => {
   }
   return ref(list)
 }
-

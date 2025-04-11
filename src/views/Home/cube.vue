@@ -9,8 +9,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
+// import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+// import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 
 
 // Props to customize the cube
@@ -47,7 +47,7 @@ onMounted(() => {
   threeContainer.value.appendChild(renderer.domElement);
 
   // 添加 AR 按钮
-  document.body.appendChild(ARButton.createButton(renderer));
+  // document.body.appendChild(ARButton.createButton(renderer));
 
   // // Add a cube
   // const geometry = new THREE.BoxGeometry(props.size || 1, props.size || 1, props.size || 1);

@@ -218,17 +218,19 @@ export enum DICT_TYPE {
   CRM_CLIENT_TAG = 'crm_client_tag', // CRM 客户标签
 
   // ========== ERP - 企业资源计划模块  ==========
-  ERP_AUDIT_STATUS = 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE = 'erp_stock_record_biz_type', // 库存明细的业务类型
   SYSTEM_FILED = 'system_field',
   COUNTRY_CODE = 'country_code', //国别代码
   ERP_PATENT_TYPE = 'erp_patent_type', //专利类型
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
-  SRP_ORDER_STATUS = 'srp_order_status', // 采购状态
-  ERP_OFF_STATUS = 'erp_off_status', // 开关状态
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
   REPORT_MAP = 'report_map', // 报表地图
+  ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
+  ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
+  ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
+  ERP_PORT_OF_LOADING = 'erp_port_of_loading', // 装运港
+  ERP_PORT_OF_DISCHARGE = 'erp_port_of_discharge', // 目的港
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台
@@ -266,4 +268,12 @@ export enum DICT_TYPE {
 
   
   
+  // ========== SRM - 采购模块  ==========
+  SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态
+  SRM_EXECUTE_STATUS = 'srm_execute_status', // SRM 执行状态
+  SRM_STORAGE_STATUS = 'srm_storage_status', // SRM 采购入库状态
+  SRM_ORDER_STATUS = 'srm_order_status', // SRM 采购订购状态
+  SRM_PAYMENT_STATUS = 'srm_payment_status', // SRM 采购付款状态
+  SRM_OFF_STATUS = 'srm_off_status', // SRM 开关状态
+  SRM_AUDIT_STATUS = 'srm_audit_status' // SRM 审批状态
 }

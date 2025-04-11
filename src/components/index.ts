@@ -9,7 +9,7 @@ import { SmRemoteSelect } from './SmRemoteSelect'
 import { SmRadioGroup } from './SmRadioGroup'
 import { SmSelect } from './SmSelect'
 import { SmRange } from './SmRange'
-
+import { SmTableField } from './SmTableField'
 
 export const setupGlobCom = (app: App<Element>): void => {
   app.component('Icon', Icon)
@@ -21,5 +21,6 @@ export const setupGlobCom = (app: App<Element>): void => {
   app.component('SmRadioGroup', SmRadioGroup)
   app.component('SmSelect', SmSelect)
   app.component('SmRange', SmRange)
+  app.component('SmTableField', SmTableField)
   // app.component('ElDatePicker', ElDatePicker)
 }

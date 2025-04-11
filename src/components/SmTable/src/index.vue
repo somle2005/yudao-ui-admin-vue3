@@ -37,6 +37,10 @@
             <template v-if="scope.row.rowEdit">
               <el-input v-model="scope.row[item.prop!]" size="small" />
             </template>
+            
+            <template v-else-if="item.dictAttrs">
+              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
+            </template>
 
             <template v-else-if="item.dictAttrs">
               <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
