@@ -65,6 +65,13 @@
         </div>
       </template>
       <template #operate="{ scope }">
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['wms:inbound:query']"
+        >
+          详情
+        </el-button>
         <!-- 待审核才出现 -->
         <el-button
           link
@@ -141,10 +148,10 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_SHIPPING_METHOD }
   },
   traceNo: '跟踪号',
-  initAge: {
-    label: '初始库龄',
-    width: '100px'
-  },
+  // initAge: {
+  //   label: '初始库龄',
+  //   width: '100px'
+  // },
 
   arrivalPlanTime: {
     label: '预计到货时间',
@@ -157,7 +164,7 @@ const fieldMap = {
     width: '200px'
   },
   creatorComment: '特别说明',
-  comment: '审批意见',
+  // comment: '审批意见',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,

@@ -51,7 +51,7 @@
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.agree)"
         >
-          同意</el-button
+          同意入库</el-button
         >
       </template>
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -114,7 +114,7 @@ const financeSubjectList = ref<FinanceSubjectVO[]>([])
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
-const itemsFormdisabled = computed(() => ['detail', 'audit'].includes(formType.value))
+const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
 const auditType = computed(() => formType.value === 'audit')
 
 const requestFormOptions: any = ref([])
@@ -204,7 +204,6 @@ const createRequestFormOptions = () => {
       children: getIntDictOptions(DICT_TYPE.WMS_SHIPPING_METHOD)
     },
     {
-      requiredFlag: true,
       type: 'date-picker',
       placeholder: '请选择预计到货时间',
       prop: 'arrivalPlanTime',
@@ -283,6 +282,10 @@ const auditFormOptions = (formOptions) => {
   return formOptions
 }
 
+const detailOptions = (formOptions) => {
+  return addDisabled(formOptions)
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -302,6 +305,9 @@ const open = async (type: string, id?: number) => {
     },
     audit: () => {
       requestFormOptions.value = auditFormOptions(createRequestFormOptions())
+    },
+    detail: () => {
+      requestFormOptions.value = detailOptions(createRequestFormOptions())
     }
   }
   formTypeOperate[type]()

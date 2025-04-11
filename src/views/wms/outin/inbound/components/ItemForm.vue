@@ -7,6 +7,7 @@
       v-loading="formLoading"
       label-width="0px"
       :inline-message="true"
+      :disabled="disabled"
     >
       <!-- show-summary :summary-method="getSummaries" -->
       <!-- sourceItemId-来源详情ID  -->
