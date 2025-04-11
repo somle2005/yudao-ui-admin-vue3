@@ -9,7 +9,7 @@
       :inline-message="true"
     >
       <!-- show-summary :summary-method="getSummaries" -->
-      <el-table :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column v-if="!showCreate" label="编号" min-width="120">
           <template #default="{ row }">
@@ -105,10 +105,7 @@
         <el-table-column label="海关品名" width="180">
           <!-- :rules="formRules.declaredType" -->
           <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.declaredType`"
-              class="mb-0px!"
-            >
+            <el-form-item :prop="`${$index}.declaredType`" class="mb-0px!">
               <el-input :disabled="disabled" v-model.trim="row.declaredType" />
             </el-form-item>
           </template>
@@ -116,10 +113,7 @@
         <el-table-column label="海关品名(英文)" width="180">
           <!-- :rules="formRules.declaredTypeEn" -->
           <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.declaredTypeEn`"
-              class="mb-0px!"
-            >
+            <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
               <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
             </el-form-item>
           </template>
@@ -241,8 +235,6 @@
           </template>
         </el-table-column> -->
 
-       
-
         <el-table-column label="含税单价" width="120">
           <template #default="{ row, $index }">
             <el-form-item
@@ -348,7 +340,6 @@
             <el-text>{{ row.erpPurchaseRequestItemNo }}</el-text>
           </template>
         </el-table-column>
-
 
         <el-table-column label="申请人" width="200">
           <template #default="{ row, $index }">
@@ -473,7 +464,7 @@ const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
-  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
   // declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
   // declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
