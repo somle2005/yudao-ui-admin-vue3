@@ -17,28 +17,26 @@
         'number-range-right-border-radius-0': useAppend
       }"
     >
+      <!-- placeholder="最小值" -->
       <el-input-number
         :disabled="disabled"
-        placeholder="最小值"
         @blur="handleBlur"
         @focus="handleFocus"
         @change="handleChangeMinValue"
         v-model="minValue_"
-        v-bind="$attrs"
         v-on="['update:minValue']"
         :controls="false"
       />
       <div class="to">
-        <div style="height: 100%;">{{ to }}</div>
+        <div style="height: 100%">{{ to }}</div>
       </div>
+      <!-- placeholder="最大值" -->
       <el-input-number
         :disabled="disabled"
-        placeholder="最大值"
         @blur="handleBlur"
         @focus="handleFocus"
         @change="handleChangeMaxValue"
         v-model="maxValue_"
-        v-bind="$attrs"
         v-on="['update:maxValue']"
         :controls="false"
       />
@@ -116,6 +114,9 @@ const props = defineProps({
     default: 'default'
   }
 })
+
+const attrs = useAttrs()
+console.log(attrs, 'attrs')
 
 const emit = defineEmits(['update:modelValue', 'update:minValue', 'update:maxValue', 'change'])
 
