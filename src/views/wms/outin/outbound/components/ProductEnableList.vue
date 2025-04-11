@@ -61,9 +61,12 @@ defineOptions({ name: 'ProductEnableTableList' })
 const dialogVisible = ref(false) // 弹窗的是否展示
 
 /** 打开弹窗 */
-const open = async () => {
+const open = async (warehouseId: number) => {
+  const addQuery = (queryParams) => {
+    queryParams.warehouseId = warehouseId
+  }
   dialogVisible.value = true
-  resetQuery()
+  resetQuery(addQuery)
   // await nextTick() // 等待，避免 queryFormRef 为空
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗

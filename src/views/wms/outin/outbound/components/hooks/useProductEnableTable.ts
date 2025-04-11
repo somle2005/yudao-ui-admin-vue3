@@ -74,7 +74,7 @@ export const useProductEnableTable = () => {
   }
 
   const productList = getProductList()
-  const wmsWarehouseList = getWMSWarehouseList()
+  // const wmsWarehouseList = getWMSWarehouseList()
   const warehouseBinList = getWarehouseBinList()
 
   const searchFormOptions = ref<Array<FormOptions>>([
@@ -104,20 +104,20 @@ export const useProductEnableTable = () => {
       },
       children: productList
     },
-    {
-      type: 'select',
-      placeholder: '请选择仓库',
-      prop: 'warehouseId',
-      label: '仓库',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: wmsWarehouseList
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择仓库',
+    //   prop: 'warehouseId',
+    //   label: '仓库',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: wmsWarehouseList
+    // },
     {
       type: 'select',
       placeholder: '请选择库位',
@@ -154,8 +154,9 @@ export const useProductEnableTable = () => {
   const getSearchFormData = () => {
     return queryParams
   }
-  const resetQuery = () => {
+  const resetQuery = (fn?) => {
     resetQueryParams(queryParams, queryFormRef)
+    fn(queryParams)
     handleQuery()
   }
 

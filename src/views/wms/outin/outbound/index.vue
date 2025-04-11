@@ -120,13 +120,13 @@ const fieldMap = {
     formatter: dateFormatter,
     width: '180px'
   },
-  updater: '更新人',
+  updateName: '更新人',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
     width: '180px'
   },
-  creator: '创建人',
+  creatorName: '创建人',
   operate: {
     label: '操作',
     slot: 'operate',

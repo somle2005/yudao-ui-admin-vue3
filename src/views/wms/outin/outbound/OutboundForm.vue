@@ -23,7 +23,7 @@
         <el-button
           :disabled="itemsFormdisabled"
           type="primary"
-          @click="openAddProductItem"
+          @click="openAddProductItem(warehouseId)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-bin:query']"
           >选择产品</el-button
@@ -48,13 +48,16 @@
 </template>
 <script setup lang="ts">
 import { OutboundApi, OutboundVO } from '@/api/wms/outbound'
-import { getWarehouseList } from '@/commonData'
+import { getFinanceSubjectList } from '@/commonData'
 import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
 import { useOutProductdata } from './components/hooks/outProductdata'
 import ProductEnableList from './components/ProductEnableList.vue'
+import { distinctList } from '@/utils/transformData'
+import { FinanceSubjectVO } from '@/api/fms/company'
+import { getWMSWarehouseList } from '@/commonData/wms'
 
 const { addProductItemRef, openAddProductItem } = useOutProductdata()
 
@@ -80,18 +83,20 @@ const initFormData = () => {
     sourceBillNo: undefined,
     sourceBillType: undefined,
     creatorComment: undefined,
-    itemList: []
+    itemList: [] as any[]
   }
 }
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
-const warehouseList: any = ref([])
+const WMSWarehouseList: any = ref([])
+const financeSubjectList = ref<FinanceSubjectVO[]>([])
 
 const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
 
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
+const warehouseId = ref()
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -99,7 +104,10 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  getWarehouseList(warehouseList)
+
+  getWMSWarehouseList(WMSWarehouseList)
+  getFinanceSubjectList(financeSubjectList)
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -147,79 +155,9 @@ const resetForm = () => {
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
-  // mode切换会对requestFormOptions.value数据进行修改
-
-  // 必填项处理
-  /**
-   排序根据语雀文档-排列-和label显示
-
-
-  sourceBillId-来源单据ID
-  sourceBillNo-来源单据号
-  sourceBillType-来源单据类型
-  不知道什么时候使用
-
-
-
-1-入库单
-2-仓库-必填-warehouseId-1
-3-出库类型-必填 -type-OutboundType
-4-状态-1
-5-财务审核状态 -auditStatus-出库单审批状态-OutboundAuditStatus 
-
-6-code-产品编码-必填-缺少
-
-
-
-
-7-库位 - 系统带出/选择 - 产品编码带出 -必填
-8-数量-必填-缺少
-9-可用库存数量-必填-缺少
-10-不良品数量-必填-缺少
-11-备注-缺少
-12-状态（主页)-系统打出-必填- 找不到字段-难道是 outboundStatus出库状态 
-13-库存主体-带出/选择   companyId-库存库存主体ID 这个数据哪里拉出来
-14-dept-库存归属-带出/选择  deptId-库存归属部门ID 这个数据哪里拉出来
-
-13-操作人-系统带出
-14-操作时间-系统带出
-
-
-items里面
-1-outboundId-入库单ID-哪里来？
-2-productId-标准产品ID
-3-actualQty-实际出库量
-4-sourceItemId-来源详情ID-哪里来？
-5-outboundStatus-出库状态
-6-planQty-计划出库量
-
-
-*/
-
-  /**
- * 
-新增测试用例
-  {
-  "type":1,
-  "warehouseId":32,
-  "companyId":50001,
-  "deptId":50012,
-  "sourceBillId":1,
-  "sourceBillNo":"1",
-  "sourceBillType":1,
-  "creatorComment":"1",
-  "itemList":[
-    {
-    "productId":"159",
-    "planQty":1,
-    "binId":1
-    }
-  ]
-  }
- */
-
   const list = [
-    {
+    { 
+      requiredFlag: true,
       type: 'select',
       placeholder: '请选择仓库',
       prop: 'warehouseId',
@@ -229,14 +167,18 @@ items里面
         clearable: true,
         style: {
           width: '100%'
+        },
+        onChange: (val: any) => {
+          warehouseId.value = val
         }
       },
-      children: warehouseList
+      children: WMSWarehouseList
     },
     {
+      requiredFlag: true,
       type: 'select',
       placeholder: '请选择出库类型',
-      prop: 'outboundStatus',
+      prop: 'type',
       label: '出库类型',
       attrs: {
         filterable: true,
@@ -245,13 +187,14 @@ items里面
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
+      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE)
     },
     {
+      requiredFlag: true,
       type: 'select',
-      placeholder: '请选择状态',
-      prop: 'status',
-      label: '状态',
+      placeholder: '请选择库存主体',
+      prop: 'companyId',
+      label: '库存主体',
       attrs: {
         filterable: true,
         clearable: true,
@@ -259,21 +202,17 @@ items里面
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
+      children: financeSubjectList
     },
     {
-      type: 'select',
-      placeholder: '请选择财务审核状态',
-      prop: 'status',
-      label: '财务审核状态',
+      type: 'input',
+      label: '特别说明',
+      prop: 'creatorComment',
+      placeholder: '请输入特别说明',
       attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
+        style: { width: '100%' },
+        clearable: true
+      }
     },
     {
       colConfig: { span: 24 },
@@ -282,6 +221,34 @@ items里面
         class: 'common-form-items'
       }
     }
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择状态',
+    //   prop: 'status',
+    //   label: '状态',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
+    // },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择财务审核状态',
+    //   prop: 'status',
+    //   label: '财务审核状态',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
+    // },
   ]
 
   addProperty(list)
@@ -295,33 +262,56 @@ const getFormData = () => {
 
 const addProductItem = (selectionList: any[]) => {
   nextTick(() => {
-    console.log('拿到按产品的-可用库存')
-    // // 测试用例
-    // // {
-    // // "inboundItemId":4529,
-    // // "qty":1,
-    // // "binId":2
-    // // },
-    // const items = formData.value.itemList
-    // const itemIdKey = 'inboundItemId'
-    // const selectList = selectionList.map((item: any) => {
-    //   // 采购订单分页需带出数据
-    //   const {
-    //     id,
-    //     productId,
-    //     productBarCode,
-    //     outboundAvailableQty // 批次剩余库存
-    //   } = item
+    /**
+       * 
+      新增测试用例
+        {
+        "type":1,
+        "warehouseId":32,
+        "companyId":50001,
+        "deptId":50012,
+        "sourceBillId":1,
+        "sourceBillNo":"1",
+        "sourceBillType":1,
+        "creatorComment":"1",
+        "itemList":[
+          {
+          "productId":"159",
+          "planQty":1,
+          "binId":1
+          }
+        ]
+        }
+      */
 
-    //   const obj = {
-    //     [itemIdKey]: id,
-    //     productId,
-    //     productBarCode,
-    //     qty: outboundAvailableQty
-    //   }
-    //   return obj
-    // })
-    // formData.value.itemList = distinctList(items, selectList, itemIdKey)
+    const items = formData.value.itemList
+    const itemIdKey = 'id'
+    const selectList = selectionList.map((item: any) => {
+      // 采购订单分页需带出数据
+      const {
+        id,
+        productId,
+        productBarCode,
+        binId,
+        binName,
+        sellableQty, // 批次剩余库存
+        warehouseId,
+        warehouseName
+      } = item
+
+      const obj = {
+        [itemIdKey]: id,
+        productId,
+        productBarCode,
+        binId,
+        binName,
+        planQty: sellableQty,
+        warehouseId,
+        warehouseName
+      }
+      return obj
+    })
+    formData.value.itemList = distinctList(items, selectList, itemIdKey)
   })
 }
 </script>
