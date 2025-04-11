@@ -12,7 +12,7 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <!-- sourceItemId-来源详情ID  -->
 
-      <el-table :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
         <el-table-column label="产品编码" width="250">
