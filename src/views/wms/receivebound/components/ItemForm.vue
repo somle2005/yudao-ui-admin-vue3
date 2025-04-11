@@ -26,7 +26,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="计划入库量" width="120">
+        <el-table-column label="数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" :rules="formRules.planQty" class="mb-0px!">
               <el-text>{{ row.planQty }}</el-text>
@@ -34,7 +34,39 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="实际入库量" width="120">
+        <el-table-column label="库存归属" width="250">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.deptId`">
+              <el-tree-select
+                disabled
+                class="!w-100%"
+                v-model="row.deptId"
+                :data="deptList"
+                :props="defaultProps"
+                check-strictly
+                node-key="id"
+                placeholder="请选择库存归属"
+                filterable
+                clearable
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="备注" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input
+                :disabled="disabled"
+                v-model="row.remark"
+                placeholder="请输入备注"
+                type="textarea"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <!-- <el-table-column label="实际入库量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
@@ -45,7 +77,7 @@
               />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column label="批次剩余库存" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.leftQty`" class="mb-0px!">
@@ -54,13 +86,13 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
+        <!-- <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
               —
             </el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-form>
     <!-- <el-row justify="center" class="mt-3" v-if="!disabled">
@@ -76,7 +108,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { getProductList } from '@/commonData'
+import { getDeptTree, getProductList } from '@/commonData'
 import { updateModelValue } from '@/utils/high/index'
 
 const props = defineProps({
@@ -97,11 +129,13 @@ const props = defineProps({
   }
 })
 
+const { deptList, defaultProps } = getDeptTree()
+
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  planQty: [{ required: true, message: '计划入库量不能为空', trigger: 'blur' }]
+  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表

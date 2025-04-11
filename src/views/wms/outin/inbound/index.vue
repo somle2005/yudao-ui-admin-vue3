@@ -138,7 +138,7 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   // },
   auditStatus: {
-    label: '审核状态',
+    label: '状态',
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },

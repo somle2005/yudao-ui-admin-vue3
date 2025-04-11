@@ -176,6 +176,28 @@ items里面
 
 */
 
+/**
+ * 
+新增测试用例
+  {
+  "type":1,
+  "warehouseId":32,
+  "companyId":50001,
+  "deptId":50012,
+  "sourceBillId":1,
+  "sourceBillNo":"1",
+  "sourceBillType":1,
+  "creatorComment":"1",
+  "itemList":[
+    {
+    "productId":"159",
+    "planQty":1,
+    "binId":1
+    }
+  ]
+  }
+ */
+
   const list = [
     {
       type: 'select',

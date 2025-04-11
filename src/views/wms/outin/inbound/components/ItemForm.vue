@@ -23,7 +23,7 @@
               class="mb-0px!"
             >
               <SmSelect
-                :disabled="disabled"
+                :disabled="auditDisabled"
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 @change="
@@ -46,7 +46,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" :rules="formRules.planQty" class="mb-0px!">
               <el-input-number
-                :disabled="disabled"
+                :disabled="auditDisabled"
                 v-model="row.planQty"
                 controls-position="right"
                 :min="0"
@@ -73,7 +73,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
-                :disabled="disabled"
+                :disabled="auditDisabled"
                 class="!w-100%"
                 v-model="row.deptId"
                 :data="deptList"
@@ -92,7 +92,6 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input
-                :disabled="disabled"
                 v-model="row.remark"
                 placeholder="请输入备注"
                 type="textarea"
@@ -121,7 +120,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column align="center" fixed="right" label="操作" width="60">
+        <el-table-column v-if="!auditDisabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
               —
@@ -130,7 +129,7 @@
         </el-table-column>
       </el-table>
     </el-form>
-    <el-row justify="center" class="mt-3" v-if="!disabled">
+    <el-row justify="center" class="mt-3" v-if="addShow">
       <el-button @click="handleAdd" round>+ 添加入库产品</el-button>
     </el-row>
   </div>
@@ -165,7 +164,8 @@ const props = defineProps({
 })
 
 const { deptList, defaultProps } = getDeptTree()
-const auditShow = computed(() => props.formType === 'audit')
+const auditDisabled = computed(() => props.formType === 'audit')
+const addShow = computed(() => ['create', 'update'].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])

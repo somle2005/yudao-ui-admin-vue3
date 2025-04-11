@@ -38,7 +38,7 @@ import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
 import { cloneDeep } from 'lodash-es'
-import { getDeptTree, getFinanceSubjectList } from '@/commonData'
+import { getFinanceSubjectList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/erp/finance/subject'
 import { OPERATE_MAP } from './constant'
 import { getItemProp } from '@/components/SmTable/src/utils'
@@ -139,21 +139,6 @@ const updateActualQuantityFormOptions = () => {
       children: financeSubjectList
     },
     {
-      requiredFlag: true,
-      type: 'tree-select',
-      placeholder: '请选择申请部门',
-      prop: 'deptId',
-      label: '申请部门',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        data: deptList,
-        props: defaultProps,
-        'check-strictly': true,
-        'node-key': 'id'
-      }
-    },
-    {
       type: 'input',
       label: '跟踪号',
       prop: 'traceNo',
@@ -164,7 +149,6 @@ const updateActualQuantityFormOptions = () => {
       }
     },
     {
-      requiredFlag: true,
       type: 'select',
       placeholder: '请选择运输方式',
       prop: 'shippingMethod',
@@ -179,7 +163,6 @@ const updateActualQuantityFormOptions = () => {
       children: getIntDictOptions(DICT_TYPE.WMS_SHIPPING_METHOD)
     },
     {
-      requiredFlag: true,
       type: 'date-picker',
       placeholder: '请选择预计到货时间',
       prop: 'arrivalPlanTime',
@@ -283,10 +266,6 @@ const open = async (type: string, id?: number) => {
   }
   dialogTitle.value = titleMap[type]
 
-  const deptObj = getDeptTree()
-  defaultProps = deptObj.defaultProps
-  deptList = deptObj.deptList
-
   getFinanceSubjectList(financeSubjectList)
   getWMSWarehouseList(WMSWarehouseList)
 
@@ -322,6 +301,17 @@ const open = async (type: string, id?: number) => {
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
+const receiveDeal = (data) => {
+  // 实际入库量设置成和计划入库量一致
+  data.itemList.forEach((item) => {
+    item.actualQty = item.planQty
+  })
+  const queryData = data.itemList.map((item) =>
+    filterObjKey(item, ['actualQty', 'id', 'inboundId'])
+  )
+  return queryData
+}
+
 const router = useRouter()
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
@@ -337,9 +327,7 @@ const submitForm = async () => {
       data.itemList = cloneDeep(itemFormRef.value.formData)
     }
     if (formType.value === OPERATE_MAP['update-actual-quantity']) {
-      const queryData = data.itemList.map((item) =>
-        filterObjKey(item, ['actualQty', 'id', 'inboundId'])
-      )
+      const queryData = receiveDeal(data)
       await InboundItemApi.updateInboundItemActualQuantity(queryData)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.abandon) {
@@ -349,9 +337,7 @@ const submitForm = async () => {
       await InboundApi.forceFinishInbound({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP['update-actual-quantityAndPickup']) {
-      const queryData = data.itemList.map((item) =>
-        filterObjKey(item, ['actualQty', 'id', 'inboundId'])
-      )
+      const queryData = receiveDeal(data)
       await InboundItemApi.updateInboundItemActualQuantity(queryData)
       const toPickup = () => {
         window.getRouteQuery = () => {

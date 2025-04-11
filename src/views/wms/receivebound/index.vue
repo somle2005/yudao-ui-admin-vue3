@@ -93,7 +93,7 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
   auditStatus: {
-    label: '审核状态',
+    label: '状态',
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },
@@ -103,10 +103,10 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_SHIPPING_METHOD }
   },
   traceNo: '跟踪号',
-  initAge: {
-    label: '初始库龄',
-    width: '100px'
-  },
+  // initAge: {
+  //   label: '初始库龄',
+  //   width: '100px'
+  // },
 
   arrivalPlanTime: {
     label: '预计到货时间',

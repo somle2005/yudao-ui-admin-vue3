@@ -34,6 +34,11 @@
     </SmForm>
   </ContentWrap>
 
+  <sm-range
+    class="!w-240px"
+    v-model="numberRange"
+  />
+
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
@@ -78,6 +83,8 @@ import { OutboundApi, OutboundVO } from '@/api/wms/outbound'
 import OutboundForm from './OutboundForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
+
+const numberRange = ref([])
 
 const { tableOptions, transformTableOptions } = useTableData()
 

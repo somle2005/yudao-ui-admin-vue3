@@ -27,7 +27,85 @@ export const FinanceSubjectApi = {
 
   // 查询结算账户精简列表
   getFinanceSubjectSimpleList: async () => {
-    return await request.get({ url: `/erp/finance-subject/simple-list` })
+    // return await request.get({ url: `/erp/finance-subject/simple-list` })
+    // mock数据
+    return Promise.resolve([
+      {
+        id: 5,
+        name: '贵都市健柏传媒有限公司',
+        taxNo: null,
+        bankName: null,
+        bankAccount: null,
+        bankAddress: null,
+        contact: null,
+        mobile: null,
+        telephone: null,
+        email: null,
+        fax: null,
+        deliveryAddress: null,
+        companyAddress: null
+      },
+      {
+        id: 4,
+        name: '河南省一全网络科技无限公司',
+        taxNo: null,
+        bankName: null,
+        bankAccount: null,
+        bankAddress: null,
+        contact: null,
+        mobile: null,
+        telephone: null,
+        email: null,
+        fax: null,
+        deliveryAddress: null,
+        companyAddress: null
+      },
+      {
+        id: 3,
+        name: '衡阳市晋鹏物流有限责任公司',
+        taxNo: null,
+        bankName: null,
+        bankAccount: null,
+        bankAddress: null,
+        contact: null,
+        mobile: null,
+        telephone: null,
+        email: null,
+        fax: null,
+        deliveryAddress: null,
+        companyAddress: null
+      },
+      {
+        id: 2,
+        name: '墨子豪公司',
+        taxNo: null,
+        bankName: null,
+        bankAccount: null,
+        bankAddress: null,
+        contact: null,
+        mobile: null,
+        telephone: null,
+        email: null,
+        fax: null,
+        deliveryAddress: null,
+        companyAddress: null
+      },
+      {
+        id: 1,
+        name: '红盾大大',
+        taxNo: null,
+        bankName: null,
+        bankAccount: null,
+        bankAddress: null,
+        contact: null,
+        mobile: null,
+        telephone: null,
+        email: null,
+        fax: null,
+        deliveryAddress: null,
+        companyAddress: null
+      }
+    ])
   },
 
   // 查询Erp财务主体详情
