@@ -14,10 +14,21 @@
         <!-- <el-button
           :disabled="itemsFormdisabled"
           type="primary"
-          @click="openAddItem"
+          @click="openAddProductItem"
           style="margin-bottom: 10px"
-          >选择入库项</el-button
+          v-hasPermi="['wms:stock-bin:query']"
+        >
+          按批次选择产品</el-button
         > -->
+        <el-button
+          :disabled="itemsFormdisabled"
+          type="primary"
+          @click="openAddProductItem"
+          style="margin-bottom: 10px"
+          v-hasPermi="['wms:stock-bin:query']"
+          >选择产品</el-button
+        >
+
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="退货产品清单" name="item">
             <ItemForm ref="itemFormRef" :items="formData.itemList" :formType="formType" />
@@ -31,6 +42,9 @@
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
+
+  <!-- 按产品有库存可出库的列表 -->
+  <ProductEnableList ref="addProductItemRef" @success="addProductItem" />
 </template>
 <script setup lang="ts">
 import { OutboundApi, OutboundVO } from '@/api/wms/outbound'
@@ -39,6 +53,10 @@ import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
+import { useOutProductdata } from './components/hooks/outProductdata'
+import ProductEnableList from './components/ProductEnableList.vue'
+
+const { addProductItemRef, openAddProductItem } = useOutProductdata()
 
 /** 出库单 表单 */
 defineOptions({ name: 'OutboundForm' })
@@ -68,6 +86,8 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const warehouseList: any = ref([])
+
+const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -176,7 +196,7 @@ items里面
 
 */
 
-/**
+  /**
  * 
 新增测试用例
   {
@@ -271,5 +291,37 @@ requestFormOptions.value = createRequestFormOptions()
 
 const getFormData = () => {
   return formData.value
+}
+
+const addProductItem = (selectionList: any[]) => {
+  nextTick(() => {
+    console.log('拿到按产品的-可用库存')
+    // // 测试用例
+    // // {
+    // // "inboundItemId":4529,
+    // // "qty":1,
+    // // "binId":2
+    // // },
+    // const items = formData.value.itemList
+    // const itemIdKey = 'inboundItemId'
+    // const selectList = selectionList.map((item: any) => {
+    //   // 采购订单分页需带出数据
+    //   const {
+    //     id,
+    //     productId,
+    //     productBarCode,
+    //     outboundAvailableQty // 批次剩余库存
+    //   } = item
+
+    //   const obj = {
+    //     [itemIdKey]: id,
+    //     productId,
+    //     productBarCode,
+    //     qty: outboundAvailableQty
+    //   }
+    //   return obj
+    // })
+    // formData.value.itemList = distinctList(items, selectList, itemIdKey)
+  })
 }
 </script>

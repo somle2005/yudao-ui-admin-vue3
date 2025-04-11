@@ -111,12 +111,12 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 const warehouseBinList: any = ref([])
-getWarehouseBinList({}, warehouseBinList)
+getWarehouseBinList(warehouseBinList, {})
 
 watch(
   () => props.warehouseId,
   (val) => {
-    // getWarehouseBinList({ warehouseId: val }, warehouseBinList)
+    // getWarehouseBinList(warehouseBinList, { warehouseId: val })
   }
 )
 

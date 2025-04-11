@@ -45,7 +45,7 @@ export const getWarehouseZoneList = (data?: any) => {
 }
 
 // 获得库位精简列表
-export const getWarehouseBinList = (params: any, data?: any) => {
+export const getWarehouseBinList = (params?: any, data?: any) => {
   const warehouseBinList = ref<(WarehouseBinVO & SelectProp)[]>([])
 
   WarehouseBinApi.getWarehouseBinSimpleList(params).then((res) => {

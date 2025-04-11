@@ -12,7 +12,7 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <!-- outboundId-入库单ID sourceItemId-来源详情ID  -->
 
-      <el-table :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
         <el-table-column label="产品编码" width="180">
@@ -21,29 +21,35 @@
               :prop="`${$index}.productId`"
               :rules="formRules.productId"
               class="mb-0px!"
-              :disabled="disabled"
             >
-              <SmSelect
-                :disabled="disabled"
-                v-model="row.productId"
-                placeholder="请选择产品编码"
-                @change="
-                  (val) =>
-                    updateModelValue(val, row, productList, 'id', {
-                      productName: 'name',
-                      barCode: 'barCode',
-                      productUnitName: 'unitName',
-                      productUnitId: 'unitId'
-                    })
-                "
-                :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
+              <el-text>{{ row.productBarCode }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <!-- 计划出库量 -->
+        <el-table-column label="数量" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
+              <el-input-number
+                v-model="row.planQty"
+                controls-position="right"
+                :min="0"
+                class="!w-100%"
               />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="实际出库量" width="120">
+        <el-table-column label="库位" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.binName`" class="mb-0px!">
+              <el-text>{{ row.binName }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <!-- <el-table-column label="实际出库量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
@@ -54,20 +60,7 @@
               />
             </el-form-item>
           </template>
-        </el-table-column>
-
-        <el-table-column label="计划出库量" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
-              <el-input-number
-                v-model="row.planQty"
-                controls-position="right"
-                :min="1"
-                class="!w-100%"
-              />
-            </el-form-item>
-          </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
@@ -78,9 +71,6 @@
         </el-table-column>
       </el-table>
     </el-form>
-    <el-row justify="center" class="mt-3" v-if="!disabled">
-      <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
-    </el-row>
   </div>
 </template>
 <script setup lang="ts">
@@ -117,11 +107,8 @@ const props = defineProps({
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
-  // warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
-  currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
+  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
@@ -168,41 +155,6 @@ const getSummaries = (param: SummaryMethodProps) => {
   return sums
 }
 
-/** 新增按钮操作 */
-const handleAdd = () => {
-  const row = {
-    orderNo: undefined,
-    orderItemId: undefined, //list记得转化
-    productId: undefined,
-    productName: undefined,
-    productBarCode: undefined,
-    productUnitName: undefined, //列表要转化取item-product里面数据
-    productUnitId: undefined, // 列表要转化取item-product里面数据
-    model: undefined, // //列表要转化取item-product里面数据
-
-    productPrice: undefined,
-    qty: undefined,
-    taxPercent: TAX_PERCENT,
-    taxPrice: undefined,
-    actTaxPrice: undefined,
-    allAmount: undefined,
-    remark: undefined,
-    settlementDate: undefined,
-    containerRate: undefined,
-
-    warehouseId: undefined,
-    expectArrivalDate: undefined,
-
-    currencyId: undefined,
-    applicantId: undefined,
-    applicantName: undefined,
-    applicationDeptId: undefined,
-    applicationDeptName: undefined
-    // productPrice: actTaxPrice
-  }
-  formData.value.push(row)
-}
-
 /** 删除按钮操作 */
 const handleDelete = (index: number) => {
   formData.value.splice(index, 1)
@@ -236,10 +188,4 @@ const validate = () => {
   return formRef.value.validate()
 }
 defineExpose({ validate, formData })
-
-/** 初始化 */
-onMounted(async () => {
-  // warehouseList.value = await WarehouseApi.getWarehouseSimpleList()
-  // defaultWarehouse.value = warehouseList.value.find((item) => item.defaultStatus)
-})
 </script>
