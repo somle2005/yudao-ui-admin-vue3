@@ -49,6 +49,19 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="备注" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input
+                :disabled="disabled"
+                v-model="row.remark"
+                placeholder="请输入备注"
+                type="textarea"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <!-- <el-table-column label="实际出库量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">

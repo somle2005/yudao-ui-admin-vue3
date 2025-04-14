@@ -12,6 +12,8 @@ export interface OutboundVO {
   sourceBillNo: string // 来源单据号
   sourceBillType: number // 来源单据类型
   creatorComment: string // 特别说明，创建方专用
+  comment?: string // 审核意见
+  itemList: any[] 
 }
 
 // 出库单 API
@@ -45,4 +47,35 @@ export const OutboundApi = {
   exportOutbound: async (params) => {
     return await request.download({ url: `/wms/outbound/export-excel`, params })
   },
+
+  // 入库单提交审核
+  submitOutboundAudit: async (data: { billId: number }) => {
+    return await request.put({
+      url: `/wms/outbound/submit`,
+      data
+    })
+  },
+
+  // 同意审核出库单
+  agreeOutboundAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/outbound/agree`,
+      data
+    })
+  },
+  // 不同意审核出库单
+  rejectOutboundAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/outbound/reject`,
+      data
+    })
+  },
+
+  // 完成出库单
+  finishOutbound: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/outbound/finish`,
+      data
+    })
+  }
 }

@@ -27,7 +27,7 @@ export interface InboundPickupPendingVO {
   pageSize: number
 }
 
-export interface InboundItemActualQuantityVO {
+export interface InboundItemActualQtyVO {
   /**
    * 实际入库量
    */
@@ -80,7 +80,7 @@ export const InboundItemApi = {
     return await request.get({ url: `/wms/inbound-item/pickup-pending`, params })
   },
   // 设置实际入库量
-  updateInboundItemActualQuantity: async (data: Array<InboundItemActualQuantityVO>) => {
+  updateInboundItemActualQuantity: async (data: Array<InboundItemActualQtyVO>) => {
     return await request.put({ url: `/wms/inbound-item/update-actual-quantity`, data })
   },
 }

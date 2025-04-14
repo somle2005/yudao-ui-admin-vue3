@@ -30,6 +30,15 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+        <el-button
+          :disabled="oneSelectionDisabled"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['wms:outbound:submit']"
+        >
+          提交审核
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -38,12 +47,14 @@
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
+      isSelection
       :loading="loading"
       :options="tableOptions"
       :data="list"
       :total="total"
       v-model:currentPage="queryParams.pageNo"
       v-model:pageSize="queryParams.pageSize"
+      @selection-change="handleSelectionChange"
       @pagination="getList"
     >
       <template #operate="{ scope }">
@@ -62,6 +73,25 @@
         >
           编辑
         </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('audit', scope.row.id)"
+          v-hasPermi="['wms:outbound:agree', 'wms:outbound:reject']"
+          v-if="scope.row.auditStatus === 1"
+        >
+          审核
+        </el-button>
+
+        <el-button
+          link
+          type="primary"
+          @click="openForm(OPERATE_MAP.finish, scope.row.id)"
+          v-hasPermi="['wms:outbound:finish']"
+        >
+          完成
+        </el-button>
+
         <el-button
           link
           type="danger"
@@ -85,6 +115,8 @@ import { OutboundApi, OutboundVO } from '@/api/wms/outbound'
 import OutboundForm from './OutboundForm.vue'
 import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
+import { useBatch } from './hooks/useBatch'
+import { OPERATE_MAP } from './constant'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -131,7 +163,7 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '200px'
+    width: '250px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, {
@@ -223,7 +255,17 @@ const handleExport = async () => {
   }
 }
 
+/** 选中操作 */
+const selectionList = ref<any[]>([])
+const handleSelectionChange = (rows: any[]) => {
+  selectionList.value = rows
+}
+
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+const { disabledBtn, handleSubmitAuditBatch } = useBatch(selectionList, getList)
+
+// 暂时提交审核是单选
+const oneSelectionDisabled = computed(() => selectionList.value.length !== 1)
 
 /** 初始化 **/
 onMounted(() => {

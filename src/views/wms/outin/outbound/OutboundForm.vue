@@ -43,7 +43,28 @@
     </SmForm>
 
     <template #footer>
-      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button v-if="!auditType" @click="submitFormDB" type="primary" :disabled="formLoading"
+        >确 定</el-button
+      >
+      <template v-if="auditType">
+        <el-button
+          v-hasPermi="['wms:outbound:reject']"
+          type="danger"
+          :disabled="formLoading"
+          @click="submitFormDB(AUDIT_TYPE.reject)"
+        >
+          不同意</el-button
+        >
+
+        <el-button
+          v-hasPermi="['wms:outbound:agree']"
+          type="primary"
+          :disabled="formLoading"
+          @click="submitFormDB(AUDIT_TYPE.agree)"
+        >
+          同意出库</el-button
+        >
+      </template>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
@@ -64,6 +85,9 @@ import { distinctList } from '@/utils/transformData'
 import { FinanceSubjectVO } from '@/api/fms/company'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getItemProp } from '@/components/SmTable/src/utils'
+import { AUDIT_TYPE } from '@/utils/constant'
+import { OPERATE_MAP } from './constant'
+import { OutboundItemApi } from '@/api/wms/outbound-item'
 
 const { addProductItemRef, openAddProductItem } = useOutProductdata()
 
@@ -98,6 +122,7 @@ const WMSWarehouseList: any = ref([])
 const financeSubjectList = ref<FinanceSubjectVO[]>([])
 
 const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
+const auditType = computed(() => formType.value === 'audit')
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -178,6 +203,22 @@ const createRequestFormOptions = () => {
   return list
 }
 const auditFormOptions = (formOptions) => {
+  addDisabled(formOptions)
+  const index = formOptions.findIndex((item) => item.slot === 'items')
+  const obj: any = {
+    type: 'input',
+    placeholder: '审核意见',
+    prop: 'comment',
+    label: '审核意见',
+    attrs: {
+      clearable: true,
+      class: '!w-1/1',
+      style: {
+        width: '100%'
+      }
+    }
+  }
+  formOptions.splice(index, 0, obj)
   return formOptions
 }
 const detailOptions = (formOptions) => {
@@ -207,6 +248,9 @@ const open = async (type: string, id?: number) => {
     },
     detail: () => {
       requestFormOptions.value = detailOptions(createRequestFormOptions())
+    },
+    finish: () => {
+      dialogTitle.value = '完成'
     }
   }
   formTypeOperate[type]()
@@ -229,18 +273,35 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
-const submitForm = async () => {
+const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as OutboundVO
+    const data = formData.value as unknown as OutboundVO as any
     if (formType.value === 'create') {
       await OutboundApi.createOutbound(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await OutboundApi.updateOutbound(data)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'audit') {
+      if (formType.value === AUDIT_TYPE.agree) {
+
+        // 同意审核的时候 实际入库量设置成和计划入库量一致
+        data.itemList.forEach((item) => {
+          item.actualQty = item.planQty
+        })
+        //  ['actualQty', 'id', 'outboundId'])
+        await OutboundItemApi.updateOutboundItemActualQty(data)
+        await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
+      } else if (type === AUDIT_TYPE.reject) {
+        await OutboundApi.rejectOutboundAuditStatus({ billId: data.id, comment: data.comment })
+      }
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === OPERATE_MAP.finish) {
+      await OutboundApi.finishOutbound({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
