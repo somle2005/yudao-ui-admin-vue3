@@ -739,7 +739,7 @@ const getFormData = () => {
 const mergeSelectItemsData = (formData, data) => {
   // count-数量要能够修改不能超过原始值
   data.items.forEach((item) => {
-    item.originCount = item.count
+    item.originCount = item.qty
   })
   formData.items = data.items
 }
@@ -785,8 +785,10 @@ const open = async (type: string, id?: number, data?: any) => {
       }
       formData.value.items = jsonToList(formData.value.items, ['inspectionJson', 'completionJson'])
       formData.value.items.forEach((item) => {
-        item.originCount = item.count
+        item.originCount = item.qty
       })
+
+      console.log(formData.value.items, 'formData.value.items')
 
       if (type === 'generateContract') {
         formData.value.signingPlace = '浙江宁波'
@@ -797,8 +799,8 @@ const open = async (type: string, id?: number, data?: any) => {
 
       if (type === 'merge') {
         dialogTitle.value = '合并入库'
-        const inFormData = getFormData()
-        mergeSelectItemsData(inFormData, data)
+        // const inFormData = getFormData()
+        // mergeSelectItemsData(inFormData, data)
       }
       // 主动触发表单数据回显
       formRef.value.initForm()
