@@ -34,11 +34,6 @@
     </SmForm>
   </ContentWrap>
 
-  <sm-range
-    class="!w-240px"
-    v-model="numberRange"
-  />
-
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
@@ -81,60 +76,60 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { OutboundApi, OutboundVO } from '@/api/wms/outbound'
 import OutboundForm from './OutboundForm.vue'
-import { useTableData } from '@/components/SmTable/src/utils'
+import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
-
-const numberRange = ref([])
 
 const { tableOptions, transformTableOptions } = useTableData()
 
+//
 const fieldMap = {
-  mode: {
-    label: '仓库属性',
-    slot: 'mode',
-    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_MODE }
+  // status: {
+  //   label: '状态',
+  //   slot: 'status',
+  //   dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
+  // },
+  no: '单据号',
+  warehouseName: '仓库名称',
+  auditStatus: {
+    label: '审核状态',
+    slot: 'auditStatus',
+    dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_AUDIT_STATUS }
   },
-  status: {
-    label: '状态',
+  type: {
+    label: '类型',
     slot: 'status',
-    dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
+    dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_TYPE }
   },
-  code: '仓库代码',
-  name: '仓库名称',
-  companyName: '公司名称',
-  country: '国家编码',
-  province: '省/州',
-  city: '城市',
-  addressLine1: '地址1',
-  addressLine2: '地址2',
-  postcode: '邮编',
-  contactPerson: '联系人',
-  contactPhone: '联系电话',
-  isSync: {
-    label: '库存同步',
-    slot: 'isSync',
-    dictAttrs: { type: DICT_TYPE.COMMON_ENABLE_STATUS }
+  outboundStatus: {
+    label: '出库状态',
+    slot: 'status',
+    dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_STATUS }
   },
+  deptName: '库存归属',
+  creatorComment: '特别说明',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
-    width: '180px'
+    width: '200px'
   },
-  updateName: '更新人',
+  updaterName: '更新人',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
-    width: '180px'
+    width: '200px'
   },
   creatorName: '创建人',
   operate: {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '180px'
+    width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap)
+tableOptions.value = transformTableOptions(fieldMap, {
+  noWidth: true,
+  wrapList: ['warehouseName', 'deptName', 'creatorComment']
+})
 
 /** 出库单 列表 */
 defineOptions({ name: 'WmsOutbound' })
@@ -167,7 +162,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await OutboundApi.getOutboundPage(queryParams)
-    list.value = data.list
+    list.value = getItemProp(data.list, ['warehouse', 'dept'])
     total.value = data.total
   } finally {
     loading.value = false

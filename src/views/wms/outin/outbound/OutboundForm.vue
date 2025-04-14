@@ -58,6 +58,7 @@ import ProductEnableList from './components/ProductEnableList.vue'
 import { distinctList } from '@/utils/transformData'
 import { FinanceSubjectVO } from '@/api/fms/company'
 import { getWMSWarehouseList } from '@/commonData/wms'
+import { getItemProp } from '@/components/SmTable/src/utils'
 
 const { addProductItemRef, openAddProductItem } = useOutProductdata()
 
@@ -112,7 +113,9 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await OutboundApi.getOutbound(id)
+      let data = await OutboundApi.getOutbound(id)
+      getItemProp(data.itemList, ['product', 'bin'])
+      formData.value = data
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {

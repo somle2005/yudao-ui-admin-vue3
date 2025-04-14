@@ -1,46 +1,54 @@
+import { getDeptTree } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
+  const WMSWarehouseList = getWMSWarehouseList()
+  const { deptList, defaultProps } = getDeptTree()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
+      type: 'input',
+      label: '单据号',
+      prop: 'no',
+      placeholder: '请输入单据号',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
       type: 'select',
-      label: '仓库属性',
-      prop: 'mode',
-      placeholder: '请输入仓库属性',
+      label: '仓库',
+      prop: 'warehouseId',
+      placeholder: '请选择仓库',
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true,
+        clearable: true
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_MODE)
+      children: WMSWarehouseList
     },
-  
-    {
-      type: 'input',
-      label: '仓库代码',
-      prop: 'code',
-      placeholder: '请输入仓库代码',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'input',
-      label: '仓库名称',
-      prop: 'name',
-      placeholder: '请输入仓库名称',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择状态',
+    //   prop: 'status',
+    //   label: '状态',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
+    // },
+
     {
       type: 'select',
-      placeholder: '请选择状态',
+      placeholder: '请选择审核状态',
       prop: 'status',
-      label: '状态',
+      label: '审核状态',
       attrs: {
         filterable: true,
         clearable: true,
@@ -48,103 +56,20 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
+      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_AUDIT_STATUS)
     },
     {
-      type: 'input',
-      label: '公司名称',
-      prop: 'companyName',
-      placeholder: '请输入公司名称',
+      type: 'tree-select',
+      label: '库存归属',
+      prop: 'deptId',
+      placeholder: '请选择库存归属',
       attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-
-    {
-      type: 'select',
-      label: '国家编码',
-      prop: 'country',
-      placeholder: '请输入国家编码',
-      attrs: {
+        'node-key': 'id',
+        'check-strictly': true,
+        props: defaultProps,
+        data: deptList,
         style: { width: '100%' },
         filterable: true,
-        clearable: true,
-      },
-      children: getIntDictOptions(DICT_TYPE.COUNTRY_CODE).map((item: any) => {
-        item.value = item.label
-        return item
-      })
-    },
-
-    {
-      type: 'input',
-      label: '省/州',
-      prop: 'province',
-      placeholder: '请输入省/州',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'input',
-      label: '城市',
-      prop: 'city',
-      placeholder: '请输入城市',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'input',
-      label: '详细地址1',
-      prop: 'addressLine1',
-      placeholder: '请输入详细地址1',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'input',
-      label: '详细地址2',
-      prop: 'addressLine2',
-      placeholder: '请输入详细地址2',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-
-    {
-      type: 'input',
-      label: '邮编',
-      prop: 'postcode',
-      placeholder: '请输入邮编',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'input',
-      label: '联系人',
-      prop: 'contactPerson',
-      placeholder: '请输入联系人',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'input',
-      label: '联系电话',
-      prop: 'contactPhone',
-      placeholder: '请输入联系电话',
-      attrs: {
-        style: { width: '100%' },
         clearable: true
       }
     }
