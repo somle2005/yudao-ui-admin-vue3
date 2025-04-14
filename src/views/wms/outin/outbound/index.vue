@@ -21,15 +21,7 @@
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['wms:outbound:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
+
         <el-button
           :disabled="oneSelectionDisabled"
           type="primary"
@@ -38,6 +30,16 @@
           v-hasPermi="['wms:outbound:submit']"
         >
           提交审核
+        </el-button>
+
+        <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:outbound:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
       </template>
     </SmForm>
@@ -85,7 +87,7 @@
 
         <el-button
           link
-          type="primary"
+          type="success"
           @click="openForm(OPERATE_MAP.finish, scope.row.id)"
           v-hasPermi="['wms:outbound:finish']"
         >

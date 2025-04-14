@@ -121,7 +121,7 @@ const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
 const financeSubjectList = ref<FinanceSubjectVO[]>([])
 
-const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
+const itemsFormdisabled = computed(() => ['detail', OPERATE_MAP.finish].includes(formType.value))
 const auditType = computed(() => formType.value === 'audit')
 
 /** 子表的表单 */
@@ -249,8 +249,9 @@ const open = async (type: string, id?: number) => {
     detail: () => {
       requestFormOptions.value = detailOptions(createRequestFormOptions())
     },
-    finish: () => {
+    [OPERATE_MAP.finish]: () => {
       dialogTitle.value = '完成'
+      requestFormOptions.value = auditFormOptions(createRequestFormOptions())
     }
   }
   formTypeOperate[type]()
@@ -288,7 +289,6 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
       if (formType.value === AUDIT_TYPE.agree) {
-
         // 同意审核的时候 实际入库量设置成和计划入库量一致
         data.itemList.forEach((item) => {
           item.actualQty = item.planQty
