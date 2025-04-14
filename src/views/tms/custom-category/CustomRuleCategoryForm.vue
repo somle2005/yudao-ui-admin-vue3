@@ -22,11 +22,11 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="报关品名" prop="declaredType">
-        <el-input v-model="formData.declaredType" placeholder="请输入报关品名" />
+      <el-form-item label="海关品名" prop="declaredType">
+        <el-input v-model="formData.declaredType" placeholder="请输入海关品名" />
       </el-form-item>
-      <el-form-item label="英文品名" prop="declaredTypeEn">
-        <el-input v-model="formData.declaredTypeEn" placeholder="请输入英文品名" />
+      <el-form-item label="海关品名(英文)" prop="declaredTypeEn">
+        <el-input v-model="formData.declaredTypeEn" placeholder="请输入海关品名(英文)" />
       </el-form-item>
     </el-form>
     <!-- 子表的表单 -->
@@ -66,8 +66,8 @@ const formData = ref({
 })
 const formRules = reactive({
   material: [{ required: true, message: '材质不能为空', trigger: 'blur' }],
-  declaredType: [{ required: true, message: '报关品名不能为空', trigger: 'blur' }],
-  declaredTypeEn: [{ required: true, message: '英文品名不能为空', trigger: 'blur' }],
+  declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 

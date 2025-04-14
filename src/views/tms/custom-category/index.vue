@@ -6,7 +6,7 @@
       :model="queryParams"
       ref="queryFormRef"
       :inline="true"
-      label-width="100px"
+      label-width="150px"
     >
       <el-form-item label="创建时间" prop="createTime">
         <el-date-picker
@@ -104,12 +104,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="报关品名"
+        label="海关品名"
         align="center"
         prop="declaredType"
         :style="{width: '500px'}"
       />
-      <el-table-column label="英文品名" align="center" prop="declaredTypeEn" />
+      <el-table-column label="海关品名(英文)" align="center" prop="declaredTypeEn" />
       <el-table-column
         label="更新时间"
         align="center"
