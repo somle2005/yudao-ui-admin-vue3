@@ -49,6 +49,13 @@
       <template #operate="{ scope }">
         <el-button
           link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['wms:outbound:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:outbound:update']"
@@ -102,9 +109,10 @@ const fieldMap = {
   },
   outboundStatus: {
     label: '出库状态',
-    slot: 'status',
+    slot: 'outboundStatus',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_STATUS }
   },
+  companyName: '库存主体',
   deptName: '库存归属',
   creatorComment: '特别说明',
   updateTime: {
@@ -128,7 +136,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   noWidth: true,
-  wrapList: ['warehouseName', 'deptName', 'creatorComment']
+  wrapList: ['warehouseName', 'deptName', 'companyName', 'creatorComment']
 })
 
 /** 出库单 列表 */
@@ -162,7 +170,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await OutboundApi.getOutboundPage(queryParams)
-    list.value = getItemProp(data.list, ['warehouse', 'dept'])
+    list.value = getItemProp(data.list, ['warehouse', 'dept', 'company'])
     total.value = data.total
   } finally {
     loading.value = false

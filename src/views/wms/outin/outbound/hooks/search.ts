@@ -1,4 +1,4 @@
-import { getDeptTree } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
@@ -6,6 +6,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const { deptList, defaultProps } = getDeptTree()
+  const financeSubjectList = getFinanceSubjectList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -57,6 +58,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_AUDIT_STATUS)
+    },
+    {
+      requiredFlag: true,
+      type: 'select',
+      placeholder: '请选择库存主体',
+      prop: 'companyId',
+      label: '库存主体',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
     },
     {
       type: 'tree-select',

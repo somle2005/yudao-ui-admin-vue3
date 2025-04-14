@@ -12,11 +12,11 @@
     >
       <template #items>
         <el-button
-          :disabled="itemsFormdisabled"
           type="primary"
           @click="openAddItem"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:inbound-item:query']"
+          v-if="!itemsFormdisabled"
           >选择拣货项</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">

@@ -21,17 +21,22 @@
           按批次选择产品</el-button
         > -->
         <el-button
-          :disabled="itemsFormdisabled"
           type="primary"
           @click="openAddProductItem(warehouseId)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-bin:query']"
+          v-if="!itemsFormdisabled"
           >选择产品</el-button
         >
 
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="退货产品清单" name="item">
-            <ItemForm ref="itemFormRef" :items="formData.itemList" :formType="formType" />
+            <ItemForm
+              ref="itemFormRef"
+              :items="formData.itemList"
+              :disabled="itemsFormdisabled"
+              :formType="formType"
+            />
           </el-tab-pane>
         </el-tabs>
       </template>
@@ -49,7 +54,7 @@
 <script setup lang="ts">
 import { OutboundApi, OutboundVO } from '@/api/wms/outbound'
 import { getFinanceSubjectList } from '@/commonData'
-import { addProperty } from '@/components/SmForm/src/utils'
+import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
@@ -99,67 +104,10 @@ const subTabsName = ref('item')
 const itemFormRef = ref()
 const warehouseId = ref()
 
-/** 打开弹窗 */
-const open = async (type: string, id?: number) => {
-  dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
-  formType.value = type
-  resetForm()
-
-  getWMSWarehouseList(WMSWarehouseList)
-  getFinanceSubjectList(financeSubjectList)
-
-  // 修改时，设置数据
-  if (id) {
-    formLoading.value = true
-    try {
-      let data = await OutboundApi.getOutbound(id)
-      getItemProp(data.itemList, ['product', 'bin'])
-      formData.value = data
-      // 主动触发表单数据回显
-      formRef.value.initForm()
-    } finally {
-      formLoading.value = false
-    }
-  }
-}
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
-const submitForm = async () => {
-  // 校验表单
-  await formRef.value.validate()
-  // 提交请求
-  formLoading.value = true
-  try {
-    const data = formData.value as unknown as OutboundVO
-    if (formType.value === 'create') {
-      await OutboundApi.createOutbound(data)
-      message.success(t('common.createSuccess'))
-    } else {
-      await OutboundApi.updateOutbound(data)
-      message.success(t('common.updateSuccess'))
-    }
-    dialogVisible.value = false
-    // 发送操作成功的事件
-    emit('success')
-  } finally {
-    formLoading.value = false
-  }
-}
-const submitFormDB = createDBFn(submitForm)
-
-/** 重置表单 */
-const resetForm = () => {
-  formData.value = initFormData()
-  formRef.value?.resetFields()
-}
-
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
   const list = [
-    { 
+    {
       requiredFlag: true,
       type: 'select',
       placeholder: '请选择仓库',
@@ -224,40 +172,91 @@ const createRequestFormOptions = () => {
         class: 'common-form-items'
       }
     }
-    // {
-    //   type: 'select',
-    //   placeholder: '请选择状态',
-    //   prop: 'status',
-    //   label: '状态',
-    //   attrs: {
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
-    // },
-    // {
-    //   type: 'select',
-    //   placeholder: '请选择财务审核状态',
-    //   prop: 'status',
-    //   label: '财务审核状态',
-    //   attrs: {
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: getIntDictOptions(DICT_TYPE.WMS_VALID_STATUS)
-    // },
   ]
 
   addProperty(list)
   return list
 }
-requestFormOptions.value = createRequestFormOptions()
+const auditFormOptions = (formOptions) => {
+  return formOptions
+}
+const detailOptions = (formOptions) => {
+  addDisabled(formOptions)
+  return formOptions
+}
+
+/** 打开弹窗 */
+const open = async (type: string, id?: number) => {
+  dialogVisible.value = true
+  dialogTitle.value = t('action.' + type)
+  formType.value = type
+  resetForm()
+
+  getWMSWarehouseList(WMSWarehouseList)
+  getFinanceSubjectList(financeSubjectList)
+
+  const formTypeOperate = {
+    create: () => {
+      requestFormOptions.value = createRequestFormOptions()
+    },
+    update: () => {
+      requestFormOptions.value = createRequestFormOptions()
+    },
+    audit: () => {
+      requestFormOptions.value = auditFormOptions(createRequestFormOptions())
+    },
+    detail: () => {
+      requestFormOptions.value = detailOptions(createRequestFormOptions())
+    }
+  }
+  formTypeOperate[type]()
+
+  // 修改时，设置数据
+  if (id) {
+    formLoading.value = true
+    try {
+      let data = await OutboundApi.getOutbound(id)
+      getItemProp(data.itemList, ['product', 'bin'])
+      formData.value = data
+      // 主动触发表单数据回显
+      formRef.value.initForm()
+    } finally {
+      formLoading.value = false
+    }
+  }
+}
+defineExpose({ open }) // 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+const submitForm = async () => {
+  // 校验表单
+  await formRef.value.validate()
+  // 提交请求
+  formLoading.value = true
+  try {
+    const data = formData.value as unknown as OutboundVO
+    if (formType.value === 'create') {
+      await OutboundApi.createOutbound(data)
+      message.success(t('common.createSuccess'))
+    } else {
+      await OutboundApi.updateOutbound(data)
+      message.success(t('common.updateSuccess'))
+    }
+    dialogVisible.value = false
+    // 发送操作成功的事件
+    emit('success')
+  } finally {
+    formLoading.value = false
+  }
+}
+const submitFormDB = createDBFn(submitForm)
+
+/** 重置表单 */
+const resetForm = () => {
+  formData.value = initFormData()
+  formRef.value?.resetFields()
+}
 
 const getFormData = () => {
   return formData.value
