@@ -39,7 +39,7 @@ import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { getFinanceSubjectList } from '@/commonData'
-import { FinanceSubjectVO } from '@/api/erp/finance/subject'
+import { FinanceSubjectVO } from '@/api/fms/company'
 import { OPERATE_MAP } from './constant'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { InboundItemApi } from '@/api/wms/inbound-item'
@@ -79,10 +79,6 @@ const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
 const financeSubjectList = ref<FinanceSubjectVO[]>([])
-let { defaultProps, deptList } = {
-  defaultProps: {},
-  deptList: [] as any
-}
 
 /** 子表的表单 */
 const subTabsName = ref('item')
