@@ -23,7 +23,17 @@
         </el-button>
 
         <el-button
-          :disabled="oneSelectionDisabled"
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:inbound:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
+
+        <el-button
+          :disabled="oneSelectDisabledBtn"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -33,13 +43,12 @@
         </el-button>
 
         <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['wms:inbound:export']"
+          :disabled="oneSelectDisabledBtn"
+          type="primary"
+          @click="openForm('audit', selectionList[0]?.id)"
+          v-hasPermi="['wms:inbound:agree', 'wms:inbound:reject']"
         >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
+          审核
         </el-button>
       </template>
     </SmForm>
@@ -75,7 +84,7 @@
           详情
         </el-button>
         <!-- 待审核才出现 -->
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="openForm('audit', scope.row.id)"
@@ -83,7 +92,7 @@
           v-if="scope.row.auditStatus === 1"
         >
           审核
-        </el-button>
+        </el-button> -->
         <el-button
           link
           type="primary"
@@ -307,7 +316,7 @@ const handleSelectionChange = (rows: any[]) => {
 
 const { disabledBtn, handleSubmitAuditBatch } = useBatch(selectionList, getList)
 // 暂时提交审核是单选
-const oneSelectionDisabled = computed(() => selectionList.value.length !== 1)
+const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
 /** 初始化 **/
 onMounted(() => {

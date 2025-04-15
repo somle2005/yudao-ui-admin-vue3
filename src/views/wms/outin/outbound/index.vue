@@ -23,13 +23,32 @@
         </el-button>
 
         <el-button
-          :disabled="oneSelectionDisabled"
+          :disabled="oneSelectDisabledBtn"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
           v-hasPermi="['wms:outbound:submit']"
         >
           提交审核
+        </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['srm:purchase-order:submit-audit']"
+        >
+          提交审核
+        </el-button>
+
+        <el-button
+          :disabled="oneSelectDisabledBtn"
+          type="primary"
+          @click="openForm('audit', selectionList[0]?.id)"
+          v-hasPermi="['wms:outbound:agree', 'wms:outbound:reject']"
+        >
+          审核
         </el-button>
 
         <el-button
@@ -75,7 +94,7 @@
         >
           编辑
         </el-button>
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="openForm('audit', scope.row.id)"
@@ -83,7 +102,7 @@
           v-if="scope.row.auditStatus === 1"
         >
           审核
-        </el-button>
+        </el-button> -->
 
         <el-button
           link
@@ -267,7 +286,7 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 const { disabledBtn, handleSubmitAuditBatch } = useBatch(selectionList, getList)
 
 // 暂时提交审核是单选
-const oneSelectionDisabled = computed(() => selectionList.value.length !== 1)
+const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
 /** 初始化 **/
 onMounted(() => {
