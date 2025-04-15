@@ -20,6 +20,35 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="最后跟进时间" prop="contactLastTime" label-width="100px">
+        <el-date-picker
+          v-model="queryParams.contactLastTime"
+          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
+          :shortcuts="defaultShortcuts"
+          class="!w-240px"
+          end-placeholder="结束日期"
+          start-placeholder="开始日期"
+          type="daterange"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          @change="handleQuery"
+        />
+      </el-form-item>
+
+      <el-form-item label="客户级别" prop="level">
+        <el-select
+          v-model="queryParams.level"
+          class="!w-240px"
+          clearable
+          placeholder="请选择客户级别"
+        >
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_LEVEL)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button @click="handleQuery">
           <Icon class="mr-5px" icon="ep:search" />
@@ -73,6 +102,14 @@
           </el-link>
         </template>
       </el-table-column>
+
+      <el-table-column
+        align="center"
+        label="客户级别"
+        prop="customerLevel"
+        width="140"
+      />
+
       <el-table-column
         :formatter="erpPriceTableColumnFormatter"
         align="center"
@@ -104,6 +141,7 @@
         prop="contactLastTime"
         width="180px"
       />
+      <el-table-column align="center" label="最后跟进内容" prop="contactLastContent" width="300px" />
       <el-table-column
         :formatter="dateFormatter"
         align="center"
@@ -168,7 +206,8 @@
 </template>
 
 <script lang="ts" setup>
-import { dateFormatter } from '@/utils/formatTime'
+import {DICT_TYPE, getIntDictOptions} from '@/utils/dict'
+import {dateFormatter, defaultShortcuts} from '@/utils/formatTime'
 import download from '@/utils/download'
 import * as BusinessApi from '@/api/crm/business'
 import BusinessForm from './BusinessForm.vue'
@@ -187,7 +226,9 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   sceneType: '1', // 默认和 activeName 相等
-  name: null
+  name: null,
+  contactLastTime: null,
+  level: null
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
