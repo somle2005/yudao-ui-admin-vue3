@@ -27,16 +27,6 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['wms:outbound:submit']"
-        >
-          提交审核
-        </el-button>
-
-        <el-button
-          :disabled="disabledBtn"
-          type="primary"
-          plain
-          @click="handleSubmitAuditBatch"
           v-hasPermi="['srm:purchase-order:submit-audit']"
         >
           提交审核
