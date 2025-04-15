@@ -6,7 +6,7 @@
           <el-form-item label="平台SKU" prop="platformCode">
             <el-input
               class="!w-240px"
-              v-model="formData.platformCode"
+              v-model="formData.code"
               placeholder="请输入平台SKU"
               :disabled="disabled"
             />

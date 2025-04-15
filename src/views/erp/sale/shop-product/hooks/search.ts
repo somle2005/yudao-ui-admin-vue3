@@ -78,7 +78,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '平台SKU',
-      prop: 'platformProductCode',
+      prop: 'shopProductCode',
       placeholder: '请输入SKU编码',
       attrs: {
         class: '!w-240px',

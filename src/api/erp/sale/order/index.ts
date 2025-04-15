@@ -18,7 +18,7 @@ export interface SaleOrderVO {
 export const SaleOrderApi = {
   // 查询销售订单分页
   getSaleOrderPage: async (params: any) => {
-    return await request.get({ url: `/erp/sale-order/page`, params })
+    return await request.get({ url: `/oms/sale-order/page`, params })
   },
 
   // 查询销售订单详情
