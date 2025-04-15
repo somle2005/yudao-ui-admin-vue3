@@ -23,7 +23,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择产品编码',
-      prop: 'type',
+      prop: 'productId',
       label: '产品编码',
       attrs: {
         filterable: true,
@@ -37,7 +37,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'tree-select',
       label: '库存归属',
-      prop: 'dproductDeptId',
+      prop: 'productDeptId',
       placeholder: '请选择库存归属',
       attrs: {
         'node-key': 'id',
@@ -57,10 +57,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
       attrs: {
         clearable: true,
         type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        'value-format': 'x',
         'start-placeholder': '开始日期',
         'end-placeholder': '结束日期',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+        // defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
         class: '!w-240px',
         style: {
           width: '100%'
