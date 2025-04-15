@@ -42,4 +42,9 @@ export const StockBinApi = {
   exportStockBin: async (params) => {
     return await request.download({ url: `/wms/stock-bin/export-excel`, params })
   },
+
+  // 获得按产品分组的仓位库存分页
+  getStockBinGroupedPage: async (data: any) => {
+    return await request.post({ url: `/wms/stock-bin/grouped-page`, data })
+  }
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="SmTable">
-    <!-- v-bind="$attrs" style="height:calc(100vh - 285px)" -->
+    <!-- v-bind="$attrs" style="height:calc(100vh - 285px)"-->
     <el-table
       v-loading="loading"
       :stripe="stripe"
@@ -37,13 +37,17 @@
             <template v-if="scope.row.rowEdit">
               <el-input v-model="scope.row[item.prop!]" size="small" />
             </template>
-            
+
             <template v-else-if="item.dictAttrs">
               <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
             </template>
 
-            <template v-else-if="item.dictAttrs">
-              <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
+            <template v-else-if="item.imageAttrs">
+              <el-image
+                :src="scope.row[item.prop]"
+                class="w-64px h-64px"
+                v-bind="item.imageAttrs"
+              />
             </template>
 
             <template v-else-if="item.wrap">

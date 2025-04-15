@@ -21,6 +21,7 @@
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
+      :showOverflowTooltip="false"
       :loading="loading"
       :options="tableOptions"
       :data="list"
@@ -47,6 +48,20 @@
           删除
         </el-button>
       </template> -->
+
+      <template #productInfo="{ scope }">
+        <ProductInfo :data="scope.row" />
+      </template>
+      <template #warehouseInfo="{ scope }">
+        <!-- show-summary -->
+        <SmTable
+          :pagination="false"
+          border
+          :tooltip="false"
+          :options="warehouseTableOptions"
+          :data="scope.row.stockWarehouseList"
+        />
+      </template>
     </SmTable>
   </ContentWrap>
 
@@ -61,34 +76,41 @@ import { StockWarehouseApi, StockWarehouseVO } from '@/api/wms/stock-warehouse'
 import StockWarehouseForm from './StockWarehouseForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
+import { StockBinApi } from '@/api/wms/stock-bin'
+import ProductInfo from './components/ProductInfo.vue'
 
-const { tableOptions, transformTableOptions, getItemProp } = useTableData()
+const { tableOptions, transformTableOptions, getItemProp, getItemPropList } = useTableData()
 
 const fieldMap = {
-  productBarCode: '产品编码',
-  warehouseName: '仓库名称',
-
-  availableQty: '可用量',
-  defectiveQty: '不良品数量',
-  outboundPendingQty: '待出库量',
-  purchasePlanQty: '采购计划量',
-  purchaseTransitQty: '采购在途量',
-  returnTransitQty: '退件在途数量',
-  sellableQty: '可售量',
-  shelvingPendingQty: '待上架数量',
-
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '200px'
+  // 产品图片
+  primaryImageUrl: {
+    label: '产品图片',
+    slot: 'primaryImageUrl',
+    imageAttrs: {}
   },
-  updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
+
+  productInfo: {
+    width: '400px',
+    label: '产品信息',
+    slot: 'productInfo'
   },
-  creatorName: '创建人'
+  warehouseInfo: {
+    width: '2000px', // 需要综合计算后得出暂时2000
+    label: '仓库信息',
+    slot: 'warehouseInfo'
+  }
+  // updateTime: {
+  //   label: '更新时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // updaterName: '更新人',
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // creatorName: '创建人'
   // operate: {
   //   label: '操作',
   //   slot: 'operate',
@@ -96,7 +118,37 @@ const fieldMap = {
   //   width: '200px'
   // }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+// tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap)
+
+const warehouseFieldMap = {
+  warehouseName: '仓库名称',
+  warehouseMode: {
+    label: '仓库经营方式',
+    width: '250px',
+    slot: 'warehouseMode',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_MODE }
+  },
+  availableQty: '可用量',
+  defectiveQty: '不良品数量',
+  outboundPendingQty: '待出库量',
+  purchasePlanQty: '采购计划量',
+  purchaseTransitQty: '采购在途量',
+  returnTransitQty: '退件在途数量',
+  sellableQty: '可售量',
+  shelvingPendingQty: '待上架数量'
+}
+
+const warehouseTableOptions = ref(transformTableOptions(warehouseFieldMap, { allWrap: true }))
+
+const warehouseInfoWidth = warehouseTableOptions.value.reduce((prev, cur) => {
+  return prev + Number(cur.width!.replace('px', ''))
+}, 0)
+
+const warehouseInfoItem = tableOptions.value.find((item) => item.prop === 'warehouseInfo')!
+warehouseInfoItem.width = warehouseInfoWidth + 'px'
+
+console.log(warehouseInfoWidth, 'warehouseInfoWidth')
 
 /** 仓库库存 列表 */
 defineOptions({ name: 'WmsStockWarehouse' })
@@ -130,8 +182,14 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await StockWarehouseApi.getStockWarehousePage(queryParams)
-    list.value = getItemProp(data.list, ['warehouse', 'product'])
+    // const data = await StockWarehouseApi.getStockWarehousePage(queryParams)
+    const data = await StockBinApi.getStockBinGroupedPage(queryParams)
+    list.value = data.list.map((item) => {
+      item.stockWarehouseList = getItemPropList(item.stockWarehouseList, [
+        { prop: 'warehouse', keyList: ['mode', 'name', 'code'] }
+      ])
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false

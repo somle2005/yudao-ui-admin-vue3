@@ -52,6 +52,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { notEmpty } from '@/utils/judge'
 import { computed } from 'vue'
 
 defineOptions({ name: 'SmRange' })
@@ -146,23 +147,26 @@ const handleChangeMinValue = (value: number) => {
     emit('update:minValue', null)
     return
   }
-  // 初始化数字精度
   const newMinValue = parsePrecision(value, props.precision)
-  // min > max 交换min max
-  if (
-    typeof newMinValue === 'number' &&
-    parseFloat(String(newMinValue)) > parseFloat(String(maxValue_.value))
-  ) {
-    // 取值范围判定
-    const { min, max } = decideValueRange(Number(maxValue_.value), newMinValue)
-    // 更新绑定值
-    updateValue(min, max)
-  } else {
-    // 取值范围判定
-    const { min, max } = decideValueRange(newMinValue, Number(maxValue_.value))
-    // 更新绑定值
-    updateValue(min, max)
-  }
+  updateValue(newMinValue, parseFloat(String(maxValue_.value)))
+
+  // // 初始化数字精度
+  // const newMinValue = parsePrecision(value, props.precision)
+  // // min > max 交换min max
+  // if (
+  //   typeof newMinValue === 'number' &&
+  //   parseFloat(String(newMinValue)) > parseFloat(String(maxValue_.value))
+  // ) {
+  //   // 取值范围判定
+  //   const { min, max } = decideValueRange(Number(maxValue_.value), newMinValue)
+  //   // 更新绑定值
+  //   updateValue(min, max)
+  // } else {
+  //   // 取值范围判定
+  //   const { min, max } = decideValueRange(newMinValue, Number(maxValue_.value))
+  //   // 更新绑定值
+  //   updateValue(min, max)
+  // }
 }
 
 const handleChangeMaxValue = (value: number) => {
@@ -171,27 +175,31 @@ const handleChangeMaxValue = (value: number) => {
     emit('update:maxValue', null)
     return
   }
-  // 初始化数字精度
+
   const newMaxValue = parsePrecision(value, props.precision)
-  // max < min 交换min max
-  if (
-    typeof newMaxValue === 'number' &&
-    parseFloat(String(newMaxValue)) < parseFloat(String(minValue_.value))
-  ) {
-    // 取值范围判定
-    const { min, max } = decideValueRange(newMaxValue, Number(minValue_.value))
-    // 更新绑定值
-    updateValue(min, max)
-  } else {
-    // 取值范围判定
-    const { min, max } = decideValueRange(Number(minValue_.value), newMaxValue)
-    // 更新绑定值
-    updateValue(min, max)
-  }
+  updateValue(Number(minValue_.value), newMaxValue)
+
+  // // 初始化数字精度
+  // const newMaxValue = parsePrecision(value, props.precision)
+  // // max < min 交换min max
+  // if (
+  //   typeof newMaxValue === 'number' &&
+  //   parseFloat(String(newMaxValue)) < parseFloat(String(minValue_.value))
+  // ) {
+  //   // 取值范围判定
+  //   const { min, max } = decideValueRange(newMaxValue, Number(minValue_.value))
+  //   // 更新绑定值
+  //   updateValue(min, max)
+  // } else {
+  //   // 取值范围判定
+  //   const { min, max } = decideValueRange(Number(minValue_.value), newMaxValue)
+  //   // 更新绑定值
+  //   updateValue(min, max)
+  // }
 }
 
 // 更新数据
-const updateValue = (min: number, max: number) => {
+const updateValue = (min: number | null, max: number | null) => {
   emit('update:minValue', min)
   emit('update:maxValue', max)
   emit('update:modelValue', [min, max])
@@ -227,6 +235,7 @@ const handleBlur = () => {
 
 // 处理数字精度
 const parsePrecision = (number: number, precision = 0) => {
+  if (!notEmpty(number)) return null
   return parseFloat(String(Math.round(number * Math.pow(10, precision)) / Math.pow(10, precision)))
 }
 
