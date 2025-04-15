@@ -28,13 +28,13 @@ export const useProductEnableTable = () => {
       formatter: dateFormatter,
       width: '200px'
     },
-    updater: '更新人',
+    updaterName: '更新人',
     createTime: {
       label: '创建时间',
       formatter: dateFormatter,
       width: '200px'
     },
-    creator: '创建人'
+    creatorName: '创建人'
   }
   tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
 
