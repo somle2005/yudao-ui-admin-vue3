@@ -51,9 +51,26 @@
         >
           提交审核
         </el-button>
+        <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['srm:purchase-request:review']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
 
         <el-button
           :disabled="disabledBtn"
+          class="ml-10px"
           type="primary"
           plain
           @click="handleUpdateStatusEnableBatch(true)"
@@ -141,7 +158,7 @@
         >
           删除
         </el-button>
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
@@ -159,7 +176,7 @@
           v-if="scope.row.auditStatus === 5"
         >
           反审核
-        </el-button>
+        </el-button> -->
       </template>
     </SmTable>
   </ContentWrap>
@@ -654,6 +671,8 @@ const { handleWholeOrderEnable } = useWholeOrder(
   wholeOrderList,
   wholeOrderTotal
 )
+
+const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
 /** 初始化 **/
 onMounted(async () => {

@@ -191,7 +191,7 @@
         </el-table-column>
         <el-table-column v-if="showOringinCount" label="下单数量" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.originCount`" class="mb-0px!">
               <el-text>{{ row.originCount }}</el-text>
             </el-form-item>
           </template>

@@ -56,10 +56,10 @@ export const useBatch = (selectionList, getList, wholeOrderEnable) => {
 
   const disabledBtn = computed(() => selectionList.value.length === 0)
 
-  const generateContractDisabledBtn = computed(() => selectionList.value.length !== 1)
+  const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
   return {
-    generateContractDisabledBtn,
+    oneSelectDisabledBtn,
     disabledBtn,
     handleUpdateStatusEnableBatch,
     handleSubmitAuditBatch
