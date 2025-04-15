@@ -1,14 +1,11 @@
 import { getDeptTree, getProductList } from '@/commonData'
-import { getWarehouseBinList, getWarehouseZoneList, getWMSWarehouseList } from '@/commonData/wms'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const productList = getProductList() // 产品列表
   const { deptList, defaultProps } = getDeptTree()
-  const warehouseZoneList = getWarehouseZoneList()
-  const warehouseBinList = getWarehouseBinList()
 
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -40,7 +37,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'tree-select',
       label: '库存归属',
-      prop: 'productDeptId',
+      prop: 'deptId',
       placeholder: '请选择库存归属',
       attrs: {
         'node-key': 'id',
@@ -52,31 +49,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
-    {
-      type: 'select',
-      label: '库区',
-      prop: 'zoneId',
-      placeholder: '请选择库区',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      },
-      children: warehouseZoneList
-    },
-    {
-      type: 'select',
-      label: '库位',
-      prop: 'binId',
-      placeholder: '请选择库位',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      },
-      children: warehouseBinList
-    },
-
     {
       type: 'date-picker',
       placeholder: '请选择创建时间',
@@ -95,11 +67,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       }
     },
-
     {
       componentType: 'sm-range',
-      label: '可售量',
-      prop: 'sellableQty',
+      label: '可用量',
+      prop: 'availableQty',
       attrs: {
         style: { width: '100%' },
         clearable: true
@@ -107,8 +78,17 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       componentType: 'sm-range',
-      label: '可用量',
-      prop: 'availableQty',
+      label: '待出库量',
+      prop: 'outboundPendingQty',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      componentType: 'sm-range',
+      label: '待上架数量',
+      prop: 'shelvingPendingQty',
       attrs: {
         style: { width: '100%' },
         clearable: true

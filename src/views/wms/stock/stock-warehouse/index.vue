@@ -148,7 +148,6 @@ const warehouseInfoWidth = warehouseTableOptions.value.reduce((prev, cur) => {
 const warehouseInfoItem = tableOptions.value.find((item) => item.prop === 'warehouseInfo')!
 warehouseInfoItem.width = warehouseInfoWidth + 'px'
 
-console.log(warehouseInfoWidth, 'warehouseInfoWidth')
 
 /** 仓库库存 列表 */
 defineOptions({ name: 'WmsStockWarehouse' })
