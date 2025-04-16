@@ -128,7 +128,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:sale-order:create']"
+          v-hasPermi="['oms:sale-order:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -137,7 +137,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:sale-order:export']"
+          v-hasPermi="['oms:sale-order:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -145,7 +145,7 @@
           type="danger"
           plain
           @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['erp:sale-order:delete']"
+          v-hasPermi="['oms:sale-order:delete']"
           :disabled="selectionList.length === 0"
         >
           <Icon icon="ep:delete" class="mr-5px" /> 删除
@@ -165,57 +165,52 @@
     >
       <el-table-column width="30" label="选择" type="selection" />
       <el-table-column min-width="180" label="订单单号" align="center" prop="no" />
+      <el-table-column min-width="180" label="所属店铺" align="center" prop="shopName" />
       <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
-      <el-table-column label="客户" align="center" prop="customerName" />
+      <el-table-column label="买家姓名" align="center" prop="buyerName" />
+      <el-table-column label="公司名" align="center" prop="companyName" />
+
+      <el-table-column label="收件人国家" align="center" prop="buyerCountryCode" width="100" />
+      <el-table-column label="收件人省【或为州】" align="center" prop="state" width="150"/>
+      <el-table-column label="城市" align="center" prop="city" />
+      <el-table-column label="区/县" align="center" prop="district" />
+      <el-table-column label="地址" align="center" prop="address" width="300"/>
+      <el-table-column label="门牌号" align="center" prop="houseNumber" />
+      <el-table-column label="邮编" align="center" prop="postalCode" />
+      <el-table-column label="运费" align="center" prop="shippingCost" />
       <el-table-column
-        label="订单时间"
+        label="订单创建时间"
         align="center"
-        prop="orderTime"
+        prop="orderCreateTime"
         :formatter="dateFormatter2"
         width="120px"
       />
-      <el-table-column label="创建人" align="center" prop="creatorName" />
+
       <el-table-column
-        label="总数量"
+        label="最迟送达时间"
         align="center"
-        prop="totalCount"
-        :formatter="erpCountTableColumnFormatter"
+        prop="deliveryLatestTime"
+        :formatter="dateFormatter2"
+        width="120px"
       />
+
       <el-table-column
-        label="出库数量"
+        label="付款时间"
         align="center"
-        prop="outCount"
-        :formatter="erpCountTableColumnFormatter"
+        prop="paymentTime"
+        :formatter="dateFormatter2"
+        width="120px"
       />
+
+      <el-table-column label="平台" align="center" prop="platformCode" width="100" />
+      <el-table-column label="邮箱" align="center" prop="email" width="100"/>
+      <el-table-column label="电话" align="center" prop="telephone" width="100"/>
       <el-table-column
-        label="退货数量"
-        align="center"
-        prop="returnCount"
-        :formatter="erpCountTableColumnFormatter"
-      />
-      <el-table-column
-        label="金额合计"
-        align="center"
-        prop="totalProductPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column
-        label="含税金额"
+        label="总金额"
         align="center"
         prop="totalPrice"
         :formatter="erpPriceTableColumnFormatter"
       />
-      <el-table-column
-        label="收取订金"
-        align="center"
-        prop="depositPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.ERP_AUDIT_STATUS" :value="scope.row.status" />
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" fixed="right" width="220">
         <template #default="scope">
           <el-button
@@ -229,7 +224,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:sale-order:update']"
+            v-hasPermi="['oms:sale-order:update']"
             :disabled="scope.row.status === 20"
           >
             编辑
@@ -238,7 +233,7 @@
             link
             type="primary"
             @click="handleUpdateStatus(scope.row.id, 20)"
-            v-hasPermi="['erp:sale-order:update-status']"
+            v-hasPermi="['oms:sale-order:update-status']"
             v-if="scope.row.status === 10"
           >
             审批
