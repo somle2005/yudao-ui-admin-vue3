@@ -46,8 +46,8 @@ export interface InboundItemActualQtyVO {
 // 入库单详情 API
 export const InboundItemApi = {
   // 查询入库单详情分页
-  getInboundItemPage: async (params: any) => {
-    return await request.get({ url: `/wms/inbound-item/page`, params })
+  getInboundItemPage: async (data: any) => {
+    return await request.post({ url: `/wms/inbound-item/page`, data })
   },
 
   // 查询入库单详情详情

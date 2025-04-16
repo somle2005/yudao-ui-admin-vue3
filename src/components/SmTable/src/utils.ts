@@ -111,10 +111,15 @@ export const getItemProp = (list: any[], itemKeyList: string[]) => {
 }
 
 export const transformCapitalizeList = (item: any, prop: string, keyList: string[]) => {
-  keyList.forEach((key) => {
-    const val = item[prop][key]
-    item[prop + capitalize(key)] = val
-  })
+  if (!item[prop]) return
+  try {
+    keyList.forEach((key) => {
+      const val = item[prop][key]
+      item[prop + capitalize(key)] = val
+    })
+  } catch (e) {
+    console.log(e, `报错了${prop}`)
+  }
 }
 
 export const getItemPropList = (list: any[], propList: any[]) => {
