@@ -62,6 +62,15 @@
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.agree)"
         >
+          同意</el-button
+        >
+
+        <el-button
+          v-hasPermi="['wms:outbound:agree']"
+          type="primary"
+          :disabled="formLoading"
+          @click="submitFormDB(AUDIT_TYPE.agreeOutbound)"
+        >
           同意出库</el-button
         >
       </template>
@@ -288,22 +297,25 @@ const submitForm = async (type?: string) => {
       await OutboundApi.updateOutbound(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
-      if (formType.value === AUDIT_TYPE.agree) {
+      if (type === AUDIT_TYPE.agree) {
         // 同意审核的时候 实际入库量设置成和计划入库量一致
         data.itemList.forEach((item) => {
           item.actualQty = item.planQty
         })
-        //  ['actualQty', 'id', 'outboundId'])
-        await OutboundItemApi.updateOutboundItemActualQty(data)
         await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
       } else if (type === AUDIT_TYPE.reject) {
         await OutboundApi.rejectOutboundAuditStatus({ billId: data.id, comment: data.comment })
+      } else if (type === AUDIT_TYPE.agreeOutbound) {
+        //  ['actualQty', 'id', 'outboundId'])
+        await OutboundItemApi.updateOutboundItemActualQty(data)
+        await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
       }
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.finish) {
       await OutboundApi.finishOutbound({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     }
+
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')

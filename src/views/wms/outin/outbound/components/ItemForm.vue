@@ -49,6 +49,25 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="库存归属" width="250">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.deptId`">
+              <el-tree-select
+                :disabled="auditDisabled"
+                class="!w-100%"
+                v-model="row.deptId"
+                :data="deptList"
+                :props="defaultProps"
+                check-strictly
+                node-key="id"
+                placeholder="请选择库存归属"
+                filterable
+                clearable
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column label="备注" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
@@ -115,6 +134,8 @@ const props = defineProps({
   }
 })
 
+const auditDisabled = computed(() => props.formType === 'audit')
+const { deptList, defaultProps } = getDeptTree()
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({

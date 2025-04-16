@@ -156,7 +156,7 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_STATUS }
   },
   companyName: '库存主体',
-  deptName: '库存归属',
+  // deptName: '库存归属',
   creatorComment: '特别说明',
   updateTime: {
     label: '更新时间',
