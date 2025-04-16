@@ -263,11 +263,12 @@ export enum DICT_TYPE {
   WMS_INBOUND_STATUS = 'wms_inbound_status', // 入库单状态
   WMS_SHIPPING_METHOD = 'wms_shipping_method', // 运输方式
   WMS_INBOUND_AUDIT_STATUS = 'wms_inbound_audit_status', // 入库单审批状态
-  WMS_WAREHOUSE_ZONE_STOCK_TYPE = 'wms_warehouse_zone_stock_type', // WMS存货类型
+  WMS_WAREHOUSE_ZONE_STOCK_TYPE = 'wms_warehouse_zone_stock_type', // WMS存货类型-库存类型
   WMS_WAREHOUSE_ZONE_PARTITION_TYPE = 'wms_warehouse_zone_partition_type', // WMS分区类型
   WMS_OUTBOUND_TYPE = 'wms_outbound_type', // WMS出库单类型
   WMS_OUTBOUND_STATUS = 'wms_outbound_status', // WMS出库状态
   WMS_OUTBOUND_AUDIT_STATUS = 'wms_outbound_audit_status', // WMS出库单审批状态
+  WMS_STOCK_FLOW_DIRECTION = 'wms_stock_flow_direction', // WMS库存流水方向
 
 
   // ========== SRM - 采购模块  ==========
