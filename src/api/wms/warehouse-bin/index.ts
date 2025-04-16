@@ -63,7 +63,7 @@ export const WarehouseBinApi = {
   },
 
   // 获得库位置精简列表
-  getWarehouseBinSimpleList: async (params: WarehouseBinSimpleVO) => {
+  getWarehouseBinSimpleList: async (params?: WarehouseBinSimpleVO) => {
     return await request.get({ url: '/wms/warehouse-bin/simple-list', params })
   }
 }

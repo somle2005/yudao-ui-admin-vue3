@@ -209,14 +209,14 @@ const addItem = (selectionList: any[]) => {
         id,
         productId,
         productBarCode,
-        outboundAvailableQty // 批次剩余库存
+        shelveAvailableQty // 可上架量
       } = item
-
+       
       const obj = {
         [itemIdKey]: id,
         productId,
         productBarCode,
-        qty: outboundAvailableQty
+        qty: shelveAvailableQty
       }
       return obj
     })

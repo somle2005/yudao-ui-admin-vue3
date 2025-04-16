@@ -77,9 +77,7 @@
 
         <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
-            <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
-              —
-            </el-button>
+            <el-button @click="handleDelete($index)" link> — </el-button>
           </template>
         </el-table-column>
       </el-table>
