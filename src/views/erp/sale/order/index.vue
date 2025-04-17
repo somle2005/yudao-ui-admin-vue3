@@ -19,25 +19,25 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="产品" prop="productId">
-        <el-select
-          v-model="queryParams.productId"
-          clearable
-          filterable
-          placeholder="请选择产品"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="订单时间" prop="orderTime">
+<!--      <el-form-item label="产品" prop="productId">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.productId"-->
+<!--          clearable-->
+<!--          filterable-->
+<!--          placeholder="请选择产品"-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option-->
+<!--            v-for="item in productList"-->
+<!--            :key="item.id"-->
+<!--            :label="item.name"-->
+<!--            :value="item.id"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+      <el-form-item label="订单时间" prop="orderCreateTime">
         <el-date-picker
-          v-model="queryParams.orderTime"
+          v-model="queryParams.orderCreateTime"
           value-format="YYYY-MM-DD HH:mm:ss"
           type="daterange"
           start-placeholder="开始日期"
@@ -46,81 +46,81 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="客户" prop="customerId">
-        <el-select
-          v-model="queryParams.customerId"
-          clearable
-          filterable
-          placeholder="请选择供客户"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in customerList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建人" prop="creator">
-        <el-select
-          v-model="queryParams.creator"
-          clearable
-          filterable
-          placeholder="请选择创建人"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in userList"
-            :key="item.id"
-            :label="item.nickname"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="出库数量" prop="outStatus">
-        <el-select
-          v-model="queryParams.outStatus"
-          placeholder="请选择出库数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未出库" value="0" />
-          <el-option label="部分出库" value="1" />
-          <el-option label="全部出库" value="2" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="退货数量" prop="returnStatus">
-        <el-select
-          v-model="queryParams.returnStatus"
-          placeholder="请选择退货数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未退货" value="0" />
-          <el-option label="部分退货" value="1" />
-          <el-option label="全部退货" value="2" />
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="客户" prop="customerId">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.customerId"-->
+<!--          clearable-->
+<!--          filterable-->
+<!--          placeholder="请选择供客户"-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option-->
+<!--            v-for="item in customerList"-->
+<!--            :key="item.id"-->
+<!--            :label="item.name"-->
+<!--            :value="item.id"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="创建人" prop="creator">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.creator"-->
+<!--          clearable-->
+<!--          filterable-->
+<!--          placeholder="请选择创建人"-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option-->
+<!--            v-for="item in userList"-->
+<!--            :key="item.id"-->
+<!--            :label="item.nickname"-->
+<!--            :value="item.id"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="状态" prop="status">-->
+<!--        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">-->
+<!--          <el-option-->
+<!--            v-for="dict in getIntDictOptions(DICT_TYPE.ERP_AUDIT_STATUS)"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="备注" prop="remark">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.remark"-->
+<!--          placeholder="请输入备注"-->
+<!--          clearable-->
+<!--          @keyup.enter="handleQuery"-->
+<!--          class="!w-240px"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="出库数量" prop="outStatus">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.outStatus"-->
+<!--          placeholder="请选择出库数量"-->
+<!--          clearable-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option label="未出库" value="0" />-->
+<!--          <el-option label="部分出库" value="1" />-->
+<!--          <el-option label="全部出库" value="2" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="退货数量" prop="returnStatus">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.returnStatus"-->
+<!--          placeholder="请选择退货数量"-->
+<!--          clearable-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option label="未退货" value="0" />-->
+<!--          <el-option label="部分退货" value="1" />-->
+<!--          <el-option label="全部退货" value="2" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -283,8 +283,8 @@ import * as UserApi from '@/api/system/user'
 import { erpCountTableColumnFormatter, erpPriceTableColumnFormatter } from '@/utils'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
 
-/** ERP 销售订单列表 */
-defineOptions({ name: 'ErpSaleOrder' })
+/** OMS 订单列表 */
+defineOptions({ name: 'OmsOrder' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -298,7 +298,7 @@ const queryParams = reactive({
   no: undefined,
   customerId: undefined,
   productId: undefined,
-  orderTime: [],
+  orderCreateTime: [],
   status: undefined,
   remark: undefined,
   creator: undefined,

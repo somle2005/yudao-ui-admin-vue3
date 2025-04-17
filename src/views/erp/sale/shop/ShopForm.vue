@@ -112,7 +112,7 @@ const initRequestFormOptions = () => {
           trigger: 'blur'
         }
       ]
-    },
+    }
 
     // {
     //   type: 'input',
@@ -214,24 +214,6 @@ const initRequestFormOptions = () => {
     //     }
     //   ]
     // },
-
-    {
-      type: 'input',
-      label: '店铺编码',
-      prop: 'code',
-      placeholder: '请输入店铺编码',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      },
-      rules: [
-        {
-          required: true,
-          message: '店铺编码不能为空',
-          trigger: 'blur'
-        }
-      ]
-    }
   ]
 }
 
