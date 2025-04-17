@@ -240,6 +240,7 @@ const detailOptions = (formOptions) => {
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
+  warehouseId.value = null
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
@@ -375,12 +376,17 @@ const addProductItem = (selectionList: any[]) => {
         sellableQty, // 批次剩余库存
         warehouseId,
         warehouseName,
-        companyId,
-        deptId,
         availableQty,
         defectiveQty,
         outboundPlanQty
       } = item
+
+      let deptId = undefined
+      let companyId = undefined
+      if (item.suggestedOwnership) {
+        deptId = item.suggestedOwnership.deptId
+        companyId = item.suggestedOwnership.companyId
+      }
 
       const obj = {
         [itemIdKey]: id,
