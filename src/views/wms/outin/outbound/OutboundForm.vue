@@ -25,6 +25,7 @@
           @click="openAddProductItem(warehouseId)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-bin:query']"
+          :disabled="!warehouseId"
           v-if="!itemsFormdisabled"
           >选择产品</el-button
         >
@@ -128,9 +129,11 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
-const financeSubjectList = ref<FinanceSubjectVO[]>([])
+// const financeSubjectList = ref<FinanceSubjectVO[]>([])
 
-const itemsFormdisabled = computed(() => ['detail', OPERATE_MAP.finish].includes(formType.value))
+const itemsFormdisabled = computed(() =>
+  ['detail', OPERATE_MAP.finish, 'audit'].includes(formType.value)
+)
 const auditType = computed(() => formType.value === 'audit')
 
 /** 子表的表单 */
@@ -174,21 +177,21 @@ const createRequestFormOptions = () => {
       },
       children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE)
     },
-    {
-      requiredFlag: true,
-      type: 'select',
-      placeholder: '请选择库存主体',
-      prop: 'companyId',
-      label: '库存主体',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: financeSubjectList
-    },
+    // {
+    //   requiredFlag: true,
+    //   type: 'select',
+    //   placeholder: '请选择库存主体',
+    //   prop: 'companyId',
+    //   label: '库存主体',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: financeSubjectList
+    // },
     {
       type: 'input',
       label: '特别说明',
@@ -243,7 +246,7 @@ const open = async (type: string, id?: number) => {
   resetForm()
 
   getWMSWarehouseList(WMSWarehouseList)
-  getFinanceSubjectList(financeSubjectList)
+  // getFinanceSubjectList(financeSubjectList)
 
   const formTypeOperate = {
     create: () => {
@@ -371,7 +374,12 @@ const addProductItem = (selectionList: any[]) => {
         binName,
         sellableQty, // 批次剩余库存
         warehouseId,
-        warehouseName
+        warehouseName,
+        companyId,
+        deptId,
+        availableQty,
+        defectiveQty,
+        outboundPlanQty
       } = item
 
       const obj = {
@@ -382,7 +390,12 @@ const addProductItem = (selectionList: any[]) => {
         binName,
         planQty: sellableQty,
         warehouseId,
-        warehouseName
+        warehouseName,
+        companyId,
+        deptId,
+        availableQty,
+        defectiveQty,
+        outboundPlanQty
       }
       return obj
     })

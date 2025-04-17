@@ -61,7 +61,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: warehouseBinList
     },
     {
-      requiredFlag: true,
       type: 'select',
       placeholder: '请选择库存主体',
       prop: 'companyId',

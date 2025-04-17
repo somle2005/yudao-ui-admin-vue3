@@ -66,12 +66,17 @@ const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
   inboundNo: '入库单编号',
-
   productName: '产品名称',
   productBarCode: '产品编码',
   warehouseName: '仓库名称',
-  binName: '库位名称',
+  // binName: '库位名称',
   deptName: '库存归属',
+  companyName: '库存主体',
+  inboundStatus: {
+    label: '入库状态',
+    slot: 'inboundStatus',
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+  },
 
   actualQty: '实际入库量',
   age: '库龄',
@@ -79,11 +84,7 @@ const fieldMap = {
   planQty: '计划入库量',
   shelvedQty: '已上架量',
 
-  inboundStatus: {
-    label: '入库状态',
-    slot: 'inboundStatus',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  },
+
   remark: '备注',
 
   updateTime: {
@@ -132,11 +133,12 @@ const getList = async () => {
     const data = await InboundItemApi.getInboundItemPage(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },
-      { prop: 'bin', keyList: ['name'] },
+      // { prop: 'bin', keyList: ['name'] },
       // { prop: 'zone', keyList: ['name'] },
       { prop: 'product', keyList: ['name', 'barCode'] },
       { prop: 'inbound', keyList: ['no'] },
       { prop: 'dept', keyList: ['name'] },
+      { prop: 'company', keyList: ['name'] },
     ]) as any
     total.value = data.total
   } finally {

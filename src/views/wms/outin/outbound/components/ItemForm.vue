@@ -28,7 +28,7 @@
         </el-table-column>
 
         <!-- 计划出库量 -->
-        <el-table-column label="数量" width="120">
+        <el-table-column label="数量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
               <el-input-number
@@ -37,6 +37,28 @@
                 :min="0"
                 class="!w-100%"
               />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="可用库存数量" width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.availableQty`" class="mb-0px!">
+              <el-text>{{ row.availableQty }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="不良品数量" width="100">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.defectiveQty`" class="mb-0px!">
+              <el-text>{{ row.defectiveQty }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="计划出库数" width="100">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.outboundPlanQty`" class="mb-0px!">
+              <el-text>{{ row.outboundPlanQty }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -53,7 +75,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
-                :disabled="auditDisabled"
+                :disabled="disabled"
                 class="!w-100%"
                 v-model="row.deptId"
                 :data="deptList"
@@ -63,6 +85,18 @@
                 placeholder="请选择库存归属"
                 filterable
                 clearable
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="库存主体" width="180">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.companyId`" class="mb-0px!" :disabled="disabled">
+              <SmSelect
+                v-model="row.companyId"
+                placeholder="请选择库存主体"
+                :data="financeSubjectList"
               />
             </el-form-item>
           </template>
@@ -112,9 +146,7 @@ import {
   getSumValue
 } from '@/utils'
 // import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
-import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { updateModelValue } from '@/utils/high/index'
+import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
 
 const props = defineProps({
   items: {
@@ -144,7 +176,7 @@ const formRules = reactive({
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
-const warehouseList = getWarehouseList()
+const financeSubjectList = getFinanceSubjectList()
 
 /** 初始化设置入库项 */
 watch(

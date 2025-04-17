@@ -17,7 +17,7 @@ export const useProductEnableTable = () => {
   const fieldMap = {
     productName: '产品名称',
     productBarCode: '产品编码',
-    warehouseName: '仓库名称',
+    // warehouseName: '仓库名称',
     binName: '库位名称',
     outboundPendingQty: '批待出库量',
     sellableQty: '可售量',
