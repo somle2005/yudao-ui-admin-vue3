@@ -60,7 +60,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['erp:custom-category:create']"
+          v-hasPermi="['tms:custom-category:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -69,7 +69,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['erp:custom-category:export']"
+          v-hasPermi="['tms:custom-category:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -80,6 +80,7 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table
+      border
       v-loading="loading"
       :data="list"
       :stripe="true"
@@ -103,13 +104,9 @@
           <dict-tag :type="DICT_TYPE.ERP_PRODUCT_MATERIAL" :value="scope.row.material" />
         </template>
       </el-table-column>
-      <el-table-column
-        label="海关品名"
-        align="center"
-        prop="declaredType"
-        :style="{width: '500px'}"
-      />
-      <el-table-column label="海关品名(英文)" align="center" prop="declaredTypeEn" />
+      <el-table-column label="海关品名" align="center" prop="declaredType" width="200px" />
+      <el-table-column label="海关品名(英文)" width="250px" align="center" prop="declaredTypeEn" />
+      <el-table-column label="产品数量" align="center" prop="productCount" width="100px" />
       <el-table-column
         label="更新时间"
         align="center"
@@ -133,7 +130,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['erp:custom-category:update']"
+            v-hasPermi="['tms:custom-category:update']"
           >
             编辑
           </el-button>
@@ -141,7 +138,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['erp:custom-category:delete']"
+            v-hasPermi="['tms:custom-category:delete']"
           >
             删除
           </el-button>
@@ -172,20 +169,13 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import {
-  CustomRuleCategoryApi,
-  CustomRuleCategoryVO
-} from '@/api/tms/custom-category'
+import { CustomRuleCategoryApi, CustomRuleCategoryVO } from '@/api/tms/custom-category'
 import CustomRuleCategoryForm from './CustomRuleCategoryForm.vue'
 import CustomRuleCategoryItemList from './components/CustomRuleCategoryItemList.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 
 /** 海关品类 列表 */
 defineOptions({ name: 'TmsCustomRuleCategory' })
-
-
-
-
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
