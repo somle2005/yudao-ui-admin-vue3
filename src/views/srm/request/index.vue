@@ -70,6 +70,7 @@
 
         <el-button
           :disabled="disabledBtn"
+          class="ml-10px"
           type="primary"
           plain
           @click="handleUpdateStatusEnableBatch(true)"
