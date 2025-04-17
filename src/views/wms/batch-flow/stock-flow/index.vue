@@ -72,12 +72,13 @@ const fieldMap = {
   productName: '产品名称',
   stockType: {
     label: '库存类型',
+    width: '200px',
     slot: 'stockType',
     dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
   },
   direction: {
     label: '库存流水方向',
-    width: '250px',
+    width: '200px',
     slot: 'direction',
     dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
   },

@@ -131,9 +131,9 @@ const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
 
 const fieldMap = {
-  no: {
+  code: {
     label: '入库单号',
-    slot: 'no',
+    slot: 'code',
     width: '200px'
   },
   warehouseName: '仓库名称',
