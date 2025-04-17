@@ -32,7 +32,8 @@ export interface FormOptions {
     | 'transfer'
     | 'upload'
     | 'editor'
-    | 'tree-select',
+    | 'tree-select'
+    | 'text'
   // 自定义组件非ElementPlus组件
   componentType?:  'sm-remote-select' | 'sm-radio-group' | 'sm-range'
   // 表单项的值

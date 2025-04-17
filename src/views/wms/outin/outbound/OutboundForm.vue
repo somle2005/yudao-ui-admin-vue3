@@ -202,6 +202,82 @@ const createRequestFormOptions = () => {
         clearable: true
       }
     },
+
+    {
+      type: 'text',
+      label: '源单编码',
+      prop: 'creatorComment',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      type: 'date-picker',
+      placeholder: '请选择计划出库时间',
+      prop: 'outboundPlanTime',
+      label: '计划出库时间',
+      attrs: {
+        clearable: true,
+        'value-format': 'x',
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'select',
+      prop: 'outbountStatus',
+      label: '出库状态',
+      attrs: {
+        disabled: true,
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_STATUS)
+    },
+    {
+      type: 'text',
+      label: '操作人',
+      prop: 'operator',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    { 
+      type: 'date-picker',
+      prop: 'operatorTime',
+      label: '操作时间',
+      attrs: {
+        disabled: true,
+        clearable: true,
+        'value-format': 'x',
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    { 
+      type: 'date-picker',
+      prop: 'outboundTime',
+      label: '出库时间',
+      attrs: {
+        disabled: true,
+        clearable: true,
+        'value-format': 'x',
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+
     {
       colConfig: { span: 24 },
       slot: 'items',
@@ -378,7 +454,7 @@ const addProductItem = (selectionList: any[]) => {
         warehouseName,
         availableQty,
         // defectiveQty,
-        // outboundPlanQty,
+        outboundPlanQty,
         suggestedOwnership
       } = item
 
@@ -402,7 +478,7 @@ const addProductItem = (selectionList: any[]) => {
         deptId,
         availableQty,
         // defectiveQty,
-        // outboundPlanQty
+        outboundPlanQty
       }
       return obj
     })

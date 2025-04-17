@@ -48,17 +48,25 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="不良品数量" width="100">
+        <!-- <el-table-column label="不良品数量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.defectiveQty`" class="mb-0px!">
               <el-text>{{ row.defectiveQty }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="计划出库数" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.outboundPlanQty`" class="mb-0px!">
               <el-text>{{ row.outboundPlanQty }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="已选择数" width="100">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.pickQty`" class="mb-0px!">
+              <el-text>{{ row.pickQty }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -194,6 +202,17 @@ watch(
     if (!val || val.length === 0) {
       return
     }
+    const map = {}
+    val.forEach((item) => {
+      if (!map[item.productId]) {
+        map[item.productId] = item.planQty
+      } else {
+        map[item.productId] += item.planQty || 0
+      }
+    })
+    val.forEach((item) => {
+      item.pickQty = map[item.productId]
+    })
   },
   { deep: true }
 )
