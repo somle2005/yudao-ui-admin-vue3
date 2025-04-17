@@ -269,6 +269,7 @@ export enum DICT_TYPE {
   WMS_OUTBOUND_STATUS = 'wms_outbound_status', // WMS出库状态
   WMS_OUTBOUND_AUDIT_STATUS = 'wms_outbound_audit_status', // WMS出库单审批状态
   WMS_STOCK_FLOW_DIRECTION = 'wms_stock_flow_direction', // WMS库存流水方向
+  WMS_STOCK_TYPE = 'wms_stock_type', // WMS库存类型
 
 
   // ========== SRM - 采购模块  ==========

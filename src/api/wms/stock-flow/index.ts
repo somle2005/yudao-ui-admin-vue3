@@ -52,4 +52,9 @@ export const StockFlowApi = {
   exportStockFlow: async (params) => {
     return await request.download({ url: `/wms/stock-flow/export-excel`, params })
   },
-}
+
+  // 获得所有者库存流水分页
+  getStockFlowPageOwnership: async (data: any) => {
+    return await request.post({ url: `/wms/stock-flow/page-ownership`, data })
+  },
+}

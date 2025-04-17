@@ -123,7 +123,10 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { noWidth: true, wrapList: ['warehouseName','code','name'] })
+tableOptions.value = transformTableOptions(fieldMap, {
+  noWidth: true,
+  wrapList: ['warehouseName', 'code', 'name']
+})
 
 /** 库区 列表 */
 defineOptions({ name: 'WmsWarehouseZone' })
@@ -154,7 +157,7 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await WarehouseZoneApi.getWarehouseZonePage(queryParams)
-    list.value = getItemProp(data.list,['warehouse'])
+    list.value = getItemProp(data.list, ['warehouse'])
     total.value = data.total
   } finally {
     loading.value = false

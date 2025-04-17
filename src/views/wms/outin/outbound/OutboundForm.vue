@@ -377,15 +377,16 @@ const addProductItem = (selectionList: any[]) => {
         warehouseId,
         warehouseName,
         availableQty,
-        defectiveQty,
-        outboundPlanQty
+        // defectiveQty,
+        // outboundPlanQty,
+        suggestedOwnership
       } = item
 
       let deptId = undefined
       let companyId = undefined
-      if (item.suggestedOwnership) {
-        deptId = item.suggestedOwnership.deptId
-        companyId = item.suggestedOwnership.companyId
+      if (suggestedOwnership) {
+        deptId = suggestedOwnership.deptId
+        companyId = suggestedOwnership.companyId
       }
 
       const obj = {
@@ -400,8 +401,8 @@ const addProductItem = (selectionList: any[]) => {
         companyId,
         deptId,
         availableQty,
-        defectiveQty,
-        outboundPlanQty
+        // defectiveQty,
+        // outboundPlanQty
       }
       return obj
     })

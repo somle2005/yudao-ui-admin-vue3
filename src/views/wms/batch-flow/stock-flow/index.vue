@@ -66,14 +66,14 @@ const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
   warehouseName: '仓库名称',
-  zoneName: '库区名称',
-  binName: '库位名称',
+  // zoneName: '库区名称',
+  // binName: '库位名称',
   productBarCode: '产品编码',
   productName: '产品名称',
   stockType: {
     label: '库存类型',
     slot: 'stockType',
-    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_ZONE_STOCK_TYPE }
+    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
   },
   direction: {
     label: '库存流水方向',
@@ -158,7 +158,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await StockFlowApi.getStockFlowPage(queryParams)
+    const data = await StockFlowApi.getStockFlowPageOwnership(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },
       { prop: 'bin', keyList: ['name'] },
