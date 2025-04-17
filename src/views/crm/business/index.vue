@@ -124,16 +124,6 @@
         prop="dealTime"
         width="180px"
       />
-      <el-table-column align="center" label="备注" prop="remark" width="200" />
-      <el-table-column
-        :formatter="dateFormatter"
-        align="center"
-        label="下次联系时间"
-        prop="contactNextTime"
-        width="180px"
-      />
-      <el-table-column align="center" label="负责人" prop="ownerUserName" width="100px" />
-      <el-table-column align="center" label="所属部门" prop="ownerUserDeptName" width="100px" />
       <el-table-column
         :formatter="dateFormatter"
         align="center"
@@ -142,6 +132,17 @@
         width="180px"
       />
       <el-table-column align="center" label="最后跟进内容" prop="contactLastContent" width="300px" />
+      <el-table-column
+        :formatter="dateFormatter"
+        align="center"
+        label="下次联系时间"
+        prop="contactNextTime"
+        width="180px"
+      />
+      <el-table-column align="center" label="备注" prop="remark" width="200" />
+      <el-table-column align="center" label="负责人" prop="ownerUserName" width="100px" />
+      <el-table-column align="center" label="所属部门" prop="ownerUserDeptName" width="100px" />
+
       <el-table-column
         :formatter="dateFormatter"
         align="center"
