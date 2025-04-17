@@ -156,9 +156,9 @@ const queryParams = reactive({
   type: undefined,
   warehouseId: undefined,
   auditStatus: 1, // 待审批
-  sourceBillId: undefined,
-  sourceBillNo: undefined,
-  sourceBillType: undefined,
+  upstreamBillId: undefined,
+  upstreamBillCode: undefined,
+  upstreamBillType: undefined,
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,

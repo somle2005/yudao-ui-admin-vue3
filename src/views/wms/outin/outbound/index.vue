@@ -199,9 +199,9 @@ const queryParams = reactive({
   type: undefined,
   status: undefined,
   auditStatus: undefined,
-  sourceBillId: undefined,
-  sourceBillNo: undefined,
-  sourceBillType: undefined,
+  upstreamBillId: undefined,
+  upstreamBillCode: undefined,
+  upstreamBillType: undefined,
   creatorComment: undefined,
   createTime: []
 })

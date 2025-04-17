@@ -119,9 +119,9 @@ const initFormData = () => {
     type: undefined,
     status: undefined,
     auditStatus: undefined,
-    sourceBillId: undefined,
-    sourceBillNo: undefined,
-    sourceBillType: undefined,
+    upstreamBillId: undefined,
+    upstreamBillCode: undefined,
+    upstreamBillType: undefined,
     creatorComment: undefined,
     itemList: [] as any[]
   }
@@ -425,9 +425,9 @@ const addProductItem = (selectionList: any[]) => {
         "warehouseId":32,
         "companyId":50001,
         "deptId":50012,
-        "sourceBillId":1,
-        "sourceBillNo":"1",
-        "sourceBillType":1,
+        "upstreamBillId":1,
+        "upstreamBillCode":"1",
+        "upstreamBillType":1,
         "creatorComment":"1",
         "itemList":[
           {
