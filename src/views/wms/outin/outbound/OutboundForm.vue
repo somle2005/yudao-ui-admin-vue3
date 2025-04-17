@@ -92,7 +92,6 @@ import ItemForm from './components/ItemForm.vue'
 import { useOutProductdata } from './components/hooks/outProductdata'
 import ProductEnableList from './components/ProductEnableList.vue'
 import { distinctList } from '@/utils/transformData'
-import { FinanceSubjectVO } from '@/api/fms/company'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
@@ -129,7 +128,6 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
-// const financeSubjectList = ref<FinanceSubjectVO[]>([])
 
 const itemsFormdisabled = computed(() =>
   ['detail', OPERATE_MAP.finish, 'audit'].includes(formType.value)
@@ -177,21 +175,6 @@ const createRequestFormOptions = () => {
       },
       children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE)
     },
-    // {
-    //   requiredFlag: true,
-    //   type: 'select',
-    //   placeholder: '请选择库存主体',
-    //   prop: 'companyId',
-    //   label: '库存主体',
-    //   attrs: {
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: financeSubjectList
-    // },
     {
       type: 'input',
       label: '特别说明',
@@ -323,7 +306,6 @@ const open = async (type: string, id?: number) => {
   resetForm()
 
   getWMSWarehouseList(WMSWarehouseList)
-  // getFinanceSubjectList(financeSubjectList)
 
   const formTypeOperate = {
     create: () => {

@@ -66,7 +66,7 @@ import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
 import { cloneDeep } from 'lodash-es'
-import { getDeptTree, getFinanceSubjectList } from '@/commonData'
+import { getFinanceSubjectList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/fms/company'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { filterObjKey, getLastListProp } from '@/utils/transformData'
@@ -242,23 +242,6 @@ const createRequestFormOptions = () => {
 }
 
 const updateFormOptions = (formOptions) => {
-  // const index = formOptions.findIndex((item) => item.prop === 'arrivalPlanTime') + 1
-  // const obj: any = {
-  //   type: 'date-picker',
-  //   placeholder: '请选择预实际到货时间',
-  //   prop: 'arrivalActualTime',
-  //   label: '预实际到货时间',
-  //   attrs: {
-  //     clearable: true,
-  //     type: 'date',
-  //     'value-format': 'x',
-  //     class: '!w-1/1',
-  //     style: {
-  //       width: '100%'
-  //     }
-  //   }
-  // }
-  // formOptions.splice(index, 0, obj)
   return formOptions
 }
 

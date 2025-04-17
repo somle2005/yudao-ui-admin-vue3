@@ -43,7 +43,6 @@
 </template>
 <script setup lang="ts">
 import { PickupApi, PickupVO } from '@/api/wms/pickup'
-import { getWarehouseBinList, getWMSWarehouseList } from '@/commonData/wms'
 import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { cloneDeep } from 'lodash-es'

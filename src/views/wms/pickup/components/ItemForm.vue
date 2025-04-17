@@ -61,13 +61,9 @@
         </el-table-column>
       </el-table>
     </el-form>
-    <!-- <el-row justify="center" class="mt-3" v-if="!disabled">
-      <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
-    </el-row> -->
   </div>
 </template>
 <script setup lang="ts">
-import { StockApi } from '@/api/erp/stock/stock'
 import {
   erpCountInputFormatter,
   erpPriceInputFormatter,
@@ -159,33 +155,12 @@ const getSummaries = (param: SummaryMethodProps) => {
   return sums
 }
 
-/** 新增按钮操作 */
-const handleAdd = () => {
-  const row = {
-    // id: undefined,
-    // pickupId: undefined,
-    productId: undefined,
-    inboundId: undefined,
-    inboundItemId: undefined,
-    binId: undefined,
-    qty: undefined
-  }
-  formData.value.push(row)
-}
 
 /** 删除按钮操作 */
 const handleDelete = (index: number) => {
   formData.value.splice(index, 1)
 }
 
-/** 加载库存 */
-const setStockCount = async (row: any) => {
-  if (!row.productId) {
-    return
-  }
-  const qty = await StockApi.getStockCount(row.productId)
-  row.stockCount = qty || 0
-}
 
 /** 表单校验 */
 const validate = () => {

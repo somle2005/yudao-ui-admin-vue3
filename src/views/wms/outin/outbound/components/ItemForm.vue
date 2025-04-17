@@ -153,8 +153,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-// import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
-import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 
 const props = defineProps({
   items: {
@@ -183,7 +182,6 @@ const formRules = reactive({
   planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
-const productList = getProductList() // 产品列表
 const financeSubjectList = getFinanceSubjectList()
 
 /** 初始化设置入库项 */
@@ -241,29 +239,6 @@ const getSummaries = (param: SummaryMethodProps) => {
 /** 删除按钮操作 */
 const handleDelete = (index: number) => {
   formData.value.splice(index, 1)
-}
-
-/** 处理产品变更 */
-const onChangeProduct = (productId, row) => {
-  const product = productList.value.find((item) => item.id === productId)
-  if (product) {
-    row.productName = product.name
-    row.productUnitName = product.unitName
-    row.productUnitId = product.unitId
-    row.model = product.model
-    // row.productPrice = row.price 含税单价和税率计算得出
-  }
-  // 加载库存
-  // setStockCount(row)
-}
-
-/** 加载库存 */
-const setStockCount = async (row: any) => {
-  if (!row.productId) {
-    return
-  }
-  const qty = await StockApi.getStockCount(row.productId)
-  row.stockCount = qty || 0
 }
 
 /** 表单校验 */

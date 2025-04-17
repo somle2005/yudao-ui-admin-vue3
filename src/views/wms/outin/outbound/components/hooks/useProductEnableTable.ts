@@ -1,9 +1,9 @@
 import { StockBinApi } from '@/api/wms/stock-bin'
-import { getProductList, getWarehouseList } from '@/commonData'
-import { getWarehouseBinList, getWMSWarehouseList } from '@/commonData/wms'
+import { getProductList } from '@/commonData'
+import { getWarehouseBinList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
-import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
+import { dateFormatter } from '@/utils/formatTime'
 import { resetQueryParams } from '@/utils/transformData'
 
 export const useProductEnableTable = () => {
@@ -104,20 +104,6 @@ export const useProductEnableTable = () => {
       },
       children: productList
     },
-    // {
-    //   type: 'select',
-    //   placeholder: '请选择仓库',
-    //   prop: 'warehouseId',
-    //   label: '仓库',
-    //   attrs: {
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: wmsWarehouseList
-    // },
     {
       type: 'select',
       placeholder: '请选择库位',
