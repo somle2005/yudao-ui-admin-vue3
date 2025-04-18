@@ -122,7 +122,7 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await PickupApi.createPickup(data)
       message.success(t('common.createSuccess'))
-    } 
+    }
     // else if (formType.value === 'update') {
     //   await PickupApi.updatePickup(data)
     //   message.success(t('common.updateSuccess'))
@@ -166,7 +166,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '单据编号',
-      prop: 'no',
+      prop: 'code',
       placeholder: '保存时自动生成',
       attrs: {
         style: { width: '100%' },
@@ -208,14 +208,22 @@ const addItem = (selectionList: any[]) => {
         id,
         productId,
         productBarCode,
-        shelveAvailableQty // 可上架量
+        shelveAvailableQty, // 可上架量
+        actualQty,
+        outboundAvailableQty,
+        planQty,
+        shelvedQty
       } = item
-       
+
       const obj = {
         [itemIdKey]: id,
         productId,
         productBarCode,
-        qty: shelveAvailableQty
+        qty: shelveAvailableQty,
+        actualQty,
+        outboundAvailableQty,
+        planQty,
+        shelvedQty
       }
       return obj
     })

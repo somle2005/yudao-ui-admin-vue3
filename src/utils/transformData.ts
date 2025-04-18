@@ -240,3 +240,22 @@ export const getLastListProp = (list: any[], prop: string) => {
     console.log(e, '报错')
   }
 }
+
+export const computeTargetQty = (list: any[], mapKey: { [key: string]: any }) => {
+  const {
+    targetQtyKey = 'pickQty',
+    computeQtyKey = 'planQty',
+    computeKey = 'productId'
+  } = mapKey || {}
+  const map = {}
+  list.forEach((item) => {
+    if (!map[item[computeKey]]) {
+      map[item[computeKey]] = item[computeQtyKey]
+    } else {
+      map[item[computeKey]] += item[computeQtyKey] || 0
+    }
+  })
+  list.forEach((item) => {
+    item[targetQtyKey] = map[item[computeKey]]
+  })
+}

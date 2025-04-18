@@ -17,12 +17,12 @@ export const useEnableTable = () => {
     productName: '产品名称',
     productBarCode: '产品编码',
     warehouseName: '仓库名称',
-    binName: '库位名称',
-    actualQty: '实际入库量',
-    age: '库龄',
-    outboundAvailableQty: '批次剩余库存',
-    planQty: '计划入库量',
-    shelvedQty: '已上架量',
+    // binName: '库位名称',
+    // age: '库龄',
+    // actualQty: '实际入库量',
+    // outboundAvailableQty: '批次剩余库存',
+    // planQty: '计划入库量',
+    // shelvedQty: '已上架量',
 
     inboundStatus: {
       label: '入库状态',

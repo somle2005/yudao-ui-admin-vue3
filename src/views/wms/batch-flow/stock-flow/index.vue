@@ -165,9 +165,9 @@ const getList = async () => {
       { prop: 'bin', keyList: ['name'] },
       { prop: 'zone', keyList: ['name'] },
       { prop: 'product', keyList: ['name', 'barCode'] },
-      { prop: 'inbound', keyList: ['no'] },
-      { prop: 'outbound', keyList: ['no'] },
-      { prop: 'pickup', keyList: ['no'] }
+      { prop: 'inbound', keyList: ['code'] },
+      { prop: 'outbound', keyList: ['code'] },
+      { prop: 'pickup', keyList: ['code'] }
     ]) as any
     total.value = data.total
   } finally {

@@ -8,7 +8,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '入库单号',
-      prop: 'no',
+      prop: 'code',
       placeholder: '请输入入库单号',
       attrs: {
         style: { width: '100%' },

@@ -136,7 +136,7 @@ const getList = async () => {
       // { prop: 'bin', keyList: ['name'] },
       // { prop: 'zone', keyList: ['name'] },
       { prop: 'product', keyList: ['name', 'barCode'] },
-      { prop: 'inbound', keyList: ['no'] },
+      { prop: 'inbound', keyList: ['code'] },
       { prop: 'dept', keyList: ['name'] },
       { prop: 'company', keyList: ['name'] },
     ]) as any

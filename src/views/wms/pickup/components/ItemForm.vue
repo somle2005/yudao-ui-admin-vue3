@@ -15,7 +15,7 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="180">
+        <el-table-column label="产品编码" width="120">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -41,7 +41,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="拣货数量" width="120">
+        <el-table-column label="拣货数量" width="80">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <!-- <el-input-number
@@ -51,6 +51,38 @@
                 class="!w-100%"
               /> -->
               <SmNumber v-model="row.qty" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="实际入库量" width="80">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
+              <el-text>{{ row.actualQty }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="批次剩余库存量" width="80">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.outboundAvailableQty`" class="mb-0px!">
+              <el-text>{{ row.outboundAvailableQty }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="计划入库量" width="80">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
+              <el-text>{{ row.planQty }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="已上架量" width="80">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.shelvedQty`" class="mb-0px!">
+              <el-text>{{ row.shelvedQty }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>

@@ -85,7 +85,7 @@ import { useSearchForm } from './hooks/search'
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  no: '单据编号',
+  code: '单据编号',
   warehouseName: '仓库名称',
   updateTime: {
     label: '更新时间',
@@ -108,7 +108,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   noWidth: true,
-  wrapList: ['no', 'warehouseName']
+  wrapList: ['code', 'warehouseName']
 })
 
 /** 拣货单 列表 */

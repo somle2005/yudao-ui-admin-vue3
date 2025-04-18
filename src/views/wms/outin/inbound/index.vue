@@ -195,7 +195,7 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true, allWrapIgnoreList: ['no'] })
+tableOptions.value = transformTableOptions(fieldMap, { allWrap: true, allWrapIgnoreList: ['code'] })
 
 /** 入库单 列表 */
 defineOptions({ name: 'WmsInbound' })
