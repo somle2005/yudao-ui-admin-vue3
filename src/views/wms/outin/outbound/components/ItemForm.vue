@@ -15,7 +15,7 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="180">
+        <el-table-column label="产品编码" width="120">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -28,20 +28,22 @@
         </el-table-column>
 
         <!-- 计划出库量 -->
-        <el-table-column label="数量" width="100">
+        <el-table-column label="数量" width="80">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 v-model="row.planQty"
                 controls-position="right"
+                :controls="false"
                 :min="0"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber v-model="row.planQty" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="可用库存数量" width="150">
+        <el-table-column label="可用库存数量" width="80">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.availableQty`" class="mb-0px!">
               <el-text>{{ row.availableQty }}</el-text>
@@ -55,7 +57,7 @@
             </el-form-item>
           </template>
         </el-table-column> -->
-        <el-table-column label="计划出库数" width="100">
+        <el-table-column label="计划出库数" width="80">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.outboundPlanQty`" class="mb-0px!">
               <el-text>{{ row.outboundPlanQty }}</el-text>
@@ -63,7 +65,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="已选择数" width="100">
+        <el-table-column label="已选择数" width="80">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.pickQty`" class="mb-0px!">
               <el-text>{{ row.pickQty }}</el-text>
@@ -79,7 +81,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="库存归属" width="250">
+        <el-table-column label="库存归属" width="200">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
@@ -98,7 +100,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="库存主体" width="180">
+        <el-table-column label="库存主体" width="200">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.companyId`" class="mb-0px!" :disabled="disabled">
               <SmSelect

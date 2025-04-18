@@ -9,6 +9,7 @@ import { SmRadioGroup } from './SmRadioGroup'
 import { SmSelect } from './SmSelect'
 import { SmRange } from './SmRange'
 import { SmTableField } from './SmTableField'
+import { SmNumber } from './SmNumber'
 
 export const setupGlobCom = (app: App<Element>): void => {
   const componentsMap = {
@@ -21,7 +22,8 @@ export const setupGlobCom = (app: App<Element>): void => {
     SmRadioGroup: SmRadioGroup,
     SmSelect: SmSelect,
     SmRange: SmRange,
-    SmTableField: SmTableField
+    SmTableField: SmTableField,
+    SmNumber: SmNumber
   }
   for (const key in componentsMap) {
     app.component(key, componentsMap[key])

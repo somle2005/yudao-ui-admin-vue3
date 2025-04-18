@@ -187,10 +187,11 @@ const createRequestFormOptions = () => {
     },
 
     {
-      type: 'text',
+      type: 'input',
       label: '源单编码',
       prop: 'creatorComment',
       attrs: {
+        disabled: true,
         style: { width: '100%' },
         clearable: true
       }
@@ -203,7 +204,6 @@ const createRequestFormOptions = () => {
       attrs: {
         clearable: true,
         'value-format': 'x',
-        class: '!w-240px',
         style: {
           width: '100%'
         }
@@ -224,10 +224,11 @@ const createRequestFormOptions = () => {
       children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_STATUS)
     },
     {
-      type: 'text',
+      type: 'input',
       label: '操作人',
       prop: 'operator',
       attrs: {
+        disabled: true,
         style: { width: '100%' },
         clearable: true
       }
@@ -240,7 +241,6 @@ const createRequestFormOptions = () => {
         disabled: true,
         clearable: true,
         'value-format': 'x',
-        class: '!w-240px',
         style: {
           width: '100%'
         }
@@ -254,7 +254,6 @@ const createRequestFormOptions = () => {
         disabled: true,
         clearable: true,
         'value-format': 'x',
-        class: '!w-240px',
         style: {
           width: '100%'
         }
