@@ -44,12 +44,13 @@
         <el-table-column label="拣货数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 v-model="row.qty"
                 controls-position="right"
                 :min="0"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber v-model="row.qty" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -155,12 +156,10 @@ const getSummaries = (param: SummaryMethodProps) => {
   return sums
 }
 
-
 /** 删除按钮操作 */
 const handleDelete = (index: number) => {
   formData.value.splice(index, 1)
 }
-
 
 /** 表单校验 */
 const validate = () => {

@@ -45,13 +45,14 @@
         <el-table-column label="数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" :rules="formRules.planQty" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="auditDisabled"
                 v-model="row.planQty"
                 controls-position="right"
                 :min="0"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber :disabled="auditDisabled" v-model="row.planQty" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -91,11 +92,7 @@
         <el-table-column label="备注" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-              <el-input
-                v-model="row.remark"
-                placeholder="请输入备注"
-                type="textarea"
-              />
+              <el-input v-model="row.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </template>
         </el-table-column>
