@@ -40,10 +40,12 @@ const resolveConfig = (tableOption, config) => {
 
   const wrapListDeal = (wrapList, item) => {
     if (!wrapList) return
-    item.slot = item.prop
-    item.wrap = true
-    if (!item.noWidth) {
-      item.width = '200px'
+    if (wrapList.includes(item.prop)) {
+      item.slot = item.prop
+      item.wrap = true
+      if (!item.noWidth) {
+        item.width = '200px'
+      }
     }
   }
 
