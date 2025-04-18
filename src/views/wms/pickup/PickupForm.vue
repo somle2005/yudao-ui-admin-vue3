@@ -26,6 +26,7 @@
               :items="formData.itemList"
               :formType="formType"
               :warehouseId="warehouseId"
+              :itemIdKey="itemIdKey"
               :disabled="itemsFormdisabled"
             />
           </el-tab-pane>
@@ -192,6 +193,8 @@ const getFormData = () => {
   return formData.value
 }
 
+
+const itemIdKey = 'inboundItemId'
 const addItem = (selectionList: any[]) => {
   nextTick(() => {
     // 测试用例
@@ -201,7 +204,6 @@ const addItem = (selectionList: any[]) => {
     // "binId":2
     // },
     const items = formData.value.itemList
-    const itemIdKey = 'inboundItemId'
     const selectList = selectionList.map((item: any) => {
       // 采购订单分页需带出数据
       const {

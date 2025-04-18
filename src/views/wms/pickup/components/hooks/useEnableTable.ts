@@ -30,17 +30,17 @@ export const useEnableTable = () => {
       dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
     },
 
-    updateTime: {
-      label: '更新时间',
-      formatter: dateFormatter,
-      width: '200px'
-    },
+    // updateTime: {
+    //   label: '更新时间',
+    //   formatter: dateFormatter,
+    //   width: '200px'
+    // },
     updaterName: '更新人',
-    createTime: {
-      label: '创建时间',
-      formatter: dateFormatter,
-      width: '200px'
-    },
+    // createTime: {
+    //   label: '创建时间',
+    //   formatter: dateFormatter,
+    //   width: '200px'
+    // },
     creatorName: '创建人',
   }
   tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
@@ -83,7 +83,7 @@ export const useEnableTable = () => {
     {
       type: 'input',
       label: '入库单编号',
-      prop: 'inboundNo',
+      prop: 'inboundCode',
       placeholder: '请输入入库单编号',
       attrs: {
         class: '!w-160px',

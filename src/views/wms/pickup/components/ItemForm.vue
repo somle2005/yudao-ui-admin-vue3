@@ -54,6 +54,13 @@
             </el-form-item>
           </template>
         </el-table-column>
+        <el-table-column label="已选择数" width="100">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.pickQty`" class="mb-0px!">
+              <el-text>{{ row.pickQty }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
 
         <el-table-column label="实际入库量" width="100">
           <template #default="{ row, $index }">
@@ -89,7 +96,15 @@
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
-            <el-button @click="handleDelete($index)" link> — </el-button>
+            <div class="btnList">
+              <div class="btn-item" @click="handleAddItem($index)">
+                <Icon icon="ep:plus" class="mr-5px" />
+              </div>
+              <div class="btn-item" @click="handleDelete($index)">
+                <Icon icon="ep:minus" class="mr-5px" />
+              </div>
+              <!-- <el-button @click="handleDelete($index)" link> — </el-button> -->
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -104,6 +119,8 @@ import {
   getSumValue
 } from '@/utils'
 import { getWarehouseBinList } from '@/commonData/wms'
+import { cloneDeep } from 'lodash-es'
+import { computeTargetQty } from '@/utils/transformData'
 
 const props = defineProps({
   items: {
@@ -124,6 +141,10 @@ const props = defineProps({
   warehouseId: {
     type: Number,
     default: null
+  },
+  itemIdKey: {
+    type: Number,
+    default: null
   }
 })
 
@@ -139,6 +160,11 @@ const formRules = reactive({
 const formRef = ref() // 表单 Ref
 const warehouseBinList: any = ref([])
 getWarehouseBinList(warehouseBinList, {})
+
+watch(
+  () => props.itemIdKey,
+  (val) => {}
+)
 
 watch(
   () => props.warehouseId,
@@ -163,6 +189,11 @@ watch(
     if (!val || val.length === 0) {
       return
     }
+    computeTargetQty(val, {
+      targetQtyKey: 'pickQty',
+      computeQtyKey: 'qty',
+      computeKey: 'productId'
+    })
   },
   { deep: true }
 )
@@ -193,9 +224,28 @@ const handleDelete = (index: number) => {
   formData.value.splice(index, 1)
 }
 
+/** 添加按钮操作 */
+const handleAddItem = (index: number) => {
+  const row = cloneDeep(formData.value[index])
+  row[props.itemIdKey] = Math.random() + formData.value.length
+  formData.value.push(row)
+}
+
 /** 表单校验 */
 const validate = () => {
   return formRef.value.validate()
 }
 defineExpose({ validate, formData })
 </script>
+
+<style lang="scss" scoped>
+.btnList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.btn-item {
+  cursor: pointer;
+}
+</style>
