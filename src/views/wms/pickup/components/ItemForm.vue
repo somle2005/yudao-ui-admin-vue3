@@ -97,11 +97,11 @@
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <div class="btnList">
-              <div class="btn-item" @click="handleAddItem($index)">
-                <Icon icon="ep:plus" class="mr-5px" />
-              </div>
               <div class="btn-item" @click="handleDelete($index)">
                 <Icon icon="ep:minus" class="mr-5px" />
+              </div>
+              <div class="btn-item" @click="handleAddItem($index)">
+                <Icon icon="ep:plus" class="mr-5px" />
               </div>
               <!-- <el-button @click="handleDelete($index)" link> — </el-button> -->
             </div>
@@ -241,7 +241,7 @@ defineExpose({ validate, formData })
 <style lang="scss" scoped>
 .btnList {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   align-items: center;
   justify-content: center;
 }
