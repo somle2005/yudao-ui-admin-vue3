@@ -40,7 +40,7 @@
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label="默认hs编码" prop="defaultHsCode">
+      <!-- <el-form-item label="默认hs编码" prop="defaultHsCode">
         <el-input v-model="formData.defaultHsCode" placeholder="请输入默认hs编码" />
       </el-form-item>
       <el-form-item label="默认申报品名(英文)" prop="defaultDeclaredTypeEn">
@@ -48,7 +48,7 @@
       </el-form-item>
       <el-form-item label="默认申报品名" prop="defaultDeclaredType">
         <el-input v-model="formData.defaultDeclaredType" placeholder="请输入默认申报品名" />
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
@@ -85,9 +85,9 @@ const initFormData = () => {
     // hsCode: undefined,
     // declaredTypeEn: undefined,
     // declaredType: undefined
-    defaultHsCode: undefined,
-    defaultDeclaredTypeEn: undefined,
-    defaultDeclaredType: undefined
+    // defaultHsCode: undefined,
+    // defaultDeclaredTypeEn: undefined,
+    // defaultDeclaredType: undefined
   }
 }
 formData.value = initFormData()

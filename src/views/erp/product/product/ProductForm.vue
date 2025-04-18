@@ -1,7 +1,7 @@
 <template>
   <!-- scroll max-height="500px" -->
   <Dialog width="800px" class="productForm-dialog" :title="dialogTitle" v-model="dialogVisible">
-    <div class="editBtn" v-if="formDisabled">
+    <div class="editBtn" v-if="formDisabled" v-hasPermi="['erp:product:query']">
       <el-button type="primary" @click="detailEdit">编辑</el-button>
     </div>
     <el-form
@@ -56,8 +56,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="SKU（编码）" prop="barCode">
-            <el-input v-model="formData.barCode" placeholder="请输入SKU（编码）" />
+          <el-form-item label="SKU" prop="barCode">
+            <el-input v-model="formData.barCode" placeholder="请输入SKU" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -213,7 +213,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="12">
+        <!-- <el-col :span="12">
           <el-form-item label="海关分类" prop="customCategoryId">
             <el-select
               v-model="formData.customCategoryId"
@@ -222,14 +222,14 @@
               placeholder="请选择海关分类"
             >
               <el-option
-                v-for="dict in customRuleCategoryList"
+                v-for="dict in customProduct"
                 :key="dict.value"
                 :label="dict.label"
                 :value="dict.value"
               />
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col> -->
 
         <el-col :span="24">
           <ContentWrap>
@@ -388,9 +388,8 @@ import ProductBookcase from '@/views/erp/product/product/ProductBookcase.vue'
 import ProductIronFilingCabinet from '@/views/erp/product/product/ProductIronFilingCabinet.vue'
 import ProductDesktopStorageRack from '@/views/erp/product/product/ProductDesktopStorageRack.vue'
 import ProductKeyboardTray from '@/views/erp/product/product/ProductKeyboardTray.vue'
-import { getCustomRuleCategoryList } from '@/commonData/index'
+import { getCustomProductList, getCustomRuleCategoryList } from '@/commonData/index'
 import { createDBFn } from '@/utils/decorate'
-
 
 /** ERP 产品 表单 */
 defineOptions({ name: 'ProductForm' })
@@ -446,6 +445,20 @@ const initFormData = () => {
 }
 formData.value = initFormData()
 
+const barCodeValidator = (rule, value, callback) => {
+  if (!value && value !== 0) {
+    callback(new Error('SKU不能为空'))
+    return
+  }
+
+  const regex = /^[A-Z0-9-]+$/
+  if (regex.test(value)) {
+    callback()
+  } else {
+    callback(new Error('只能包含大写英文、数字和符号-'))
+  }
+}
+
 const formDisabled = computed(() => formType.value === 'detail') // 表单是否禁用
 
 const formRules = reactive({
@@ -460,7 +473,7 @@ const formRules = reactive({
   width: [{ required: true, message: '基础宽度（mm）不能为空', trigger: 'blur' }],
   length: [{ required: true, message: '基础长度（mm）不能为空', trigger: 'blur' }],
   height: [{ required: true, message: '基础高度（mm）不能为空', trigger: 'blur' }],
-  barCode: [{ required: true, message: 'SKU(编码)不能为空', trigger: 'blur' }],
+  barCode: [{ required: true, trigger: 'blur', validator: barCodeValidator }],
   color: [{ required: true, message: '颜色不能为空', trigger: 'blur' }],
   primaryImageUrl: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
 
@@ -476,6 +489,7 @@ const unitList = ref<ProductUnitVO[]>([]) // 产品单位列表
 const userList = ref<any[]>([]) // 用户列表
 const isEditMode = ref(false) // 控制是否为编辑模式
 const customRuleCategoryList = ref<any[]>([]) // 海关分类
+const customProduct = ref<any[]>([])
 
 // 找到categoryId对应的子组件
 const formDict: Record<string, any> = {
@@ -530,7 +544,8 @@ const open = async (type: string, id?: number) => {
     isEditMode.value = false // 设置为新增模式
   }
   // 加载海关分类
-  getCustomRuleCategoryList(customRuleCategoryList)
+  // getCustomRuleCategoryList(customRuleCategoryList)
+  //getCustomProductList(customProduct)
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
   categoryList.value = handleTree(categoryData, 'id', 'parentId')
@@ -580,8 +595,6 @@ const submitForm = async () => {
 }
 
 const submitFormDB = createDBFn(submitForm)
-
-
 
 /** 重置表单 */
 const resetForm = () => {

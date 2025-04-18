@@ -10,7 +10,7 @@
   >
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column label="产品名称" min-width="180">
+      <el-table-column label="SKU (编码)" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <el-select
@@ -18,34 +18,29 @@
               clearable
               filterable
               @change="onChangeProduct($event, row)"
-              placeholder="请选择产品"
+              placeholder="请选择SKU编码"
             >
               <el-option
                 v-for="item in productList"
                 :key="item.id"
-                :label="item.name"
+                :label="item.barCode"
                 :value="item.id"
               />
             </el-select>
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="条码" min-width="150">
+      <el-table-column label="产品名称" min-width="180">
         <template #default="{ row }">
           <el-form-item class="mb-0px!">
-            <el-input disabled v-model="row.productNo" />
+            <el-input disabled v-model="row.productName" />
           </el-form-item>
         </template>
       </el-table-column>
       <el-table-column label="单位" min-width="80">
         <template #default="{ row }">
-          <dict-tag :type="DICT_TYPE.CRM_PRODUCT_UNIT" :value="row.productUnit" />
-        </template>
-      </el-table-column>
-      <el-table-column label="价格（元）" min-width="120">
-        <template #default="{ row }">
           <el-form-item class="mb-0px!">
-            <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+            <el-input disabled v-model="row.productUnitName" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -145,10 +140,11 @@ const handleAdd = () => {
   const row = {
     id: undefined,
     productId: undefined,
-    productUnit: undefined, // 产品单位
+    productUnitName: undefined, // 产品单位
     productNo: undefined, // 产品条码
     productPrice: undefined, // 产品价格
     contractPrice: undefined,
+    productName: undefined,
     count: 1
   }
   formData.value.push(row)
@@ -163,10 +159,11 @@ const handleDelete = (index: number) => {
 const onChangeProduct = (productId, row) => {
   const product = productList.value.find((item) => item.id === productId)
   if (product) {
-    row.productUnit = product.unit
+    row.productUnitName = product.unitName
     row.productNo = product.no
     row.productPrice = product.price
     row.contractPrice = product.price
+    row.productName = product.name
   }
 }
 

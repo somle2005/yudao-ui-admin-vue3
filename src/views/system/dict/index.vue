@@ -137,7 +137,7 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <DictTypeForm ref="formRef" @success="getList" />
+  <DictTypeForm ref="formRef" @success="refresh" />
 </template>
 
 <script lang="ts" setup>
@@ -146,6 +146,7 @@ import { dateFormatter } from '@/utils/formatTime'
 import * as DictTypeApi from '@/api/system/dict/dict.type'
 import DictTypeForm from './DictTypeForm.vue'
 import download from '@/utils/download'
+import { resetDictCache } from '@/utils/permission'
 
 defineOptions({ name: 'SystemDictType' })
 
@@ -176,6 +177,11 @@ const getList = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const refresh =  () => {
+  getList()
+  resetDictCache()
 }
 
 /** 搜索按钮操作 */

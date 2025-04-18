@@ -98,6 +98,18 @@ export const submitContract = async (id: number) => {
   return await request.put({ url: `/crm/contract/submit?id=${id}` })
 }
 
+
+// 审批合同
+export const approveContract = async (id: number) => {
+  return await request.put({ url: `/crm/contract/approve?id=${id}` })
+}
+
+// 退回审批合同
+export const cancelApproveContract = async (id: number) => {
+  return await request.put({ url: `/crm/contract/cancelApprove?id=${id}` })
+}
+
+
 // 合同转移
 export const transferContract = async (data: TransferReqVO) => {
   return await request.put({ url: '/crm/contract/transfer', data })

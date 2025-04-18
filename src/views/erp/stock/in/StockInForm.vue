@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import { StockInApi, StockInVO } from '@/api/erp/stock/in'
 import StockInItemForm from './components/StockInItemForm.vue'
-import { SupplierApi, SupplierVO } from '@/api/erp/purchase/supplier'
+import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 
 /** ERP 其它入库单 表单 */
 defineOptions({ name: 'StockInForm' })

@@ -162,6 +162,7 @@ import { usePermissionStore } from '@/store/modules/permission'
 import * as LoginApi from '@/api/login'
 import { LoginStateEnum, useFormValid, useLoginState } from './useLogin'
 import { resetDictCache } from '@/utils/permission'
+import { saveUser } from '@/utils/cache'
 
 defineOptions({ name: 'LoginForm' })
 
@@ -263,6 +264,7 @@ const handleLogin = async (params: any) => {
     if (!res) {
       return
     }
+    saveUser(res)
     loading.value = ElLoading.service({
       lock: true,
       text: '正在加载系统中...',

@@ -47,6 +47,7 @@ export interface ProductVO {
     * 包装宽度（整数，没有小数点，单位mm，必须为正数）
     */
    packageWidth: number
+   unitName: string // 单位名称
 }
 
 export interface ProductVOSelectItem extends ProductVO {
@@ -64,6 +65,11 @@ export const ProductApi = {
   // 获得产品精简列表
   getProductSimpleList: async () => {
     return await request.get({ url: `/erp/product/simple-list` })
+  },
+
+  // 获得产品精简列表(高效)返回100个结果
+  getProductEfficientList: async (params: any) => {
+    return await request.get({ url: `/erp/product/simple-list-efficient`, params })
   },
 
   // 查询ERP 产品详情
@@ -89,5 +95,5 @@ export const ProductApi = {
   // 导出ERP 产品 Excel
   exportProduct: async (params) => {
     return await request.download({ url: `/erp/product/export-excel`, params })
-  },
+  }
 }
