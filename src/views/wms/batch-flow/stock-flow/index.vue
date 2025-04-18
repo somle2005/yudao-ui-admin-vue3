@@ -82,9 +82,9 @@ const fieldMap = {
     slot: 'direction',
     dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
   },
-  inboundNo: '入库单号',
-  outboundNo: '出库单号',
-  pickupNo: '拣货单号',
+  inboundCode: '入库单号',
+  outboundCode: '出库单号',
+  pickupCode: '拣货单号',
   reason: '流水原因',
 
   availableQty: '可用量',

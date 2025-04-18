@@ -13,7 +13,7 @@ export const useEnableTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
 
   const fieldMap = {
-    inboundNo: '入库单编号',
+    inboundCode: '入库单编号',
     productName: '产品名称',
     productBarCode: '产品编码',
     warehouseName: '仓库名称',

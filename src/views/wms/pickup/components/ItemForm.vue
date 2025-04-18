@@ -41,7 +41,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="拣货数量" width="80">
+        <el-table-column label="拣货数量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <!-- <el-input-number
@@ -55,7 +55,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="实际入库量" width="80">
+        <el-table-column label="实际入库量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-text>{{ row.actualQty }}</el-text>
@@ -63,7 +63,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="批次剩余库存量" width="80">
+        <el-table-column label="批次剩余库存量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.outboundAvailableQty`" class="mb-0px!">
               <el-text>{{ row.outboundAvailableQty }}</el-text>
@@ -71,7 +71,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="计划入库量" width="80">
+        <el-table-column label="计划入库量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
               <el-text>{{ row.planQty }}</el-text>
@@ -79,7 +79,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="已上架量" width="80">
+        <el-table-column label="已上架量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.shelvedQty`" class="mb-0px!">
               <el-text>{{ row.shelvedQty }}</el-text>

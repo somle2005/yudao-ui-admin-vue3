@@ -241,7 +241,7 @@ export const getLastListProp = (list: any[], prop: string) => {
   }
 }
 
-export const computeTargetQty = (list: any[], mapKey: { [key: string]: any }) => {
+export const computeTargetQty = (list: any[], mapKey?: { [key: string]: any }) => {
   const {
     targetQtyKey = 'pickQty',
     computeQtyKey = 'planQty',

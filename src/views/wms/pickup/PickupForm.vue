@@ -17,10 +17,10 @@
           style="margin-bottom: 10px"
           v-hasPermi="['wms:inbound-item:query']"
           v-if="!itemsFormdisabled"
-          >选择拣货项</el-button
+          >选择上架产品</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="拣货产品清单" name="item">
+          <el-tab-pane label="上架产品清单" name="item">
             <ItemForm
               ref="itemFormRef"
               :items="formData.itemList"
@@ -67,7 +67,7 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const initFormData = () => {
   return {
     id: undefined,
-    no: undefined,
+    code: undefined,
     warehouseId: undefined,
     itemList: [] as any[]
   }

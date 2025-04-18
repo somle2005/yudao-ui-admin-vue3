@@ -84,7 +84,7 @@ const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
 
 const fieldMap = {
-  no: '入库单号',
+  code: '入库单号',
   warehouseName: '仓库名称',
 
   type: {
@@ -152,7 +152,7 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: '',
+  code: '',
   type: undefined,
   warehouseId: undefined,
   auditStatus: 1, // 待审批

@@ -131,11 +131,7 @@ const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
 
 const fieldMap = {
-  code: {
-    label: '入库单号',
-    slot: 'code',
-    width: '200px'
-  },
+  code: '入库单号',
   warehouseName: '仓库名称',
 
   type: {
@@ -195,7 +191,8 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true, allWrapIgnoreList: ['code'] })
+tableOptions.value = transformTableOptions(fieldMap, { allWrap: true})
+console.log(tableOptions.value,'tableOptions.value')
 
 /** 入库单 列表 */
 defineOptions({ name: 'WmsInbound' })

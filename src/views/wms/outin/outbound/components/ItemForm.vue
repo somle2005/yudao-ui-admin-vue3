@@ -156,6 +156,7 @@ import {
   getSumValue
 } from '@/utils'
 import { getDeptTree, getFinanceSubjectList } from '@/commonData'
+import { computeTargetQty } from '@/utils/transformData'
 
 const props = defineProps({
   items: {
@@ -202,17 +203,18 @@ watch(
     if (!val || val.length === 0) {
       return
     }
-    const map = {}
-    val.forEach((item) => {
-      if (!map[item.productId]) {
-        map[item.productId] = item.planQty
-      } else {
-        map[item.productId] += item.planQty || 0
-      }
-    })
-    val.forEach((item) => {
-      item.pickQty = map[item.productId]
-    })
+    computeTargetQty(val)
+    // const map = {}
+    // val.forEach((item) => {
+    //   if (!map[item.productId]) {
+    //     map[item.productId] = item.planQty
+    //   } else {
+    //     map[item.productId] += item.planQty || 0
+    //   }
+    // })
+    // val.forEach((item) => {
+    //   item.pickQty = map[item.productId]
+    // })
   },
   { deep: true }
 )
