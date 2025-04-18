@@ -23,20 +23,23 @@ export const useProductEnableTable = () => {
     sellableQty: '可售量',
     availableQty: '可用量',
 
-    updateTime: {
-      label: '更新时间',
-      formatter: dateFormatter,
-      width: '200px'
-    },
+    // updateTime: {
+    //   label: '更新时间',
+    //   formatter: dateFormatter,
+    //   width: '200px'
+    // },
     updaterName: '更新人',
-    createTime: {
-      label: '创建时间',
-      formatter: dateFormatter,
-      width: '200px'
-    },
+    // createTime: {
+    //   label: '创建时间',
+    //   formatter: dateFormatter,
+    //   width: '200px'
+    // },
     creatorName: '创建人'
   }
-  tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+  tableOptions.value = transformTableOptions(fieldMap, {
+    allWrap: true,
+    noWidthList: ['outboundPendingQty', 'sellableQty', 'availableQty']
+  })
 
   // 注意外面都要用let
   // eslint-disable-next-line prefer-const

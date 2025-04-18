@@ -1,5 +1,5 @@
 <template>
-  <Dialog title="选择产品" v-model="dialogVisible" width="1000">
+  <Dialog title="选择产品" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
