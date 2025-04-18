@@ -21,37 +21,80 @@ const resolveConfig = (tableOption, config) => {
       }
     })
   }
+  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config
 
-  if (config?.allWrap) {
-    tableOption.forEach((item) => {
-      const allWrapIgnoreList = config.allWrapIgnoreList || []
-      allWrapIgnoreList.push(...['operate'])
-      if (allWrapIgnoreList.includes(item.prop)) return
+  const allWrapDeal = (allWrap, item) => {
+    if (!allWrap) return
+    allWrapIgnoreList.push(...['operate'])
+    if (allWrapIgnoreList.includes(item.prop)) return
+    const propertyList = ['dictAttrs', 'formatter']
+    const flag = propertyList.some((a) => item[a])
+    if (flag) return
 
-      const propertyList = ['dictAttrs', 'formatter']
-      const flag = propertyList.some((a) => item[a])
-      if (flag) return
-
-      item.slot = item.prop
-      item.wrap = true
-      if (!item.noWidth) {
-        item.width = '200px'
-      }
-    })
+    item.slot = item.prop
+    item.wrap = true
+    if (!item.noWidth) {
+      item.width = '200px'
+    }
   }
 
-  if (config?.wrapList) {
-    const wrapList = config.wrapList
-    tableOption.forEach((item) => {
-      if (wrapList.includes(item.prop)) {
-        item.slot = item.prop
-        item.wrap = true
-        if (!item.noWidth) {
-          item.width = '200px'
-        }
-      }
-    })
+  const wrapListDeal = (wrapList, item) => {
+    if (!wrapList) return
+    item.slot = item.prop
+    item.wrap = true
+    if (!item.noWidth) {
+      item.width = '200px'
+    }
   }
+
+  const noWidthListDeal = (noWidthList, item) => {
+    if (!noWidthList) return
+    if (noWidthList.includes(item.prop)) {
+      item.width = undefined
+    }
+  }
+
+  tableOption.forEach((item) => {
+    allWrapDeal(allWrap, item)
+    wrapListDeal(wrapList, item)
+    noWidthListDeal(noWidthList, item)
+  })
+
+  // if (allWrap) {
+  //   tableOption.forEach((item) => {
+  //     allWrapIgnoreList.push(...['operate'])
+  //     if (allWrapIgnoreList.includes(item.prop)) return
+  //     const propertyList = ['dictAttrs', 'formatter']
+  //     const flag = propertyList.some((a) => item[a])
+  //     if (flag) return
+
+  //     item.slot = item.prop
+  //     item.wrap = true
+  //     if (!item.noWidth) {
+  //       item.width = '200px'
+  //     }
+  //   })
+  // }
+
+  // if (wrapList) {
+  //   tableOption.forEach((item) => {
+  //     if (wrapList.includes(item.prop)) {
+  //       item.slot = item.prop
+  //       item.wrap = true
+  //       if (!item.noWidth) {
+  //         item.width = '200px'
+  //       }
+  //     }
+  //   })
+  // }
+
+  // if (noWidthList) {
+  //   tableOption.forEach((item) => {
+  //     if (noWidthList.includes(item.prop)) {
+  //       item.width = undefined
+  //     }
+  //   })
+  // }
 }
 
 export const transformTableOptions = (
