@@ -21,7 +21,7 @@ const resolveConfig = (tableOption, config) => {
       }
     })
   }
-  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config
+  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config || {}
 
   const allWrapDeal = (allWrap, item) => {
     if (!allWrap) return
