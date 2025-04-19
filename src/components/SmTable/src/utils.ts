@@ -21,7 +21,7 @@ const resolveConfig = (tableOption, config) => {
       }
     })
   }
-  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config
+  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config || {}
 
   const allWrapDeal = (allWrap, item) => {
     if (!allWrap) return
@@ -61,42 +61,6 @@ const resolveConfig = (tableOption, config) => {
     wrapListDeal(wrapList, item)
     noWidthListDeal(noWidthList, item)
   })
-
-  // if (allWrap) {
-  //   tableOption.forEach((item) => {
-  //     allWrapIgnoreList.push(...['operate'])
-  //     if (allWrapIgnoreList.includes(item.prop)) return
-  //     const propertyList = ['dictAttrs', 'formatter']
-  //     const flag = propertyList.some((a) => item[a])
-  //     if (flag) return
-
-  //     item.slot = item.prop
-  //     item.wrap = true
-  //     if (!item.noWidth) {
-  //       item.width = '200px'
-  //     }
-  //   })
-  // }
-
-  // if (wrapList) {
-  //   tableOption.forEach((item) => {
-  //     if (wrapList.includes(item.prop)) {
-  //       item.slot = item.prop
-  //       item.wrap = true
-  //       if (!item.noWidth) {
-  //         item.width = '200px'
-  //       }
-  //     }
-  //   })
-  // }
-
-  // if (noWidthList) {
-  //   tableOption.forEach((item) => {
-  //     if (noWidthList.includes(item.prop)) {
-  //       item.width = undefined
-  //     }
-  //   })
-  // }
 }
 
 export const transformTableOptions = (
