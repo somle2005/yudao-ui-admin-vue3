@@ -139,7 +139,7 @@ const fieldMap = {
     width: '250px'
   },
   price: '售价',
-  currency: '币种',
+  currencyCode: '币种',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,

@@ -111,8 +111,8 @@ const fieldMap = {
     width: '180px'
   },
 
-  platformShopName: {
-    label: '平台店铺名称',
+  externalName: {
+    label: '外部来源名称',
     width: '180px'
   },
   code: {

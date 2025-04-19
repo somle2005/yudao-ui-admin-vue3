@@ -10,10 +10,39 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="订单单号" prop="no">
+      <el-form-item label="订单单号" prop="code">
         <el-input
-          v-model="queryParams.no"
+          v-model="queryParams.code"
           placeholder="请输入订单单号"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="平台编码" prop="platformCode">
+        <el-input
+          v-model="queryParams.platformCode"
+          placeholder="请输入平台编码"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+
+      <el-form-item label="外部单据编码" prop="externalCode" label-width="100">
+        <el-input
+          v-model="queryParams.externalCode"
+          placeholder="请输入外部单据编码"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+
+      <el-form-item label="买家姓名" prop="buyerName">
+        <el-input
+          v-model="queryParams.buyerName"
+          placeholder="请输入买家姓名"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -35,17 +64,17 @@
 <!--          />-->
 <!--        </el-select>-->
 <!--      </el-form-item>-->
-      <el-form-item label="订单时间" prop="orderCreateTime">
-        <el-date-picker
-          v-model="queryParams.orderCreateTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-240px"
-        />
-      </el-form-item>
+<!--      <el-form-item label="订单时间" prop="orderCreateTime">-->
+<!--        <el-date-picker-->
+<!--          v-model="queryParams.orderCreateTime"-->
+<!--          value-format="YYYY-MM-DD HH:mm:ss"-->
+<!--          type="daterange"-->
+<!--          start-placeholder="开始日期"-->
+<!--          end-placeholder="结束日期"-->
+<!--          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"-->
+<!--          class="!w-240px"-->
+<!--        />-->
+<!--      </el-form-item>-->
 <!--      <el-form-item label="客户" prop="customerId">-->
 <!--        <el-select-->
 <!--          v-model="queryParams.customerId"-->
@@ -121,110 +150,110 @@
 <!--          <el-option label="全部退货" value="2" />-->
 <!--        </el-select>-->
 <!--      </el-form-item>-->
-      <el-form-item label="客户" prop="customerId">
-        <el-select
-          v-model="queryParams.customerId"
-          clearable
-          filterable
-          placeholder="请选择供客户"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in customerList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建人" prop="creator">
-        <el-select
-          v-model="queryParams.creator"
-          clearable
-          filterable
-          placeholder="请选择创建人"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in userList"
-            :key="item.id"
-            :label="item.nickname"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="出库数量" prop="outStatus">
-        <el-select
-          v-model="queryParams.outStatus"
-          placeholder="请选择出库数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未出库" value="0" />
-          <el-option label="部分出库" value="1" />
-          <el-option label="全部出库" value="2" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="退货数量" prop="returnStatus">
-        <el-select
-          v-model="queryParams.returnStatus"
-          placeholder="请选择退货数量"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="未退货" value="0" />
-          <el-option label="部分退货" value="1" />
-          <el-option label="全部退货" value="2" />
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="客户" prop="customerId">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.customerId"-->
+<!--          clearable-->
+<!--          filterable-->
+<!--          placeholder="请选择供客户"-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option-->
+<!--            v-for="item in customerList"-->
+<!--            :key="item.id"-->
+<!--            :label="item.name"-->
+<!--            :value="item.id"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="创建人" prop="creator">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.creator"-->
+<!--          clearable-->
+<!--          filterable-->
+<!--          placeholder="请选择创建人"-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option-->
+<!--            v-for="item in userList"-->
+<!--            :key="item.id"-->
+<!--            :label="item.nickname"-->
+<!--            :value="item.id"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="状态" prop="status">-->
+<!--        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable class="!w-240px">-->
+<!--          <el-option-->
+<!--            v-for="dict in getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="备注" prop="remark">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.remark"-->
+<!--          placeholder="请输入备注"-->
+<!--          clearable-->
+<!--          @keyup.enter="handleQuery"-->
+<!--          class="!w-240px"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="出库数量" prop="outStatus">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.outStatus"-->
+<!--          placeholder="请选择出库数量"-->
+<!--          clearable-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option label="未出库" value="0" />-->
+<!--          <el-option label="部分出库" value="1" />-->
+<!--          <el-option label="全部出库" value="2" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="退货数量" prop="returnStatus">-->
+<!--        <el-select-->
+<!--          v-model="queryParams.returnStatus"-->
+<!--          placeholder="请选择退货数量"-->
+<!--          clearable-->
+<!--          class="!w-240px"-->
+<!--        >-->
+<!--          <el-option label="未退货" value="0" />-->
+<!--          <el-option label="部分退货" value="1" />-->
+<!--          <el-option label="全部退货" value="2" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button
-          type="primary"
-          plain
-          @click="openForm('create')"
-          v-hasPermi="['oms:sale-order:create']"
-        >
-          <Icon icon="ep:plus" class="mr-5px" /> 新增
-        </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['oms:sale-order:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
-        <el-button
-          type="danger"
-          plain
-          @click="handleDelete(selectionList.map((item) => item.id))"
-          v-hasPermi="['oms:sale-order:delete']"
-          :disabled="selectionList.length === 0"
-        >
-          <Icon icon="ep:delete" class="mr-5px" /> 删除
-        </el-button>
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          @click="openForm('create')"-->
+<!--          v-hasPermi="['oms:sale-order:create']"-->
+<!--        >-->
+<!--          <Icon icon="ep:plus" class="mr-5px" /> 新增-->
+<!--        </el-button>-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          @click="handleExport"-->
+<!--          :loading="exportLoading"-->
+<!--          v-hasPermi="['oms:sale-order:export']"-->
+<!--        >-->
+<!--          <Icon icon="ep:download" class="mr-5px" /> 导出-->
+<!--        </el-button>-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          @click="handleDelete(selectionList.map((item) => item.id))"-->
+<!--          v-hasPermi="['oms:sale-order:delete']"-->
+<!--          :disabled="selectionList.length === 0"-->
+<!--        >-->
+<!--          <Icon icon="ep:delete" class="mr-5px" /> 删除-->
+<!--        </el-button>-->
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -239,20 +268,23 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column width="30" label="选择" type="selection" />
-      <el-table-column min-width="180" label="订单单号" align="center" prop="no" />
+      <el-table-column min-width="180" label="订单单号" align="center" prop="code" />
+      <el-table-column min-width="180" label="外部单据编码" align="center" prop="externalCode" />
       <el-table-column min-width="180" label="所属店铺" align="center" prop="shopName" />
       <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
-      <el-table-column label="买家姓名" align="center" prop="buyerName" />
+      <el-table-column label="买家姓名" min-width="180" align="center" prop="buyerName" />
       <el-table-column label="公司名" align="center" prop="companyName" />
 
-      <el-table-column label="收件人国家" align="center" prop="buyerCountryCode" width="100" />
-      <el-table-column label="收件人省【或为州】" align="center" prop="state" width="150"/>
+      <el-table-column label="收件人国家" align="center" prop="recipientCountryCode" width="100" />
+      <el-table-column label="收件人省或州】" align="center" prop="state" width="150"/>
       <el-table-column label="城市" align="center" prop="city" />
       <el-table-column label="区/县" align="center" prop="district" />
-      <el-table-column label="地址" align="center" prop="address" width="300"/>
-      <el-table-column label="门牌号" align="center" prop="houseNumber" />
+      <el-table-column label="地址1" align="center" prop="address1" width="300"/>
+      <el-table-column label="地址2" align="center" prop="address1" width="300"/>
+      <el-table-column label="地址3" align="center" prop="address1" width="300"/>
+      <el-table-column label="门牌号" align="center" prop="houseNo" />
       <el-table-column label="邮编" align="center" prop="postalCode" />
-      <el-table-column label="运费" align="center" prop="shippingCost" />
+      <el-table-column label="运费" align="center" prop="shippingFee" />
       <el-table-column
         label="订单创建时间"
         align="center"
@@ -272,75 +304,70 @@
       <el-table-column
         label="付款时间"
         align="center"
-        prop="paymentTime"
+        prop="payTime"
         :formatter="dateFormatter2"
         width="120px"
       />
 
       <el-table-column label="平台" align="center" prop="platformCode" width="100" />
       <el-table-column label="邮箱" align="center" prop="email" width="100"/>
-      <el-table-column label="电话" align="center" prop="telephone" width="100"/>
+      <el-table-column label="电话" align="center" prop="phone" width="100"/>
       <el-table-column
         label="总金额"
         align="center"
         prop="totalPrice"
         :formatter="erpPriceTableColumnFormatter"
       />
-      <el-table-column
-        label="收取订金"
-        align="center"
-        prop="depositPrice"
-        :formatter="erpPriceTableColumnFormatter"
-      />
-      <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.SRM_AUDIT_STATUS" :value="scope.row.status" />
-        </template>
-      </el-table-column>
+
+<!--      <el-table-column label="状态" align="center" fixed="right" width="90" prop="status">-->
+<!--        <template #default="scope">-->
+<!--          <dict-tag :type="DICT_TYPE.SRM_AUDIT_STATUS" :value="scope.row.status" />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="操作" align="center" fixed="right" width="220">
         <template #default="scope">
           <el-button
             link
             @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['erp:sale-order:query']"
+            v-hasPermi="['oms:order:query']"
           >
             详情
           </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['oms:sale-order:update']"
-            :disabled="scope.row.status === 20"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="handleUpdateStatus(scope.row.id, 20)"
-            v-hasPermi="['oms:sale-order:update-status']"
-            v-if="scope.row.status === 10"
-          >
-            审批
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleUpdateStatus(scope.row.id, 10)"
-            v-hasPermi="['erp:sale-order:update-status']"
-            v-else
-          >
-            反审批
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete([scope.row.id])"
-            v-hasPermi="['erp:sale-order:delete']"
-          >
-            删除
-          </el-button>
+<!--          <el-button-->
+<!--            link-->
+<!--            type="primary"-->
+<!--            @click="openForm('update', scope.row.id)"-->
+<!--            v-hasPermi="['oms:sale-order:update']"-->
+<!--            :disabled="scope.row.status === 20"-->
+<!--          >-->
+<!--            编辑-->
+<!--          </el-button>-->
+<!--          <el-button-->
+<!--            link-->
+<!--            type="primary"-->
+<!--            @click="handleUpdateStatus(scope.row.id, 20)"-->
+<!--            v-hasPermi="['oms:sale-order:update-status']"-->
+<!--            v-if="scope.row.status === 10"-->
+<!--          >-->
+<!--            审批-->
+<!--          </el-button>-->
+<!--          <el-button-->
+<!--            link-->
+<!--            type="danger"-->
+<!--            @click="handleUpdateStatus(scope.row.id, 10)"-->
+<!--            v-hasPermi="['erp:sale-order:update-status']"-->
+<!--            v-else-->
+<!--          >-->
+<!--            反审批-->
+<!--          </el-button>-->
+<!--          <el-button-->
+<!--            link-->
+<!--            type="danger"-->
+<!--            @click="handleDelete([scope.row.id])"-->
+<!--            v-hasPermi="['erp:sale-order:delete']"-->
+<!--          >-->
+<!--            删除-->
+<!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -381,15 +408,18 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
-  customerId: undefined,
+  code: undefined,
+  platformCode: undefined,
   productId: undefined,
   orderCreateTime: [],
   status: undefined,
   remark: undefined,
   creator: undefined,
   outStatus: undefined,
-  returnStatus: undefined
+  returnStatus: undefined,
+  customerId: undefined,
+  externalCode: undefined,
+  buyerName: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
