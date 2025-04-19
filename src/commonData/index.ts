@@ -7,10 +7,10 @@ import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { ProductApi, ProductVO, ProductVOSelectItem } from '@/api/erp/product/product'
 import { cloneDeep } from 'lodash-es'
 import { getSimpleUserList, UserVO } from '@/api/system/user'
-import { ShopApi } from '@/api/oms/shop'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/company'
-import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { ShopApi } from '@/api/oms/shop'
 import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
 import { CustomProductApi } from '@/api/tms/custom-product'
 
@@ -89,7 +89,7 @@ export const getSupplierList = (data?: any) => {
 }
 
 // 获取仓库下拉列表
-export const getWarehouseList = () => {
+export const getWarehouseList = (data?: any) => {
   const warehouseList = ref<WarehouseVO[]>([]) // 账户列表
   // 加载账户列表
   WarehouseApi.getWarehouseSimpleList().then((res) => {
@@ -99,6 +99,9 @@ export const getWarehouseList = () => {
 
       return item
     })
+    if (data) {
+      data.value = warehouseList.value
+    }
   })
   return warehouseList
 }
@@ -107,7 +110,8 @@ export const getProductList = (data?: any, keyMap?: { [key: string]: any }) => {
   const productList = ref<ProductVO[]>([]) // 产品列表
   ProductApi.getProductSimpleList().then((res) => {
     productList.value = res.map((item) => {
-      item.label = item.name + '  ' + item.barCode
+      // item.label = item.name + '  ' + item.barCode
+      item.label = item.barCode
       item.value = item.id
 
       if (keyMap) {
