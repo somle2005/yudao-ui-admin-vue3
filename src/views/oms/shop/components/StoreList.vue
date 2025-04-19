@@ -17,7 +17,7 @@
 </template>
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
-import { ShopApi } from '@/api/erp/sale/shop'
+import { ShopApi } from '@/api/oms/shop'
 import { cloneDeep } from 'lodash-es'
 import { debounce } from 'min-dash'
 const shopList: any = ref([])

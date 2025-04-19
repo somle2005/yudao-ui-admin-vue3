@@ -241,7 +241,7 @@
 <!--          plain-->
 <!--          @click="handleExport"-->
 <!--          :loading="exportLoading"-->
-<!--          v-hasPermi="['oms:sale-order:export']"-->
+<!--          v-hasPermi="['oms:sale-order:export']"--> 
 <!--        >-->
 <!--          <Icon icon="ep:download" class="mr-5px" /> 导出-->
 <!--        </el-button>-->
@@ -388,7 +388,7 @@
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { dateFormatter2 } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { SaleOrderApi, SaleOrderVO } from '@/api/erp/sale/order'
+import { SaleOrderApi, SaleOrderVO } from '@/api/oms/order'
 import SaleOrderForm from './SaleOrderForm.vue'
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
 import { UserVO } from '@/api/system/user'

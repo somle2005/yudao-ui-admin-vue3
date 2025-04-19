@@ -18,7 +18,7 @@
 </template>
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { ShopApi, ShopVO } from '@/api/erp/sale/shop'
+import { ShopApi, ShopVO } from '@/api/oms/shop'
 import { createDBFn } from '@/utils/decorate'
 
 /** OMS 平台店铺 */

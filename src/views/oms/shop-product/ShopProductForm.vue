@@ -135,7 +135,7 @@
 </template>
 <script setup lang="ts">
 // import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { ShopProductApi, ShopProductVO } from '@/api/erp/sale/shop-product'
+import { ShopProductApi, ShopProductVO } from '@/api/oms/shop-product'
 import { createDBFn } from '@/utils/decorate'
 import ProductItemForm from './components/ProductItemForm.vue'
 import { useProductItemForm } from './hooks/useProductItemForm'

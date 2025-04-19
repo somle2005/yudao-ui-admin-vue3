@@ -1,5 +1,7 @@
 <template>
   <div class="platform-store">
+    <StoreList ref="storeListRef" @click-shop="clickShop" />
+
     <div class="platform-store-table">
       <ContentWrap>
         <!-- 搜索工作栏 -->
@@ -23,7 +25,8 @@
               type="primary"
               plain
               @click="openForm('create')"
-              v-hasPermi="['oms:shop-product:create']"
+              v-if="clickShopItem.type === 1"
+              v-hasPermi="['oms:shop:create']"
             >
               <Icon icon="ep:plus" class="mr-5px" /> 新增
             </el-button>
@@ -31,8 +34,9 @@
         </SmForm>
       </ContentWrap>
 
-      <!-- 列表  style="height: calc(100vh - 230px)" -->
-      <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+      <!-- 列表 -->
+      <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }" style="margin-bottom: 0">
+        <!-- style="height: calc(100vh - 230px)" -->
         <SmTable
           border
           :loading="loading"
@@ -43,36 +47,26 @@
           v-model:pageSize="queryParams.pageSize"
           @pagination="getList"
         >
-<!--          <template #image="{ scope }">-->
-<!--            <el-image :src="scope.row.image" class="w-64px h-64px" />-->
-<!--          </template>-->
-<!--          <template #status="{ scope }">-->
-<!--            <dict-tag-->
-<!--              :type="DICT_TYPE.ERP_PRODUCT_LISTING_STATUS"-->
-<!--              :value="scope.row.status + '' || ''"-->
-<!--            />-->
-<!--          </template>-->
+          <template #countryCode="{ scope }">
+            {{ scope.row.countryCode }}
+            <!-- <dict-tag :type="DICT_TYPE.COUNTRY_CODE" value="7" /> -->
+            <!-- <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode + '' || ''" /> -->
+          </template>
 
-<!--          <template #name="{ scope }">-->
-<!--            <div class="slot-wrap">-->
-<!--              <el-link type="primary" :href="scope.row.url" target="_blank">{{-->
-<!--                scope.row.name-->
-<!--              }}</el-link>-->
-<!--            </div>-->
-<!--          </template>-->
+          <template #status="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_OFF_STATUS" :value="scope.row.status + '' || ''" />
+          </template>
 
-<!--          <template #SKUQuantity="{ scope }">-->
-<!--            <div :key="item" v-for="item in scope.row.SKUQuantity" class="slot-wrap">-->
-<!--              {{ item }}-->
-<!--            </div>-->
-<!--          </template>-->
+          <template #type="{ scope }">
+            <dict-tag :type="DICT_TYPE.ERP_SHOP_TYPE" :value="scope.row.type + '' || ''" />
+          </template>
 
           <template #operate="{ scope }">
             <el-button
               link
               type="primary"
               @click="openForm('update', scope.row.id)"
-              v-hasPermi="['oms:shop-product:update']"
+              v-hasPermi="['oms:shop:update']"
             >
               编辑
             </el-button>
@@ -80,7 +74,7 @@
               link
               type="danger"
               @click="handleDelete(scope.row.id)"
-              v-hasPermi="['oms:shop-product:delete']"
+              v-hasPermi="['oms:shop:delete']"
             >
               删除
             </el-button>
@@ -90,56 +84,46 @@
     </div>
 
     <!-- 表单弹窗：添加/修改 -->
-    <ShopProductForm ref="formRef" @success="getList" />
+    <ShopForm ref="formRef" @success="refresh" />
   </div>
 </template>
 
 <script setup lang="ts">
-// import { DICT_TYPE } from '@/utils/dict'
+import { DICT_TYPE } from '@/utils/dict'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import ShopProductForm from './ShopProductForm.vue'
+import ShopForm from './ShopForm.vue'
+import StoreList from './components/StoreList.vue'
 import { useSearchForm } from './hooks/search'
-import { ShopProductApi, ShopProductVO } from '@/api/erp/sale/shop-product'
+import { ShopApi, ShopVO } from '@/api/oms/shop'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { cloneDeep } from 'lodash-es'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
-  platform: {
-    label: '所属平台',
+  platformCode: {
+    label: '平台',
     width: '180px'
   },
-  shopProductCode: {
-    label: '平台SKU',
+  name:  {
+    label: '店铺名称',
     width: '180px'
   },
-  name: {
-    label: '平台产品名称',
+
+  externalName: {
+    label: '外部来源名称',
     width: '180px'
   },
-  platformShopName: {
-    label: '平台店铺名称',
-    width: '180px',
-    slot: 'platformShopName',
-    wrap: true
-  },
-  shopName: {
-    label: '店铺别名',
+  code: {
+    label: '店铺编码',
     width: '180px'
   },
-  deptName: {
-    label: '部门',
-    width: '180px',
-    slot: 'deptName',
-    wrap: true
+
+  platformShopCode: {
+    label: '平台店铺编码',
+    width: '180px'
   },
-  qty: {
-    label: '可售数量',
-    width: '250px'
-  },
-  price: '售价',
-  currencyCode: '币种',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
@@ -154,27 +138,27 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    // action: true,
     width: '180px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap)
+tableOptions.value = transformTableOptions(fieldMap, { noWidth: true })
 
-/** OMS 店铺产品 列表 */
-defineOptions({ name: 'OmsShopProduct' })
+/** OMS 平台店铺 列表 */
+defineOptions({ name: 'OmsShop' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<ShopProductVO[]>([]) // 列表的数据
+const list = ref<ShopVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  shopId: undefined,
   platform: undefined,
-  shopName: undefined
+  name: undefined,
+  status: undefined,
+  type: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -183,21 +167,8 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await ShopProductApi.getShopProductPage(queryParams)
-    
-    try {
-      list.value = data.list.map((item) => {
-        if (item.shop !== null) {
-          item.platformShopName = item.shop.platformShopName
-          item.platform = item.shop.platformCode
-          item.shopName = item.shop.name
-        }
-        item.shopProductCode = item.code
-        return item
-      })
-    } catch (e) {
-      console.log(e, '处理列表数据报错')
-    }
+    const data = await ShopApi.getShopPage(queryParams)
+    list.value = data.list
     total.value = data.total
   } finally {
     loading.value = false
@@ -228,7 +199,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await ShopProductApi.deleteShopProduct(id)
+    await ShopApi.deleteShop(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -242,7 +213,7 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await ShopProductApi.exportShopProduct(queryParams)
+    const data = await ShopApi.exportShop(queryParams)
     download.excel(data, '客户.xls')
   } catch {
   } finally {
@@ -252,6 +223,26 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
+const clickShopItem: any = ref({})
+const clickShop = async (item: any) => {
+  clickShopItem.value = item
+  loading.value = true
+  try {
+    const query: any = cloneDeep(queryParams)
+    query.type = item.type
+    const data = await ShopApi.getShopPage(query)
+    list.value = data.list
+    total.value = data.total
+  } finally {
+    loading.value = false
+  }
+}
+const storeListRef = ref()
+const refresh = () => {
+  getList()
+  storeListRef.value.getList()
+}
+
 /** 初始化 **/
 onMounted(() => {
   getList()
@@ -259,14 +250,11 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .platform-store {
-  // display: flex;
-  height: calc(100vh - 120px);
+  display: flex;
+  // height: calc(100vh - 120px);
 }
 .platform-store-table {
   margin-left: 10px;
   flex-grow: 1;
-}
-.slot-wrap {
-  white-space: normal;
 }
 </style>
