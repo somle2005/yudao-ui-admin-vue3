@@ -182,7 +182,7 @@ import SaleOutItemForm from './components/SaleOutItemForm.vue'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
 import { AccountApi, AccountVO } from '@/api/fms/account'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
-import SaleOrderOutEnableList from '@/views/erp/sale/order/components/SaleOrderOutEnableList.vue'
+import SaleOrderOutEnableList from '@/views/oms/order/components/SaleOrderOutEnableList.vue'
 import { SaleOrderVO } from '@/api/oms/order'
 import * as UserApi from '@/api/system/user'
 

@@ -182,7 +182,7 @@ import SaleReturnItemForm from './components/SaleReturnItemForm.vue'
 import { CustomerApi, CustomerVO } from '@/api/erp/sale/customer'
 import { AccountApi, AccountVO } from '@/api/fms/account'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
-import SaleOrderReturnEnableList from '@/views/erp/sale/order/components/SaleOrderReturnEnableList.vue'
+import SaleOrderReturnEnableList from '@/views/oms/order/components/SaleOrderReturnEnableList.vue'
 import { SaleOrderVO } from '@/api/oms/order'
 import * as UserApi from '@/api/system/user'
 
