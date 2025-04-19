@@ -16,6 +16,7 @@
         label="创建时间"
         prop="createTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="跟进人" prop="creatorName" />
       <el-table-column align="center" label="跟进类型" prop="type">
@@ -30,6 +31,7 @@
         label="下次联系时间"
         prop="nextTime"
         width="180px"
+        sortable
       />
       <el-table-column
         align="center"

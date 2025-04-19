@@ -126,20 +126,23 @@
         prop="orderDate"
         width="120"
         :formatter="dateFormatter2"
+        sortable
       />
       <el-table-column
         align="center"
         label="合同开始时间"
         prop="startTime"
-        width="120"
+        width="140"
         :formatter="dateFormatter2"
+        sortable
       />
       <el-table-column
         align="center"
         label="合同结束时间"
         prop="endTime"
-        width="120"
+        width="140"
         :formatter="dateFormatter2"
+        sortable
       />
       <el-table-column align="center" label="客户签约人" prop="contactName" width="130">
         <template #default="scope">
@@ -178,6 +181,7 @@
         label="最后跟进时间"
         prop="contactLastTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="负责人" prop="ownerUserName" width="120" />
       <el-table-column align="center" label="所属部门" prop="ownerUserDeptName" width="100px" />
@@ -187,6 +191,7 @@
         label="更新时间"
         prop="updateTime"
         width="180px"
+        sortable
       />
       <el-table-column
         :formatter="dateFormatter"
@@ -194,6 +199,7 @@
         label="创建时间"
         prop="createTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="120" />
       <el-table-column align="center" fixed="right" label="合同状态" prop="auditStatus" width="120">

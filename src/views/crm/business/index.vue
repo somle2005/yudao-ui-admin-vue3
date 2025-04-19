@@ -86,6 +86,7 @@
         label="预计成交日期"
         prop="dealTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="备注" prop="remark" width="200" />
       <el-table-column
@@ -94,6 +95,7 @@
         label="下次联系时间"
         prop="contactNextTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="负责人" prop="ownerUserName" width="100px" />
       <el-table-column align="center" label="所属部门" prop="ownerUserDeptName" width="100px" />
@@ -103,6 +105,7 @@
         label="最后跟进时间"
         prop="contactLastTime"
         width="180px"
+        sortable
       />
       <el-table-column
         :formatter="dateFormatter"
@@ -110,6 +113,7 @@
         label="更新时间"
         prop="updateTime"
         width="180px"
+        sortable
       />
       <el-table-column
         :formatter="dateFormatter"
@@ -117,6 +121,7 @@
         label="创建时间"
         prop="createTime"
         width="180px"
+        sortable
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
       <el-table-column
