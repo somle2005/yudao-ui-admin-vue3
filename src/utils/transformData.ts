@@ -231,3 +231,31 @@ export const computeList = (mapList: Array<MapListObj>, list: any[]) => {
     console.log(e, '报错')
   }
 }
+
+export const getLastListProp = (list: any[], prop: string) => {
+  if (!list?.length) return
+  try {
+    return list[list.length - 1][prop]
+  } catch (e) {
+    console.log(e, '报错')
+  }
+}
+
+export const computeTargetQty = (list: any[], mapKey?: { [key: string]: any }) => {
+  const {
+    targetQtyKey = 'pickQty',
+    computeQtyKey = 'planQty',
+    computeKey = 'productId'
+  } = mapKey || {}
+  const map = {}
+  list.forEach((item) => {
+    if (!map[item[computeKey]]) {
+      map[item[computeKey]] = item[computeQtyKey]
+    } else {
+      map[item[computeKey]] += item[computeQtyKey] || 0
+    }
+  })
+  list.forEach((item) => {
+    item[targetQtyKey] = map[item[computeKey]]
+  })
+}

@@ -29,3 +29,10 @@ export const hasPermission = (permission: string[]) => {
     permission.some((permission) => userStore.permissions.has(permission))
   )
 }
+
+export const hasAllPermission = (permission: string[]) => {
+  return (
+    userStore.permissions.has(all_permission) ||
+    permission.every((permission) => userStore.permissions.has(permission))
+  )
+}
