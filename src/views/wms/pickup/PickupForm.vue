@@ -98,6 +98,12 @@ const open = async (type: string, id?: number) => {
       let data = await PickupApi.getPickup(id)
       getItemProp(data.itemList, ['product'])
       formData.value = data
+      formData.value.itemList.forEach((item) => {
+        if (item.inbound) {
+          item.inboundCode = item.inbound.code
+        }
+      })
+
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {
@@ -193,7 +199,6 @@ const getFormData = () => {
   return formData.value
 }
 
-
 const itemIdKey = 'inboundItemId'
 const addItem = (selectionList: any[]) => {
   nextTick(() => {
@@ -215,7 +220,7 @@ const addItem = (selectionList: any[]) => {
         outboundAvailableQty,
         planQty,
         shelvedQty,
-        inbound,
+        inbound
       } = item
 
       const obj = {
