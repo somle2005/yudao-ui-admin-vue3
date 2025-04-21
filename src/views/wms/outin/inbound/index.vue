@@ -42,8 +42,9 @@
           提交审核
         </el-button>
 
+        <!-- 待入库状态 -->
         <el-button
-          :disabled="oneSelectDisabledBtn"
+          :disabled="selectionList[0]?.auditStatus !== 1"
           type="primary"
           @click="openForm('audit', selectionList[0]?.id)"
           v-hasPermi="['wms:inbound:agree', 'wms:inbound:reject']"
@@ -149,6 +150,11 @@ const fieldMap = {
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },
+  shelvingStatus: {
+    label: '上架状态',
+    slot: 'shelvingStatus',
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_SHELVING_STATUS }
+  },
   shippingMethod: {
     label: '运输方式',
     slot: 'shippingMethod',
@@ -191,8 +197,8 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true})
-console.log(tableOptions.value,'tableOptions.value')
+tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+console.log(tableOptions.value, 'tableOptions.value')
 
 /** 入库单 列表 */
 defineOptions({ name: 'WmsInbound' })

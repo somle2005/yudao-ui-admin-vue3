@@ -188,8 +188,8 @@ const createRequestFormOptions = () => {
 
     {
       type: 'input',
-      label: '源单编码',
-      prop: 'creatorComment',
+      label: '上游单据编码',
+      prop: 'upstreamCode',
       attrs: {
         disabled: true,
         style: { width: '100%' },
@@ -249,9 +249,8 @@ const createRequestFormOptions = () => {
     { 
       type: 'date-picker',
       prop: 'outboundTime',
-      label: '出库时间',
+      label: '计划出库时间',
       attrs: {
-        disabled: true,
         clearable: true,
         'value-format': 'x',
         style: {
@@ -436,7 +435,8 @@ const addProductItem = (selectionList: any[]) => {
         availableQty,
         // defectiveQty,
         outboundPlanQty,
-        suggestedOwnership
+        suggestedOwnership,
+        bin,
       } = item
 
       let deptId = undefined
@@ -459,7 +459,8 @@ const addProductItem = (selectionList: any[]) => {
         deptId,
         availableQty,
         // defectiveQty,
-        outboundPlanQty
+        outboundPlanQty,
+        stockType: bin?.zone?.stockType
       }
       return obj
     })

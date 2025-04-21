@@ -73,6 +73,16 @@
           </template>
         </el-table-column>
 
+
+        <el-table-column label="存货类型" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.stockType`" class="mb-0px!">
+              <dict-tag :type="DICT_TYPE.WMS_STOCK_TYPE" :value="row.stockType" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        
+
         <el-table-column label="库位" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.binName`" class="mb-0px!">
@@ -157,6 +167,7 @@ import {
 } from '@/utils'
 import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 import { computeTargetQty } from '@/utils/transformData'
+import { DICT_TYPE } from '@/utils/dict'
 
 const props = defineProps({
   items: {

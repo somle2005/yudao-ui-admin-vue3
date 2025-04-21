@@ -6,6 +6,16 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
+      type: 'input',
+      label: '入库单号',
+      prop: 'code',
+      placeholder: '请输入入库单号',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+      }
+    },
+    {
       type: 'select',
       label: '仓库',
       prop: 'warehouseId',

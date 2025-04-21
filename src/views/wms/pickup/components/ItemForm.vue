@@ -228,7 +228,8 @@ const handleDelete = (index: number) => {
 const handleAddItem = (index: number) => {
   const row = cloneDeep(formData.value[index])
   row[props.itemIdKey] = Math.random() + formData.value.length
-  formData.value.push(row)
+  formData.value.splice(index,0,row)
+  // formData.value.push(row)
 }
 
 /** 表单校验 */
