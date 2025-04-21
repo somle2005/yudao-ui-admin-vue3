@@ -48,7 +48,7 @@
         <el-table-column prop="pickQty" label="已选择数" width="100" align="center" />
         <el-table-column prop="actualQty" label="入库数量" width="100" align="center" />
         <!-- <el-table-column prop="outboundAvailableQty" label="待上架数" width="100" align="center" /> -->
-        <el-table-column prop="shelvePendingQty" label="待上架数" width="100" align="center" />
+        <el-table-column prop="shelveAvailableQty" label="待上架数" width="100" align="center" />
 
         <!-- <el-table-column label="计划入库量" width="100">
           <template #default="{ row, $index }">
