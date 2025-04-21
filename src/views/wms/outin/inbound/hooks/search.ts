@@ -129,7 +129,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '特别说明',
-      prop: 'creatorComment',
+      prop: 'remark',
       placeholder: '请输入特别说明',
       attrs: {
         style: { width: '100%' },

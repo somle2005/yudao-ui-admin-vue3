@@ -118,7 +118,7 @@ const fieldMap = {
     formatter: dateFormatter2,
     width: '200px'
   },
-  creatorComment: '特别说明',
+  remark: '特别说明',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -164,7 +164,7 @@ const queryParams = reactive({
   shippingMethod: undefined,
   arrivalPlanTime: [],
   arrivalActualTime: [],
-  creatorComment: undefined,
+  remark: undefined,
   initAge: undefined,
   createTime: []
 })

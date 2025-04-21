@@ -121,7 +121,7 @@ const initFormData = () => {
     upstreamBillId: undefined,
     upstreamBillCode: undefined,
     upstreamBillType: undefined,
-    creatorComment: undefined,
+    remark: undefined,
     itemList: [] as any[]
   }
 }
@@ -178,7 +178,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '特别说明',
-      prop: 'creatorComment',
+      prop: 'remark',
       placeholder: '请输入特别说明',
       attrs: {
         style: { width: '100%' },
@@ -408,7 +408,7 @@ const addProductItem = (selectionList: any[]) => {
         "upstreamBillId":1,
         "upstreamBillCode":"1",
         "upstreamBillType":1,
-        "creatorComment":"1",
+        "remark":"1",
         "itemList":[
           {
           "productId":"159",

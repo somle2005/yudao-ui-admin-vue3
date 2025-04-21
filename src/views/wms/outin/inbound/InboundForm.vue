@@ -101,7 +101,7 @@ const initFormData = () => {
     shippingMethod: undefined,
     arrivalPlanTime: undefined,
     arrivalActualTime: undefined,
-    creatorComment: undefined,
+    remark: undefined,
     initAge: undefined,
     itemList: []
   }
@@ -221,7 +221,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '特别说明',
-      prop: 'creatorComment',
+      prop: 'remark',
       placeholder: '请输入特别说明',
       attrs: {
         style: { width: '100%' },

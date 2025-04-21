@@ -157,7 +157,7 @@ const fieldMap = {
   },
   companyName: '库存主体',
   // deptName: '库存归属',
-  creatorComment: '特别说明',
+  remark: '特别说明',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -179,7 +179,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   noWidth: true,
-  wrapList: ['warehouseName', 'deptName', 'companyName', 'creatorComment']
+  wrapList: ['warehouseName', 'deptName', 'companyName', 'remark']
 })
 
 /** 出库单 列表 */
@@ -202,7 +202,7 @@ const queryParams = reactive({
   upstreamBillId: undefined,
   upstreamBillCode: undefined,
   upstreamBillType: undefined,
-  creatorComment: undefined,
+  remark: undefined,
   createTime: []
 })
 const queryFormRef = ref() // 搜索的表单

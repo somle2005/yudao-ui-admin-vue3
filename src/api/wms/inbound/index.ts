@@ -15,7 +15,7 @@ export interface InboundVO {
   shippingMethod: number // 运输方式，1-海运；2-火车；3-空运；4、集卡
   planArrivalTime: Date // 预计到货时间
   actualArrivalTime: Date // 实际到货时间
-  creatorComment: string // 特别说明，创建方专用
+  remark: string // 备注，创建方专用
   initAge: number // 初始库龄
   itemList: any[] // 详情清单
   comment?: string // 审批意见
