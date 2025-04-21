@@ -44,7 +44,7 @@
 
         <!-- 待入库状态 -->
         <el-button
-          :disabled="selectionList[0]?.auditStatus !== 1"
+          :disabled="selectionList[0]?.auditStatus !== AUDIT_STATUS.pendStorage"
           type="primary"
           @click="openForm('audit', selectionList[0]?.id)"
           v-hasPermi="['wms:inbound:agree', 'wms:inbound:reject']"
@@ -127,6 +127,7 @@ import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { getLastListProp } from '@/utils/transformData'
+import { AUDIT_STATUS } from '@/views/wms/constants/index'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示

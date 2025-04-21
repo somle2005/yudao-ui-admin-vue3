@@ -33,7 +33,7 @@
         </el-button>
 
         <el-button
-          :disabled="oneSelectDisabledBtn"
+          :disabled="selectionList[0]?.auditStatus !== AUDIT_STATUS.pendStorage"
           type="primary"
           @click="openForm('audit', selectionList[0]?.id)"
           v-hasPermi="['wms:outbound:agree', 'wms:outbound:reject']"
@@ -128,6 +128,7 @@ import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { OPERATE_MAP } from './constant'
+import { AUDIT_STATUS } from '@/views/wms/constants/index'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
