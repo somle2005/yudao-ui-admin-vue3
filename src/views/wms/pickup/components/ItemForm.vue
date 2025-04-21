@@ -16,9 +16,9 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
 
         <el-table-column label="入库单编号" prop="inboundCode" align="center" width="150" />
-        <el-table-column prop="productBarCode" label="产品编码" width="120" />
+        <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
 
-        <el-table-column label="库位" width="180">
+        <el-table-column label="库位" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.binId`"
@@ -31,7 +31,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="本次上架数" width="100">
+        <el-table-column label="本次上架数" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <!-- <el-input-number
@@ -44,10 +44,10 @@
             </el-form-item>
           </template>
         </el-table-column>
-        
-        <el-table-column prop="pickQty" label="已选择数" width="100"/>
-        <el-table-column prop="actualQty" label="入库数量" width="100" />
-        <el-table-column prop="outboundAvailableQty" label="待上架数" width="100" />
+
+        <el-table-column prop="pickQty" label="已选择数" width="100" align="center" />
+        <el-table-column prop="actualQty" label="入库数量" width="100" align="center" />
+        <el-table-column prop="outboundAvailableQty" label="待上架数" width="100" align="center" />
 
         <!-- <el-table-column label="计划入库量" width="100">
           <template #default="{ row, $index }">
@@ -57,7 +57,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column prop="shelvedQty" label="已上架数" width="100" />
+        <el-table-column prop="shelvedQty" label="已上架数" width="100" align="center" />
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
