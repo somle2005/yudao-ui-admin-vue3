@@ -1,4 +1,5 @@
 import { InboundItemApi } from '@/api/wms/inbound-item'
+import { getProductList } from '@/commonData'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
@@ -80,6 +81,8 @@ export const useEnableTable = () => {
     }
   }
 
+  const productList = getProductList()
+
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -91,7 +94,21 @@ export const useEnableTable = () => {
         style: { width: '100%' },
         clearable: true
       }
-    }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择产品编码',
+      prop: 'productId',
+      label: '产品编码',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: productList
+    },
   ])
 
   const events = {
@@ -102,6 +119,13 @@ export const useEnableTable = () => {
 
   searchFormOptions.value.forEach((item) => {
     item.events = events
+    if (item.attrs) {
+      item.attrs.class = '!w-160px'
+    } else {
+      item.attrs = {
+        class: '!w-160px'
+      }
+    }
   })
 
   const getSearchFormData = () => {

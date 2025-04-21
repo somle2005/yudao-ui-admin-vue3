@@ -86,6 +86,7 @@ import {
 import { getWarehouseBinList } from '@/commonData/wms'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
+import { hasRepeat } from '@/utils/judge'
 
 const props = defineProps({
   items: {
@@ -119,7 +120,22 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  binId: [{ required: true, message: '库位不能为空', trigger: 'blur' }],
+  binId: [
+    { required: true, message: '库位不能为空', trigger: 'blur' },
+    {
+      validator: function (rule, value, callback) {
+        const hasRepeatFlag = hasRepeat(formData.value)
+        if (hasRepeatFlag) {
+          callback(new Error('相同产品库位不能重复'))
+        } else {
+          //校验通过
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
+
   qty: [{ required: true, message: '本次上架数不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
