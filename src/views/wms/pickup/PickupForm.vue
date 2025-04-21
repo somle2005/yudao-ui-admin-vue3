@@ -214,7 +214,8 @@ const addItem = (selectionList: any[]) => {
         actualQty,
         outboundAvailableQty,
         planQty,
-        shelvedQty
+        shelvedQty,
+        inbound,
       } = item
 
       const obj = {
@@ -225,7 +226,8 @@ const addItem = (selectionList: any[]) => {
         actualQty,
         outboundAvailableQty,
         planQty,
-        shelvedQty
+        shelvedQty,
+        inboundCode: inbound?.code
       }
       return obj
     })

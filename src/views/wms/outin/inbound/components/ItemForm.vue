@@ -57,7 +57,7 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column v-if="auditShow" label="实际入库量" width="120">
+        <!-- <el-table-column v-if="auditShow" label="入库数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
@@ -97,7 +97,7 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column v-if="updateShow" label="实际入库量" width="120">
+        <!-- <el-table-column v-if="updateShow" label="入库数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number

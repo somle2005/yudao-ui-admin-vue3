@@ -19,8 +19,8 @@
       <el-form-item label="计划入库量" prop="planQty">
         <el-input v-model="formData.planQty" placeholder="请输入计划入库量" />
       </el-form-item>
-      <el-form-item label="实际入库量" prop="actual Qty">
-        <el-input v-model="formData.actualQty" placeholder="请输入实际入库量" />
+      <el-form-item label="入库数量" prop="actual Qty">
+        <el-input v-model="formData.actualQty" placeholder="请输入入库数量" />
       </el-form-item>
       <el-form-item label="批次剩余库存，出库后的剩余库存量" prop="leftQty">
         <el-input v-model="formData.leftQty" placeholder="请输入批次剩余库存，出库后的剩余库存量" />
@@ -63,7 +63,7 @@ const formRules = reactive({
   productId: [{ required: true, message: '标准产品ID不能为空', trigger: 'blur' }],
   productSku: [{ required: true, message: '标准产品SKU不能为空', trigger: 'blur' }],
   planQty: [{ required: true, message: '计划入库量不能为空', trigger: 'blur' }],
-  actualQty: [{ required: true, message: '实际入库量不能为空', trigger: 'blur' }],
+  actualQty: [{ required: true, message: '入库数量不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 

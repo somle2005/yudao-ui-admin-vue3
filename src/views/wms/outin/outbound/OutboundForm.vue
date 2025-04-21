@@ -358,7 +358,7 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
       if (type === AUDIT_TYPE.agree) {
-        // 同意审核的时候 实际入库量设置成和计划入库量一致
+        // 同意审核的时候 入库数量设置成和计划入库量一致
         data.itemList.forEach((item) => {
           item.actualQty = item.planQty
         })

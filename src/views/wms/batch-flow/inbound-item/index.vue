@@ -78,11 +78,11 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   },
 
-  actualQty: '实际入库量',
+  actualQty: '入库数量',
   age: '库龄',
   outboundAvailableQty: '批次剩余库存',
   planQty: '计划入库量',
-  shelvedQty: '已上架量',
+  shelvedQty: '已上架数',
 
 
   remark: '备注',

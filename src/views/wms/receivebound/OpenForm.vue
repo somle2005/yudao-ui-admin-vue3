@@ -298,7 +298,7 @@ const open = async (type: string, id?: number) => {
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 const receiveDeal = (data) => {
-  // 实际入库量设置成和计划入库量一致
+  // 入库数量设置成和计划入库量一致
   data.itemList.forEach((item) => {
     item.actualQty = item.planQty
   })

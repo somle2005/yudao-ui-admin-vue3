@@ -15,18 +15,8 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.productId`"
-              :rules="formRules.productId"
-              class="mb-0px!"
-              :disabled="disabled"
-            >
-              <el-text>{{ row.productBarCode }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column label="入库单编号" prop="inboundCode" align="center" width="150" />
+        <el-table-column prop="productBarCode" label="产品编码" width="120" />
 
         <el-table-column label="库位" width="180">
           <template #default="{ row, $index }">
@@ -41,7 +31,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="拣货数量" width="100">
+        <el-table-column label="本次上架数" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <!-- <el-input-number
@@ -54,45 +44,20 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="已选择数" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.pickQty`" class="mb-0px!">
-              <el-text>{{ row.pickQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        
+        <el-table-column prop="pickQty" label="已选择数" width="100"/>
+        <el-table-column prop="actualQty" label="入库数量" width="100" />
+        <el-table-column prop="outboundAvailableQty" label="待上架数" width="100" />
 
-        <el-table-column label="实际入库量" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
-              <el-text>{{ row.actualQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="批次剩余库存量" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.outboundAvailableQty`" class="mb-0px!">
-              <el-text>{{ row.outboundAvailableQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="计划入库量" width="100">
+        <!-- <el-table-column label="计划入库量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
               <el-text>{{ row.planQty }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
-        <el-table-column label="已上架量" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.shelvedQty`" class="mb-0px!">
-              <el-text>{{ row.shelvedQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="shelvedQty" label="已上架数" width="100" />
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
@@ -155,7 +120,7 @@ const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   binId: [{ required: true, message: '库位不能为空', trigger: 'blur' }],
-  qty: [{ required: true, message: '拣货数量不能为空', trigger: 'blur' }]
+  qty: [{ required: true, message: '本次上架数不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const warehouseBinList: any = ref([])
@@ -227,9 +192,8 @@ const handleDelete = (index: number) => {
 /** 添加按钮操作 */
 const handleAddItem = (index: number) => {
   const row = cloneDeep(formData.value[index])
-  row[props.itemIdKey] = Math.random() + formData.value.length
-  formData.value.splice(index,0,row)
-  // formData.value.push(row)
+  // row[props.itemIdKey] = Math.random() + formData.value.length
+  formData.value.splice(index, 0, row)
 }
 
 /** 表单校验 */

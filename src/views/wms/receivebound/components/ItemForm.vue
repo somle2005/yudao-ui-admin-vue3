@@ -66,7 +66,7 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="实际入库量" width="120">
+        <!-- <el-table-column label="入库数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
