@@ -11,8 +11,8 @@
       :getModelValue="getSearchFormData"
     >
       <template #action>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" /> 搜索 </el-button>
+        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" /> 重置 </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -53,15 +53,16 @@
         <ProductInfo :data="scope.row" />
       </template>
       <template #warehouseInfo="{ scope }">
-        <!-- show-summary -->
-          <SmTable
-            :pagination="false"
-            border
-            :tooltip="false"
-            :options="warehouseTableOptions"
-            :data="scope.row.stockWarehouseList"
-            ref="warehouseInfoRef"
-          />
+        <SmTable
+          show-summary
+          :summary-method="getSummaries"
+          :pagination="false"
+          border
+          :tooltip="false"
+          :options="warehouseTableOptions"
+          :data="scope.row.stockWarehouseList"
+          ref="warehouseInfoRef"
+        />
       </template>
     </SmTable>
   </ContentWrap>
@@ -79,6 +80,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { StockBinApi } from '@/api/wms/stock-bin'
 import ProductInfo from './components/ProductInfo.vue'
+import { getSumValue } from '@/utils'
 
 const { tableOptions, transformTableOptions, getItemProp, getItemPropList } = useTableData()
 
@@ -168,6 +170,29 @@ const warehouseInfoRef = ref() // 仓库信息表格
 //   const productInfoItem = tableOptions.value.find((item) => item.prop === 'productInfo')!
 //   productInfoItem.width = undefined
 // }
+
+/** 合计 */
+const getSummaries = (param: any) => {
+  const { columns, data } = param
+  console.log(param, 'param')
+  const sums: string[] = []
+  columns.forEach((column, index: number) => {
+    if (index === 0) {
+      sums[index] = '产品小计'
+      return
+    }
+
+    if (!['warehouseName', 'warehouseMode'].includes(column.property)) {
+      const sum = getSumValue(data.map((item) => Number(item[column.property])))
+      sums[index] = sum + ''
+      // column.property === 'qty' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
+    } else {
+      sums[index] = ''
+    }
+  })
+
+  return sums
+}
 
 /** 仓库库存 列表 */
 defineOptions({ name: 'WmsStockWarehouse' })
