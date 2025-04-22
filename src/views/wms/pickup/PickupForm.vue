@@ -215,11 +215,11 @@ const addItem = (selectionList: any[]) => {
         id,
         productId,
         productBarCode,
-        shelveAvailableQty, // 可上架量
         actualQty,
         outboundAvailableQty,
         planQty,
         shelvedQty,
+        shelveAvailableQty, // 待上架量
         inbound
       } = item
 
@@ -232,6 +232,7 @@ const addItem = (selectionList: any[]) => {
         outboundAvailableQty,
         planQty,
         shelvedQty,
+        shelveAvailableQty,
         inboundCode: inbound?.code
       }
       return obj
