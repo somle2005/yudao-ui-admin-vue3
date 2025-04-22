@@ -2,6 +2,7 @@
   <div id="SmTable">
     <!-- v-bind="$attrs" style="height:calc(100vh - 285px)"-->
     <el-table
+      ref="tableRef"
       v-loading="loading"
       :stripe="stripe"
       :showOverflowTooltip="showOverflowTooltip"
@@ -301,6 +302,10 @@ const handleCurrentChange = (row) => {
   currentRow.value = row
   emits('oneSelectionChange', row)
 }
+
+const tableRef = ref()
+defineExpose({ tableRef }) // 提供 open 方法，用于打开弹窗
+
 </script>
 
 <style lang="scss" scoped>

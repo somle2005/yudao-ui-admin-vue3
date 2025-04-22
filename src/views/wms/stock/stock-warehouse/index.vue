@@ -54,13 +54,14 @@
       </template>
       <template #warehouseInfo="{ scope }">
         <!-- show-summary -->
-        <SmTable
-          :pagination="false"
-          border
-          :tooltip="false"
-          :options="warehouseTableOptions"
-          :data="scope.row.stockWarehouseList"
-        />
+          <SmTable
+            :pagination="false"
+            border
+            :tooltip="false"
+            :options="warehouseTableOptions"
+            :data="scope.row.stockWarehouseList"
+            ref="warehouseInfoRef"
+          />
       </template>
     </SmTable>
   </ContentWrap>
@@ -95,7 +96,7 @@ const fieldMap = {
     slot: 'productInfo'
   },
   warehouseInfo: {
-    width: '2000px', // 需要综合计算后得出暂时2000
+    width: '1690px', // 需要综合计算后得出暂时2000
     label: '仓库信息',
     slot: 'warehouseInfo'
   }
@@ -120,26 +121,34 @@ const fieldMap = {
 }
 // tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
 tableOptions.value = transformTableOptions(fieldMap)
-
+// 可售数-可用数-待出库数-待上架数-不良品数-采购计划数-采购在途数-退件在途数-库龄
 const warehouseFieldMap = {
   warehouseName: '仓库名称',
   warehouseMode: {
     label: '仓库经营方式',
-    width: '250px',
+    width: '150px',
     slot: 'warehouseMode',
     dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_MODE }
   },
-  availableQty: '可用量',
-  defectiveQty: '不良品数量',
-  outboundPendingQty: '待出库量',
-  purchasePlanQty: '采购计划量',
-  purchaseTransitQty: '采购在途量',
-  returnTransitQty: '退件在途数量',
-  sellableQty: '可售量',
-  shelvingPendingQty: '待上架数量'
+  sellableQty: '可售数',
+  availableQty: '可用数',
+  outboundPendingQty: '待出库数',
+  shelvingPendingQty: '待上架数',
+  defectiveQty: '不良品数',
+  purchasePlanQty: '采购计划数',
+  purchaseTransitQty: '采购在途数',
+  returnTransitQty: '退件在途数'
+  // age: '库龄'
 }
 
 const warehouseTableOptions = ref(transformTableOptions(warehouseFieldMap, { allWrap: true }))
+const widthList = ['warehouseName', 'warehouseMode']
+
+warehouseTableOptions.value.forEach((item: any) => {
+  if (!widthList.includes(item.prop)) {
+    item.width = '100px'
+  }
+})
 
 const warehouseInfoWidth = warehouseTableOptions.value.reduce((prev, cur) => {
   return prev + Number(cur.width!.replace('px', ''))
@@ -147,7 +156,18 @@ const warehouseInfoWidth = warehouseTableOptions.value.reduce((prev, cur) => {
 
 const warehouseInfoItem = tableOptions.value.find((item) => item.prop === 'warehouseInfo')!
 warehouseInfoItem.width = warehouseInfoWidth + 'px'
+const warehouseInfoRef = ref() // 仓库信息表格
 
+// const tableOptionsWidth = tableOptions.value.reduce((prev, cur) => {
+//   return prev + Number(cur.width!.replace('px', ''))
+// }, 0)
+
+// // 2560-1690-500 = 370
+// const remainWidthFlag = window.innerWidth - tableOptionsWidth - 500 >= 370
+// if (remainWidthFlag) {
+//   const productInfoItem = tableOptions.value.find((item) => item.prop === 'productInfo')!
+//   productInfoItem.width = undefined
+// }
 
 /** 仓库库存 列表 */
 defineOptions({ name: 'WmsStockWarehouse' })
@@ -190,6 +210,10 @@ const getList = async () => {
       return item
     })
     total.value = data.total
+
+    // setTimeout(() => {
+    //   warehouseInfoRef.value.tableRef.doLayout()
+    // }, 1000)
   } finally {
     loading.value = false
   }
@@ -248,3 +272,8 @@ onMounted(() => {
   getList()
 })
 </script>
+<style lang="scss" scoped>
+:global(.cell) {
+  padding: 0 !important;
+}
+</style>

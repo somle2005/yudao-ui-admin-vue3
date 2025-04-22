@@ -1,4 +1,4 @@
-import { getDeptTree, getProductList } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 
@@ -6,6 +6,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const productList = getProductList() // 产品列表
   const { deptList, defaultProps } = getDeptTree()
+  const financeSubjectList = getFinanceSubjectList()
 
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -49,6 +50,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
+    {
+      type: 'select',
+      placeholder: '请选择库存主体',
+      prop: 'companyId',
+      label: '库存主体',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+
     {
       type: 'date-picker',
       placeholder: '请选择创建时间',

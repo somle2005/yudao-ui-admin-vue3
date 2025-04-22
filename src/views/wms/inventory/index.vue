@@ -81,6 +81,8 @@ import { useTableData } from '@/components/SmTable/src/utils'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
+// 可售数-可用数-待出库数-待上架数-不良品数-采购计划数-采购在途数-退件在途数-库龄
+
 const fieldMap = {
   warehouseName: '仓库名称',
   productBarCode: '产品编码',

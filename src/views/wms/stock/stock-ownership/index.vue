@@ -68,6 +68,7 @@ const fieldMap = {
   productBarCode: '产品编码',
   productName: '产品名称',
   deptName: '库存归属',
+  companyName: '库存主体',
   availableQty: '可用量',
   outboundPendingQty: '待出库量',
   shelvingPendingQty: '待上架数量',

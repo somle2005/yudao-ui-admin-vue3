@@ -5,7 +5,7 @@ import { FormOptions } from '@/components/SmForm/src/types/types'
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const productList = getProductList() // 产品列表
-  const { deptList, defaultProps } = getDeptTree()
+  // const { deptList, defaultProps } = getDeptTree()
 
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -34,21 +34,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: productList
     },
-    {
-      type: 'tree-select',
-      label: '库存归属',
-      prop: 'deptId',
-      placeholder: '请选择库存归属',
-      attrs: {
-        'node-key': 'id',
-        'check-strictly': true,
-        props: defaultProps,
-        data: deptList,
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      }
-    },
+    // {
+    //   type: 'tree-select',
+    //   label: '库存归属',
+    //   prop: 'deptId',
+    //   placeholder: '请选择库存归属',
+    //   attrs: {
+    //     'node-key': 'id',
+    //     'check-strictly': true,
+    //     props: defaultProps,
+    //     data: deptList,
+    //     style: { width: '100%' },
+    //     filterable: true,
+    //     clearable: true
+    //   }
+    // },
     {
       type: 'date-picker',
       placeholder: '请选择创建时间',
