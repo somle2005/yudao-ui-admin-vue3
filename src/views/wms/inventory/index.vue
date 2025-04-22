@@ -49,6 +49,13 @@
       <template #operate="{ scope }">
         <el-button
           link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['wms:inventory:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inventory:update']"
@@ -84,45 +91,14 @@ const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 // 可售数-可用数-待出库数-待上架数-不良品数-采购计划数-采购在途数-退件在途数-库龄
 
 const fieldMap = {
+  code: '盘点单号',
   warehouseName: '仓库名称',
-  productBarCode: '产品编码',
-  productName: '产品名称',
   auditStatus: {
     label: '状态',
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INVENTORY_AUDIT_STATUS }
   },
-  stockType: {
-    label: '库存类型',
-    width: '200px',
-    slot: 'stockType',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
-  },
-  direction: {
-    label: '库存流水方向',
-    width: '200px',
-    slot: 'direction',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
-  },
-  inboundCode: '入库单号',
-  outboundCode: '出库单号',
-  pickupCode: '拣货单号',
-  reason: '流水原因',
-
-  availableQty: '可用量',
-  deltaQty: '变更量',
-  outboundPendingQty: '待出库量',
-  purchasePlanQty: '采购计划量',
-  purchaseTransitQty: '采购在途量',
-  returnTransitQty: '退件在途数量',
-  sellableQty: '可售量',
-  shelvingPendingQty: '待上架数量',
-
-  flowTime: {
-    label: '流水发生时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
+  remark: '备注',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -142,7 +118,10 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  noWidth: true,
+  wrapList: ['code', 'warehouseName']
+})
 
 /** 盘点 列表 */
 defineOptions({ name: 'WmsInventory' })
@@ -170,7 +149,10 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await InventoryApi.getInventoryPage(queryParams)
-    list.value = data.list
+    list.value = data.list.map((item) => {
+      item.warehouseName = item?.warehouse?.name
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false

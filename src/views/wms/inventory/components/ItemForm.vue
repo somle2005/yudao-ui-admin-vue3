@@ -15,62 +15,50 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="入库单编号" prop="inboundCode" align="center" width="150" />
         <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
 
-        <el-table-column label="库位" width="180" align="center">
+        <el-table-column label="实际库存" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
-              :prop="`${$index}.binId`"
-              :rules="formRules.binId"
+              :prop="`${$index}.actualQty`"
+              :rules="formRules.actualQty"
               class="mb-0px!"
-              :disabled="disabled"
             >
-              <SmSelect v-model="row.binId" placeholder="请选择库位" :data="warehouseBinList" />
+              <SmNumber v-model="row.actualQty" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="本次上架数" width="100" align="center">
+        <el-table-column label="预期库存" width="100" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-              <!-- <el-input-number
-                v-model="row.qty"
-                controls-position="right"
-                :min="0"
-                class="!w-100%"
-              /> -->
-              <SmNumber v-model="row.qty" />
+            <el-form-item
+              :prop="`${$index}.expectedQty`"
+              :rules="formRules.expectedQty"
+              class="mb-0px!"
+            >
+              <SmNumber v-model="row.expectedQty" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column prop="pickQty" label="已选择数" width="100" align="center" />
-        <el-table-column prop="actualQty" label="入库数量" width="100" align="center" />
-        <!-- <el-table-column prop="outboundAvailableQty" label="待上架数" width="100" align="center" /> -->
-        <el-table-column prop="shelveAvailableQty" label="待上架数" width="100" align="center" />
-
-        <!-- <el-table-column label="计划入库量" width="100">
+        <el-table-column label="备注" width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
-              <el-text>{{ row.planQty }}</el-text>
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input
+                :disabled="disabled"
+                v-model="row.remark"
+                placeholder="请输入备注"
+                type="textarea"
+              />
             </el-form-item>
           </template>
-        </el-table-column> -->
+        </el-table-column>
 
-        <el-table-column prop="shelvedQty" label="已上架数" width="100" align="center" />
+        <!-- <el-table-column prop="pickQty" label="已选择数" width="100" align="center" /> -->
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
-            <div class="btnList">
-              <div class="btn-item" @click="handleDelete($index)">
-                <Icon icon="ep:minus" class="mr-5px" />
-              </div>
-              <div class="btn-item" @click="handleAddItem($index)">
-                <Icon icon="ep:plus" class="mr-5px" />
-              </div>
-              <!-- <el-button @click="handleDelete($index)" link> — </el-button> -->
-            </div>
+            <el-button @click="handleDelete($index)" link> — </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -110,7 +98,7 @@ const props = defineProps({
     default: null
   },
   itemIdKey: {
-    type: String,
+    type: Number,
     default: null
   }
 })
@@ -136,8 +124,8 @@ const formRules = reactive({
       trigger: 'blur'
     }
   ],
-
-  qty: [{ required: true, message: '本次上架数不能为空', trigger: 'blur' }]
+  expectedQty: [{ required: true, message: '预期库存不能为空', trigger: 'blur' }],
+  actualQty: [{ required: true, message: '实际库存不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const warehouseBinList: any = ref([])
@@ -219,15 +207,3 @@ const validate = () => {
 }
 defineExpose({ validate, formData })
 </script>
-
-<style lang="scss" scoped>
-.btnList {
-  display: flex;
-  // flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.btn-item {
-  cursor: pointer;
-}
-</style>

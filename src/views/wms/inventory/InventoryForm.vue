@@ -1,35 +1,55 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form
+    <SmForm
+      class="-mb-15px"
       ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
+      isCol
+      label-width="150px"
+      v-model="formData"
       v-loading="formLoading"
+      :options="requestFormOptions"
+      :getModelValue="getFormData"
     >
-      <el-form-item label="单据号" prop="no">
-        <el-input v-model="formData.no" placeholder="请输入单据号" />
-      </el-form-item>
-      <el-form-item label="仓库ID" prop="warehouseId">
-        <el-input v-model="formData.warehouseId" placeholder="请输入仓库ID" />
-      </el-form-item>
-      <el-form-item label="出库单审批状态 ; WmsInventoryAuditStatus : 0-起草中 , 1-待审批 , 2-已驳回 , 3-已通过" prop="auditStatus">
-        <el-radio-group v-model="formData.auditStatus">
-          <el-radio value="1">请选择字典生成</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="创建者备注" prop="creatorNotes">
-        <el-input v-model="formData.creatorNotes" placeholder="请输入创建者备注" />
-      </el-form-item>
-    </el-form>
+      <template #items>
+        <el-button
+          type="primary"
+          @click="openAddItem"
+          style="margin-bottom: 10px"
+          v-hasPermi="['wms:stock-warehouse:query']"
+          v-if="!itemsFormdisabled"
+          >选择盘点产品</el-button
+        >
+        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="盘点产品清单" name="item">
+            <ItemForm
+              ref="itemFormRef"
+              :items="formData.productItemList"
+              :formType="formType"
+              :disabled="itemsFormdisabled"
+            />
+          </el-tab-pane>
+        </el-tabs>
+      </template>
+    </SmForm>
+
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
+  <EnableList ref="addItemRef" @success="addItem" />
 </template>
 <script setup lang="ts">
+import ItemForm from './components/ItemForm.vue'
+import EnableList from './components/EnableList.vue'
 import { InventoryApi, InventoryVO } from '@/api/wms/inventory'
+import { addProperty } from '@/components/SmForm/src/utils'
+import { useOutData } from './components/hooks/outdata'
+import { createDBFn } from '@/utils/decorate'
+import { getWMSWarehouseList } from '@/commonData/wms'
+import { distinctList } from '@/utils/transformData'
+
+const { addItemRef, openAddItem } = useOutData()
 
 /** 盘点 表单 */
 defineOptions({ name: 'InventoryForm' })
@@ -41,19 +61,24 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
-  id: undefined,
-  no: undefined,
-  warehouseId: undefined,
-  auditStatus: undefined,
-  creatorNotes: undefined,
-})
-const formRules = reactive({
-  no: [{ required: true, message: '单据号不能为空', trigger: 'blur' }],
-  warehouseId: [{ required: true, message: '仓库ID不能为空', trigger: 'blur' }],
-  auditStatus: [{ required: true, message: '出库单审批状态 ; WmsInventoryAuditStatus : 0-起草中 , 1-待审批 , 2-已驳回 , 3-已通过不能为空', trigger: 'blur' }],
-})
+const initFormData = () => {
+  return {
+    id: undefined,
+    code: undefined,
+    warehouseId: undefined,
+    auditStatus: undefined,
+    productItemList: [] as any[],
+    binItemList: []
+  }
+}
+const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
+const WMSWarehouseList = ref([])
+
+/** 子表的表单 */
+const subTabsName = ref('item')
+const itemFormRef = ref()
+const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -61,6 +86,8 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+
+  getWMSWarehouseList(WMSWarehouseList)
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -85,7 +112,7 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await InventoryApi.createInventory(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await InventoryApi.updateInventory(data)
       message.success(t('common.updateSuccess'))
     }
@@ -97,15 +124,96 @@ const submitForm = async () => {
   }
 }
 
+const submitFormDB = createDBFn(submitForm)
+
 /** 重置表单 */
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    no: undefined,
-    warehouseId: undefined,
-    auditStatus: undefined,
-    creatorNotes: undefined,
-  }
+  formData.value = initFormData()
   formRef.value?.resetFields()
+}
+
+const requestFormOptions: any = ref([])
+const createRequestFormOptions = () => {
+  const list = [
+    // {
+    //   type: 'input',
+    //   label: '单据编号',
+    //   prop: 'code',
+    //   placeholder: '保存时自动生成',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true,
+    //     disabled: true
+    //   }
+    // },
+    {
+      requiredFlag: true,
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      placeholder: '请选择仓库',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true,
+        onChange: (val: any) => {
+          // warehouseId.value = val
+        }
+      },
+      children: WMSWarehouseList
+    },
+    {
+      type: 'input',
+      label: '备注',
+      prop: 'remark',
+      placeholder: '请输入备注',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      }
+    },
+
+    {
+      colConfig: { span: 24 },
+      slot: 'items',
+      formItemConfig: {
+        class: 'common-form-items'
+      }
+    }
+  ]
+
+  addProperty(list)
+  return list
+}
+requestFormOptions.value = createRequestFormOptions()
+
+const getFormData = () => {
+  return formData.value
+}
+
+const itemIdKey = 'stockWarehousePageId'
+const addItem = (selectionList: any[]) => {
+  nextTick(() => {
+    // 测试用例
+    // {
+    // "inboundItemId":4529,
+    // "qty":1,
+    // "binId":2
+    // },
+    const items = formData.value.productItemList
+    const selectList = selectionList.map((item: any) => {
+      const { id, productId, productBarCode, availableQty } = item
+
+      const obj = {
+        [itemIdKey]: id,
+        productId,
+        productBarCode,
+        actualQty: availableQty
+      }
+      return obj
+    })
+    formData.value.productItemList = distinctList(items, selectList, itemIdKey)
+  })
 }
 </script>
