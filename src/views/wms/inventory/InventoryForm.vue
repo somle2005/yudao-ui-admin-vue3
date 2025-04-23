@@ -13,10 +13,11 @@
       <template #items>
         <el-button
           type="primary"
-          @click="openAddItem"
+          @click="openAddItem(warehouseId)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-warehouse:query']"
           v-if="!itemsFormdisabled"
+          :disabled="!warehouseId"
           >选择盘点产品</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
@@ -43,11 +44,12 @@
 import ItemForm from './components/ItemForm.vue'
 import EnableList from './components/EnableList.vue'
 import { InventoryApi, InventoryVO } from '@/api/wms/inventory'
-import { addProperty } from '@/components/SmForm/src/utils'
+import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { useOutData } from './components/hooks/outdata'
 import { createDBFn } from '@/utils/decorate'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { distinctList } from '@/utils/transformData'
+import { getItemPropList } from '@/components/SmTable/src/utils'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -74,11 +76,74 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList = ref([])
+const warehouseId = ref()
 
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
 const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
+
+const requestFormOptions: any = ref([])
+const createRequestFormOptions = () => {
+  const list = [
+    // {
+    //   type: 'input',
+    //   label: '单据编号',
+    //   prop: 'code',
+    //   placeholder: '保存时自动生成',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true,
+    //     disabled: true
+    //   }
+    // },
+    {
+      requiredFlag: true,
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      placeholder: '请选择仓库',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true,
+        onChange: (val: any) => {
+          warehouseId.value = val
+        }
+      },
+      children: WMSWarehouseList
+    },
+    {
+      type: 'input',
+      label: '备注',
+      prop: 'remark',
+      placeholder: '请输入备注',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      colConfig: { span: 24 },
+      slot: 'items',
+      formItemConfig: {
+        class: 'common-form-items'
+      }
+    }
+  ]
+
+  addProperty(list)
+  return list
+}
+
+const detailOptions = (formOptions) => {
+  addDisabled(formOptions)
+  return formOptions
+}
+
+const getFormData = () => {
+  return formData.value
+}
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -86,13 +151,37 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+  warehouseId.value = null
+
+  const formTypeOperate = {
+    create: () => {
+      requestFormOptions.value = createRequestFormOptions()
+    },
+    update: () => {
+      requestFormOptions.value = createRequestFormOptions()
+    },
+    audit: () => {
+      // requestFormOptions.value = auditFormOptions(createRequestFormOptions())
+    },
+    detail: () => {
+      requestFormOptions.value = detailOptions(createRequestFormOptions())
+    }
+    // [OPERATE_MAP.finish]: () => {
+    //   dialogTitle.value = '完成'
+    //   requestFormOptions.value = auditFormOptions(createRequestFormOptions())
+    // }
+  }
+  formTypeOperate[type]()
 
   getWMSWarehouseList(WMSWarehouseList)
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await InventoryApi.getInventory(id)
+      let data = await InventoryApi.getInventory(id)
+      getItemPropList(data.productItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+      formData.value = data
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }
@@ -130,66 +219,6 @@ const submitFormDB = createDBFn(submitForm)
 const resetForm = () => {
   formData.value = initFormData()
   formRef.value?.resetFields()
-}
-
-const requestFormOptions: any = ref([])
-const createRequestFormOptions = () => {
-  const list = [
-    // {
-    //   type: 'input',
-    //   label: '单据编号',
-    //   prop: 'code',
-    //   placeholder: '保存时自动生成',
-    //   attrs: {
-    //     style: { width: '100%' },
-    //     clearable: true,
-    //     disabled: true
-    //   }
-    // },
-    {
-      requiredFlag: true,
-      type: 'select',
-      label: '仓库',
-      prop: 'warehouseId',
-      placeholder: '请选择仓库',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true,
-        onChange: (val: any) => {
-          // warehouseId.value = val
-        }
-      },
-      children: WMSWarehouseList
-    },
-    {
-      type: 'input',
-      label: '备注',
-      prop: 'remark',
-      placeholder: '请输入备注',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true,
-        disabled: true
-      }
-    },
-
-    {
-      colConfig: { span: 24 },
-      slot: 'items',
-      formItemConfig: {
-        class: 'common-form-items'
-      }
-    }
-  ]
-
-  addProperty(list)
-  return list
-}
-requestFormOptions.value = createRequestFormOptions()
-
-const getFormData = () => {
-  return formData.value
 }
 
 const itemIdKey = 'stockWarehousePageId'

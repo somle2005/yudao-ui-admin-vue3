@@ -1,5 +1,6 @@
 import { StockWarehouseApi } from '@/api/wms/stock-warehouse'
 import { getProductList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getItemProp, getItemPropList, useTableData } from '@/components/SmTable/src/utils'
 import { resetQueryParams } from '@/utils/transformData'
@@ -72,7 +73,6 @@ export const useEnableTable = () => {
   }
 
   const productList = getProductList()
-
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'select',
@@ -87,6 +87,15 @@ export const useEnableTable = () => {
         }
       },
       children: productList
+    },
+    {
+      componentType: 'sm-range',
+      label: '可用量',
+      prop: 'availableQty',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
     }
   ])
 
@@ -110,8 +119,10 @@ export const useEnableTable = () => {
   const getSearchFormData = () => {
     return queryParams
   }
-  const resetQuery = () => {
+
+  const resetQuery = (fn?) => {
     resetQueryParams(queryParams, queryFormRef)
+    fn && fn(queryParams)
     handleQuery()
   }
 

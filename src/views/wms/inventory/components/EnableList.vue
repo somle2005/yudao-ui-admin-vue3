@@ -1,5 +1,5 @@
 <template>
-  <Dialog title="待上架的入库单" v-model="dialogVisible">
+  <Dialog title="待盘点产品" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
@@ -61,11 +61,15 @@ defineOptions({ name: 'EnableList' })
 const dialogVisible = ref(false) // 弹窗的是否展示
 
 /** 打开弹窗 */
-const open = async () => {
+const open = async (warehouseId: number) => {
+  const addQuery = (queryParams) => {
+    queryParams.warehouseId = warehouseId
+  }
   dialogVisible.value = true
-  resetQuery()
+  resetQuery(addQuery)
   // await nextTick() // 等待，避免 queryFormRef 为空
 }
+
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交选择 */

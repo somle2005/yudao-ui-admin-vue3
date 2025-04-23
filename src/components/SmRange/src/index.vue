@@ -26,6 +26,7 @@
         v-model="minValue_"
         v-on="['update:minValue']"
         :controls="false"
+        :min="0"
       />
       <div class="to">
         <div style="height: 100%">{{ to }}</div>
@@ -39,6 +40,7 @@
         v-model="maxValue_"
         v-on="['update:maxValue']"
         :controls="false"
+        :min="0"
       />
     </div>
     <!--<div
@@ -53,6 +55,7 @@
 </template>
 <script setup lang="ts">
 import { notEmpty } from '@/utils/judge'
+import { isNumber } from '@/utils/is'
 import { computed } from 'vue'
 
 defineOptions({ name: 'SmRange' })
@@ -60,7 +63,7 @@ defineOptions({ name: 'SmRange' })
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [null, null] // 调用时使用v-model="[min,max]" 绑定
+    default: () => [] // 调用时使用v-model="[min,max]" 绑定
   },
   minValue: {
     type: Number,
@@ -121,13 +124,30 @@ console.log(attrs, 'attrs')
 
 const emit = defineEmits(['update:modelValue', 'update:minValue', 'update:maxValue', 'change'])
 
+const emitModelValue = (list: (number | null)[]) => {
+  const emitList = (isNumber(list[1]) && !isNaN(list[1])) ? list : [list[0]]
+  console.log(emitList, 'emitList')
+
+  emit('update:modelValue', emitList)
+}
+
+// 更新数据
+const updateValue = (min: number | null, max: number | null) => {
+  emit('update:minValue', min)
+  emit('update:maxValue', max)
+  emitModelValue([min, max])
+  // emit('update:modelValue', [min, max])
+  emit('change', { min, max })
+}
+
 const minValue_ = computed({
   get() {
     return (props.minValue || props.modelValue[0]) as number
   },
   set(value) {
     emit('update:minValue', value)
-    emit('update:modelValue', [value, maxValue_.value])
+    emitModelValue([value, maxValue_.value])
+    // emit('update:modelValue', [value, maxValue_.value])
   }
 })
 
@@ -137,7 +157,8 @@ const maxValue_ = computed({
   },
   set(value) {
     emit('update:maxValue', value)
-    emit('update:modelValue', [minValue_.value, value])
+    emitModelValue([minValue_.value, value])
+    // emit('update:modelValue', [minValue_.value, value])
   }
 })
 
@@ -196,14 +217,6 @@ const handleChangeMaxValue = (value: number) => {
   //   // 更新绑定值
   //   updateValue(min, max)
   // }
-}
-
-// 更新数据
-const updateValue = (min: number | null, max: number | null) => {
-  emit('update:minValue', min)
-  emit('update:maxValue', max)
-  emit('update:modelValue', [min, max])
-  emit('change', { min, max })
 }
 
 // 取值范围判定
