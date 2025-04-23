@@ -65,6 +65,7 @@ import { distinctList } from '@/utils/transformData'
 import { getItemPropList } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { OPERATE_MAP } from './constant'
+import { InventoryBinApi } from '@/api/wms/inventory-bin'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -280,8 +281,8 @@ const submitForm = async (type?: string) => {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
 
-        await InventoryApi.updateInventoryBinActualQuantity(data.productItemList)
-        
+        await InventoryBinApi.updateInventoryBinActualQuantity(data.productItemList)
+
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 

@@ -10,36 +10,6 @@ export interface InventoryVO {
   comment?: string // 审核意见
 }
 
-export interface InventoryActualQtyVO {
-  /**
-   * 实际库存，实盘数量
-   */
-  actualQty?: number
-  /**
-   * 仓位ID
-   */
-  binId?: number
-  /**
-   * 预期库存，仓位可用库存
-   */
-  expectedQty?: number
-  /**
-   * 主键
-   */
-  id?: number
-  /**
-   * 盘点结果单ID
-   */
-  inventoryId?: number
-  /**
-   * 产品ID
-   */
-  productId?: number
-  /**
-   * 备注
-   */
-  remark?: string
-}
 
 // 盘点 API
 export const InventoryApi = {
@@ -103,9 +73,4 @@ export const InventoryApi = {
       data
     })
   },
-
-  // 设置实际库存量
-  updateInventoryBinActualQuantity: async (data: Array<InventoryActualQtyVO>) => {
-    return await request.put({ url: `/wms/inventory-bin/update-actual-quantity`, data })
-  }
 }
