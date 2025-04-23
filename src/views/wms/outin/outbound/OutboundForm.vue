@@ -22,10 +22,10 @@
         > -->
         <el-button
           type="primary"
-          @click="openAddProductItem(warehouseId)"
+          @click="openAddProductItem(formData.warehouseId!)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-bin:query']"
-          :disabled="!warehouseId"
+          :disabled="!formData.warehouseId"
           v-if="!itemsFormdisabled"
           >选择产品</el-button
         >
@@ -137,7 +137,6 @@ const auditType = computed(() => formType.value === 'audit')
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
-const warehouseId = ref()
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -155,7 +154,6 @@ const createRequestFormOptions = () => {
           width: '100%'
         },
         onChange: (val: any) => {
-          warehouseId.value = val
         }
       },
       children: WMSWarehouseList
@@ -297,7 +295,6 @@ const detailOptions = (formOptions) => {
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
-  warehouseId.value = null
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type

@@ -13,11 +13,11 @@
       <template #items>
         <el-button
           type="primary"
-          @click="openAddItem(warehouseId)"
+          @click="openAddItem(formData.warehouseId!)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-warehouse:query']"
           v-if="!itemsFormdisabled"
-          :disabled="!warehouseId"
+          :disabled="!formData.warehouseId"
           >选择盘点产品</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
@@ -27,6 +27,7 @@
               :items="formData.productItemList"
               :formType="formType"
               :disabled="itemsFormdisabled"
+              :warehouseId="formData.warehouseId"
             />
           </el-tab-pane>
         </el-tabs>
@@ -90,7 +91,6 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList = ref([])
-const warehouseId = ref()
 
 /** 子表的表单 */
 const subTabsName = ref('item')
@@ -124,7 +124,6 @@ const createRequestFormOptions = () => {
         filterable: true,
         clearable: true,
         onChange: (val: any) => {
-          warehouseId.value = val
         }
       },
       children: WMSWarehouseList
@@ -208,7 +207,6 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  warehouseId.value = null
 
   const formTypeOperate = {
     create: () => {
