@@ -17,7 +17,7 @@
 
         <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
 
-        <el-table-column label="实际库存" width="100" align="center">
+        <el-table-column v-if="showActualQty" label="实际库存" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.actualQty`"
@@ -29,7 +29,9 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="预期库存" width="100" align="center">
+        <el-table-column prop="expectedQty" label="预期库存" width="100" align="center" />
+
+        <!-- <el-table-column label="预期库存" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.expectedQty`"
@@ -39,7 +41,7 @@
               <SmNumber v-model="row.expectedQty" />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="备注" width="120">
           <template #default="{ row, $index }">
@@ -76,6 +78,7 @@ import { getWarehouseBinList } from '@/commonData/wms'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
 import { hasRepeat } from '@/utils/judge'
+import { OPERATE_MAP } from '../constant'
 
 const props = defineProps({
   items: {
@@ -104,6 +107,7 @@ const props = defineProps({
 })
 
 const updateShow = computed(() => props.formType === 'update')
+const showActualQty = computed(() => [OPERATE_MAP.inventory].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])

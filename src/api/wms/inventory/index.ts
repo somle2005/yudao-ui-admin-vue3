@@ -7,6 +7,38 @@ export interface InventoryVO {
   warehouseId: number // 仓库ID
   auditStatus: number // 出库单审批状态 ; WmsInventoryAuditStatus : 0-起草中 , 1-待审批 , 2-已驳回 , 3-已通过
   creatorNotes: string // 创建者备注
+  comment?: string // 审核意见
+}
+
+export interface InventoryActualQtyVO {
+  /**
+   * 实际库存，实盘数量
+   */
+  actualQty?: number
+  /**
+   * 仓位ID
+   */
+  binId?: number
+  /**
+   * 预期库存，仓位可用库存
+   */
+  expectedQty?: number
+  /**
+   * 主键
+   */
+  id?: number
+  /**
+   * 盘点结果单ID
+   */
+  inventoryId?: number
+  /**
+   * 产品ID
+   */
+  productId?: number
+  /**
+   * 备注
+   */
+  remark?: string
 }
 
 // 盘点 API
@@ -40,4 +72,40 @@ export const InventoryApi = {
   exportInventory: async (params) => {
     return await request.download({ url: `/wms/inventory/export-excel`, params })
   },
-}
+
+  // 盘点提交审核
+  submitInventoryAudit: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inventory/submit`,
+      data
+    })
+  },
+
+  // 同意审核盘点
+  agreeInventoryAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inventory/agree`,
+      data
+    })
+  },
+  // 不同意审核盘点
+  rejectInventoryAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inventory/reject`,
+      data
+    })
+  },
+
+  // 作废盘点
+  abandonInventory: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/inventory/abandon`,
+      data
+    })
+  },
+
+  // 设置实际库存量
+  updateInventoryBinActualQuantity: async (data: Array<InventoryActualQtyVO>) => {
+    return await request.put({ url: `/wms/inventory-bin/update-actual-quantity`, data })
+  }
+}

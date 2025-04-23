@@ -54,6 +54,26 @@
         >
           详情
         </el-button>
+
+        <el-button
+          link
+          type="primary"
+          @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
+          v-if="
+            hasAllPermission(['wms:inventory:submit', 'wms:inventory:update', 'wms:outbound:agree'])
+          "
+        >
+          盘点
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
+          v-hasPermi="['wms:inventory:abandon']"
+        >
+          作废
+        </el-button>
+
         <el-button
           link
           type="primary"
@@ -85,6 +105,8 @@ import { InventoryApi, InventoryVO } from '@/api/wms/inventory'
 import InventoryForm from './InventoryForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { OPERATE_MAP } from './constant'
+import { hasAllPermission } from '@/directives/permission/hasPermi'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -115,7 +137,7 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '200px'
+    width: '300px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, {

@@ -2,6 +2,7 @@ export const AUDIT_TYPE = {
   agree: '审核同意',
   reject: '审核不同意',
   agreeOutbound: '同意出库',
+  agreeInventory: '同意盘点',
 }
 
 export const TAX_PERCENT = 13
