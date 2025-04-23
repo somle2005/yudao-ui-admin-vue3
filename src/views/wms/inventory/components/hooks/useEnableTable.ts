@@ -122,6 +122,7 @@ export const useEnableTable = () => {
 
   const resetQuery = (fn?) => {
     resetQueryParams(queryParams, queryFormRef)
+    queryParams.availableQty = [1]
     fn && fn(queryParams)
     handleQuery()
   }

@@ -260,6 +260,8 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
+  await itemFormRef.value.validate()
+  
   // 提交请求
   formLoading.value = true
   try {
@@ -277,8 +279,9 @@ const submitForm = async (type?: string) => {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-        //  ['actualQty', 'id', 'outboundId'])
-        await InventoryApi.updateInventoryBinActualQuantity(data)
+
+        await InventoryApi.updateInventoryBinActualQuantity(data.productItemList)
+        
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 

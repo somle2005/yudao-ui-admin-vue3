@@ -343,6 +343,7 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
+  await itemFormRef.value.validate()
   // 提交请求
   formLoading.value = true
   try {
