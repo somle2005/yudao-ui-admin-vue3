@@ -107,6 +107,7 @@ import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { OPERATE_MAP } from './constant'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
+import { getLastListProp } from '@/utils/transformData'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -120,6 +121,7 @@ const fieldMap = {
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INVENTORY_AUDIT_STATUS }
   },
+  // comment: '审批意见',
   remark: '备注',
   updateTime: {
     label: '更新时间',
@@ -173,6 +175,7 @@ const getList = async () => {
     const data = await InventoryApi.getInventoryPage(queryParams)
     list.value = data.list.map((item) => {
       item.warehouseName = item?.warehouse?.name
+      item.comment = getLastListProp(item.approvalHistoryList, 'comment')
       return item
     })
     total.value = data.total
