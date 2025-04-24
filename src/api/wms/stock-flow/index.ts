@@ -57,4 +57,14 @@ export const StockFlowApi = {
   getStockFlowPageOwnership: async (data: any) => {
     return await request.post({ url: `/wms/stock-flow/page-ownership`, data })
   },
+
+  // 获得仓库库存流水分页
+  getStockFlowPageWarehouse: async (data: any) => {
+    return await request.post({ url: `/wms/stock-flow/page-warehouse`, data })
+  },
+
+  // 获得仓位库存流水分页
+  getStockFlowPageBin: async (data: any) => {
+    return await request.post({ url: `/wms/stock-flow/page-bin`, data })
+  }
 }

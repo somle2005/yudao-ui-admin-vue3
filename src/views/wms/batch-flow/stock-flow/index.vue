@@ -67,7 +67,7 @@ const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 const fieldMap = {
   warehouseName: '仓库名称',
   // zoneName: '库区名称',
-  // binName: '库位名称',
+  binName: '库位名称',
   productBarCode: '产品编码',
   productName: '产品名称',
   stockType: {
@@ -87,14 +87,14 @@ const fieldMap = {
   pickupCode: '拣货单号',
   reason: '流水原因',
 
-  availableQty: '可用量',
-  deltaQty: '变更量',
-  outboundPendingQty: '待出库量',
-  purchasePlanQty: '采购计划量',
-  purchaseTransitQty: '采购在途量',
-  returnTransitQty: '退件在途数量',
-  sellableQty: '可售量',
-  shelvingPendingQty: '待上架数量',
+  availableQty: '可用数',
+  deltaQty: '变更数',
+  outboundPendingQty: '待出库数',
+  purchasePlanQty: '采购计划数',
+  purchaseTransitQty: '采购在途数',
+  returnTransitQty: '退件在途数数',
+  sellableQty: '可售数',
+  shelvingPendingQty: '待上架数数',
 
   flowTime: {
     label: '流水发生时间',
@@ -120,7 +120,19 @@ const fieldMap = {
   //   width: '200px'
   // }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  computePropList: [
+    'availableQty',
+    'deltaQty',
+    'outboundPendingQty',
+    'purchasePlanQty',
+    'purchaseTransitQty',
+    'returnTransitQty',
+    'sellableQty',
+    'shelvingPendingQty'
+  ]
+})
 
 /** 库存流水 列表 */
 defineOptions({ name: 'WmsStockFlow' })
@@ -159,7 +171,8 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await StockFlowApi.getStockFlowPageOwnership(queryParams)
+    // const data = await StockFlowApi.getStockFlowPageOwnership(queryParams)
+    const data = await StockFlowApi.getStockFlowPageBin(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },
       { prop: 'bin', keyList: ['name'] },
