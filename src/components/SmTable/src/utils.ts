@@ -21,7 +21,13 @@ const resolveConfig = (tableOption, config) => {
       }
     })
   }
-  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config || {}
+  const {
+    allWrap,
+    wrapList,
+    noWidthList = [],
+    allWrapIgnoreList = [],
+    computePropList = []
+  } = config || {}
 
   const allWrapDeal = (allWrap, item) => {
     if (!allWrap) return
@@ -56,10 +62,20 @@ const resolveConfig = (tableOption, config) => {
     }
   }
 
+  // 默认25px 1字符
+  const computePropListWidth = (computePropList, item) => {
+    if (!computePropList) return
+    if (computePropList.includes(item.prop)) {
+      const computeWidth = item.label.length * 25
+      item.width = computeWidth >= 75 ? computeWidth : 60
+    }
+  }
+
   tableOption.forEach((item) => {
     allWrapDeal(allWrap, item)
     wrapListDeal(wrapList, item)
     noWidthListDeal(noWidthList, item)
+    computePropListWidth(computePropList, item)
   })
 }
 

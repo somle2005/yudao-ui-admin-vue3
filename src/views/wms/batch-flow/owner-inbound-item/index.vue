@@ -86,7 +86,6 @@ const fieldMap = {
   planQty: '计划入库数',
   shelvedQty: '已上架数',
 
-
   remark: '备注',
 
   updateTime: {
@@ -102,7 +101,10 @@ const fieldMap = {
   },
   creatorName: '创建人'
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  computePropList: ['actualQty', 'age', 'outboundAvailableQty', 'planQty', 'shelvedQty']
+})
 
 /** 入库单详情 列表 */
 defineOptions({ name: 'WmsInboundItem' })
@@ -142,7 +144,7 @@ const getList = async () => {
       { prop: 'dept', keyList: ['name'] },
       { prop: 'company', keyList: ['name'] },
       { prop: 'inboundDept', keyList: ['name'] },
-      { prop: 'inboundCompany', keyList: ['name'] },
+      { prop: 'inboundCompany', keyList: ['name'] }
     ]) as any
     total.value = data.total
   } finally {

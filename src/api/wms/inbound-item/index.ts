@@ -31,23 +31,27 @@ export interface InboundItemActualQtyVO {
   /**
    * 实际入库量
    */
-  actualQty?: number;
+  actualQty?: number
   /**
    * 主键
    */
-  id: number;
+  id: number
   /**
    * 入库单ID
    */
-  inboundId?: number;
+  inboundId?: number
 }
-
 
 // 入库单详情 API
 export const InboundItemApi = {
   // 查询入库单详情分页
   getInboundItemPage: async (data: any) => {
     return await request.post({ url: `/wms/inbound-item/page`, data })
+  },
+
+  // 库位批次库存查询
+  getInboundItemPageBin: async (data: any) => {
+    return await request.post({ url: `wms/inbound-item/page-bin`, data })
   },
 
   // 查询入库单详情详情
@@ -82,5 +86,5 @@ export const InboundItemApi = {
   // 设置实际入库量
   updateInboundItemActualQuantity: async (data: Array<InboundItemActualQtyVO>) => {
     return await request.put({ url: `/wms/inbound-item/update-actual-quantity`, data })
-  },
+  }
 }

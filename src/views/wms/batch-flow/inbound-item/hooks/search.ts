@@ -34,6 +34,19 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: productList
     },
     {
+      type: 'select',
+      label: '库位',
+      prop: 'binId',
+      placeholder: '请选择库位',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: warehouseBinList
+    },
+
+    {
       type: 'tree-select',
       label: '库存归属',
       prop: 'deptId',
@@ -50,18 +63,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      label: '库位',
-      prop: 'binId',
-      placeholder: '请选择库位',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      },
-      children: warehouseBinList
-    },
-    {
-      type: 'select',
       placeholder: '请选择库存主体',
       prop: 'companyId',
       label: '库存主体',
@@ -74,6 +75,38 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: financeSubjectList
     },
+    
+    {
+      type: 'tree-select',
+      label: '入库库存归属',
+      prop: 'inboundDeptId',
+      placeholder: '请选择入库库存归属',
+      attrs: {
+        'node-key': 'id',
+        'check-strictly': true,
+        props: defaultProps,
+        data: deptList,
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择入库库存主体',
+      prop: 'inboundCompanyId',
+      label: '入库库存主体',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+
+
 
     {
       type: 'select',

@@ -69,9 +69,11 @@ const fieldMap = {
   productName: '产品名称',
   productBarCode: '产品编码',
   warehouseName: '仓库名称',
-  // binName: '库位名称',
+  binName: '库位名称',
   deptName: '库存归属',
   companyName: '库存主体',
+  inboundDeptName: '入库库存归属',
+  inboundCompanyName: '入库库存归属',
   inboundStatus: {
     label: '入库状态',
     slot: 'inboundStatus',
@@ -84,23 +86,25 @@ const fieldMap = {
   planQty: '计划入库量',
   shelvedQty: '已上架数',
 
+  remark: '备注'
 
-  remark: '备注',
-
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  creatorName: '创建人'
+  // updateTime: {
+  //   label: '更新时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // updaterName: '更新人',
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // creatorName: '创建人'
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  computePropList: ['actualQty', 'age', 'outboundAvailableQty', 'planQty', 'shelvedQty']
+})
 
 /** 入库单详情 列表 */
 defineOptions({ name: 'WmsInboundItem' })
@@ -130,15 +134,16 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await InboundItemApi.getInboundItemPage(queryParams)
+    const data = await InboundItemApi.getInboundItemPageBin(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },
       // { prop: 'bin', keyList: ['name'] },
-      // { prop: 'zone', keyList: ['name'] },
       { prop: 'product', keyList: ['name', 'barCode'] },
       { prop: 'inbound', keyList: ['code'] },
       { prop: 'dept', keyList: ['name'] },
       { prop: 'company', keyList: ['name'] },
+      { prop: 'inboundDept', keyList: ['name'] },
+      { prop: 'inboundCompany', keyList: ['name'] }
     ]) as any
     total.value = data.total
   } finally {
