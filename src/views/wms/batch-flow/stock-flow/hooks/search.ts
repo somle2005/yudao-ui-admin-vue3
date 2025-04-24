@@ -1,11 +1,12 @@
 import { getDeptTree, getProductList } from '@/commonData'
-import { getWMSWarehouseList } from '@/commonData/wms'
+import { getWarehouseBinList, getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const productList = getProductList() // 产品列表
   // const { deptList, defaultProps } = getDeptTree()
+  const warehouseBinList = getWarehouseBinList()
 
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -33,6 +34,18 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: productList
+    },
+    {
+      type: 'select',
+      label: '库位',
+      prop: 'binId',
+      placeholder: '请选择库位',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: warehouseBinList
     },
     // {
     //   type: 'tree-select',
