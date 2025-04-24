@@ -97,14 +97,18 @@ const fieldMap = {
     slot: ' reason',
     dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
   },
-
-  availableQty: '仓库可用数',
-  sellableQty: '仓库可售数',
+  availableQty: '批次可用库存',
   deltaQty: {
     label: '库存变更',
     width: '100px',
     slot: 'deltaQty'
   },
+  zhanwei: '批次当前库存', // 等后端提供字段
+
+  stockWarehouseAvailableQty1: '仓库当前库存', // 等后端提供字段
+  stockWarehouseAvailableQty: '仓库可用库存',
+  stockWarehouseSellableQty: '仓库可售库存',
+
   // outboundPendingQty: '待出库数',
   // purchasePlanQty: '采购计划数',
   // purchaseTransitQty: '采购在途数',
@@ -197,11 +201,12 @@ const getList = async () => {
       { prop: 'product', keyList: ['name', 'barCode'] },
       { prop: 'inbound', keyList: ['code'] },
       { prop: 'outbound', keyList: ['code'] },
-      { prop: 'pickup', keyList: ['code'] }
+      { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] }
     ]) as any
 
     list.value.forEach((item: any) => {
       item.deltaQty = item.deltaQty * item.direction
+      item.stockWarehouseAvailableQty1 = item.stockWarehouseAvailableQty
     })
 
     total.value = data.total
