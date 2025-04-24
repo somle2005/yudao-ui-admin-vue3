@@ -80,11 +80,21 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   // },
 
-  actualQty: '入库数',
+  stockType: {
+    label: '状态',
+    slot: 'stockType',
+    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
+  },
+
+  zhanwei1: '数量',
+  zhanwei2: '总库存',
+  zhanwei3: '待出数量',
+
   age: '库龄',
-  outboundAvailableQty: '批次剩余库存数',
-  planQty: '计划入库数',
-  shelvedQty: '已上架数',
+  // actualQty: '入库数',
+  // outboundAvailableQty: '批次剩余库存数',
+  // planQty: '计划入库数',
+  // shelvedQty: '已上架数',
 
   remark: '备注',
 

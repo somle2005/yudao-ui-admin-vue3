@@ -80,11 +80,21 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   // },
 
-  actualQty: '入库数量',
+  stockType: {
+    label: '状态',
+    slot: 'stockType',
+    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
+  },
+
+  // actualQty: '入库数量',
+ 
+  // outboundAvailableQty: '批次剩余库存',
+  // planQty: '计划入库量',
+  // shelvedQty: '已上架数',
   age: '库龄',
-  outboundAvailableQty: '批次剩余库存',
-  planQty: '计划入库量',
-  shelvedQty: '已上架数',
+  zhanwei1: '数量',
+  zhanwei2: '总库存',
+  zhanwei3: '待出数量',
 
   remark: '备注'
 
@@ -106,7 +116,7 @@ tableOptions.value = transformTableOptions(fieldMap, {
   computePropList: ['actualQty', 'age', 'outboundAvailableQty', 'planQty', 'shelvedQty']
 })
 
-tableOptions.value[tableOptions.value.length-1].width = undefined
+tableOptions.value[tableOptions.value.length - 1].width = undefined
 
 /** 入库单详情 列表 */
 defineOptions({ name: 'WmsInboundItem' })
