@@ -107,7 +107,7 @@ tableOptions.value = transformTableOptions(fieldMap, {
 })
 
 /** 入库单详情 列表 */
-defineOptions({ name: 'WmsInboundItem' })
+defineOptions({ name: 'WmsOwnerInboundItem' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
