@@ -69,9 +69,9 @@ const fieldMap = {
   productName: '产品名称',
   deptName: '库存归属',
   companyName: '库存主体',
-  availableQty: '可用量',
-  outboundPendingQty: '待出库量',
-  shelvingPendingQty: '待上架数量',
+  availableQty: '可用数',
+  outboundPendingQty: '待出库数',
+  shelvingPendingQty: '待上架数数',
 
   updateTime: {
     label: '更新时间',

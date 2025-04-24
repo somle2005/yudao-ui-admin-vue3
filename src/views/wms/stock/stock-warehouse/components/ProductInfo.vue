@@ -11,7 +11,7 @@ const list = [
   { prop: 'name', label: '产品名称' },
   { prop: 'material', label: '材料(中文)' },
   { prop: 'brand', label: '品牌' },
-  { prop: 'unitName', label: '单位名称' }
+  // { prop: 'unitName', label: '单位名称' }
 ]
 
 const props = defineProps({

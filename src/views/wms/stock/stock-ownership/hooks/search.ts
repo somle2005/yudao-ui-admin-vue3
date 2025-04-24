@@ -85,7 +85,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       componentType: 'sm-range',
-      label: '可用量',
+      label: '可用数',
       prop: 'availableQty',
       attrs: {
         style: { width: '100%' },
@@ -94,7 +94,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       componentType: 'sm-range',
-      label: '待出库量',
+      label: '待出库数',
       prop: 'outboundPendingQty',
       attrs: {
         style: { width: '100%' },
@@ -103,7 +103,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       componentType: 'sm-range',
-      label: '待上架数量',
+      label: '待上架数数',
       prop: 'shelvingPendingQty',
       attrs: {
         style: { width: '100%' },

@@ -98,7 +98,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
     {
       componentType: 'sm-range',
-      label: '可售量',
+      label: '可售数',
       prop: 'sellableQty',
       attrs: {
         style: { width: '100%' },
@@ -107,7 +107,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       componentType: 'sm-range',
-      label: '可用量',
+      label: '可用数',
       prop: 'availableQty',
       attrs: {
         style: { width: '100%' },

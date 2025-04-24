@@ -72,9 +72,9 @@ const fieldMap = {
   productName: '产品名称',
 
 
-  availableQty: '可用量',
-  outboundPendingQty: '待出库量',
-  sellableQty: '可售量',
+  availableQty: '可用数',
+  outboundPendingQty: '待出库数',
+  sellableQty: '可售数',
 
   updateTime: {
     label: '更新时间',

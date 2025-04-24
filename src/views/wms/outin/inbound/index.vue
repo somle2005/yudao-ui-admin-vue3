@@ -198,8 +198,9 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
-console.log(tableOptions.value, 'tableOptions.value')
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true
+})
 
 /** 入库单 列表 */
 defineOptions({ name: 'WmsInbound' })

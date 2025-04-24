@@ -1,4 +1,4 @@
-import { getDeptTree, getFinanceSubjectList } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
@@ -7,6 +7,8 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const { deptList, defaultProps } = getDeptTree()
   const financeSubjectList = getFinanceSubjectList()
+  const productList = getProductList() // 产品列表
+
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -29,6 +31,20 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       },
       children: WMSWarehouseList
+    },
+    {
+      type: 'select',
+      placeholder: '请选择产品编码',
+      prop: 'productId',
+      label: '产品编码',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: productList
     },
     // {
     //   type: 'select',

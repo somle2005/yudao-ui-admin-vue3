@@ -16,29 +16,29 @@
       <el-form-item label="产品SKU" prop="productSku">
         <el-input v-model="formData.productSku" placeholder="请输入产品SKU" />
       </el-form-item>
-      <el-form-item label="采购计划量" prop="purchasePlanQuantity">
-        <el-input v-model="formData.purchasePlanQuantity" placeholder="请输入采购计划量" />
+      <el-form-item label="采购计划数" prop="purchasePlanQuantity">
+        <el-input v-model="formData.purchasePlanQuantity" placeholder="请输入采购计划数" />
       </el-form-item>
-      <el-form-item label="采购在途量" prop="purchaseTransitQuantity">
-        <el-input v-model="formData.purchaseTransitQuantity" placeholder="请输入采购在途量" />
+      <el-form-item label="采购在途数" prop="purchaseTransitQuantity">
+        <el-input v-model="formData.purchaseTransitQuantity" placeholder="请输入采购在途数" />
       </el-form-item>
-      <el-form-item label="退件在途数量" prop="returnTransitQuantity">
-        <el-input v-model="formData.returnTransitQuantity" placeholder="请输入退件在途数量" />
+      <el-form-item label="退件在途数数" prop="returnTransitQuantity">
+        <el-input v-model="formData.returnTransitQuantity" placeholder="请输入退件在途数数" />
       </el-form-item>
-      <el-form-item label="待上架数量" prop="pendingShelvingQuantity">
-        <el-input v-model="formData.pendingShelvingQuantity" placeholder="请输入待上架数量" />
+      <el-form-item label="待上架数数" prop="pendingShelvingQuantity">
+        <el-input v-model="formData.pendingShelvingQuantity" placeholder="请输入待上架数数" />
       </el-form-item>
-      <el-form-item label="可用量，在库的良品数量" prop="availableQuantity">
-        <el-input v-model="formData.availableQuantity" placeholder="请输入可用量，在库的良品数量" />
+      <el-form-item label="可用数，在库的良品数数" prop="availableQuantity">
+        <el-input v-model="formData.availableQuantity" placeholder="请输入可用数，在库的良品数数" />
       </el-form-item>
-      <el-form-item label="可售量，未被单据占用的良品数量" prop="sellableQuantity">
-        <el-input v-model="formData.sellableQuantity" placeholder="请输入可售量，未被单据占用的良品数量" />
+      <el-form-item label="可售数，未被单据占用的良品数数" prop="sellableQuantity">
+        <el-input v-model="formData.sellableQuantity" placeholder="请输入可售数，未被单据占用的良品数数" />
       </el-form-item>
-      <el-form-item label="待出库量" prop="pendingOutboundQuantity">
-        <el-input v-model="formData.pendingOutboundQuantity" placeholder="请输入待出库量" />
+      <el-form-item label="待出库数" prop="pendingOutboundQuantity">
+        <el-input v-model="formData.pendingOutboundQuantity" placeholder="请输入待出库数" />
       </el-form-item>
-      <el-form-item label="不良品数量" prop="defectiveQuantity">
-        <el-input v-model="formData.defectiveQuantity" placeholder="请输入不良品数量" />
+      <el-form-item label="不良品数数" prop="defectiveQuantity">
+        <el-input v-model="formData.defectiveQuantity" placeholder="请输入不良品数数" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -78,14 +78,14 @@ const formRules = reactive({
   warehouseId: [{ required: true, message: '仓库ID不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: '产品ID不能为空', trigger: 'blur' }],
   productSku: [{ required: true, message: '产品SKU不能为空', trigger: 'blur' }],
-  purchasePlanQuantity: [{ required: true, message: '采购计划量不能为空', trigger: 'blur' }],
-  purchaseTransitQuantity: [{ required: true, message: '采购在途量不能为空', trigger: 'blur' }],
-  returnTransitQuantity: [{ required: true, message: '退件在途数量不能为空', trigger: 'blur' }],
-  pendingShelvingQuantity: [{ required: true, message: '待上架数量不能为空', trigger: 'blur' }],
-  availableQuantity: [{ required: true, message: '可用量，在库的良品数量不能为空', trigger: 'blur' }],
-  sellableQuantity: [{ required: true, message: '可售量，未被单据占用的良品数量不能为空', trigger: 'blur' }],
-  pendingOutboundQuantity: [{ required: true, message: '待出库量不能为空', trigger: 'blur' }],
-  defectiveQuantity: [{ required: true, message: '不良品数量不能为空', trigger: 'blur' }],
+  purchasePlanQuantity: [{ required: true, message: '采购计划数不能为空', trigger: 'blur' }],
+  purchaseTransitQuantity: [{ required: true, message: '采购在途数不能为空', trigger: 'blur' }],
+  returnTransitQuantity: [{ required: true, message: '退件在途数数不能为空', trigger: 'blur' }],
+  pendingShelvingQuantity: [{ required: true, message: '待上架数数不能为空', trigger: 'blur' }],
+  availableQuantity: [{ required: true, message: '可用数，在库的良品数数不能为空', trigger: 'blur' }],
+  sellableQuantity: [{ required: true, message: '可售数，未被单据占用的良品数数不能为空', trigger: 'blur' }],
+  pendingOutboundQuantity: [{ required: true, message: '待出库数不能为空', trigger: 'blur' }],
+  defectiveQuantity: [{ required: true, message: '不良品数数不能为空', trigger: 'blur' }],
 })
 const formRef = ref() // 表单 Ref
 
