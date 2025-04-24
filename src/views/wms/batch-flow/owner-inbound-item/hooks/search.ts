@@ -94,20 +94,20 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
 
 
-    {
-      type: 'select',
-      placeholder: '请选择入库状态',
-      prop: 'inboundStatus',
-      label: '入库状态',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_STATUS)
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择入库状态',
+    //   prop: 'inboundStatus',
+    //   label: '入库状态',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_STATUS)
+    // },
     {
       type: 'date-picker',
       placeholder: '请选择创建时间',

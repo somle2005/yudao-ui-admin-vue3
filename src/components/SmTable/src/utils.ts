@@ -33,7 +33,7 @@ const resolveConfig = (tableOption, config) => {
     if (!allWrap) return
     allWrapIgnoreList.push(...['operate'])
     if (allWrapIgnoreList.includes(item.prop)) return
-    const propertyList = ['dictAttrs', 'formatter']
+    const propertyList = ['dictAttrs', 'formatter', 'slot']
     const flag = propertyList.some((a) => item[a])
     if (flag) return
 

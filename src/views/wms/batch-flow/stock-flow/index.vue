@@ -29,6 +29,11 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
+      <template #deltaQty="{ scope }">
+        <div class="green" v-if="scope.row.deltaQty > 0">+{{ scope.row.deltaQty }}</div>
+        <div class="red" v-else-if="scope.row.deltaQty < 0">-{{ scope.row.deltaQty }}</div>
+        <div v-else-if="scope.row.deltaQty === 0">{{ scope.row.deltaQty }}</div>
+      </template>
       <!-- <template #operate="{ scope }">
          <el-button
             link
@@ -70,12 +75,12 @@ const fieldMap = {
   binName: '库位名称',
   productBarCode: '产品编码',
   productName: '产品名称',
-  stockType: {
-    label: '库存类型',
-    width: '200px',
-    slot: 'stockType',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
-  },
+  // stockType: {
+  //   label: '库存类型',
+  //   width: '200px',
+  //   slot: 'stockType',
+  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
+  // },
   direction: {
     label: '库存流水方向',
     width: '200px',
@@ -84,17 +89,28 @@ const fieldMap = {
   },
   inboundCode: '入库单号',
   outboundCode: '出库单号',
-  pickupCode: '拣货单号',
-  reason: '流水原因',
+  pickupCode: '上架单号',
 
-  availableQty: '可用数',
-  deltaQty: '变更数',
-  outboundPendingQty: '待出库数',
-  purchasePlanQty: '采购计划数',
-  purchaseTransitQty: '采购在途数',
-  returnTransitQty: '退件在途数数',
-  sellableQty: '可售数',
-  shelvingPendingQty: '待上架数数',
+  reason: {
+    label: '操作类型',
+    width: '200px',
+    slot: ' reason',
+    dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
+  },
+
+  availableQty: '仓库可用数',
+  sellableQty: '仓库可售数',
+  deltaQty: {
+    label: '库存变更',
+    width: '100px',
+    slot: 'deltaQty'
+  },
+  // outboundPendingQty: '待出库数',
+  // purchasePlanQty: '采购计划数',
+  // purchaseTransitQty: '采购在途数',
+  // returnTransitQty: '退件在途数',
+  // sellableQty: '可售数',
+  // shelvingPendingQty: '待上架数',
 
   flowTime: {
     label: '流水发生时间',
@@ -123,6 +139,7 @@ const fieldMap = {
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
   computePropList: [
+    'reason',
     'availableQty',
     'deltaQty',
     'outboundPendingQty',
@@ -182,6 +199,11 @@ const getList = async () => {
       { prop: 'outbound', keyList: ['code'] },
       { prop: 'pickup', keyList: ['code'] }
     ]) as any
+
+    list.value.forEach((item: any) => {
+      item.deltaQty = item.deltaQty * item.direction
+    })
+
     total.value = data.total
   } finally {
     loading.value = false
@@ -241,3 +263,11 @@ onMounted(() => {
   getList()
 })
 </script>
+<style lang="scss" scoped>
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+</style>

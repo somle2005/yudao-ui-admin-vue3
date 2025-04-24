@@ -74,11 +74,11 @@ const fieldMap = {
   companyName: '库存主体',
   inboundDeptName: '入库库存归属',
   inboundCompanyName: '入库库存归属',
-  inboundStatus: {
-    label: '入库状态',
-    slot: 'inboundStatus',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  },
+  // inboundStatus: {
+  //   label: '入库状态',
+  //   slot: 'inboundStatus',
+  //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+  // },
 
   actualQty: '入库数',
   age: '库龄',
