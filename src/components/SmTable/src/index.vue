@@ -13,7 +13,7 @@
       @row-click="rowClick"
       class="SmTable-el-table"
     >
-      <el-table-column v-if="isSelection" fixed="left" width="40" label="选择" type="selection" />
+      <el-table-column v-if="isSelection" fixed="left" width="40" label="选择" type="selection" align="center" />
       <!-- 后期可以补充oneSelectionAttrs进行扩展 -->
       <el-table-column v-if="oneSelection" fixed="left" align="center" width="40">
         <template #default="scope">
@@ -357,7 +357,7 @@ defineExpose({ tableRef }) // 提供 open 方法，用于打开弹窗
   justify-content: flex-end;
   align-items: center;
 }
-:global(#SmTable .cell) {
-  padding: 0!important;
-}
+// :global(#SmTable .cell) {
+//   padding: 0!important;
+// }
 </style>

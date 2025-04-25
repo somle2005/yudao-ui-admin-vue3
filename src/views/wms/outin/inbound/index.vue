@@ -96,6 +96,16 @@
         </el-button> -->
         <el-button
           link
+          type="warning"
+          @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
+          v-hasPermi="['wms:inbound:abandon']"
+          v-if="isAbandon(scope.row.auditStatus)"
+        >
+          作废
+        </el-button>
+
+        <el-button
+          link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inbound:update']"
@@ -128,6 +138,8 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { getLastListProp } from '@/utils/transformData'
 import { AUDIT_STATUS } from '@/views/wms/constants/index'
+import { isAbandon } from '@/views/wms/utils/index'
+import { OPERATE_MAP } from '@/views/wms/constants/index'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示

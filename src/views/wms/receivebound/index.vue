@@ -43,6 +43,7 @@
           type="warning"
           @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
           v-hasPermi="['wms:inbound:abandon']"
+          v-if="isAbandon(scope.row.auditStatus)"
         >
           作废
         </el-button>
@@ -75,10 +76,11 @@ import download from '@/utils/download'
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { OPERATE_MAP } from './constant'
+import { OPERATE_MAP } from '@/views/wms/constants/index'
 import OpenForm from './OpenForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
+import { isAbandon } from '../utils'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -218,7 +220,6 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-
 onActivated(() => {
   const routeQuery = window.getRouteQuery && window.getRouteQuery()
   if (routeQuery?.no) {
@@ -228,5 +229,4 @@ onActivated(() => {
   }
   getList()
 })
-
 </script>

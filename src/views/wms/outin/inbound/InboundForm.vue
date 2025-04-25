@@ -71,6 +71,7 @@ import { FinanceSubjectVO } from '@/api/fms/company'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { filterObjKey, getLastListProp } from '@/utils/transformData'
 import { InboundItemApi } from '@/api/wms/inbound-item'
+import { OPERATE_MAP } from '@/views/wms/constants/index'
 
 // import { useOutData } from './components/hooks/outdata'
 
@@ -114,7 +115,7 @@ const financeSubjectList = ref<FinanceSubjectVO[]>([])
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
-const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
+const itemsFormdisabled = computed(() => [OPERATE_MAP.abandon, 'detail'].includes(formType.value))
 const auditType = computed(() => formType.value === 'audit')
 
 const requestFormOptions: any = ref([])
@@ -269,6 +270,27 @@ const detailOptions = (formOptions) => {
   return addDisabled(formOptions)
 }
 
+const abandonFormOptions = (formOptions) => {
+  const index = formOptions.findIndex((item) => item.slot === 'items')
+
+  const obj: any = {
+    type: 'input',
+    placeholder: '审核意见',
+    prop: 'comment',
+    label: '审核意见',
+    attrs: {
+      clearable: true,
+      class: '!w-1/1',
+      style: {
+        width: '100%'
+      }
+    }
+  }
+  formOptions.splice(index, 0, obj)
+
+  return formOptions
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -291,6 +313,9 @@ const open = async (type: string, id?: number) => {
     },
     detail: () => {
       requestFormOptions.value = detailOptions(createRequestFormOptions())
+    },
+    [OPERATE_MAP.abandon]: () => {
+      requestFormOptions.value = abandonFormOptions(detailOptions(createRequestFormOptions()))
     }
   }
   formTypeOperate[type]()
@@ -345,6 +370,9 @@ const submitForm = async (type?: string) => {
         await InboundApi.rejectInboundAuditStatus({ billId: data.id, comment: data.comment })
       }
       message.success('审核成功')
+    } else if (formType.value === OPERATE_MAP.abandon) {
+      await InboundApi.abandonInbound({ billId: data.id, comment: data.comment })
+      message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件

@@ -66,7 +66,6 @@ import { StockFlowApi, StockFlowVO } from '@/api/wms/stock-flow'
 import StockFlowForm from './StockFlowForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { it } from 'node:test'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 

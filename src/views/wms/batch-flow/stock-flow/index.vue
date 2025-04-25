@@ -39,7 +39,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['wms:stock-flow:update']"
+            v-hasPermi="['wms:stock-flow:update']" 
           >
             编辑
           </el-button>

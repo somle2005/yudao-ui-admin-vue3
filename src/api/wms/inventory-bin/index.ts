@@ -75,5 +75,20 @@ export const InventoryBinApi = {
   // 设置实际库存量
   updateInventoryBinActualQuantity: async (data: Array<InventoryBinActualQtyVO>) => {
     return await request.put({ url: `/wms/inventory-bin/update-actual-quantity`, data })
+  },
+
+  //  追加盘点库位
+  appendInventoryBin: async (data: Array<InventoryBinActualQtyVO>) => {
+    return await request.post({ url: `/wms/inventory-bin/append`, data })
+  },
+
+  //  导入盘点结果
+  importInventoryBinExcel: async (data: any) => {
+    return await request.post({ url: `/wms/inventory-bin/import-excel`, data })
+  },
+
+  //  导入盘点产品
+  importInventoryProductExcel: async (data: any) => {
+    return await request.post({ url: `/wms/inventory-product/import-excel`, data })
   }
 }
