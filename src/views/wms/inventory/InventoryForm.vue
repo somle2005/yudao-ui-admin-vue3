@@ -124,8 +124,7 @@ const createRequestFormOptions = () => {
         style: { width: '100%' },
         filterable: true,
         clearable: true,
-        onChange: (val: any) => {
-        }
+        onChange: (val: any) => {}
       },
       children: WMSWarehouseList
     },
@@ -229,6 +228,10 @@ const open = async (type: string, id?: number) => {
     [OPERATE_MAP.abandon]: () => {
       dialogTitle.value = OPERATE_MAP.abandon
       requestFormOptions.value = abandonFormOptions(detailOptions(createRequestFormOptions()))
+    },
+    [OPERATE_MAP.append]: () => {
+      dialogTitle.value = OPERATE_MAP.append
+      requestFormOptions.value = createRequestFormOptions()
     }
   }
   formTypeOperate[type]()
@@ -246,6 +249,13 @@ const open = async (type: string, id?: number) => {
           item.actualQty = item.expectedQty
         })
       }
+      if (type === OPERATE_MAP.append) {
+        data.binItemList.forEach((item) => {
+          item.actualQty = item.expectedQty
+        })
+        getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+        data.productItemList = data.binItemList
+      }
 
       formData.value = data
       formRef.value.initForm()
@@ -262,7 +272,7 @@ const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
   await itemFormRef.value.validate()
-  
+
   // 提交请求
   formLoading.value = true
   try {
@@ -285,7 +295,9 @@ const submitForm = async (type?: string) => {
 
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
-
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === OPERATE_MAP.append) {
+      await InventoryBinApi.appendInventoryBin(data.productItemList)
       message.success(t('common.updateSuccess'))
     }
 

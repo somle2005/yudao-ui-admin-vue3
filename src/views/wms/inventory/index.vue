@@ -77,6 +77,15 @@
         <el-button
           link
           type="primary"
+          @click="openForm(OPERATE_MAP.append, scope.row.id)"
+          v-hasPermi="['wms:inventory-bin:append']"
+        >
+          追加盘点库位
+        </el-button>
+
+        <el-button
+          link
+          type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inventory:update']"
         >
@@ -139,7 +148,7 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '300px'
+    width: '400px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, {
