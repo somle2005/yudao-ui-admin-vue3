@@ -74,8 +74,9 @@
 
         <el-table-column label="库存主体" width="200" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.companyId`" class="mb-0px!" :disabled="disabled">
+            <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
               <SmSelect
+                :disabled="disabled"
                 v-model="row.companyId"
                 placeholder="请选择库存主体"
                 :data="financeSubjectList"

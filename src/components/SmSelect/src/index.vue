@@ -1,13 +1,23 @@
 <template>
   <!-- @keyup.enter="handleQuery"    class="!w-240px" -->
-  <el-select v-model="bindVal" clearable filterable :placeholder="placeholder" v-bind="$attrs">
-    <el-option
-      v-for="item in selectList"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    />
-  </el-select>
+  <div class="contents">
+    <el-select
+      v-if="!disabled"
+      v-model="bindVal"
+      clearable
+      filterable
+      :placeholder="placeholder"
+      v-bind="$attrs"
+    >
+      <el-option
+        v-for="item in selectList"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      />
+    </el-select>
+    <div v-else class="text">{{ bindMap[bindVal] }}</div>
+  </div>
 </template>
 <script setup lang="ts">
 import { cloneDeep } from 'lodash-es'
@@ -55,6 +65,10 @@ const props = defineProps({
   idKey: {
     type: String,
     default: 'id'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 
   // // 是否在加载中
@@ -68,6 +82,7 @@ const emits = defineEmits(['update:modelValue'])
 
 const bindVal = ref()
 const selectList: any = ref([])
+const bindMap = ref({})
 
 const emitModelValue = (val) => {
   if (bindVal.value && props?.data?.length) {
@@ -111,6 +126,7 @@ watch(
         const { label, value } = props.keyMap
         item.label = item[label]
         item.value = item[value]
+        bindMap.value[item.value] = item.label
         return item
       })
     } else {
@@ -125,4 +141,12 @@ onMounted(() => {})
 onUnmounted(() => {})
 defineExpose({})
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.contents {
+  display: contents;
+}
+.text {
+  width: 100%;
+  text-align: center;
+}
+</style>

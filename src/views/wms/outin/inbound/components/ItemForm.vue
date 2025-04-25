@@ -23,7 +23,7 @@
               class="mb-0px!"
             >
               <SmSelect
-                :disabled="auditDisabled"
+                :disabled="auditDisabled || disabled"
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 @change="

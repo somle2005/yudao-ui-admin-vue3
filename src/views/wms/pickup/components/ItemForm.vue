@@ -20,13 +20,13 @@
 
         <el-table-column label="库位" width="180" align="center">
           <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.binId`"
-              :rules="formRules.binId"
-              class="mb-0px!"
-              :disabled="disabled"
-            >
-              <SmSelect v-model="row.binId" placeholder="请选择库位" :data="warehouseBinList" />
+            <el-form-item :prop="`${$index}.binId`" :rules="formRules.binId" class="mb-0px!">
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.binId"
+                placeholder="请选择库位"
+                :data="warehouseBinList"
+              />
             </el-form-item>
           </template>
         </el-table-column>
