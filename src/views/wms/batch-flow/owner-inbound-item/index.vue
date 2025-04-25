@@ -70,8 +70,8 @@ const fieldMap = {
   productBarCode: '产品编码',
   warehouseName: '仓库名称',
   // binName: '库位名称',
-  deptName: '库存归属',
-  companyName: '库存主体',
+  // deptName: '库存归属',
+  // companyName: '库存主体',
   inboundDeptName: '入库库存归属',
   inboundCompanyName: '入库库存归属',
   // inboundStatus: {
@@ -80,17 +80,16 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   // },
 
-  stockType: {
-    label: '状态',
-    slot: 'stockType',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
-  },
-
-  zhanwei1: '数量',
-  zhanwei2: '总库存',
-  zhanwei3: '待出数量',
+  // stockType: {
+  //   label: '状态',
+  //   slot: 'stockType',
+  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
+  // },
 
   age: '库龄',
+  actualQty: '数量',
+  stockWarehouseAvailableQty: '总库存',
+  outboundAvailableQty: '待出数量',
   // actualQty: '入库数',
   // outboundAvailableQty: '批次剩余库存数',
   // planQty: '计划入库数',
@@ -113,7 +112,15 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  computePropList: ['actualQty', 'age', 'outboundAvailableQty', 'planQty', 'shelvedQty']
+  noComputePropList: [
+    'inboundCode',
+    'productName',
+    'productBarCode',
+    'warehouseName',
+    'remark',
+    'updateTime',
+    'createTime'
+  ]
 })
 
 /** 入库单详情 列表 */
@@ -154,7 +161,8 @@ const getList = async () => {
       { prop: 'dept', keyList: ['name'] },
       { prop: 'company', keyList: ['name'] },
       { prop: 'inboundDept', keyList: ['name'] },
-      { prop: 'inboundCompany', keyList: ['name'] }
+      { prop: 'inboundCompany', keyList: ['name'] },
+      { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] }
     ]) as any
     total.value = data.total
   } finally {

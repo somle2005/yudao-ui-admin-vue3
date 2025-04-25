@@ -66,6 +66,7 @@ import { StockFlowApi, StockFlowVO } from '@/api/wms/stock-flow'
 import StockFlowForm from './StockFlowForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { it } from 'node:test'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -88,8 +89,8 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
   },
   inboundCode: '入库单号',
-  outboundCode: '出库单号',
-  pickupCode: '上架单号',
+  // outboundCode: '出库单号',
+  // pickupCode: '上架单号',
   reason: {
     label: '操作类型',
     width: '200px',
@@ -143,15 +144,14 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  computePropList: [
-    'reason',
-    'availableQty',
-    'inboundItemFlowOutboundAvailableQty',
-    'stockWarehouseAvailableQty1',
-    'stockWarehouseAvailableQty',
-    'stockWarehouseSellableQty',
-    'updaterName',
-    'creatorName'
+  noComputePropList: [
+    'warehouseName',
+    'productBarCode',
+    'productName',
+    'updateTime',
+    'createTime',
+    'inboundCode',
+    'flowTime'
   ]
 })
 
@@ -199,14 +199,15 @@ const getList = async () => {
       // { prop: 'zone', keyList: ['name'] },
       { prop: 'product', keyList: ['name', 'barCode'] },
       { prop: 'inbound', keyList: ['code'] },
-      { prop: 'outbound', keyList: ['code'] },
-      { prop: 'pickup', keyList: ['code'] },
+      // { prop: 'outbound', keyList: ['code'] },
+      // { prop: 'pickup', keyList: ['code'] },
       { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] },
       { prop: 'inboundItemFlow', keyList: ['outboundAvailableQty'] }
     ]) as any
 
     list.value.forEach((item: any) => {
       item.deltaQty = item.deltaQty * item.direction
+      item.stockWarehouseAvailableQty1 = item.stockWarehouseAvailableQty
     })
 
     total.value = data.total

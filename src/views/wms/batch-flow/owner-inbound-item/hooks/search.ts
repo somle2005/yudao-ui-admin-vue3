@@ -31,35 +31,35 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: productList
     },
-    {
-      type: 'tree-select',
-      label: '库存归属',
-      prop: 'deptId',
-      placeholder: '请选择库存归属',
-      attrs: {
-        'node-key': 'id',
-        'check-strictly': true,
-        props: defaultProps,
-        data: deptList,
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      }
-    },
-    {
-      type: 'select',
-      placeholder: '请选择库存主体',
-      prop: 'companyId',
-      label: '库存主体',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: financeSubjectList
-    },
+    // {
+    //   type: 'tree-select',
+    //   label: '库存归属',
+    //   prop: 'deptId',
+    //   placeholder: '请选择库存归属',
+    //   attrs: {
+    //     'node-key': 'id',
+    //     'check-strictly': true,
+    //     props: defaultProps,
+    //     data: deptList,
+    //     style: { width: '100%' },
+    //     filterable: true,
+    //     clearable: true
+    //   }
+    // },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择库存主体',
+    //   prop: 'companyId',
+    //   label: '库存主体',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: financeSubjectList
+    // },
 
     {
       type: 'tree-select',

@@ -142,15 +142,16 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  computePropList: [
-    'reason',
-    'availableQty',
-    'inboundItemFlowOutboundAvailableQty',
-    'stockWarehouseAvailableQty1',
-    'stockWarehouseAvailableQty',
-    'stockWarehouseSellableQty',
-    'updaterName',
-    'creatorName'
+  noComputePropList: [
+    'warehouseName',
+    'productBarCode',
+    'productName',
+    'updateTime',
+    'createTime',
+    'inboundCode',
+    'outboundCode',
+    'pickupCode',
+    'flowTime'
   ]
 })
 

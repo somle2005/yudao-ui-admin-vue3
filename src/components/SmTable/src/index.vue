@@ -8,6 +8,7 @@
       :showOverflowTooltip="showOverflowTooltip"
       :data="tableData"
       :border="border"
+      :tooltip="tooltip"
       v-bind="TableAttrs()"
       @row-click="rowClick"
       class="SmTable-el-table"
@@ -216,6 +217,10 @@ const props = defineProps({
   pagination: {
     type: Boolean,
     default: true
+  },
+  tooltip: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -305,7 +310,6 @@ const handleCurrentChange = (row) => {
 
 const tableRef = ref()
 defineExpose({ tableRef }) // 提供 open 方法，用于打开弹窗
-
 </script>
 
 <style lang="scss" scoped>
@@ -352,5 +356,8 @@ defineExpose({ tableRef }) // 提供 open 方法，用于打开弹窗
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+:global(#SmTable .cell) {
+  padding: 0!important;
 }
 </style>

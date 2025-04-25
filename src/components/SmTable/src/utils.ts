@@ -26,7 +26,8 @@ const resolveConfig = (tableOption, config) => {
     wrapList,
     noWidthList = [],
     allWrapIgnoreList = [],
-    computePropList = []
+    computePropList = [],
+    noComputePropList = [],
   } = config || {}
 
   const allWrapDeal = (allWrap, item) => {
@@ -45,7 +46,7 @@ const resolveConfig = (tableOption, config) => {
   }
 
   const wrapListDeal = (wrapList, item) => {
-    if (!wrapList) return
+    if (!wrapList?.length) return
     if (wrapList.includes(item.prop)) {
       item.slot = item.prop
       item.wrap = true
@@ -56,7 +57,7 @@ const resolveConfig = (tableOption, config) => {
   }
 
   const noWidthListDeal = (noWidthList, item) => {
-    if (!noWidthList) return
+    if (!noWidthList?.length) return
     if (noWidthList.includes(item.prop)) {
       item.width = undefined
     }
@@ -64,9 +65,17 @@ const resolveConfig = (tableOption, config) => {
 
   // 默认25px 1字符
   const computePropListWidth = (computePropList, item) => {
-    if (!computePropList) return
+    if (!computePropList?.length) return
     if (computePropList.includes(item.prop)) {
       const computeWidth = item.label.length * 25
+      item.width = computeWidth >= 75 ? computeWidth : 60
+    }
+  }
+
+  const noComputePropListWidth = (noComputePropList, item) => {
+    if (!noComputePropList?.length) return
+    if (!noComputePropList.includes(item.prop)) {
+      const computeWidth = item.label.length * 20
       item.width = computeWidth >= 75 ? computeWidth : 60
     }
   }
@@ -76,6 +85,7 @@ const resolveConfig = (tableOption, config) => {
     wrapListDeal(wrapList, item)
     noWidthListDeal(noWidthList, item)
     computePropListWidth(computePropList, item)
+    noComputePropListWidth(noComputePropList, item)
   })
 }
 
