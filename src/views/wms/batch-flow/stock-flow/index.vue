@@ -103,9 +103,9 @@ const fieldMap = {
     width: '100px',
     slot: 'deltaQty'
   },
-  zhanwei: '批次当前库存', // 等后端提供字段
+  inboundItemFlowOutboundAvailableQty: '批次当前库存',
 
-  stockWarehouseAvailableQty1: '仓库当前库存', // 等后端提供字段
+  stockWarehouseAvailableQty1: '仓库当前库存',
   stockWarehouseAvailableQty: '仓库可用库存',
   stockWarehouseSellableQty: '仓库可售库存',
 
@@ -145,13 +145,12 @@ tableOptions.value = transformTableOptions(fieldMap, {
   computePropList: [
     'reason',
     'availableQty',
-    'deltaQty',
-    'outboundPendingQty',
-    'purchasePlanQty',
-    'purchaseTransitQty',
-    'returnTransitQty',
-    'sellableQty',
-    'shelvingPendingQty'
+    'inboundItemFlowOutboundAvailableQty',
+    'stockWarehouseAvailableQty1',
+    'stockWarehouseAvailableQty',
+    'stockWarehouseSellableQty',
+    'updaterName',
+    'creatorName'
   ]
 })
 
@@ -201,7 +200,8 @@ const getList = async () => {
       { prop: 'product', keyList: ['name', 'barCode'] },
       { prop: 'inbound', keyList: ['code'] },
       { prop: 'outbound', keyList: ['code'] },
-      { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] }
+      { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] },
+      { prop: 'inboundItemFlow', keyList: ['outboundAvailableQty'] }
     ]) as any
 
     list.value.forEach((item: any) => {
