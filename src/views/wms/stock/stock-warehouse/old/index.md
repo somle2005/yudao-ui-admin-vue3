@@ -50,7 +50,7 @@
       </template> -->
 
       <template #productInfo="{ scope }">
-        <ProductInfo :data="scope?.row?.product" />
+        <ProductInfo :data="scope.row" />
       </template>
       <template #warehouseInfo="{ scope }">
         <SmTable
@@ -82,13 +82,13 @@ import { StockBinApi } from '@/api/wms/stock-bin'
 import ProductInfo from './components/ProductInfo.vue'
 import { getSumValue } from '@/utils'
 
-const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
+const { tableOptions, transformTableOptions, getItemProp, getItemPropList } = useTableData()
 
 const fieldMap = {
   // 产品图片
-  productPrimaryImageUrl: {
+  primaryImageUrl: {
     label: '产品图片',
-    slot: 'productPrimaryImageUrl',
+    slot: 'primaryImageUrl',
     imageAttrs: {}
   },
 
@@ -227,13 +227,11 @@ const getList = async () => {
   loading.value = true
   try {
     // const data = await StockWarehouseApi.getStockWarehousePage(queryParams)
-    // const data = await StockBinApi.getStockBinGroupedPage(queryParams)
-    const data = await StockWarehouseApi.getStockWarehousePageGrouped(queryParams)
+    const data = await StockBinApi.getStockBinGroupedPage(queryParams)
     list.value = data.list.map((item) => {
       item.stockWarehouseList = getItemPropList(item.stockWarehouseList, [
-        { prop: 'warehouse', keyList: ['mode', 'name', 'code'] },
+        { prop: 'warehouse', keyList: ['mode', 'name', 'code'] }
       ])
-      item.productPrimaryImageUrl = item?.product?.primaryImageUrl
       return item
     })
     total.value = data.total
