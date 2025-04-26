@@ -92,23 +92,28 @@ const fieldMap = {
   // planQty: '计划入库量',
   // shelvedQty: '已上架数',
   age: '库龄',
-  actualQty: '数量',
-  stockWarehouseAvailableQty: '总库存',
-  outboundAvailableQty: '待出数量',
+  // actualQty: '数量',
+  // stockWarehouseAvailableQty: '总库存',
+  // outboundAvailableQty: '待出数量',
 
-  remark: '备注'
+  binName: '库位名称',
+  binOutboundPendingQty: '库位待出数量',
+  binSellableQty: '库位待出数量',
+  binAvailableQty: '库位库存',
 
-  // updateTime: {
-  //   label: '更新时间',
-  //   formatter: dateFormatter,
-  //   width: '200px'
-  // },
+  remark: '备注',
+
+  updateTime: {
+    label: '更新时间',
+    formatter: dateFormatter,
+    width: '200px'
+  },
   // updaterName: '更新人',
-  // createTime: {
-  //   label: '创建时间',
-  //   formatter: dateFormatter,
-  //   width: '200px'
-  // },
+  createTime: {
+    label: '创建时间',
+    formatter: dateFormatter,
+    width: '200px'
+  }
   // creatorName: '创建人'
 }
 tableOptions.value = transformTableOptions(fieldMap, {
@@ -119,11 +124,11 @@ tableOptions.value = transformTableOptions(fieldMap, {
     'productBarCode',
     'warehouseName',
     'stockType',
-    'remark'
+    'remark',
   ]
 })
 
-tableOptions.value[tableOptions.value.length - 1].width = undefined
+// tableOptions.value[tableOptions.value.length - 1].width = undefined
 
 /** 入库单详情 列表 */
 defineOptions({ name: 'WmsInboundItem' })

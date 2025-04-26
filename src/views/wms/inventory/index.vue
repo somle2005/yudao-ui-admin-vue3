@@ -30,6 +30,25 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+
+        <!-- <el-button
+          v-hasPermi="['wms:inbound-item:import']"
+          plain
+          type="warning"
+          @click="handleImportBinExcel"
+        >
+          <Icon icon="ep:upload" />
+          导入盘点结果
+        </el-button>
+        <el-button
+          v-hasPermi="['wms:inbound-item:import']"
+          plain
+          type="warning"
+          @click="handleImportProductExcel"
+        >
+          <Icon icon="ep:upload" />
+          导入盘点产品
+        </el-button> -->
       </template>
     </SmForm>
   </ContentWrap>
@@ -240,6 +259,13 @@ const handleExport = async () => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const handleImportBinExcel = () => {
+  // InventoryBinApi.importInventoryBinExcel
+}
+const handleImportProductExcel = () => {
+  // handleImportProductExcel
+}
 
 /** 初始化 **/
 onMounted(() => {

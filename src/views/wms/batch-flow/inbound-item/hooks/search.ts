@@ -1,13 +1,15 @@
 import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
-import { getWarehouseBinList } from '@/commonData/wms'
+import { getWarehouseBinList, getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
-  const productList = getProductList() // 产品列表
   // const { deptList, defaultProps } = getDeptTree()
-  // const warehouseBinList = getWarehouseBinList()
   // const financeSubjectList = getFinanceSubjectList()
+  const productList = getProductList() // 产品列表
+  const warehouseBinList = getWarehouseBinList()
+  const WMSWarehouseList = getWMSWarehouseList()
+
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -33,18 +35,30 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: productList
     },
-    // {
-    //   type: 'select',
-    //   label: '库位',
-    //   prop: 'binId',
-    //   placeholder: '请选择库位',
-    //   attrs: {
-    //     style: { width: '100%' },
-    //     filterable: true,
-    //     clearable: true
-    //   },
-    //   children: warehouseBinList
-    // },
+    {
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      placeholder: '请选择仓库',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
+    },
+    {
+      type: 'select',
+      label: '库位',
+      prop: 'binId',
+      placeholder: '请选择库位',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: warehouseBinList
+    },
 
     // {
     //   type: 'tree-select',
@@ -75,7 +89,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   },
     //   children: financeSubjectList
     // },
-    
+
     // {
     //   type: 'tree-select',
     //   label: '入库库存归属',
