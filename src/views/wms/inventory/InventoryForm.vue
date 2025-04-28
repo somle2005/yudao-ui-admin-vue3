@@ -69,7 +69,7 @@ import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { useOutData } from './components/hooks/outdata'
 import { createDBFn } from '@/utils/decorate'
 import { getWMSWarehouseList } from '@/commonData/wms'
-import { distinctList } from '@/utils/transformData'
+import { distinctList, filterObjKey } from '@/utils/transformData'
 import { getItemPropList } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { OPERATE_MAP } from './constant'
@@ -80,7 +80,9 @@ const { addItemRef, openAddItem } = useOutData()
 /** 盘点 表单 */
 defineOptions({ name: 'InventoryForm' })
 
-const buttonExist = computed(() => !itemsFormdisabled || ![OPERATE_MAP.append].includes(formType.value))
+const buttonExist = computed(
+  () => !itemsFormdisabled || ![OPERATE_MAP.append].includes(formType.value)
+)
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -198,6 +200,7 @@ const abandonFormOptions = (formOptions) => {
 
 const appendFormOptions = (formOptions) => {
   // addComment(formOptions)
+  addDisabled(formOptions)
   return formOptions
 }
 
@@ -256,6 +259,7 @@ const open = async (type: string, id?: number) => {
       if (type === OPERATE_MAP.append) {
         data.binItemList.forEach((item) => {
           item.actualQty = item.expectedQty
+          item.id = undefined
         })
         getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
         data.productItemList = data.binItemList
@@ -283,7 +287,6 @@ const submitForm = async (type?: string) => {
     const data = formData.value as unknown as InventoryVO as any
     if (formType.value === 'create') {
       const billId = await InventoryApi.createInventory(data)
-      console.log(billId,'billId')
       await InventoryApi.submitInventoryAudit({ billId, comment: data.comment })
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
@@ -308,7 +311,10 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.append) {
       // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-      await InventoryBinApi.appendInventoryBin(data.productItemList)
+      const queryData = data.productItemList.map((item) =>
+        filterObjKey(item, ['productId', 'inventoryId', 'expectedQty', 'actualQty', 'binId'])
+      )
+      await InventoryBinApi.appendInventoryBin(queryData)
       message.success(t('common.updateSuccess'))
     }
 

@@ -21,7 +21,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.binId`" :rules="formRules.binId" class="mb-0px!">
               <SmSelect
-                :disabled="disabled"
+                :disabled="otherDisabled"
                 v-model="row.binId"
                 placeholder="请选择库位"
                 :data="warehouseBinList"
@@ -37,7 +37,7 @@
               :rules="formRules.actualQty"
               class="mb-0px!"
             >
-              <SmNumber v-model="row.actualQty" />
+              <SmNumber :disabled="otherDisabled" v-model="row.actualQty" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -60,7 +60,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input
-                :disabled="disabled"
+                :disabled="otherDisabled"
                 v-model="row.remark"
                 placeholder="请输入备注"
                 type="textarea"
@@ -71,7 +71,7 @@
 
         <!-- <el-table-column prop="pickQty" label="已选择数" width="100" align="center" /> -->
 
-        <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
+        <el-table-column v-if="!otherDisabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button @click="handleDelete($index)" link> — </el-button>
           </template>
@@ -92,7 +92,6 @@ import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
 import { hasRepeat } from '@/utils/judge'
 import { OPERATE_MAP } from '../constant'
-
 
 const props = defineProps({
   items: {
@@ -119,10 +118,14 @@ const props = defineProps({
     default: null
   }
 })
-  
+
 const updateShow = computed(() => props.formType === 'update')
 const showActualQty = computed(() => [OPERATE_MAP.inventory].includes(props.formType))
 const showBin = computed(() => [OPERATE_MAP.append].includes(props.formType))
+
+const otherDisabled = computed(
+  () => props.disabled || [OPERATE_MAP.append].includes(props.formType)
+)
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
