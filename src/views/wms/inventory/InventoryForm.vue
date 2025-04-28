@@ -16,7 +16,7 @@
           @click="openAddItem(formData.warehouseId!)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-warehouse:query']"
-          v-if="!itemsFormdisabled"
+          v-if="buttonExist"
           :disabled="!formData.warehouseId"
           >选择盘点产品</el-button
         >
@@ -79,6 +79,8 @@ const { addItemRef, openAddItem } = useOutData()
 
 /** 盘点 表单 */
 defineOptions({ name: 'InventoryForm' })
+
+const buttonExist = computed(() => !itemsFormdisabled || ![OPERATE_MAP.append].includes(formType.value))
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -195,7 +197,7 @@ const abandonFormOptions = (formOptions) => {
 }
 
 const appendFormOptions = (formOptions) => {
-  addComment(formOptions)
+  // addComment(formOptions)
   return formOptions
 }
 
@@ -280,8 +282,9 @@ const submitForm = async (type?: string) => {
   try {
     const data = formData.value as unknown as InventoryVO as any
     if (formType.value === 'create') {
-      await InventoryApi.createInventory(data)
-      await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+      const billId = await InventoryApi.createInventory(data)
+      console.log(billId,'billId')
+      await InventoryApi.submitInventoryAudit({ billId, comment: data.comment })
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
       await InventoryApi.updateInventory(data)

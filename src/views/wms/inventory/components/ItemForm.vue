@@ -17,6 +17,19 @@
 
         <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
 
+        <el-table-column v-if="showBin" label="库位" width="180" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.binId`" :rules="formRules.binId" class="mb-0px!">
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.binId"
+                placeholder="请选择库位"
+                :data="warehouseBinList"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column v-if="showActualQty" label="实际库存" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
@@ -80,6 +93,7 @@ import { computeTargetQty } from '@/utils/transformData'
 import { hasRepeat } from '@/utils/judge'
 import { OPERATE_MAP } from '../constant'
 
+
 const props = defineProps({
   items: {
     // type: Array as PropType<PurchaseInItemVO[]>,
@@ -105,9 +119,10 @@ const props = defineProps({
     default: null
   }
 })
-
+  
 const updateShow = computed(() => props.formType === 'update')
 const showActualQty = computed(() => [OPERATE_MAP.inventory].includes(props.formType))
+const showBin = computed(() => [OPERATE_MAP.append].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
