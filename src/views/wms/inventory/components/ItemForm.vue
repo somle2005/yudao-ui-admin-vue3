@@ -30,14 +30,15 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="showActualQty" label="实际库存" width="100" align="center">
+        <!-- v-if="showActualQty" -->
+        <el-table-column label="实际库存" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.actualQty`"
               :rules="formRules.actualQty"
               class="mb-0px!"
             >
-              <SmNumber :disabled="otherDisabled" v-model="row.actualQty" />
+              <SmNumber :disabled="otherDisabled" :max="row.expectedQty" v-model="row.actualQty" />
             </el-form-item>
           </template>
         </el-table-column>
