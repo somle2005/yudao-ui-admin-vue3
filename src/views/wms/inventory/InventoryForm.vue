@@ -80,10 +80,6 @@ const { addItemRef, openAddItem } = useOutData()
 /** 盘点 表单 */
 defineOptions({ name: 'InventoryForm' })
 
-const buttonExist = computed(
-  () => !itemsFormdisabled || ![OPERATE_MAP.append].includes(formType.value)
-)
-
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 
@@ -108,7 +104,6 @@ const WMSWarehouseList = ref([])
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
-const itemsFormdisabled = computed(() => ['detail', OPERATE_MAP.abandon].includes(formType.value))
 
 const auditType = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
 
@@ -358,4 +353,9 @@ const addItem = (selectionList: any[]) => {
     formData.value.productItemList = distinctList(items, selectList, itemIdKey)
   })
 }
+
+const itemsFormdisabled = computed(() => ['detail', OPERATE_MAP.abandon].includes(formType.value))
+const buttonExist = computed(
+  () => !['detail', OPERATE_MAP.abandon, OPERATE_MAP.append].includes(formType.value)
+)
 </script>
