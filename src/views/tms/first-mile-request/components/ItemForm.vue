@@ -35,7 +35,7 @@
         <el-table-column label="申请数量" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.qty" />
+              <SmNumber :disabled="disabled" v-model="row.qty" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -43,35 +43,35 @@
         <el-table-column label="包装长(cm)" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.packageLength`" class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.packageLength" />
+              <SmNumber :disabled="disabled" v-model="row.packageLength" />
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="包装宽(cm)" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.packageWidth`" class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.packageWidth" />
+              <SmNumber :disabled="disabled" v-model="row.packageWidth" />
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="包装高(cm)" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.packageHeight`" class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.packageHeight" />
+              <SmNumber :disabled="disabled" v-model="row.packageHeight" />
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="毛重(kg)" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.packageWeight`"  class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.packageWeight" />
+              <SmNumber :disabled="disabled" v-model="row.packageWeight" />
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="体积(m³)" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.volume`"  class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.volume" />
+              <SmNumber :disabled="disabled" v-model="row.volume" />
             </el-form-item>
           </template>
         </el-table-column>
