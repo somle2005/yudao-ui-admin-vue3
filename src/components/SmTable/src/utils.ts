@@ -83,7 +83,9 @@ const resolveConfig = (tableOption, config) => {
 
   const noComputePropListWidth = (noComputePropList, item) => {
     if (!noComputePropList?.length) return
-    if (!noComputePropList.includes(item.prop) && !item.prop.includes('Time')) {
+    const ignoreList = ['Time', 'operate']
+    const everyIgnore = ignoreList.every((a) => !item.prop.includes(a))
+    if (!noComputePropList.includes(item.prop) && everyIgnore) {
       scaleComputeWidth(item)
     }
   }
