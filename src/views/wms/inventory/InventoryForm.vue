@@ -43,7 +43,7 @@
           type="danger"
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.reject)"
-           v-hasPermi="['wms:inventory:reject']"
+          v-hasPermi="['wms:inventory:reject']"
         >
           不同意</el-button
         >
@@ -164,8 +164,7 @@ const detailOptions = (formOptions) => {
   return formOptions
 }
 
-const inventoryFormOptions = (formOptions) => {
-  addDisabled(formOptions)
+const addComment = (formOptions) => {
   const index = formOptions.findIndex((item) => item.slot === 'items')
   const obj: any = {
     type: 'input',
@@ -184,24 +183,19 @@ const inventoryFormOptions = (formOptions) => {
   return formOptions
 }
 
+const inventoryFormOptions = (formOptions) => {
+  addDisabled(formOptions)
+  addComment(formOptions)
+  return formOptions
+}
+
 const abandonFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.slot === 'items')
+  addComment(formOptions)
+  return formOptions
+}
 
-  const obj: any = {
-    type: 'input',
-    placeholder: '请输入审核意见',
-    prop: 'comment',
-    label: '审核意见',
-    attrs: {
-      clearable: true,
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  formOptions.splice(index, 0, obj)
-
+const appendFormOptions = (formOptions) => {
+  addComment(formOptions)
   return formOptions
 }
 
@@ -239,7 +233,7 @@ const open = async (type: string, id?: number) => {
     },
     [OPERATE_MAP.append]: () => {
       dialogTitle.value = OPERATE_MAP.append
-      requestFormOptions.value = createRequestFormOptions()
+      requestFormOptions.value = appendFormOptions(createRequestFormOptions())
     }
   }
   formTypeOperate[type]()
@@ -287,6 +281,7 @@ const submitForm = async (type?: string) => {
     const data = formData.value as unknown as InventoryVO as any
     if (formType.value === 'create') {
       await InventoryApi.createInventory(data)
+      await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
       await InventoryApi.updateInventory(data)
@@ -297,18 +292,19 @@ const submitForm = async (type?: string) => {
     } else if (formType.value === OPERATE_MAP.inventory) {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
-        await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+        // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
         await InventoryBinApi.updateInventoryBinActualQuantity(data.productItemList)
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 
-      if(type === AUDIT_TYPE.reject) {
+      if (type === AUDIT_TYPE.reject) {
         await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
         await InventoryApi.rejectInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.append) {
+      // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
       await InventoryBinApi.appendInventoryBin(data.productItemList)
       message.success(t('common.updateSuccess'))
     }

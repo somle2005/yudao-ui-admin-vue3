@@ -74,12 +74,13 @@
           详情
         </el-button>
 
+        <!-- 'wms:inventory:submit' -->
         <el-button
           link
           type="primary"
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
           v-if="
-            hasAllPermission(['wms:inventory:submit', 'wms:inventory:update', 'wms:outbound:agree'])
+            hasAllPermission(['wms:inventory:update', 'wms:outbound:agree'])
           "
         >
           盘点
@@ -97,7 +98,7 @@
           link
           type="primary"
           @click="openForm(OPERATE_MAP.append, scope.row.id)"
-          v-hasPermi="['wms:inventory-bin:append']"
+          v-if="hasAllPermission(['wms:inventory-bin:append'])"
         >
           追加盘点库位
         </el-button>
