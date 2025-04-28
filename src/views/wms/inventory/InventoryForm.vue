@@ -40,6 +40,14 @@
       >
       <template v-if="auditType">
         <el-button
+          type="danger"
+          :disabled="formLoading"
+          @click="submitFormDB(AUDIT_TYPE.reject)"
+           v-hasPermi="['wms:inventory:reject']"
+        >
+          不同意</el-button
+        >
+        <el-button
           type="primary"
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.agreeInventory)"
@@ -290,11 +298,15 @@ const submitForm = async (type?: string) => {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-
         await InventoryBinApi.updateInventoryBinActualQuantity(data.productItemList)
-
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
+
+      if(type === AUDIT_TYPE.reject) {
+        await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+        await InventoryApi.rejectInventoryAuditStatus({ billId: data.id, comment: data.comment })
+      }
+
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.append) {
       await InventoryBinApi.appendInventoryBin(data.productItemList)
