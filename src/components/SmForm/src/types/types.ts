@@ -7,34 +7,39 @@ interface Callback {
   (isValid?: boolean, invalidFields?: ValidateFieldsError): void
 }
 
+type FormType =
+  | 'cascader'
+  | 'checkbox'
+  | 'checkbox-group'
+  | 'checkbox-button'
+  | 'color-picker'
+  | 'date-picker'
+  | 'input'
+  | 'input-number'
+  | 'radio'
+  | 'radio-group'
+  | 'radio-button'
+  | 'rate'
+  | 'select'
+  | 'option'
+  | 'slider'
+  | 'switch'
+  | 'time-picker'
+  | 'time-select'
+  | 'transfer'
+  | 'upload'
+  | 'editor'
+  | 'tree-select'
+  | 'text'
+
+type FormComponentType = 'sm-remote-select' | 'sm-radio-group' | 'sm-range'
+
 // 表单每一项的配置选项
 export interface FormOptions {
   // 表单项显示的元素
-  type?:
-    | 'cascader'
-    | 'checkbox'
-    | 'checkbox-group'
-    | 'checkbox-button'
-    | 'color-picker'
-    | 'date-picker'
-    | 'input'
-    | 'input-number'
-    | 'radio'
-    | 'radio-group'
-    | 'radio-button'
-    | 'rate'
-    | 'select'
-    | 'option'
-    | 'slider'
-    | 'switch'
-    | 'time-picker'
-    | 'time-select'
-    | 'transfer'
-    | 'upload'
-    | 'editor'
-    | 'tree-select',
+  type?: FormType
   // 自定义组件非ElementPlus组件
-  componentType?:  'sm-remote-select'
+  componentType?: FormComponentType
   // 表单项的值
   value?: any
   // 表单项label
@@ -82,15 +87,16 @@ export interface FormOptions {
     autoUpload?: boolean
     disabled?: boolean
     limit?: number
-  },
+  }
   isCol?: boolean // 是否开启栅格化布局
   colConfig?: {
     [key: string]: any
-  },
+  }
   // el-form-item的配置
   formItemConfig?: {
     [key: string]: any
-  },
+  }
+  requiredFlag?: boolean // 用户带上rules统一处理
 }
 
 export interface ValidateFieldCallback {

@@ -9,7 +9,7 @@ const props = defineProps({
   modelValue: propTypes.bool.def(false),
   title: propTypes.string.def('Dialog'),
   fullscreen: propTypes.bool.def(true),
-  width: propTypes.oneOfType([String, Number]).def('40%'),
+  width: propTypes.oneOfType([String, Number]).def('70%'),
   scroll: propTypes.bool.def(false), // 是否开启滚动条。如果是的话，按照 maxHeight 设置最大高度
   maxHeight: propTypes.oneOfType([String, Number]).def('400px')
 })

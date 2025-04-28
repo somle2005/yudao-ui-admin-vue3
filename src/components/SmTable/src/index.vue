@@ -1,17 +1,19 @@
 <template>
   <div id="SmTable">
-    <!-- v-bind="$attrs" style="height:calc(100vh - 285px)" -->
+    <!-- v-bind="$attrs" style="height:calc(100vh - 285px)"-->
     <el-table
+      ref="tableRef"
       v-loading="loading"
       :stripe="stripe"
       :showOverflowTooltip="showOverflowTooltip"
       :data="tableData"
       :border="border"
+      :tooltip="tooltip"
       v-bind="TableAttrs()"
       @row-click="rowClick"
       class="SmTable-el-table"
     >
-      <el-table-column v-if="isSelection" fixed="left" width="30" label="选择" type="selection" />
+      <el-table-column v-if="isSelection" fixed="left" width="40" label="选择" type="selection" align="center" />
       <!-- 后期可以补充oneSelectionAttrs进行扩展 -->
       <el-table-column v-if="oneSelection" fixed="left" align="center" width="40">
         <template #default="scope">
@@ -37,9 +39,17 @@
             <template v-if="scope.row.rowEdit">
               <el-input v-model="scope.row[item.prop!]" size="small" />
             </template>
-            
+
             <template v-else-if="item.dictAttrs">
               <dict-tag :type="item.dictAttrs.type" :value="scope.row[item.prop] ?? ''" />
+            </template>
+
+            <template v-else-if="item.imageAttrs">
+              <el-image
+                :src="scope.row[item.prop]"
+                class="w-64px h-64px"
+                v-bind="item.imageAttrs"
+              />
             </template>
 
             <template v-else-if="item.wrap">
@@ -207,6 +217,10 @@ const props = defineProps({
   pagination: {
     type: Boolean,
     default: true
+  },
+  tooltip: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -293,6 +307,9 @@ const handleCurrentChange = (row) => {
   currentRow.value = row
   emits('oneSelectionChange', row)
 }
+
+const tableRef = ref()
+defineExpose({ tableRef }) // 提供 open 方法，用于打开弹窗
 </script>
 
 <style lang="scss" scoped>
@@ -340,4 +357,7 @@ const handleCurrentChange = (row) => {
   justify-content: flex-end;
   align-items: center;
 }
+// :global(#SmTable .cell) {
+//   padding: 0!important;
+// }
 </style>
