@@ -19,7 +19,7 @@
 
         <el-table-column v-if="showBin" label="库位" width="180" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.binId`" :rules="formRules.binId" class="mb-0px!">
+            <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
                 :disabled="otherDisabled"
                 v-model="row.binId"
@@ -90,8 +90,8 @@ import {
 import { getWarehouseBinList } from '@/commonData/wms'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
-import { hasRepeat } from '@/utils/judge'
 import { OPERATE_MAP } from '../constant'
+import { getBinIdRules } from '../../utils'
 
 const props = defineProps({
   items: {
@@ -129,23 +129,11 @@ const otherDisabled = computed(
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
+const { binIdRuleList, createBinIdRule } = getBinIdRules(formData)
+
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  binId: [
-    { required: true, message: '库位不能为空', trigger: 'blur' },
-    {
-      validator: function (rule, value, callback) {
-        const hasRepeatFlag = hasRepeat(formData.value)
-        if (hasRepeatFlag) {
-          callback(new Error('相同产品库位不能重复'))
-        } else {
-          //校验通过
-          callback()
-        }
-      },
-      trigger: 'blur'
-    }
-  ],
+  binId: binIdRuleList,
   expectedQty: [{ required: true, message: '预期库存不能为空', trigger: 'blur' }],
   actualQty: [{ required: true, message: '实际库存不能为空', trigger: 'blur' }]
 })

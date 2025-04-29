@@ -17,10 +17,21 @@
 
         <el-table-column label="入库单编号" prop="inboundCode" align="center" width="150" />
         <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
+        <!-- <el-table-column label="产品编码" width="120" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item
+              :prop="`${$index}.productId`"
+              :rules="formRules.productId"
+              class="mb-0px!"
+            >
+              <div>{{ row.productBarCode }}</div>
+            </el-form-item>
+          </template>
+        </el-table-column> -->
 
         <el-table-column label="库位" width="180" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.binId`" :rules="formRules.binId" class="mb-0px!">
+            <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
                 :disabled="disabled"
                 v-model="row.binId"
@@ -87,7 +98,7 @@ import {
 import { getWarehouseBinList } from '@/commonData/wms'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
-import { hasRepeat } from '@/utils/judge'
+import { getBinIdRules } from '../../utils'
 
 const props = defineProps({
   items: {
@@ -116,27 +127,14 @@ const props = defineProps({
 })
 
 const updateShow = computed(() => props.formType === 'update')
-
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
+
+const { binIdRuleList, createBinIdRule } = getBinIdRules(formData)
+
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  binId: [
-    { required: true, message: '库位不能为空', trigger: 'blur' },
-    {
-      validator: function (rule, value, callback) {
-        const hasRepeatFlag = hasRepeat(formData.value)
-        if (hasRepeatFlag) {
-          callback(new Error('相同产品库位不能重复'))
-        } else {
-          //校验通过
-          callback()
-        }
-      },
-      trigger: 'blur'
-    }
-  ],
-
+  binId: binIdRuleList,
   qty: [{ required: true, message: '本次上架数不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
