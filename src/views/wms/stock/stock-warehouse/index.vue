@@ -138,11 +138,11 @@ const warehouseFieldMap = {
   outboundPendingQty: '待出库数',
   shelvingPendingQty: '待上架数',
   defectiveQty: '不良品数',
-  purchasePlanQty: '采购计划数',
+  // purchasePlanQty: '采购计划数',
   transitQty: '在途数',
   makePendingQty: '在制数',
   // purchaseTransitQty: '采购在途数',
-  // returnTransitQty: '退件在途数'
+  returnTransitQty: '退件在途数'
   // age: '库龄'
 }
 
@@ -177,7 +177,6 @@ const warehouseInfoRef = ref() // 仓库信息表格
 /** 合计 */
 const getSummaries = (param: any) => {
   const { columns, data } = param
-  console.log(param, 'param')
   const sums: string[] = []
   columns.forEach((column, index: number) => {
     if (index === 0) {
@@ -234,7 +233,7 @@ const getList = async () => {
     const data = await StockWarehouseApi.getStockWarehousePageGrouped(queryParams)
     list.value = data.list.map((item) => {
       item.stockWarehouseList = getItemPropList(item.stockWarehouseList, [
-        { prop: 'warehouse', keyList: ['mode', 'name', 'code'] },
+        { prop: 'warehouse', keyList: ['mode', 'name', 'code'] }
       ])
       item.productPrimaryImageUrl = item?.product?.primaryImageUrl
       return item

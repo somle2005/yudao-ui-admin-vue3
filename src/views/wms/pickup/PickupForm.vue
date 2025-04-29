@@ -243,7 +243,7 @@ const addItem = (selectionList: any[]) => {
     })
     let itemList: any[] = distinctList(items, selectList, itemIdKey)
     // 上架仅可选择相同仓库
-    itemList = getSameKeyItemList(itemList, 'warehouseId')
+    // itemList = getSameKeyItemList(itemList, 'warehouseId')
     formData.value.itemList = itemList
   })
 }
