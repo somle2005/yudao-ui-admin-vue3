@@ -34,7 +34,7 @@
           link
           type="primary"
           @click="openForm(OPERATE_MAP['update-actual-quantity'], scope.row.id)"
-          v-hasPermi="['wms:inbound-item:update']"
+          v-if="hasAllPermission(['wms:inbound-item:update', 'wms:inbound:agree'])"
         >
           收货
         </el-button>

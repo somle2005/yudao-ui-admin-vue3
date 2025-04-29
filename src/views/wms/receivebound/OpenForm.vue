@@ -44,6 +44,7 @@ import { OPERATE_MAP } from '@/views/wms/constants/index'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { InboundItemApi } from '@/api/wms/inbound-item'
 import { filterObjKey } from '@/utils/transformData'
+import { addComment } from '../utils'
 
 /** 收货单 表单 */
 defineOptions({ name: 'OpenForm' })
@@ -207,44 +208,12 @@ const updateActualQuantityFormOptions = () => {
 }
 
 const abandonFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.slot === 'items')
-
-  const obj: any = {
-    type: 'input',
-    placeholder: '审核意见',
-    prop: 'comment',
-    label: '审核意见',
-    attrs: {
-      clearable: true,
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  formOptions.splice(index, 0, obj)
-
+  addComment(formOptions)
   return formOptions
 }
 
 const forceFinishFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.slot === 'items')
-
-  const obj: any = {
-    type: 'input',
-    placeholder: '审核意见',
-    prop: 'comment',
-    label: '审核意见',
-    attrs: {
-      clearable: true,
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  formOptions.splice(index, 0, obj)
-
+  addComment(formOptions)
   return formOptions
 }
 
@@ -267,7 +236,7 @@ const open = async (type: string, id?: number) => {
 
   const formTypeOperate = {
     [OPERATE_MAP['update-actual-quantity']]: () => {
-      requestFormOptions.value = updateActualQuantityFormOptions()
+      requestFormOptions.value = addComment(updateActualQuantityFormOptions())
     },
     [OPERATE_MAP.abandon]: () => {
       requestFormOptions.value = abandonFormOptions(updateActualQuantityFormOptions())
@@ -325,6 +294,7 @@ const submitForm = async () => {
     if (formType.value === OPERATE_MAP['update-actual-quantity']) {
       const queryData = receiveDeal(data)
       await InboundItemApi.updateInboundItemActualQuantity(queryData)
+      await InboundApi.agreeInboundAuditStatus({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.abandon) {
       await InboundApi.abandonInbound({ billId: data.id, comment: data.comment })
@@ -335,6 +305,7 @@ const submitForm = async () => {
     } else if (formType.value === OPERATE_MAP['update-actual-quantityAndPickup']) {
       const queryData = receiveDeal(data)
       await InboundItemApi.updateInboundItemActualQuantity(queryData)
+      await InboundApi.agreeInboundAuditStatus({ billId: data.id, comment: data.comment })
       const toPickup = () => {
         window.getRouteQuery = () => {
           try {

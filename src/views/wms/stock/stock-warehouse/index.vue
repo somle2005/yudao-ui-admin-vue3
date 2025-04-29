@@ -20,6 +20,7 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      class="stock-warehouse-table"
       border
       :showOverflowTooltip="false"
       :loading="loading"
@@ -300,7 +301,7 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-:global(.cell) {
+:global(.stock-warehouse-table .cell) {
   padding: 0 !important;
 }
 </style>

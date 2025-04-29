@@ -74,6 +74,7 @@ import { getItemPropList } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { OPERATE_MAP } from './constant'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
+import { addComment } from '../utils'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -163,24 +164,6 @@ const detailOptions = (formOptions) => {
   return formOptions
 }
 
-const addComment = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.slot === 'items')
-  const obj: any = {
-    type: 'input',
-    placeholder: '请输入审核意见',
-    prop: 'comment',
-    label: '审核意见',
-    attrs: {
-      clearable: true,
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  formOptions.splice(index, 0, obj)
-  return formOptions
-}
 
 const inventoryFormOptions = (formOptions) => {
   addDisabled(formOptions)
