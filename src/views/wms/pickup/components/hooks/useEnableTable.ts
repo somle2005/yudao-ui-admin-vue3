@@ -26,7 +26,7 @@ export const useEnableTable = () => {
     // planQty: '计划入库量',
     // shelvedQty: '已上架数',
 
-    actualQty: '数量',
+    actualQty: '待上架数量',
     inboundStatus: {
       label: '入库状态',
       slot: 'inboundStatus',
@@ -73,6 +73,7 @@ export const useEnableTable = () => {
   }
 
   const getList = async () => {
+    queryParams.inboundStatus = 2 // 已入库
     selectionList.value = []
     list.value = []
     loading.value = true
@@ -125,7 +126,7 @@ export const useEnableTable = () => {
         clearable: true
       },
       children: WMSWarehouseList
-    },
+    }
   ])
 
   const events = {
