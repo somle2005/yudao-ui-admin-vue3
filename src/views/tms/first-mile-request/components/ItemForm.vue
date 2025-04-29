@@ -29,7 +29,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-
+ 
         <!-- 自动带出该目的仓库所在国家的产品FBA条码 -->
         <el-table-column prop="fbaBarCode" label="FBA条码" width="120" align="center" />
         <el-table-column label="申请数量" width="100" align="center">

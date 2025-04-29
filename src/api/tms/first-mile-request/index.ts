@@ -44,10 +44,18 @@ export const FirstMileRequestApi = {
     return await request.download({ url: `/tms/first-mile-request/export-excel`, params })
   },
 
-// ==================== 子表（头程申请表明细） ====================
+  // ==================== 子表（头程申请表明细） ====================
 
   // 获得头程申请表明细列表
   getFirstMileRequestItemListByRequestId: async (requestId) => {
-    return await request.get({ url: `/tms/first-mile-request/first-mile-request-item/list-by-request-id?requestId=` + requestId })
+    return await request.get({
+      url:
+        `/tms/first-mile-request/first-mile-request-item/list-by-request-id?requestId=` + requestId
+    })
   },
+
+  // 获取最新的单据编号
+  getFirstMileRequestLatestNo: async () => {
+    return await request.get({ url: `/tms/first-mile-request/get-latest-no` })
+  }
 }

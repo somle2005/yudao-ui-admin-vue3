@@ -89,11 +89,19 @@ const open = async (type: string, id?: number) => {
   const deptObj = getDeptTree(deptList)
   defaultProps = deptObj.defaultProps
 
+  if (type === 'create') {
+    FirstMileRequestApi.getFirstMileRequestLatestNo().then((res) => {
+      const modelValue = formRef.value.getFormData()
+      modelValue.code = res
+    })
+  }
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
     try {
       formData.value = await FirstMileRequestApi.getFirstMileRequest(id)
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }
@@ -112,7 +120,6 @@ const createRequestFormOptions = () => {
       attrs: {
         style: { width: '100%' },
         clearable: true,
-        disabled: true
       }
     },
     {
