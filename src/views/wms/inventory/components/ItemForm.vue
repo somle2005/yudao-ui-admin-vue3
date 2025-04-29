@@ -30,8 +30,7 @@
           </template>
         </el-table-column>
 
-        <!-- v-if="showActualQty" -->
-        <el-table-column label="实际库存" width="100" align="center">
+        <el-table-column v-if="showActualQty" label="实际库存" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.actualQty`"
