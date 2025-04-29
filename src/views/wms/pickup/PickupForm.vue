@@ -95,6 +95,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
+      // 同一批上架只会有相同的仓库
       let data = await PickupApi.getPickup(id)
       getItemProp(data.itemList, ['product'])
       formData.value = data
@@ -102,6 +103,7 @@ const open = async (type: string, id?: number) => {
         if (item.inbound) {
           item.inboundCode = item.inbound.code
         }
+        item.warehouseId = data.warehouseId
       })
 
       // 主动触发表单数据回显
@@ -220,7 +222,8 @@ const addItem = (selectionList: any[]) => {
         planQty,
         shelvedQty,
         shelveAvailableQty, // 待上架量
-        inbound
+        inbound,
+        warehouseId
       } = item
 
       const obj = {
@@ -233,7 +236,8 @@ const addItem = (selectionList: any[]) => {
         planQty,
         shelvedQty,
         shelveAvailableQty,
-        inboundCode: inbound?.code
+        inboundCode: inbound?.code,
+        warehouseId
       }
       return obj
     })

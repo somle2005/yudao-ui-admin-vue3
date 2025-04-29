@@ -1,5 +1,6 @@
 import { InboundItemApi } from '@/api/wms/inbound-item'
 import { getProductList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
@@ -85,6 +86,7 @@ export const useEnableTable = () => {
   }
 
   const productList = getProductList()
+  const WMSWarehouseList = getWMSWarehouseList()
 
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -111,7 +113,19 @@ export const useEnableTable = () => {
         }
       },
       children: productList
-    }
+    },
+    {
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      placeholder: '请选择仓库',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
+    },
   ])
 
   const events = {

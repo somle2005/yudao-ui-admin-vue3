@@ -31,6 +31,7 @@
 
         <el-table-column label="库位" width="180" align="center">
           <template #default="{ row, $index }">
+            <!-- :data="warehouseBinList" -->
             <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
                 :disabled="disabled"
@@ -139,7 +140,7 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 const warehouseBinList: any = ref([])
-getWarehouseBinList(warehouseBinList, {})
+// getWarehouseBinList(warehouseBinList, {})
 
 watch(
   () => props.itemIdKey,
@@ -156,10 +157,21 @@ watch(
 /** 初始化设置入库项 */
 watch(
   () => props.items,
-  async (val) => {
+  async (val: any) => {
     formData.value = val
+    if (val?.length && !warehouseBinList.value.length) {
+      getWarehouseBinList(warehouseBinList, { warehouseId: val[0].warehouseId })
+    }
+    // formData.value = cloneDeep(val)
+    // if (formData.value?.length) {
+    //   formData.value.forEach((item: any) => {
+    //     item.warehouseBinList = warehouseBinList.value.filter(
+    //       (a) => a.warehouseId === item.warehouseId
+    //     )
+    //   })
+    //   val = formData.value
+    // }
   },
-  { immediate: true, deep: true }
 )
 
 /** 监听合同产品变化，计算合同产品总价 */

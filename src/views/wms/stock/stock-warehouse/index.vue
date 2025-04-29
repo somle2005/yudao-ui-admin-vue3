@@ -139,8 +139,10 @@ const warehouseFieldMap = {
   shelvingPendingQty: '待上架数',
   defectiveQty: '不良品数',
   purchasePlanQty: '采购计划数',
-  purchaseTransitQty: '采购在途数',
-  returnTransitQty: '退件在途数'
+  transitQty: '在途数',
+  makePendingQty: '在制数',
+  // purchaseTransitQty: '采购在途数',
+  // returnTransitQty: '退件在途数'
   // age: '库龄'
 }
 
