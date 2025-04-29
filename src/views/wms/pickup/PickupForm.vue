@@ -50,7 +50,7 @@ import { cloneDeep } from 'lodash-es'
 import ItemForm from './components/ItemForm.vue'
 import EnableList from './components/EnableList.vue'
 import { useOutData } from './components/hooks/outdata'
-import { distinctList } from '@/utils/transformData'
+import { distinctList, getSameKeyItemList } from '@/utils/transformData'
 import { getItemProp } from '@/components/SmTable/src/utils'
 
 const { addItemRef, openAddItem } = useOutData()
@@ -241,7 +241,10 @@ const addItem = (selectionList: any[]) => {
       }
       return obj
     })
-    formData.value.itemList = distinctList(items, selectList, itemIdKey)
+    let itemList: any[] = distinctList(items, selectList, itemIdKey)
+    // 上架仅可选择相同仓库
+    itemList = getSameKeyItemList(itemList, 'warehouseId')
+    formData.value.itemList = itemList
   })
 }
 </script>
