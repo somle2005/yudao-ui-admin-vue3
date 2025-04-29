@@ -47,7 +47,7 @@
           @click="handleImportProductExcel"
         >
           <Icon icon="ep:upload" />
-          导入盘点产品
+          导入盘点库位
         </el-button> -->
       </template>
     </SmForm>

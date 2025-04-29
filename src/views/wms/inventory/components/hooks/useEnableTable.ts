@@ -1,6 +1,6 @@
-import { StockWarehouseApi } from '@/api/wms/stock-warehouse'
+import { StockBinApi } from '@/api/wms/stock-bin'
 import { getProductList } from '@/commonData'
-import { getWMSWarehouseList } from '@/commonData/wms'
+import { getWarehouseBinList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getItemProp, getItemPropList, useTableData } from '@/components/SmTable/src/utils'
 import { resetQueryParams } from '@/utils/transformData'
@@ -17,6 +17,7 @@ export const useEnableTable = () => {
     productName: '产品名称',
     productBarCode: '产品编码',
     warehouseName: '仓库名称',
+    binName: '库位名称',
 
     availableQty: '可用量',
     // updateTime: {
@@ -60,10 +61,11 @@ export const useEnableTable = () => {
     list.value = []
     loading.value = true
     try {
-      const data = await StockWarehouseApi.getStockWarehousePage(queryParams)
+      const data = await StockBinApi.getStockBinPage(queryParams)
       list.value = getItemPropList(data.list, [
         { prop: 'warehouse', keyList: ['name'] },
-        { prop: 'product', keyList: ['name', 'barCode'] }
+        { prop: 'product', keyList: ['name', 'barCode'] },
+        { prop: 'bin', keyList: ['name'] }
       ]) as any[]
 
       total.value = data.total
@@ -73,6 +75,7 @@ export const useEnableTable = () => {
   }
 
   const productList = getProductList()
+  const warehouseBinList = ref<any[]>([])
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'select',
@@ -87,6 +90,18 @@ export const useEnableTable = () => {
         }
       },
       children: productList
+    },
+    {
+      type: 'select',
+      label: '库位',
+      prop: 'binId',
+      placeholder: '请选择库位',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: warehouseBinList
     },
     {
       componentType: 'sm-range',
@@ -124,6 +139,7 @@ export const useEnableTable = () => {
     resetQueryParams(queryParams, queryFormRef)
     queryParams.availableQty = [1]
     fn && fn(queryParams)
+    getWarehouseBinList(warehouseBinList, { warehouseId: queryParams.warehouseId })
     handleQuery()
   }
 

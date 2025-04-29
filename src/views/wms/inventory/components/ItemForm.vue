@@ -17,7 +17,7 @@
 
         <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
 
-        <el-table-column v-if="showBin" label="库位" width="180" align="center">
+        <el-table-column label="库位" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
@@ -71,9 +71,17 @@
 
         <!-- <el-table-column prop="pickQty" label="已选择数" width="100" align="center" /> -->
 
-        <el-table-column v-if="!otherDisabled" align="center" fixed="right" label="操作" width="60">
+        <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
-            <el-button @click="handleDelete($index)" link> — </el-button>
+            <div class="btnList">
+              <div class="btn-item" @click="handleDelete($index)">
+                <Icon icon="ep:minus" class="mr-5px" />
+              </div>
+              <div class="btn-item" @click="handleAddItem($index)">
+                <Icon icon="ep:plus" class="mr-5px" />
+              </div>
+              <!-- <el-button @click="handleDelete($index)" link> — </el-button> -->
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -119,8 +127,7 @@ const props = defineProps({
   }
 })
 
-const updateShow = computed(() => props.formType === 'update')
-const showActualQty = computed(() => [OPERATE_MAP.inventory].includes(props.formType))
+const showActualQty = computed(() => [OPERATE_MAP.inventory, 'update'].includes(props.formType))
 const showBin = computed(() => [OPERATE_MAP.append].includes(props.formType))
 
 const otherDisabled = computed(
@@ -139,7 +146,7 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 const warehouseBinList: any = ref([])
-getWarehouseBinList(warehouseBinList, {})
+// getWarehouseBinList(warehouseBinList, {})
 
 watch(
   () => props.itemIdKey,
@@ -149,7 +156,7 @@ watch(
 watch(
   () => props.warehouseId,
   (val) => {
-    // getWarehouseBinList(warehouseBinList, { warehouseId: val })
+    getWarehouseBinList(warehouseBinList, { warehouseId: val })
   }
 )
 
@@ -217,3 +224,13 @@ const validate = () => {
 }
 defineExpose({ validate, formData })
 </script>
+<style lang="scss" scoped>
+.btnList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-item {
+  cursor: pointer;
+}
+</style>

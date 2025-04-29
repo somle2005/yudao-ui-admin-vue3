@@ -1,5 +1,5 @@
 <template>
-  <Dialog title="待盘点产品" v-model="dialogVisible">
+  <Dialog title="待盘点库位" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm

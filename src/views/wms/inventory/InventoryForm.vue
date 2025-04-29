@@ -18,13 +18,13 @@
           v-hasPermi="['wms:stock-warehouse:query']"
           v-if="buttonExist"
           :disabled="!formData.warehouseId"
-          >选择盘点产品</el-button
+          >选择盘点库位</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="盘点产品清单" name="item">
+          <el-tab-pane label="盘点库位清单" name="item">
             <ItemForm
               ref="itemFormRef"
-              :items="formData.productItemList"
+              :items="formData.binItemList"
               :formType="formType"
               :disabled="itemsFormdisabled"
               :warehouseId="formData.warehouseId"
@@ -94,8 +94,8 @@ const initFormData = () => {
     code: undefined,
     warehouseId: undefined,
     auditStatus: undefined,
-    productItemList: [] as any[],
-    binItemList: []
+    // productItemList: [] as any[],
+    binItemList: [] as any[]
   }
 }
 const formData = ref(initFormData())
@@ -164,7 +164,6 @@ const detailOptions = (formOptions) => {
   return formOptions
 }
 
-
 const inventoryFormOptions = (formOptions) => {
   addDisabled(formOptions)
   addComment(formOptions)
@@ -227,21 +226,24 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       let data = await InventoryApi.getInventory(id)
-      getItemPropList(data.productItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+      getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+      data.binItemList.forEach((item) => {
+        item.actualQty = item.expectedQty
+      })
 
-      if (type === OPERATE_MAP.inventory) {
-        data.productItemList.forEach((item) => {
-          item.actualQty = item.expectedQty
-        })
-      }
-      if (type === OPERATE_MAP.append) {
-        data.binItemList.forEach((item) => {
-          item.actualQty = item.expectedQty
-          item.id = undefined
-        })
-        getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
-        data.productItemList = data.binItemList
-      }
+      // if (type === OPERATE_MAP.inventory) {
+      //   data.productItemList.forEach((item) => {
+      //     item.actualQty = item.expectedQty
+      //   })
+      // }
+      // if (type === OPERATE_MAP.append) {
+      //   data.binItemList.forEach((item) => {
+      //     item.actualQty = item.expectedQty
+      //     item.id = undefined
+      //   })
+      //   getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+      //   data.productItemList = data.binItemList
+      // }
 
       formData.value = data
       formRef.value.initForm()
@@ -277,7 +279,7 @@ const submitForm = async (type?: string) => {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-        await InventoryBinApi.updateInventoryBinActualQuantity(data.productItemList)
+        await InventoryBinApi.updateInventoryBinActualQuantity(data.binItemList)
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 
@@ -289,7 +291,7 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.append) {
       // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-      const queryData = data.productItemList.map((item) =>
+      const queryData = data.binItemList.map((item) =>
         filterObjKey(item, ['productId', 'inventoryId', 'expectedQty', 'actualQty', 'binId'])
       )
       await InventoryBinApi.appendInventoryBin(queryData)
@@ -321,19 +323,20 @@ const addItem = (selectionList: any[]) => {
     // "qty":1,
     // "binId":2
     // },
-    const items = formData.value.productItemList
+    const items = formData.value.binItemList
     const selectList = selectionList.map((item: any) => {
-      const { id, productId, productBarCode, availableQty } = item
+      const { id, productId, binId, productBarCode, availableQty } = item
 
       const obj = {
         [itemIdKey]: id,
+        binId,
         productId,
         productBarCode,
         expectedQty: availableQty
       }
       return obj
     })
-    formData.value.productItemList = distinctList(items, selectList, itemIdKey)
+    formData.value.binItemList = distinctList(items, selectList, itemIdKey)
   })
 }
 
