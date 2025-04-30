@@ -157,7 +157,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  noComputePropList: ['productBarCode', 'productName']
+  noComputePropList: ['productBarCode', 'productName', 'warehouseName']
 })
 
 const codeTypeList = [
