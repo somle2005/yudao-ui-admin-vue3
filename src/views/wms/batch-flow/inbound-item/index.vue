@@ -64,20 +64,32 @@ import { useSearchForm } from './hooks/search'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
-// 1 顺序 仓库--库位--产品编码--库位库存--库存总数--待出数量--入库单号--存货类型-库龄-时间信息
-
 
 const fieldMap = {
   warehouseName: '仓库',
-
-
-  inboundCode: '入库单编号',
-
-
-
-  productName: '产品名称',
+  binName: '库位',
   productBarCode: '产品编码',
+  binAvailableQty: '库位库存',
+  stockWarehouseAvailableQty: '库存总数',
+  binOutboundPendingQty: '待出数量',
+  inboundCode: '入库单号',
+  stockType: {
+    label: '存货类型',
+    slot: 'stockType',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_ZONE_PARTITION_TYPE }
+  },
+  age: '库龄',
+  updateTime: {
+    label: '操作时间',
+    formatter: dateFormatter,
+    width: '200px' 
+  },
 
+  // binSellableQty: '库位可售数量',
+  // remark: '备注',
+  // productName: '产品名称',
+
+ 
   // binName: '库位',
   // deptName: '库存归属',
   // companyName: '库存主体',
@@ -89,40 +101,27 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   // },
 
-  stockType: {
-    label: '状态',
-    slot: 'stockType',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
-  },
+
 
   // actualQty: '入库数量',
 
   // outboundAvailableQty: '批次剩余库存',
   // planQty: '计划入库量',
   // shelvedQty: '已上架数',
-  age: '库龄',
+
   // actualQty: '数量',
   // stockWarehouseAvailableQty: '总库存',
   // outboundAvailableQty: '待出数量',
 
-  binName: '库位',
-  binOutboundPendingQty: '库位待出数量',
-  binSellableQty: '库位可售数量',
-  binAvailableQty: '库位库存',
 
-  remark: '备注',
 
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
+
   // updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
-  }
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // }
   // creatorName: '创建人'
 }
 tableOptions.value = transformTableOptions(fieldMap, {
