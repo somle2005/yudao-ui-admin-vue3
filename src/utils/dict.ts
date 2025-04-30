@@ -273,6 +273,7 @@ export enum DICT_TYPE {
   WMS_INBOUND_SHELVING_STATUS = 'wms_inbound_shelving_status', //  WMS入库单上架状态
   WMS_INVENTORY_AUDIT_STATUS = 'wms_inventory_audit_status', // WMS盘点单审批状态
   WMS_STOCK_REASON = 'wms_stock_reason', // WMS流水发生的原因
+  WMS_MOVE_EXECUTE_STATUS = 'wms_move_execute_status', // WMS库存移动的执行状态
 
   // ========== SRM - 采购模块  ==========
   SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态

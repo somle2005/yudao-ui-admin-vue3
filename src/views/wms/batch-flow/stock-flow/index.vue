@@ -34,6 +34,20 @@
         <div class="red" v-else-if="scope.row.deltaQty < 0">-{{ scope.row.deltaQty }}</div>
         <div v-else-if="scope.row.deltaQty === 0">{{ scope.row.deltaQty }}</div>
       </template>
+
+      <template #operateNo="{ scope }">
+        <div> 操作单号:{{ scope.row.outboundCode }} {{ scope.row.pickupCode }} </div>
+        <div> 入库单号:{{ scope.row.inboundCode }} </div>
+        <!-- <div> 出库单号:{{ scope.row.outboundCode }} </div>
+        <div> 上架单号:{{ scope.row.pickupCode }} </div> -->
+      </template>
+      <template #codeType="{ scope }">
+        <dict-tag
+          :type="getCodeType(scope?.row?.reason)"
+          :value="getCodeValue(scope.row, scope?.row?.reason)"
+        />
+      </template>
+
       <!-- <template #operate="{ scope }">
          <el-button
             link
@@ -70,32 +84,12 @@ import { useTableData } from '@/components/SmTable/src/utils'
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
-  warehouseName: '仓库名称',
-  // zoneName: '库区名称',
-  binName: '库位名称',
   productBarCode: '产品编码',
   productName: '产品名称',
-  // stockType: {
-  //   label: '库存类型',
-  //   width: '200px',
-  //   slot: 'stockType',
-  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
-  // },
-  direction: {
-    label: '库存流水方向',
-    width: '200px',
-    slot: 'direction',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
-  },
-  inboundCode: '入库单号',
-  outboundCode: '出库单号',
-  pickupCode: '上架单号',
-
-  reason: {
-    label: '操作类型',
-    width: '200px',
-    slot: ' reason',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
+  flowTime: {
+    label: '操作时间', // 流水发生时间
+    formatter: dateFormatter,
+    width: '200px'
   },
   availableQty: '批次可用库存',
   deltaQty: {
@@ -104,35 +98,56 @@ const fieldMap = {
     slot: 'deltaQty'
   },
   inboundItemFlowOutboundAvailableQty: '批次当前库存',
+  warehouseName: '仓库名称',
+  binName: '库位名称',
 
   stockWarehouseAvailableQty1: '仓库当前库存',
   stockWarehouseAvailableQty: '仓库可用库存',
   stockWarehouseSellableQty: '仓库可售库存',
 
-  // outboundPendingQty: '待出库数',
-  // purchasePlanQty: '采购计划数',
-  // purchaseTransitQty: '采购在途数',
-  // returnTransitQty: '退件在途数',
-  // sellableQty: '可售数',
-  // shelvingPendingQty: '待上架数',
+  codeType: {
+    label: '单据类型',
+    width: '200px',
+    slot: 'codeType'
+  },
 
-  flowTime: {
-    label: '流水发生时间',
-    formatter: dateFormatter,
-    width: '200px'
+  operateNo: {
+    label: '操作单号',
+    slot: 'operateNo',
+    width: '250px'
   },
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  creatorName: '创建人'
+  updaterName: '操作人'
+
+  // reason: {
+  //   label: '操作类型',
+  //   width: '200px',
+  //   slot: ' reason',
+  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
+  // },
+
+  // inboundCode: '入库单号',
+  // outboundCode: '出库单号',
+  // pickupCode: '上架单号',
+
+  // direction: {
+  //   label: '库存流水方向',
+  //   width: '200px',
+  //   slot: 'direction',
+  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
+  // },
+
+  // updateTime: {
+  //   label: '更新时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // updaterName: '更新人',
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // creatorName: '创建人'
   // operate: {
   //   label: '操作',
   //   slot: 'operate',
@@ -142,18 +157,40 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  noComputePropList: [
-    'warehouseName',
-    'productBarCode',
-    'productName',
-    'updateTime',
-    'createTime',
-    'inboundCode',
-    'outboundCode',
-    'pickupCode',
-    'flowTime'
-  ]
+  noComputePropList: ['productBarCode', 'productName']
 })
+
+const codeTypeList = [
+  { name: '入库', type: 1, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' }, // split('.')[0][1]
+  { name: '拣货', type: 2, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' },
+
+  { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
+  { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
+  { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' }
+
+  // 只有出库单-入库单状态
+  // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
+
+  // { name: '所有者移动单', type: 7, dictType: 'wms_move_execute_status', getValue: 'pickup.status' },
+
+  // { name: '盘赢', type: 8, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' },
+  // { name: '盘亏', type: 9, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' }
+]
+
+const getCodeType = (type: number) => {
+  const item = codeTypeList.find((item) => item.type === type)
+  if (item) {
+    return DICT_TYPE[item.dictType.toUpperCase()]
+  }
+}
+
+const getCodeValue = (row: any, type: number) => {
+  const item = codeTypeList.find((item) => item.type === type)
+  if (item) {
+    const link = item.getValue.split('.')
+    return row[link[0]][link[1]]
+  }
+}
 
 /** 库存流水 列表 */
 defineOptions({ name: 'WmsStockFlow' })
