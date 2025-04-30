@@ -87,7 +87,7 @@ const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   code: '单据编号',
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,

@@ -85,7 +85,7 @@ const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   code: '仓库代码',
-  name: '仓库名称',
+  name: '仓库',
   mode: {
     label: '仓库属性',
     slot: 'mode',

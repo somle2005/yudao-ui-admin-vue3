@@ -125,7 +125,7 @@ const fieldMap = {
 tableOptions.value = transformTableOptions(fieldMap)
 // 可售数-可用数-待出库数-待上架数-不良品数-采购计划数-采购在途数-退件在途数-库龄
 const warehouseFieldMap = {
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   warehouseMode: {
     label: '仓库经营方式',
     width: '150px',

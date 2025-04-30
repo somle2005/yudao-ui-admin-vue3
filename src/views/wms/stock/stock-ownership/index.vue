@@ -64,7 +64,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   productBarCode: '产品编码',
   productName: '产品名称',
   deptName: '库存归属',

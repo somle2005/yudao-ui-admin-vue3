@@ -140,7 +140,7 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
   // },
   code: '单据号',
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   auditStatus: {
     label: '审核状态',
     slot: 'auditStatus',

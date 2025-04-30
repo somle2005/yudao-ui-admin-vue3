@@ -124,7 +124,7 @@ const createRequestFormOptions = () => {
   /**
    排序根据语雀文档-排列-和label显示
    * 1、仓库代码 code-1
-2、仓库名称 name-1
+2、仓库 name-1
 3、状态 status ValidStatus-1
 4、仓库属性 mode -1-注意切换逻辑
 
@@ -201,9 +201,9 @@ const createRequestFormOptions = () => {
     {
       requiredFlag: true,
       type: 'input',
-      label: '仓库名称',
+      label: '仓库',
       prop: 'name',
-      placeholder: '请输入仓库名称',
+      placeholder: '请输入仓库',
       attrs: {
         style: { width: '100%' },
         clearable: true
