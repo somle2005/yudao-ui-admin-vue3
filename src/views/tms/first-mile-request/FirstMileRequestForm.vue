@@ -137,18 +137,18 @@ const createRequestFormOptions = () => {
         clearable: true
       }
     },
-    {
-      type: 'select',
-      label: '审核状态',
-      prop: 'auditStatus',
-      placeholder: '请选择审核状态',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      },
-      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
-    },
+    // {
+    //   type: 'select',
+    //   label: '审核状态',
+    //   prop: 'auditStatus',
+    //   placeholder: '请选择审核状态',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     filterable: true,
+    //     clearable: true
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    // },
     {
       type: 'select',
       label: '目的仓',

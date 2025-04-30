@@ -30,6 +30,21 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['tms:first-mile-request:submit-audit']"
+        >
+          提交审核
+        </el-button>
+        <el-switch
+          v-model="wholeOrderEnable"
+          active-text="整单"
+          class="ml-10px"
+          @change="handleWholeOrderEnable"
+        />
       </template>
     </SmForm>
   </ContentWrap>
@@ -38,6 +53,7 @@
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
+      isSelection
       :loading="loading"
       :options="tableOptions"
       :data="list"
@@ -45,6 +61,7 @@
       v-model:currentPage="queryParams.pageNo"
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
+      @selection-change="handleSelectionChange"
     >
       <template #operate="{ scope }">
         <el-button
@@ -78,59 +95,75 @@ import { FirstMileRequestApi, FirstMileRequestVO } from '@/api/tms/first-mile-re
 import FirstMileRequestForm from './FirstMileRequestForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { useBatch } from './hooks/useBatch'
+import { useTable } from './hooks/useTable'
 
-const { tableOptions, transformTableOptions } = useTableData()
+// const { tableOptions, transformTableOptions } = useTableData()
 
-const fieldMap = {
-  code: '单据编码',
-  requestUserName: '申请人名称',
-  requestDeptName: '申请部门名称',
-  toWarehouseName: '目的仓名称',
-  totalWeight: '总重量(kg)',
-  totalVolume: '总体积(m³)',
-  itemCount: '明细数量',
+// const fieldMap = {
+//   code: '单据编码',
+//   requestUserName: '申请人名称',
+//   requestDeptName: '申请部门名称',
+//   toWarehouseName: '目的仓名称',
+//   totalWeight: '总重量(kg)',
+//   totalVolume: '总体积(m³)',
+//   itemCount: '明细数量',
 
-  auditStatus: {
-    label: '审核状态',
-    slot: 'auditStatus',
-    dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
-  },
-  orderStatus: {
-    label: '审核状态',
-    slot: 'orderStatus',
-    dictAttrs: { type: DICT_TYPE.SRM_ORDER_STATUS }
-  },
-  offStatus: {
-    label: '关闭状态',
-    slot: 'offStatus',
-    dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
-  },
+//   auditStatus: {
+//     label: '审核状态',
+//     slot: 'auditStatus',
+//     dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
+//   },
+//   orderStatus: {
+//     label: '审核状态',
+//     slot: 'orderStatus',
+//     dictAttrs: { type: DICT_TYPE.SRM_ORDER_STATUS }
+//   },
+//   offStatus: {
+//     label: '关闭状态',
+//     slot: 'offStatus',
+//     dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
+//   },
 
-  // comment: '审批意见',
-  // remark: '备注',
-  // updateTime: {
-  //   label: '更新时间',
-  //   formatter: dateFormatter,
-  //   width: '200px'
-  // },
-  // updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  // creatorName: '创建人',
-  operate: {
-    label: '操作',
-    slot: 'operate',
-    fixed: 'right',
-    width: '200px'
-  }
-}
-tableOptions.value = transformTableOptions(fieldMap, {
-  wrapList: ['code'],
-  noComputePropList: ['code', 'auditStatus', 'orderStatus', 'offStatus']
-})
+//   // comment: '审批意见',
+//   // remark: '备注',
+//   // updateTime: {
+//   //   label: '更新时间',
+//   //   formatter: dateFormatter,
+//   //   width: '200px'
+//   // },
+//   // updaterName: '更新人',
+//   createTime: {
+//     label: '创建时间',
+//     formatter: dateFormatter,
+//     width: '200px'
+//   },
+//   // creatorName: '创建人',
+//   operate: {
+//     label: '操作',
+//     slot: 'operate',
+//     fixed: 'right',
+//     width: '200px'
+//   }
+// }
+// tableOptions.value = transformTableOptions(fieldMap, {
+//   wrapList: ['code'],
+//   noComputePropList: ['code', 'auditStatus', 'orderStatus', 'offStatus']
+// })
+
+let {
+  allOptions,
+  tableOptions,
+
+  wholeOrderEnable,
+  itemsList,
+  wholeOrderList,
+  itemsTotal,
+  wholeOrderTotal,
+
+  switchList,
+  useWholeOrder
+} = useTable()
 
 /** 头程申请单 列表 */
 defineOptions({ name: 'TmsFirstMileRequest' })
@@ -166,6 +199,7 @@ const getList = async () => {
     const data = await FirstMileRequestApi.getFirstMileRequestPage(queryParams)
     list.value = data.list
     total.value = data.total
+    switchList(list, total, data)
   } finally {
     loading.value = false
   }
@@ -217,7 +251,31 @@ const handleExport = async () => {
   }
 }
 
+/** 选中操作 */
+const selectionList = ref<any[]>([])
+const handleSelectionChange = (rows: any[]) => {
+  selectionList.value = rows
+}
+
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatusBatch } = useBatch(
+  selectionList,
+  getList,
+  openForm
+)
+
+const { handleWholeOrderEnable } = useWholeOrder(
+  allOptions,
+  tableOptions,
+  selectionList,
+  list,
+  total,
+  itemsList,
+  itemsTotal,
+  wholeOrderList,
+  wholeOrderTotal
+)
 
 /** 初始化 **/
 onMounted(() => {

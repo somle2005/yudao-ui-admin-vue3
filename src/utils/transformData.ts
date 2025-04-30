@@ -31,6 +31,34 @@ export const mergeItemsToList = (list: any[], mapKey = {}) => {
   // })
   return arr
 }
+
+/**
+ *
+ * @param list
+ * 提取list中的items合并当前list项 展示每一项的items 合并进行数组- 小驼峰形式拼接字段
+ */
+export const mergeItemsUpToList = (list: any[], itemKey = 'items') => {
+  if (!list?.length) return []
+  const arr: any = []
+  cloneDeep(list).forEach((item: any) => {
+    if (item[itemKey]?.length) {
+      item[itemKey].forEach((obj) => {
+        const newItem = {
+          ...obj
+        }
+        for (const key in item) {
+          // key首字母大写
+          newItem[itemKey + key[0].toUpperCase() + key.slice(1)] = obj[key]
+        }
+        arr.push(newItem)
+      })
+    } else {
+      arr.push(item)
+    }
+  })
+  return arr
+}
+
 /**
  *
  * @param formData 表单数据

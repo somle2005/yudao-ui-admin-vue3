@@ -57,5 +57,10 @@ export const FirstMileRequestApi = {
   // 获取最新的单据编号
   getFirstMileRequestLatestNo: async () => {
     return await request.get({ url: `/tms/first-mile-request/get-latest-no` })
+  },
+
+  // 头程申请表提交审核
+  submitFirstMileRequestAudit: async (data: { ids: number[] }) => {
+    return await request.post({ url: `/tms/first-mile-request/submit-audit`, data })
   }
 }
