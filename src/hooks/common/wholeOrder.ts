@@ -101,3 +101,22 @@ export const getWholeOrderItemsId = (
   }
   return ids
 }
+
+// 对整单和分行的items-id获取做了处理
+export const getBatchId = (wholeOrderEnable, selectionList) => {
+  let ids: any = []
+  if (wholeOrderEnable.value) {
+    selectionList.value.forEach((item: any) => {
+      if (item?.items?.length) {
+        item.items.forEach((a: any) => {
+          ids.push({ id: a.id })
+        })
+      }
+    })
+  } else {
+    ids = selectionList.value.map((item: any) => {
+      return { id: item.itemsId }
+    })
+  }
+  return ids
+}

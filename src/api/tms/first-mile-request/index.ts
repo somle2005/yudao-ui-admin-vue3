@@ -46,7 +46,7 @@ export const FirstMileRequestApi = {
 
   // ==================== 子表（头程申请表明细） ====================
 
-  // 获得头程申请表明细列表
+  // 获得头程申请单 明细列表
   getFirstMileRequestItemListByRequestId: async (requestId) => {
     return await request.get({
       url:
@@ -59,8 +59,13 @@ export const FirstMileRequestApi = {
     return await request.get({ url: `/tms/first-mile-request/get-latest-no` })
   },
 
-  // 头程申请表提交审核
+  // 头程申请单 提交审核
   submitFirstMileRequestAudit: async (data: { ids: number[] }) => {
     return await request.post({ url: `/tms/first-mile-request/submit-audit`, data })
+  },
+
+  // 头程申请单 启用/禁用申请单子项
+  updateFirstMileRequestItemStatus: async (data: { itemIds: number[]; enable: boolean }) => {
+    return await request.put({ url: `/tms/first-mile-request/update-item-status`, data })
   }
 }

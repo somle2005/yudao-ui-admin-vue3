@@ -30,6 +30,26 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleUpdateStatusEnableBatch(true)"
+          v-hasPermi="['tms:first-mile-request:item-off']"
+        >
+          开启
+        </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          plain
+          @click="handleUpdateStatusEnableBatch(false)"
+          v-hasPermi="['tms:first-mile-request:item-off']"
+        >
+          关闭
+        </el-button>
+
         <el-button
           :disabled="disabledBtn"
           type="primary"
@@ -39,6 +59,24 @@
         >
           提交审核
         </el-button>
+
+        <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['tms:first-mile-request:audit-status']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
         <el-switch
           v-model="wholeOrderEnable"
           active-text="整单"
@@ -259,11 +297,13 @@ const handleSelectionChange = (rows: any[]) => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatusBatch } = useBatch(
-  selectionList,
-  getList,
-  openForm
-)
+const {
+  disabledBtn,
+  oneSelectDisabledBtn,
+  handleUpdateStatus,
+  handleSubmitAuditBatch,
+  handleUpdateStatusEnableBatch
+} = useBatch(wholeOrderEnable,selectionList, getList, openForm)
 
 const { handleWholeOrderEnable } = useWholeOrder(
   allOptions,
