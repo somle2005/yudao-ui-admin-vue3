@@ -26,7 +26,7 @@ export const useEnableTable = () => {
     // planQty: '计划入库量',
     // shelvedQty: '已上架数',
 
-    actualQty: '待上架数量',
+    shelveAvailableQty: '待上架数量',
     inboundStatus: {
       label: '入库状态',
       slot: 'inboundStatus',

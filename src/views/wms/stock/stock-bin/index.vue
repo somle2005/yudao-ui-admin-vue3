@@ -71,7 +71,6 @@ const fieldMap = {
   productBarCode: '产品编码',
   productName: '产品名称',
 
-
   availableQty: '可用数',
   outboundPendingQty: '待出库数',
   sellableQty: '可售数',
@@ -95,7 +94,10 @@ const fieldMap = {
   //   width: '200px'
   // }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  noComputePropList: ['warehouseName', 'productName', 'productBarCode']
+})
 
 /** 仓位库存 列表 */
 defineOptions({ name: 'WmsStockBin' })
@@ -125,7 +127,10 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await StockBinApi.getStockBinPage(queryParams)
-    list.value = getItemProp(data.list, ['product', 'bin', 'warehouse','zone'])
+    list.value = getItemProp(data.list, ['product', 'bin', 'warehouse']).map((item) => {
+      item.zoneName = item?.bin?.zone?.name
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false

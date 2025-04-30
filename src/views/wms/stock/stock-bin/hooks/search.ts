@@ -1,12 +1,10 @@
-import { getDeptTree, getProductList } from '@/commonData'
+import { getProductList } from '@/commonData'
 import { getWarehouseBinList, getWarehouseZoneList, getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const productList = getProductList() // 产品列表
-  const { deptList, defaultProps } = getDeptTree()
   const warehouseZoneList = getWarehouseZoneList()
   const warehouseBinList = getWarehouseBinList()
 
@@ -36,21 +34,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: productList
-    },
-    {
-      type: 'tree-select',
-      label: '库存归属',
-      prop: 'productDeptId',
-      placeholder: '请选择库存归属',
-      attrs: {
-        'node-key': 'id',
-        'check-strictly': true,
-        props: defaultProps,
-        data: deptList,
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      }
     },
     {
       type: 'select',

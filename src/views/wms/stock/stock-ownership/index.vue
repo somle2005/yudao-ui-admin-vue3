@@ -71,7 +71,7 @@ const fieldMap = {
   companyName: '库存主体',
   availableQty: '可用数',
   outboundPendingQty: '待出库数',
-  shelvingPendingQty: '待上架数数',
+  shelvingPendingQty: '待上架数',
 
   updateTime: {
     label: '更新时间',
@@ -92,7 +92,14 @@ const fieldMap = {
   //   width: '200px'
   // }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  noComputePropList: [
+    'warehouseName',
+    'productName',
+    'productBarCode',
+  ]
+})
 
 /** 所有者库存 列表 */
 defineOptions({ name: 'WmsStockOwnership' })
