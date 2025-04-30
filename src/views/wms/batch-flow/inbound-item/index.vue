@@ -64,12 +64,21 @@ import { useSearchForm } from './hooks/search'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
+// 1 顺序 仓库--库位--产品编码--库位库存--库存总数--待出数量--入库单号--存货类型-库龄-时间信息
+
+
 const fieldMap = {
+  warehouseName: '仓库',
+
+
   inboundCode: '入库单编号',
+
+
+
   productName: '产品名称',
   productBarCode: '产品编码',
-  warehouseName: '仓库名称',
-  // binName: '库位名称',
+
+  // binName: '库位',
   // deptName: '库存归属',
   // companyName: '库存主体',
   // inboundDeptName: '入库库存归属',
@@ -96,9 +105,9 @@ const fieldMap = {
   // stockWarehouseAvailableQty: '总库存',
   // outboundAvailableQty: '待出数量',
 
-  binName: '库位名称',
+  binName: '库位',
   binOutboundPendingQty: '库位待出数量',
-  binSellableQty: '库位待出数量',
+  binSellableQty: '库位可售数量',
   binAvailableQty: '库位库存',
 
   remark: '备注',

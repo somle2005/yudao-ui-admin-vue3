@@ -98,8 +98,8 @@ const fieldMap = {
     slot: 'deltaQty'
   },
   inboundItemFlowOutboundAvailableQty: '批次当前库存',
-  warehouseName: '仓库名称',
-  binName: '库位名称',
+  warehouseName: '仓库',
+  binName: '库位',
 
   stockWarehouseAvailableQty1: '仓库当前库存',
   stockWarehouseAvailableQty: '仓库可用库存',
