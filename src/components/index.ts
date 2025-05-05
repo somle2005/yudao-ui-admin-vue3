@@ -10,6 +10,7 @@ import { SmSelect } from './SmSelect'
 import { SmRange } from './SmRange'
 import { SmTableField } from './SmTableField'
 import { SmNumber } from './SmNumber'
+import { SmImportFile } from './SmImportFile'
 
 export const setupGlobCom = (app: App<Element>): void => {
   const componentsMap = {
@@ -23,7 +24,8 @@ export const setupGlobCom = (app: App<Element>): void => {
     SmSelect: SmSelect,
     SmRange: SmRange,
     SmTableField: SmTableField,
-    SmNumber: SmNumber
+    SmNumber: SmNumber,
+    SmImportFile: SmImportFile
   }
   for (const key in componentsMap) {
     app.component(key, componentsMap[key])

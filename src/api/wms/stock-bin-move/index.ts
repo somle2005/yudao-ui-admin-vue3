@@ -5,52 +5,51 @@ export interface StockBinMoveVO {
   /**
    * 库存类型 ; WmsMoveExecuteStatus : 0-草稿 , 1-已执行
    */
-  executeStatus?: number;
+  executeStatus?: number
   /**
    * 主键
    */
-  id?: number;
+  id?: number
   /**
    * 详情清单
    */
-  itemList?: WmsStockBinMoveItemSaveReqVO[];
+  itemList?: WmsStockBinMoveItemSaveReqVO[]
   /**
    * 单据号
    */
-  no?: string;
+  no?: string
   /**
    * 仓库ID
    */
-  warehouseId: number;
+  warehouseId: number
 }
 
 export interface WmsStockBinMoveItemSaveReqVO {
   /**
    * 库位移动表ID
    */
-  binMoveId: number;
+  binMoveId: number
   /**
    * 调出库位ID
    */
-  fromBinId?: number;
+  fromBinId?: number
   /**
    * 主键
    */
-  id?: number;
+  id?: number
   /**
    * 产品ID
    */
-  productId?: number;
+  productId?: number
   /**
    * 移动数量
    */
-  qty: number;
+  qty: number
   /**
    * 调入库位ID
    */
-  toBinId?: number;
+  toBinId?: number
 }
-
 
 // 库位移动 API
 export const StockBinMoveApi = {
@@ -65,7 +64,7 @@ export const StockBinMoveApi = {
   },
 
   // 新增库位移动
-  createStockBinMove: async (data: StockBinMoveVO) => {
-    return await request.post({ url: `/wms/stock-bin-move/create`, data })
-  },
+  createStockBinMove: async (formData: StockBinMoveVO) => {
+    return await request.upload({ url: `/wms/stock-bin-move/create`, data: formData })
+  }
 }

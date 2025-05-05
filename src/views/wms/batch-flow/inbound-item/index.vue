@@ -13,6 +13,15 @@
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleImport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:stock-bin-move:import']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 批量调整库位
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -52,6 +61,12 @@
 
   <!-- 表单弹窗：添加/修改 -->
   <InboundItemForm ref="formRef" @success="getList" />
+
+  <SmImportFile
+    ref="smImportFileRef"
+    v-model="importFile"
+    :importUrlFn="StockBinMoveApi.createStockBinMove"
+  />
 </template>
 
 <script setup lang="ts">
@@ -61,9 +76,9 @@ import { InboundItemApi, InboundItemVO } from '@/api/wms/inbound-item'
 import InboundItemForm from './InboundItemForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
+import { StockBinMoveApi } from '@/api/wms/stock-bin-move'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
-
 
 const fieldMap = {
   warehouseName: '仓库',
@@ -82,14 +97,13 @@ const fieldMap = {
   updateTime: {
     label: '操作时间',
     formatter: dateFormatter,
-    width: '200px' 
-  },
+    width: '200px'
+  }
 
   // binSellableQty: '库位可售数量',
   // remark: '备注',
   // productName: '产品名称',
 
- 
   // binName: '库位',
   // deptName: '库存归属',
   // companyName: '库存主体',
@@ -101,8 +115,6 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   // },
 
-
-
   // actualQty: '入库数量',
 
   // outboundAvailableQty: '批次剩余库存',
@@ -112,9 +124,6 @@ const fieldMap = {
   // actualQty: '数量',
   // stockWarehouseAvailableQty: '总库存',
   // outboundAvailableQty: '待出数量',
-
-
-
 
   // updaterName: '更新人',
   // createTime: {
@@ -132,7 +141,7 @@ tableOptions.value = transformTableOptions(fieldMap, {
     'productBarCode',
     'warehouseName',
     'stockType',
-    'remark',
+    'remark'
   ]
 })
 
@@ -228,6 +237,13 @@ const handleExport = async () => {
   } finally {
     exportLoading.value = false
   }
+}
+
+const importFile = ref()
+const smImportFileRef = ref()
+/** 导入按钮操作 */
+const handleImport = async () => {
+  smImportFileRef.value.open()
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
