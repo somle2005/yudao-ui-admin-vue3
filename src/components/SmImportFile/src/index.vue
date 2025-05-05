@@ -14,7 +14,6 @@
         action="none"
         drag
       >
-        <!-- <template  #trigger 留着后期可能有UI交互变动> -->
         <template #trigger>
           <template v-if="!file">
             <Icon icon="ep:upload" />
@@ -24,7 +23,7 @@
           <Icon v-if="file" icon="ep:document" />
         </template>
 
-        <template v-if="!file" #tip>
+        <template #tip>
           <div class="el-upload__tip text-center">
             <span>仅允许导入 xls、xlsx 格式文件。</span>
             <el-link
@@ -53,7 +52,6 @@ import { UploadFile, UploadFiles } from 'element-plus'
 defineOptions({ name: 'SmImportFile' })
 
 const props = defineProps({
-  // 是否显示分页
   title: {
     type: String,
     default: '导入文件'
@@ -80,7 +78,6 @@ const message = useMessage() // 消息弹窗
 const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
 const uploadRef = ref()
-const fileList = ref<string | Blob[]>([]) // 文件列表
 const file = ref<string | Blob>()
 
 /** 打开弹窗 */
@@ -97,10 +94,7 @@ const submitForm = async () => {
     const formData = new FormData()
     formData.append('file', file.value as Blob)
     await props.importUrlFn(formData)
-
     submitFormSuccess(formData)
-    // const res = await CustomerApi.handleImport(formData)
-    // submitFormSuccess(res)
   } catch {
     submitFormError()
   } finally {
@@ -170,8 +164,6 @@ const importTemplate = async () => {
   const { url, name } = props.templateObj
   const res = await url()
   download.excel(res, name)
-  // const res = await CustomerApi.importCustomerTemplate()
-  // download.excel(res, '客户导入模版.xls')
 }
 </script>
 <style lang="scss" scoped>
