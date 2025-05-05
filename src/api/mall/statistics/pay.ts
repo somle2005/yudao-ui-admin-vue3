@@ -8,5 +8,6 @@ export interface PaySummaryRespVO {
 
 /** 获取钱包充值金额 */
 export const getWalletRechargePrice = async () => {
-  return await request.get<PaySummaryRespVO>({ url: `/statistics/pay/summary` })
+  // return await request.get<PaySummaryRespVO>({ url: `/statistics/pay/summary` })
+  return Promise.resolve()
 }

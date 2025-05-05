@@ -99,9 +99,10 @@ export const getMemberSexStatisticsList = () => {
 
 // 按照终端，查询会员统计列表
 export const getMemberTerminalStatisticsList = () => {
-  return request.get<MemberTerminalStatisticsRespVO[]>({
-    url: '/statistics/member/terminal-statistics-list'
-  })
+  // return request.get<MemberTerminalStatisticsRespVO[]>({
+  //   url: '/statistics/member/terminal-statistics-list'
+  // })
+  return Promise.resolve()
 }
 
 // 获得用户数量量对照
