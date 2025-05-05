@@ -174,7 +174,6 @@ const open = async (type: string, id?: number, row?: any) => {
         const qtyItem = requestFormOptions.value.find((item) => item.prop === 'qty')
         qtyItem.attrs.max = obj.binAvailableQty
         formData.value = obj
-        console.log(formData.value, 'formData.value')
         getWarehouseBinList(warehouseBinList, { warehouseId })
         formRef.value.initForm()
       })

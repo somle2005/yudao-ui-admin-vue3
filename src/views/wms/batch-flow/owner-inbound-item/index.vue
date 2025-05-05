@@ -63,17 +63,43 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
+/**
+所有者批次库存
+1.顺序：
+仓库-产品编码--产品名称--库存公司--库存归属--批次数量--库存总数--待出数量--入库单号--存货类型--库龄--时间信息
+actualQty-是否应该availableQty
+
+2.系统中有两列库存归属，应该一列为库存公司
+3.系统中库存总数数量为0，存在问题
+4.删选条件增加【仓库】筛选
+
+ */
 
 const fieldMap = {
-  inboundCode: '入库单编号',
-  productName: '产品名称',
-  productBarCode: '产品编码',
   warehouseName: '仓库',
+  productBarCode: '产品编码',
+  productName: '产品名称',
+  inboundCompanyName: '库存公司',
+  inboundDeptName: '库存归属',
+
+  actualQty: '批次数量',
+  stockWarehouseAvailableQty: '库存总数',
+
+  outboundAvailableQty: '待出数量',
+  inboundCode: '入库单号',
+  stockType: {
+    label: '存货类型',
+    slot: 'stockType',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_ZONE_PARTITION_TYPE }
+  },
+  age: '库龄',
+
+  // 时间信息
+
   // binName: '库位',
   // deptName: '库存归属',
   // companyName: '库存主体',
-  inboundDeptName: '入库库存归属',
-  inboundCompanyName: '入库库存归属',
+
   // inboundStatus: {
   //   label: '入库状态',
   //   slot: 'inboundStatus',
@@ -86,16 +112,10 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
   // },
 
-  age: '库龄',
-  actualQty: '数量',
-  stockWarehouseAvailableQty: '总库存',
-  outboundAvailableQty: '待出数量',
   // actualQty: '入库数',
   // outboundAvailableQty: '批次剩余库存数',
   // planQty: '计划入库数',
   // shelvedQty: '已上架数',
-
-  remark: '备注',
 
   updateTime: {
     label: '更新时间',
