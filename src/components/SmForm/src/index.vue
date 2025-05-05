@@ -22,6 +22,7 @@
             :placeholder="getPlaceholder(item.placeholder)"
             v-model.trim="model[item.prop!]"
             v-bind="item.attrs"
+            :attrs="item.attrs"
             v-on="item.events || {}"
             @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
           />
@@ -91,6 +92,7 @@
                 :placeholder="getPlaceholder(item.placeholder)"
                 v-model.trim="model[item.prop!]"
                 v-bind="item.attrs"
+                :attrs="item.attrs"
                 v-on="item.events || {}"
                 @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
               />
@@ -295,7 +297,7 @@ defineExpose({
 })
 
 onMounted(() => {
-  initForm()
+  // initForm()
 })
 // 监听父组件传递进来的options
 watch(

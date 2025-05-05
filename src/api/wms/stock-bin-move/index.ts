@@ -64,7 +64,12 @@ export const StockBinMoveApi = {
   },
 
   // 新增库位移动
-  createStockBinMove: async (formData: StockBinMoveVO) => {
-    return await request.upload({ url: `/wms/stock-bin-move/create`, data: formData })
+  createStockBinMove: async (data: StockBinMoveVO) => {
+    return await request.post({ url: `/wms/stock-bin-move/create`, data })
+  },
+
+  importStockBinMove: async (formData: any) => {
+    return await request.upload({ url: `/wms/stock-bin-move/import-excel`, data: formData })
   }
 }
+

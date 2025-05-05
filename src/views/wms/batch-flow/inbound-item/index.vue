@@ -38,8 +38,17 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-      <!-- <template #operate="{ scope }">
-          <el-button
+      <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          :loading="exportLoading"
+          @click="openForm(OPERATE_MAP.moveBin, undefined, scope.row)"
+          v-hasPermi="['wms:stock-bin-move:create']"
+        >
+          移库位
+        </el-button>
+        <!-- <el-button
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
@@ -51,11 +60,11 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['wms:inbound-item:delete']"
+          v-hasPermi="['wms:inbound-item:delete']"
           >
             删除
-          </el-button>
-      </template> -->
+          </el-button> -->
+      </template>
     </SmTable>
   </ContentWrap>
 
@@ -65,7 +74,7 @@
   <SmImportFile
     ref="smImportFileRef"
     v-model="importFile"
-    :importUrlFn="StockBinMoveApi.createStockBinMove"
+    :importUrlFn="StockBinMoveApi.importStockBinMove"
   />
 </template>
 
@@ -77,6 +86,7 @@ import InboundItemForm from './InboundItemForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { StockBinMoveApi } from '@/api/wms/stock-bin-move'
+import { OPERATE_MAP } from './constant/index'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -98,6 +108,13 @@ const fieldMap = {
     label: '操作时间',
     formatter: dateFormatter,
     width: '200px'
+  },
+
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '100px'
   }
 
   // binSellableQty: '库位可售数量',
@@ -207,8 +224,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, row?: any) => {
+  formRef.value.open(type, id, row)
 }
 
 /** 删除按钮操作 */
