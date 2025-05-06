@@ -297,7 +297,7 @@ defineExpose({
 })
 
 onMounted(() => {
-  // initForm()
+  initForm()
 })
 // 监听父组件传递进来的options
 watch(

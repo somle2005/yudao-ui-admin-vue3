@@ -21,7 +21,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
-                :disabled="otherDisabled"
+                disabled
                 v-model="row.binId"
                 placeholder="请选择库位"
                 :data="warehouseBinList"
