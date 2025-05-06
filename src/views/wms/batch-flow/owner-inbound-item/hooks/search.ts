@@ -1,4 +1,5 @@
 import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
@@ -6,6 +7,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const productList = getProductList() // 产品列表
   const { deptList, defaultProps } = getDeptTree()
   const financeSubjectList = getFinanceSubjectList()
+  const WMSWarehouseList = getWMSWarehouseList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -16,6 +18,18 @@ export const useSearchForm = (handleQuery, queryParams) => {
         style: { width: '100%' },
         clearable: true
       }
+    },
+    {
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      placeholder: '请选择仓库',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
     },
     {
       type: 'select',
@@ -63,9 +77,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
     {
       type: 'tree-select',
-      label: '入库库存归属',
+      label: '库存归属',
       prop: 'inboundDeptId',
-      placeholder: '请选择入库库存归属',
+      placeholder: '请选择库存归属',
       attrs: {
         'node-key': 'id',
         'check-strictly': true,
@@ -78,9 +92,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      placeholder: '请选择入库库存主体',
+      placeholder: '请选择库存公司',
       prop: 'inboundCompanyId',
-      label: '入库库存主体',
+      label: '库存公司',
       attrs: {
         filterable: true,
         clearable: true,
@@ -108,24 +122,24 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   },
     //   children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_STATUS)
     // },
-    {
-      type: 'date-picker',
-      placeholder: '请选择创建时间',
-      prop: 'createTime',
-      label: '创建时间',
-      attrs: {
-        clearable: true,
-        type: 'daterange',
-        'value-format': 'x',
-        'start-placeholder': '开始日期',
-        'end-placeholder': '结束日期',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
-        class: '!w-240px',
-        style: {
-          width: '100%'
-        }
-      }
-    }
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择创建时间',
+    //   prop: 'createTime',
+    //   label: '创建时间',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'daterange',
+    //     'value-format': 'x',
+    //     'start-placeholder': '开始日期',
+    //     'end-placeholder': '结束日期',
+    //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+    //     class: '!w-240px',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // }
   ])
 
   const events = {

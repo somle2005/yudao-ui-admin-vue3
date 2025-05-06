@@ -93,6 +93,12 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_ZONE_PARTITION_TYPE }
   },
   age: '库龄',
+  updateTime: {
+    label: '操作时间',
+    formatter: dateFormatter,
+    width: '200px'
+  },
+
 
   // 时间信息
 
@@ -117,18 +123,18 @@ const fieldMap = {
   // planQty: '计划入库数',
   // shelvedQty: '已上架数',
 
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  creatorName: '创建人'
+  // updateTime: {
+  //   label: '更新时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // updaterName: '更新人',
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // creatorName: '创建人'
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
