@@ -1,11 +1,12 @@
-import { getDeptTree, getProductList } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const productList = getProductList() // 产品列表
-  // const { deptList, defaultProps } = getDeptTree()
+  const { deptList, defaultProps } = getDeptTree()
+  const financeSubjectList = getFinanceSubjectList()
 
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -34,6 +35,37 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: productList
     },
+
+    {
+      type: 'tree-select',
+      label: '库存归属',
+      prop: 'inboundDeptId',
+      placeholder: '请选择库存归属',
+      attrs: {
+        'node-key': 'id',
+        'check-strictly': true,
+        props: defaultProps,
+        data: deptList,
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择库存公司',
+      prop: 'inboundCompanyId',
+      label: '库存公司',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+
     // {
     //   type: 'tree-select',
     //   label: '库存归属',
@@ -49,24 +81,24 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //     clearable: true
     //   }
     // },
-    {
-      type: 'date-picker',
-      placeholder: '请选择创建时间',
-      prop: 'createTime',
-      label: '创建时间',
-      attrs: {
-        clearable: true,
-        type: 'daterange',
-        'value-format': 'x',
-        'start-placeholder': '开始日期',
-        'end-placeholder': '结束日期',
-        // defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
-        class: '!w-240px',
-        style: {
-          width: '100%'
-        }
-      }
-    },
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择创建时间',
+    //   prop: 'createTime',
+    //   label: '创建时间',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'daterange',
+    //     'value-format': 'x',
+    //     'start-placeholder': '开始日期',
+    //     'end-placeholder': '结束日期',
+    //     // defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+    //     class: '!w-240px',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
     {
       componentType: 'sm-range',
       label: '可用数',

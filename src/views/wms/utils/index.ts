@@ -1,4 +1,5 @@
 import { getRepeatMap } from '@/utils/judge'
+import { DICT_TYPE } from '@/utils/dict'
 
 export const isAbandon = (status: any) => {
   return [0, 2].includes(status) //草稿0 驳回2
@@ -48,12 +49,43 @@ export const getBinIdRules = (formData) => {
       {
         ...binIdRuleList[1],
         row
-      } 
+      }
     ] as any[]
   }
 
   return {
     binIdRuleList,
     createBinIdRule
+  }
+}
+
+export const codeTypeList = [
+  { name: '入库', type: 1, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' }, // split('.')[0][1]
+  { name: '拣货', type: 2, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' },
+
+  { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
+  { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
+  { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' }
+
+  // 只有出库单-入库单状态
+  // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
+
+  // { name: '所有者移动单', type: 7, dictType: 'wms_move_execute_status', getValue: 'pickup.status' },
+
+  // { name: '盘赢', type: 8, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' },
+  // { name: '盘亏', type: 9, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' }
+]
+
+export const getCodeType = (type: number) => {
+  const item = codeTypeList.find((item) => item.type === type)
+  if (item) {
+    return DICT_TYPE[item.dictType.toUpperCase()]
+  }
+}
+export const getCodeValue = (row: any, type: number) => {
+  const item = codeTypeList.find((item) => item.type === type)
+  if (item) {
+    const link = item.getValue.split('.')
+    return row[link[0]][link[1]]
   }
 }

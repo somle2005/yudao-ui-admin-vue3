@@ -34,6 +34,20 @@
         <div class="red" v-else-if="scope.row.deltaQty < 0">-{{ scope.row.deltaQty }}</div>
         <div v-else-if="scope.row.deltaQty === 0">{{ scope.row.deltaQty }}</div>
       </template>
+
+      <template #operateNo="{ scope }">
+        <div> 操作单号:{{ scope.row.outboundCode }} {{ scope.row.pickupCode }} </div>
+        <div> 入库单号:{{ scope.row.inboundCode }} </div>
+        <!-- <div> 出库单号:{{ scope.row.outboundCode }} </div>
+        <div> 上架单号:{{ scope.row.pickupCode }} </div> -->
+      </template>
+      <template #codeType="{ scope }">
+        <dict-tag
+          :type="getCodeType(scope?.row?.reason)"
+          :value="getCodeValue(scope.row, scope?.row?.reason)"
+        />
+      </template>
+
       <!-- <template #operate="{ scope }">
          <el-button
             link
@@ -60,55 +74,100 @@
 </template>
 
 <script setup lang="ts">
+
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { StockFlowApi, StockFlowVO } from '@/api/wms/stock-flow'
 import StockFlowForm from './StockFlowForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { getCodeType, getCodeValue } from '@/views/wms/utils/index'
 
+/**
+所有者批次日志
+1.顺序：
+产品编码--产品名称--库存公司--库存归属--操作时间--批次可用库存--库存变更--批次当前库存--仓库名称----仓
+库当前库存--仓库可用库存--仓库可售库存--操作类型--
+操作单号（入库出库单等）--操作人
+
+
+2.库存信息无
+3.操作类型为 产生这个变更单据的 单据的类型，如入库单的类型 为采购入库  盘点入库 手工入库 等
+4.展示不需要太多时间，只需要一个操作时间和操作人即可 
+5.筛选项 无 库存公司和库存归属的筛选，表中也无此两列的信息
+
+ */
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
-  warehouseName: '仓库',
-  // zoneName: '库区名称',
-  // binName: '库位',
   productBarCode: '产品编码',
   productName: '产品名称',
-  // stockType: {
-  //   label: '库存类型',
-  //   width: '200px',
-  //   slot: 'stockType',
-  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
-  // },
-  direction: {
-    label: '库存流水方向',
-    width: '200px',
-    slot: 'direction',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
-  },
-  inboundCode: '入库单号',
-  // outboundCode: '出库单号',
-  // pickupCode: '上架单号',
-  reason: {
-    label: '操作类型',
-    width: '200px',
-    slot: ' reason',
-    dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
-  },
 
+
+  // 库存公司--库存归属-缺少
+  flowTime: {
+    label: '操作时间',
+    formatter: dateFormatter,
+    width: '200px'
+  },
   availableQty: '批次可用库存',
   deltaQty: {
     label: '库存变更',
     width: '100px',
     slot: 'deltaQty'
   },
-
   inboundItemFlowOutboundAvailableQty: '批次当前库存',
-
+  warehouseName: '仓库',
   stockWarehouseAvailableQty1: '仓库当前库存',
   stockWarehouseAvailableQty: '仓库可用库存',
   stockWarehouseSellableQty: '仓库可售库存',
+
+  codeType: {
+    label: '单据类型',
+    width: '200px',
+    slot: 'codeType'
+  },
+  operateNo: {
+    label: '操作单号',
+    slot: 'operateNo',
+    width: '250px'
+  },
+  updaterName: '操作人',
+
+  
+  // reason: {
+  //   label: '操作类型',
+  //   width: '200px',
+  //   slot: ' reason',
+  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
+  // },
+
+  // zoneName: '库区名称',
+  // binName: '库位',
+
+  // stockType: {
+  //   label: '库存类型',
+  //   width: '200px',
+  //   slot: 'stockType',
+  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_TYPE }
+  // },
+  // direction: {
+  //   label: '库存流水方向',
+  //   width: '200px',
+  //   slot: 'direction',
+  //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
+  // },
+
+
+  inboundCode: '入库单号',
+  // outboundCode: '出库单号',
+  // pickupCode: '上架单号',
+
+
+ 
+ 
+
+
 
   // outboundPendingQty: '待出库数',
   // purchasePlanQty: '采购计划数',
@@ -117,23 +176,19 @@ const fieldMap = {
   // sellableQty: '可售数',
   // shelvingPendingQty: '待上架数数',
 
-  flowTime: {
-    label: '流水发生时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  creatorName: '创建人'
+
+  // updateTime: {
+  //   label: '更新时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // updaterName: '更新人',
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // },
+  // creatorName: '创建人'
   // operate: {
   //   label: '操作',
   //   slot: 'operate',

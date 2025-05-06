@@ -80,6 +80,7 @@ import { StockFlowApi, StockFlowVO } from '@/api/wms/stock-flow'
 import StockFlowForm from './StockFlowForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { getCodeType, getCodeValue } from '@/views/wms/utils/index'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -159,38 +160,6 @@ tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
   noComputePropList: ['productBarCode', 'productName', 'warehouseName']
 })
-
-const codeTypeList = [
-  { name: '入库', type: 1, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' }, // split('.')[0][1]
-  { name: '拣货', type: 2, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' },
-
-  { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
-  { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
-  { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' }
-
-  // 只有出库单-入库单状态
-  // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
-
-  // { name: '所有者移动单', type: 7, dictType: 'wms_move_execute_status', getValue: 'pickup.status' },
-
-  // { name: '盘赢', type: 8, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' },
-  // { name: '盘亏', type: 9, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' }
-]
-
-const getCodeType = (type: number) => {
-  const item = codeTypeList.find((item) => item.type === type)
-  if (item) {
-    return DICT_TYPE[item.dictType.toUpperCase()]
-  }
-}
-
-const getCodeValue = (row: any, type: number) => {
-  const item = codeTypeList.find((item) => item.type === type)
-  if (item) {
-    const link = item.getValue.split('.')
-    return row[link[0]][link[1]]
-  }
-}
 
 /** 库存流水 列表 */
 defineOptions({ name: 'WmsStockFlow' })
