@@ -159,7 +159,7 @@ const fieldMap = {
   // },
 
 
-  inboundCode: '入库单号',
+  // inboundCode: '入库单号',
   // outboundCode: '出库单号',
   // pickupCode: '上架单号',
 
