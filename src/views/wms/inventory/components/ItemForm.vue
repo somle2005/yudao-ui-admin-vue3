@@ -96,7 +96,7 @@
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <div class="btnList">
-              <div class="btn-item" @click="handleDelete($index)">
+              <div v-if="!inventoryDisabled" class="btn-item" @click="handleDelete($index)">
                 <Icon icon="ep:minus" class="mr-5px" />
               </div>
               <div v-if="!binDisabled" class="btn-item" @click="handleAddItem($index)">
@@ -150,7 +150,9 @@ const props = defineProps({
   }
 })
 
-const showActualQty = computed(() => [OPERATE_MAP.inventory, 'update','detail'].includes(props.formType))
+const showActualQty = computed(() =>
+  [OPERATE_MAP.inventory, 'update', 'detail'].includes(props.formType)
+)
 const showBin = computed(() => [OPERATE_MAP.append].includes(props.formType))
 
 const otherDisabled = computed(
@@ -160,8 +162,8 @@ const otherDisabled = computed(
 const binDisabled = computed(
   () => props.disabled || [OPERATE_MAP.append, 'create'].includes(props.formType)
 )
-
 const showDetail = computed(() => ['detail'].includes(props.formType))
+const inventoryDisabled = computed(() => [OPERATE_MAP.inventory].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
@@ -243,6 +245,7 @@ const handleDelete = (index: number) => {
 /** 添加按钮操作 */
 const handleAddItem = (index: number) => {
   const row = cloneDeep(formData.value[index])
+  row.binId = undefined
   // row[props.itemIdKey] = Math.random() + formData.value.length
   formData.value.splice(index, 0, row)
 }

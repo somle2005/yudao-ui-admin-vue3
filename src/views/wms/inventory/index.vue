@@ -102,23 +102,23 @@
           作废
         </el-button>
 
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="openForm(OPERATE_MAP.append, scope.row.id)"
           v-if="hasAllPermission(['wms:inventory-bin:append'])"
         >
           追加盘点库位
-        </el-button>
+        </el-button> -->
 
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inventory:update']"
         >
           编辑
-        </el-button>
+        </el-button> -->
         <el-button
           link
           type="danger"
