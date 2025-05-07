@@ -91,7 +91,7 @@
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
           v-if="
             hasAllPermission(['wms:inventory:update', 'wms:outbound:agree']) &&
-            scope.row.auditStatus !== passed
+            !hideInventoryList.includes(scope.row.auditStatus)
           "
         >
           盘点
@@ -122,14 +122,14 @@
         >
           编辑
         </el-button> -->
-        <el-button
+        <!-- <el-button
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
           v-hasPermi="['wms:inventory:delete']"
         >
           删除
-        </el-button>
+        </el-button> -->
       </template>
     </SmTable>
   </ContentWrap>
@@ -150,7 +150,7 @@ import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { getLastListProp } from '@/utils/transformData'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
 
-const passed = 3 //已通过
+const hideInventoryList = [3, 5] // 3已通过 5已作废
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 

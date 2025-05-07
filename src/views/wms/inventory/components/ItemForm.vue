@@ -248,6 +248,8 @@ const handleDelete = (index: number) => {
 const handleAddItem = (index: number) => {
   const row = cloneDeep(formData.value[index])
   row.binId = undefined
+  row.expectedQty = 0
+  row.actualQty = 0
   // row[props.itemIdKey] = Math.random() + formData.value.length
   formData.value.splice(index + 1, 0, row)
 }

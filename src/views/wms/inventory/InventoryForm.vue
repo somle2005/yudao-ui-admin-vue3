@@ -454,6 +454,6 @@ const addItem = (selectionList: any[]) => {
 
 const itemsFormdisabled = computed(() => ['detail', OPERATE_MAP.abandon].includes(formType.value))
 const buttonExist = computed(
-  () => !['detail', OPERATE_MAP.abandon, OPERATE_MAP.append].includes(formType.value)
+  () => !['detail', OPERATE_MAP.abandon, OPERATE_MAP.append, OPERATE_MAP.inventory].includes(formType.value)
 )
 </script>
