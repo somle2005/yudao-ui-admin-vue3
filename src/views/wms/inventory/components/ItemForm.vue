@@ -16,8 +16,15 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
 
         <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
+        <el-table-column
+          v-if="showDetail"
+          prop="updaterName"
+          label="操作人"
+          width="80"
+          align="center"
+        />
 
-        <el-table-column label="库位" width="180" align="center">
+        <el-table-column label="库位" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
@@ -45,6 +52,20 @@
 
         <el-table-column prop="expectedQty" label="系统数量" width="100" align="center" />
 
+        <el-table-column
+          v-if="showDetail"
+          prop="deltaQty"
+          label="差异值"
+          width="80"
+          align="center"
+        />
+
+        <el-table-column v-if="showDetail" label="盘点结果" width="100" align="center">
+          <template #default="{ row }">
+            <dict-tag :type="DICT_TYPE.WMS_INVENTORY_STATUS" :value="row.status" />
+          </template>
+        </el-table-column>
+
         <!-- <el-table-column label="预期库存" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
@@ -57,7 +78,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="备注" width="120">
+        <el-table-column label="备注" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input
@@ -101,6 +122,7 @@ import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
 import { OPERATE_MAP } from '../constant'
 import { getBinIdRules } from '../../utils'
+import { DICT_TYPE } from '@/utils/dict'
 
 const props = defineProps({
   items: {
@@ -128,16 +150,18 @@ const props = defineProps({
   }
 })
 
-const showActualQty = computed(() => [OPERATE_MAP.inventory, 'update'].includes(props.formType))
+const showActualQty = computed(() => [OPERATE_MAP.inventory, 'update','detail'].includes(props.formType))
 const showBin = computed(() => [OPERATE_MAP.append].includes(props.formType))
 
 const otherDisabled = computed(
   () => props.disabled || [OPERATE_MAP.append].includes(props.formType)
 )
 
-const binDisabled =  computed(
-  () => props.disabled || [OPERATE_MAP.append,'create'].includes(props.formType)
+const binDisabled = computed(
+  () => props.disabled || [OPERATE_MAP.append, 'create'].includes(props.formType)
 )
+
+const showDetail = computed(() => ['detail'].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])

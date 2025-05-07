@@ -75,6 +75,7 @@ import { AUDIT_TYPE } from '@/utils/constant'
 import { OPERATE_MAP } from './constant'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
 import { addComment } from '../utils'
+import { getIntDictOptions } from '@/utils/dict'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -159,7 +160,117 @@ const createRequestFormOptions = () => {
   return list
 }
 
-const detailOptions = (formOptions) => {
+const detailOptions = () => {
+  const formOptions = [
+    {
+      type: 'input',
+      label: '盘点单号',
+      prop: 'code',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      }
+    },
+    {
+      requiredFlag: true,
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      placeholder: '请选择仓库',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true,
+        onChange: (val: any) => {}
+      },
+      children: WMSWarehouseList
+    },
+
+    {
+      type: 'select',
+      label: '状态',
+      prop: 'auditStatus',
+      placeholder: '请选择状态',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_INVENTORY_AUDIT_STATUS)
+    },
+
+    {
+      type: 'input',
+      label: '创建人',
+      prop: 'creatorName',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      }
+    },
+    {
+      type: 'date-picker',
+      placeholder: '请选择创建时间',
+      prop: 'createTime',
+      label: '创建时间',
+      attrs: {
+        clearable: true,
+        type: 'date',
+        format: 'YYYY-MM-DD HH:mm:ss',
+        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    {
+      type: 'input',
+      label: '更新人',
+      prop: 'updaterName',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        disabled: true
+      }
+    },
+    {
+      type: 'date-picker',
+      placeholder: '请选择更新时间',
+      prop: 'updateTime',
+      label: '更新时间',
+      attrs: {
+        clearable: true,
+        type: 'date',
+        format: 'YYYY-MM-DD HH:mm:ss',
+        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+
+    {
+      type: 'input',
+      label: '备注',
+      prop: 'remark',
+      placeholder: '请输入备注',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      colConfig: { span: 24 },
+      slot: 'items',
+      formItemConfig: {
+        class: 'common-form-items'
+      }
+    }
+  ]
   addDisabled(formOptions)
   return formOptions
 }
@@ -171,6 +282,7 @@ const inventoryFormOptions = (formOptions) => {
 }
 
 const abandonFormOptions = (formOptions) => {
+  addDisabled(formOptions)
   addComment(formOptions)
   return formOptions
 }
@@ -203,7 +315,7 @@ const open = async (type: string, id?: number) => {
       // requestFormOptions.value = auditFormOptions(createRequestFormOptions())
     },
     detail: () => {
-      requestFormOptions.value = detailOptions(createRequestFormOptions())
+      requestFormOptions.value = detailOptions()
     },
     [OPERATE_MAP.inventory]: () => {
       dialogTitle.value = OPERATE_MAP.inventory
@@ -211,7 +323,7 @@ const open = async (type: string, id?: number) => {
     },
     [OPERATE_MAP.abandon]: () => {
       dialogTitle.value = OPERATE_MAP.abandon
-      requestFormOptions.value = abandonFormOptions(detailOptions(createRequestFormOptions()))
+      requestFormOptions.value = abandonFormOptions(createRequestFormOptions())
     },
     [OPERATE_MAP.append]: () => {
       dialogTitle.value = OPERATE_MAP.append
