@@ -39,8 +39,8 @@ export const StockBinApi = {
   },
 
   // 导出仓位库存 Excel
-  exportStockBin: async (params) => {
-    return await request.download({ url: `/wms/stock-bin/export-excel`, params })
+  exportStockBin: async (data) => {
+    return await request.download({ url: `/wms/stock-bin/export-excel`, data, method: 'POST' })
   },
 
   // 获得按产品分组的仓位库存分页

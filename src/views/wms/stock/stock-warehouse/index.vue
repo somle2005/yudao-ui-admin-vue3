@@ -296,7 +296,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await StockWarehouseApi.exportStockWarehouse(queryParams)
-    download.excel(data, '仓库库存.xls')
+    download.excel(data, '仓库.xls')
   } catch {
   } finally {
     exportLoading.value = false

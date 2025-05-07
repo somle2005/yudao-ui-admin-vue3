@@ -13,6 +13,15 @@
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:stock-ownership:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -182,7 +191,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await StockOwnershipApi.exportStockOwnership(queryParams)
-    download.excel(data, '所有者库存.xls')
+    download.excel(data, '库存归属.xls')
   } catch {
   } finally {
     exportLoading.value = false
