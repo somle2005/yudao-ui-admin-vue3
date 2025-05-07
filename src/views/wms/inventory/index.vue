@@ -78,7 +78,7 @@
           link
           type="success"
           @click="handleExport(scope.row.id)"
-          v-hasPermi="['wms:inventory:export']"
+          v-hasPermi="['wms:inventory-bin:export']"
           :loading="exportLoading"
         >
           导出
