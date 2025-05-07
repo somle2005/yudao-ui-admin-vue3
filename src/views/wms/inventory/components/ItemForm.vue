@@ -28,11 +28,11 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
-                :disabled="binDisabled"
+                :disabled="binDisabled || row.originBin"
                 v-model="row.binId"
                 placeholder="请选择库位"
                 :data="warehouseBinList"
-                @change="changeBin(row, $index)"
+                @change="(val) => changeBin(row, $index, val)"
               />
             </el-form-item>
           </template>
@@ -53,13 +53,12 @@
 
         <el-table-column prop="expectedQty" label="系统数量" width="100" align="center" />
 
-        <el-table-column
-          v-if="showDetail"
-          prop="deltaQty"
-          label="差异值"
-          width="80"
-          align="center"
-        />
+        <el-table-column v-if="showDetail" prop="deltaQty" label="差异值" width="80" align="center">
+          <!-- 2盘盈 1盘亏 0盘平 -->
+          <template #default="{ row }">
+            <SmPlusMinus :val="row.deltaQty" :type="row.status" :typeList="[2, 1, 0]" />
+          </template>
+        </el-table-column>
 
         <el-table-column v-if="showDetail" label="盘点结果" width="100" align="center">
           <template #default="{ row }">
@@ -125,6 +124,7 @@ import { OPERATE_MAP } from '../constant'
 import { getBinIdRules } from '../../utils'
 import { DICT_TYPE } from '@/utils/dict'
 import { StockBinApi } from '@/api/wms/stock-bin'
+import { isEmpty } from '@/utils/is'
 
 const props = defineProps({
   items: {
@@ -246,15 +246,21 @@ const handleDelete = (index: number) => {
 
 /** 添加按钮操作 */
 const handleAddItem = (index: number) => {
+  // row[props.itemIdKey] = Math.random() + formData.value.length
   const row = cloneDeep(formData.value[index])
   row.binId = undefined
   row.expectedQty = 0
   row.actualQty = 0
-  // row[props.itemIdKey] = Math.random() + formData.value.length
+  row.originBin = undefined
   formData.value.splice(index + 1, 0, row)
 }
 
-const changeBin = async (row, index) => {
+const changeBin = async (row, index, val) => {
+  if (isEmpty(val)) {
+    row.expectedQty = 0
+    row.actualQty = 0
+    return
+  }
   if (!row.binId) return
 
   const query = {

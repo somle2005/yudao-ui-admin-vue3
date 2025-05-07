@@ -343,6 +343,12 @@ const open = async (type: string, id?: number) => {
         item.actualQty = item.expectedQty
       })
 
+      if (type === OPERATE_MAP.inventory) {
+        data.binItemList.forEach((item) => {
+          item.originBin = true
+        })
+      }
+
       // if (type === OPERATE_MAP.inventory) {
       //   data.productItemList.forEach((item) => {
       //     item.actualQty = item.expectedQty
@@ -454,6 +460,9 @@ const addItem = (selectionList: any[]) => {
 
 const itemsFormdisabled = computed(() => ['detail', OPERATE_MAP.abandon].includes(formType.value))
 const buttonExist = computed(
-  () => !['detail', OPERATE_MAP.abandon, OPERATE_MAP.append, OPERATE_MAP.inventory].includes(formType.value)
+  () =>
+    !['detail', OPERATE_MAP.abandon, OPERATE_MAP.append, OPERATE_MAP.inventory].includes(
+      formType.value
+    )
 )
 </script>
