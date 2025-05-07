@@ -95,7 +95,8 @@ const fieldMap = {
   binName: '库位',
   productBarCode: '产品编码',
   binAvailableQty: '库位库存',
-  stockWarehouseAvailableQty: '库存总数',
+  stockWarehouseTotalQty: '库存总数', // availableQty+shelvingPendingQty
+
   binOutboundPendingQty: '待出数量',
   inboundCode: '入库单号',
   stockType: {
@@ -202,7 +203,7 @@ const getList = async () => {
       { prop: 'company', keyList: ['name'] },
       { prop: 'inboundDept', keyList: ['name'] },
       { prop: 'inboundCompany', keyList: ['name'] },
-      { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] }
+      { prop: 'stockWarehouse', keyList: ['totalQty'] }
     ]) as any
     total.value = data.total
   } finally {

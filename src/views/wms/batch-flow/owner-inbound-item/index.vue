@@ -83,7 +83,7 @@ const fieldMap = {
   inboundDeptName: '库存归属',
 
   actualQty: '批次数量',
-  stockWarehouseAvailableQty: '库存总数',
+  stockWarehouseTotalQty: '库存总数', // availableQty+shelvingPendingQty
 
   outboundAvailableQty: '待出数量',
   inboundCode: '入库单号',
@@ -188,7 +188,7 @@ const getList = async () => {
       { prop: 'company', keyList: ['name'] },
       { prop: 'inboundDept', keyList: ['name'] },
       { prop: 'inboundCompany', keyList: ['name'] },
-      { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] }
+      { prop: 'stockWarehouse', keyList: ['totalQty'] },
     ]) as any
     total.value = data.total
   } finally {
