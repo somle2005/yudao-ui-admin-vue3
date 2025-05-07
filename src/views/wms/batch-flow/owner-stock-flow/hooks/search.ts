@@ -39,7 +39,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'tree-select',
       label: '库存归属',
-      prop: 'inboundDeptId',
+      prop: 'deptId',
       placeholder: '请选择库存归属',
       attrs: {
         'node-key': 'id',
@@ -54,7 +54,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择库存公司',
-      prop: 'inboundCompanyId',
+      prop: 'companyId',
       label: '库存公司',
       attrs: {
         filterable: true,

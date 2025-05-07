@@ -102,9 +102,8 @@ const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 const fieldMap = {
   productBarCode: '产品编码',
   productName: '产品名称',
-
-
-  // 库存公司--库存归属-缺少
+  companyName: '库存公司',
+  deptName:'库存归属',
   flowTime: {
     label: '操作时间',
     formatter: dateFormatter,
@@ -246,7 +245,8 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await StockFlowApi.getStockFlowPageWarehouse(queryParams)
+    // const data = await StockFlowApi.getStockFlowPageWarehouse(queryParams)
+    const data = await StockFlowApi.getStockFlowPageOwnership(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },
       // { prop: 'bin', keyList: ['name'] },
@@ -256,7 +256,12 @@ const getList = async () => {
       // { prop: 'outbound', keyList: ['code'] },
       // { prop: 'pickup', keyList: ['code'] },
       { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] },
-      { prop: 'inboundItemFlow', keyList: ['outboundAvailableQty'] }
+      { prop: 'inboundItemFlow', keyList: ['outboundAvailableQty'] },
+
+      { prop: 'dept', keyList: ['name'] },
+      { prop: 'company', keyList: ['name'] },
+
+    
     ]) as any
 
     list.value.forEach((item: any) => {
