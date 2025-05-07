@@ -21,7 +21,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
               <SmSelect
-                disabled
+                :disabled="binDisabled"
                 v-model="row.binId"
                 placeholder="请选择库位"
                 :data="warehouseBinList"
@@ -30,19 +30,20 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="showActualQty" label="实际库存" width="100" align="center">
+        <el-table-column v-if="showActualQty" label="实盘数量" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.actualQty`"
               :rules="formRules.actualQty"
               class="mb-0px!"
             >
-              <SmNumber :disabled="otherDisabled" :max="row.expectedQty" v-model="row.actualQty" />
+              <SmNumber :disabled="otherDisabled" v-model="row.actualQty" />
+              <!-- <SmNumber :disabled="otherDisabled" :max="row.expectedQty" v-model="row.actualQty" /> -->
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column prop="expectedQty" label="预期库存" width="100" align="center" />
+        <el-table-column prop="expectedQty" label="系统数量" width="100" align="center" />
 
         <!-- <el-table-column label="预期库存" width="100" align="center">
           <template #default="{ row, $index }">
@@ -77,7 +78,7 @@
               <div class="btn-item" @click="handleDelete($index)">
                 <Icon icon="ep:minus" class="mr-5px" />
               </div>
-              <div class="btn-item" @click="handleAddItem($index)">
+              <div v-if="!binDisabled" class="btn-item" @click="handleAddItem($index)">
                 <Icon icon="ep:plus" class="mr-5px" />
               </div>
               <!-- <el-button @click="handleDelete($index)" link> — </el-button> -->
@@ -132,6 +133,10 @@ const showBin = computed(() => [OPERATE_MAP.append].includes(props.formType))
 
 const otherDisabled = computed(
   () => props.disabled || [OPERATE_MAP.append].includes(props.formType)
+)
+
+const binDisabled =  computed(
+  () => props.disabled || [OPERATE_MAP.append,'create'].includes(props.formType)
 )
 
 const formLoading = ref(false) // 表单的加载中

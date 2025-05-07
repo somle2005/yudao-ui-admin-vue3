@@ -21,7 +21,7 @@
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
-        <el-button
+        <!-- <el-button
           type="success"
           plain
           @click="handleExport"
@@ -29,7 +29,7 @@
           v-hasPermi="['wms:inventory:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
+        </el-button> -->
 
         <!-- <el-button
           v-hasPermi="['wms:inbound-item:import']"
@@ -74,14 +74,22 @@
           详情
         </el-button>
 
+        <el-button
+          link
+          type="success"
+          @click="handleExport(scope.row.id)"
+          v-hasPermi="['wms:inventory:export']"
+          :loading="exportLoading"
+        >
+          导出
+        </el-button>
+
         <!-- 'wms:inventory:submit' -->
         <el-button
           link
           type="primary"
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
-          v-if="
-            hasAllPermission(['wms:inventory:update', 'wms:outbound:agree'])
-          "
+          v-if="hasAllPermission(['wms:inventory:update', 'wms:outbound:agree'])"
         >
           盘点
         </el-button>
@@ -137,6 +145,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { OPERATE_MAP } from './constant'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { getLastListProp } from '@/utils/transformData'
+import { InventoryBinApi } from '@/api/wms/inventory-bin'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -173,7 +182,8 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   noWidth: true,
-  wrapList: ['code', 'warehouseName']
+  wrapList: ['code', 'warehouseName'],
+  noComputePropListWidth: ['code','warehouseName'],
 })
 
 /** 盘点 列表 */
@@ -245,13 +255,14 @@ const handleDelete = async (id: number) => {
 }
 
 /** 导出按钮操作 */
-const handleExport = async () => {
+const handleExport = async (inventoryId: number) => {
   try {
     // 导出的二次确认
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await InventoryApi.exportInventory(queryParams)
+    // const data = await InventoryApi.exportInventory(queryParams)
+    const data = await InventoryBinApi.exportInventoryBin({ inventoryId })
     download.excel(data, '盘点.xls')
   } catch {
   } finally {
