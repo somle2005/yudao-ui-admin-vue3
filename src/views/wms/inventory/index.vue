@@ -89,7 +89,10 @@
           link
           type="primary"
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
-          v-if="hasAllPermission(['wms:inventory:update', 'wms:outbound:agree'])"
+          v-if="
+            hasAllPermission(['wms:inventory:update', 'wms:outbound:agree']) &&
+            scope.row.auditStatus !== passed
+          "
         >
           盘点
         </el-button>
@@ -147,6 +150,8 @@ import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { getLastListProp } from '@/utils/transformData'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
 
+const passed = 3 //已通过
+
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 // 可售数-可用数-待出库数-待上架数-不良品数-采购计划数-采购在途数-退件在途数-库龄
@@ -183,7 +188,7 @@ const fieldMap = {
 tableOptions.value = transformTableOptions(fieldMap, {
   noWidth: true,
   wrapList: ['code', 'warehouseName'],
-  noComputePropListWidth: ['code','warehouseName'],
+  noComputePropListWidth: ['code', 'warehouseName']
 })
 
 /** 盘点 列表 */

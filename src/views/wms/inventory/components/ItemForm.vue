@@ -32,6 +32,7 @@
                 v-model="row.binId"
                 placeholder="请选择库位"
                 :data="warehouseBinList"
+                @change="changeBin(row, $index)"
               />
             </el-form-item>
           </template>
@@ -123,6 +124,7 @@ import { computeTargetQty } from '@/utils/transformData'
 import { OPERATE_MAP } from '../constant'
 import { getBinIdRules } from '../../utils'
 import { DICT_TYPE } from '@/utils/dict'
+import { StockBinApi } from '@/api/wms/stock-bin'
 
 const props = defineProps({
   items: {
@@ -247,7 +249,26 @@ const handleAddItem = (index: number) => {
   const row = cloneDeep(formData.value[index])
   row.binId = undefined
   // row[props.itemIdKey] = Math.random() + formData.value.length
-  formData.value.splice(index, 0, row)
+  formData.value.splice(index + 1, 0, row)
+}
+
+const changeBin = async (row, index) => {
+  if (!row.binId) return
+
+  const query = {
+    binId: row.binId, // 必须取外面的会选择变更
+    productId: row?.productId,
+    warehouseId: row.bin?.warehouseId
+  }
+  const data = await StockBinApi.getStockBinStocks(query)
+  if (data?.length) {
+    const binItem = data[0]
+    row.expectedQty = binItem.availableQty
+    row.actualQty = binItem.availableQty
+  } else {
+    row.expectedQty = 0
+    row.actualQty = 0
+  }
 }
 
 /** 表单校验 */

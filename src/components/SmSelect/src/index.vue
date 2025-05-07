@@ -144,7 +144,6 @@ watch(
     if (val?.length) {
       selectList.value = cloneDeep(val).map((item: any) => {
         const { label, value } = props.attrs.keyMap || props.keyMap
-        console.log(label, value, 'label-value')
         item.label = item[label]
         item.value = item[value]
         bindMap.value[item.value] = item.label

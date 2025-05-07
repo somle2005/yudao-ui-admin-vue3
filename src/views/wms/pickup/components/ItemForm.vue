@@ -171,7 +171,7 @@ watch(
     //   })
     //   val = formData.value
     // }
-  },
+  }
 )
 
 /** 监听合同产品变化，计算合同产品总价 */
@@ -220,7 +220,7 @@ const handleDelete = (index: number) => {
 const handleAddItem = (index: number) => {
   const row = cloneDeep(formData.value[index])
   // row[props.itemIdKey] = Math.random() + formData.value.length
-  formData.value.splice(index, 0, row)
+  formData.value.splice(index + 1, 0, row)
 }
 
 /** 表单校验 */
