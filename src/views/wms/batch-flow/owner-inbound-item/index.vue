@@ -18,7 +18,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['wms:stock-bin:export']"
+          v-hasPermi="['wms:inbound-item:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -244,7 +244,8 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await InboundItemApi.exportInboundItem(queryParams)
-    download.excel(data, '入库单详情.xls')
+    download.excel(data, '所有者批次库存.xls')
+    // download.excel(data, '入库单详情.xls')
   } catch {
   } finally {
     exportLoading.value = false

@@ -66,5 +66,32 @@ export const StockFlowApi = {
   // 获得仓位库存流水分页
   getStockFlowPageBin: async (data: any) => {
     return await request.post({ url: `/wms/stock-flow/page-bin`, data })
+  },
+
+  // 导出库位库存流水 Excel
+  exportStockFlowBin: async (data) => {
+    return await request.download({
+      url: `/admin-api/wms/stock-flow/export-bin`,
+      data,
+      method: 'POST'
+    })
+  },
+
+  // 导出仓库库存流水 Excel
+  exportStockFlowWarehouse: async (data) => {
+    return await request.download({
+      url: `/wms/stock-flow/export-warehouse`,
+      data,
+      method: 'POST'
+    })
+  },
+
+  // 导出所有者库位库存流水 Excel
+  exportStockFlowOwnership: async (data) => {
+    return await request.download({
+      url: `/wms/stock-flow/export-ownership`,
+      data,
+      method: 'POST'
+    })
   }
 }
