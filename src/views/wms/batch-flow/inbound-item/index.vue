@@ -13,6 +13,15 @@
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+         <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:inbound-item:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
         <el-button
           type="success"
           plain
@@ -250,7 +259,8 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await InboundItemApi.exportInboundItem(queryParams)
-    download.excel(data, '入库单详情.xls')
+    download.excel(data, '批次库存.xls')
+    // download.excel(data, '入库单详情.xls')
   } catch {
   } finally {
     exportLoading.value = false
