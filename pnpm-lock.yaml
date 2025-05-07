@@ -216,9 +216,6 @@ importers:
       '@unocss/transformer-variant-group':
         specifier: ^0.58.5
         version: 0.58.9
-      '@vitejs/plugin-basic-ssl':
-        specifier: ^2.0.0
-        version: 2.0.0(vite@5.1.4(@types/node@20.17.9)(sass@1.81.0)(terser@5.36.0))
       '@vitejs/plugin-legacy':
         specifier: ^5.3.1
         version: 5.4.3(terser@5.36.0)(vite@5.1.4(@types/node@20.17.9)(sass@1.81.0)(terser@5.36.0))
@@ -2080,12 +2077,6 @@ packages:
 
   '@videojs/xhr@2.6.0':
     resolution: {integrity: sha512-7J361GiN1tXpm+gd0xz2QWr3xNWBE+rytvo8J3KuggFaLg+U37gZQ2BuPLcnkfGffy2e+ozY70RHC8jt7zjA6Q==}
-
-  '@vitejs/plugin-basic-ssl@2.0.0':
-    resolution: {integrity: sha512-gc9Tjg8bUxBVSTzeWT3Njc0Cl3PakHFKdNfABnZWiUgbxqmHDEn7uECv3fHVylxoYgNzAcmU7ZrILz+BwSo3sA==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
-    peerDependencies:
-      vite: ^6.0.0
 
   '@vitejs/plugin-legacy@5.4.3':
     resolution: {integrity: sha512-wsyXK9mascyplcqvww1gA1xYiy29iRHfyciw+a0t7qRNdzX6PdfSWmOoCi74epr87DujM+5J+rnnSv+4PazqVg==}
@@ -7832,10 +7823,6 @@ snapshots:
       '@babel/runtime': 7.26.0
       global: 4.4.0
       is-function: 1.0.2
-
-  '@vitejs/plugin-basic-ssl@2.0.0(vite@5.1.4(@types/node@20.17.9)(sass@1.81.0)(terser@5.36.0))':
-    dependencies:
-      vite: 5.1.4(@types/node@20.17.9)(sass@1.81.0)(terser@5.36.0)
 
   '@vitejs/plugin-legacy@5.4.3(terser@5.36.0)(vite@5.1.4(@types/node@20.17.9)(sass@1.81.0)(terser@5.36.0))':
     dependencies:
