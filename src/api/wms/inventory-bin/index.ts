@@ -84,11 +84,11 @@ export const InventoryBinApi = {
 
   //  导入盘点结果
   importInventoryBinExcel: async (data: any) => {
-    return await request.post({ url: `/wms/inventory-bin/import-excel`, data })
+    return await request.upload({ url: `/wms/inventory-bin/import-excel`, data })
   },
 
   //  导入盘点产品
   importInventoryProductExcel: async (data: any) => {
-    return await request.post({ url: `/wms/inventory-product/import-excel`, data })
+    return await request.upload({ url: `/wms/inventory-product/import-excel`, data })
   }
 }

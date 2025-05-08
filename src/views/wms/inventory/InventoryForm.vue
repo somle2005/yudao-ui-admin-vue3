@@ -20,6 +20,25 @@
           :disabled="!formData.warehouseId"
           >选择盘点库位</el-button
         >
+
+        <el-button
+          type="primary"
+          @click="handleImport(importMap.create)"
+          style="margin-bottom: 10px"
+          v-hasPermi="['wms:stock-warehouse:query']"
+          v-if="createExist"
+          >导入盘点产品</el-button
+        >
+
+        <el-button
+          type="primary"
+          @click="handleImport(importMap.inventory)"
+          style="margin-bottom: 10px"
+          v-hasPermi="['wms:stock-warehouse:query']"
+          v-if="inventoryExist"
+          >导入盘点结果</el-button
+        >
+
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="盘点库位清单" name="item">
             <ItemForm
@@ -60,6 +79,8 @@
     </template>
   </Dialog>
   <EnableList ref="addItemRef" @success="addItem" />
+
+  <SmImportFile ref="smImportFileRef" :importUrlFn="importUrlFn" :templateObj="templateObj" />
 </template>
 <script setup lang="ts">
 import ItemForm from './components/ItemForm.vue'
@@ -76,6 +97,7 @@ import { OPERATE_MAP } from './constant'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
 import { addComment } from '../utils'
 import { getIntDictOptions } from '@/utils/dict'
+import { useImport } from './hooks/import'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -297,12 +319,14 @@ const getFormData = () => {
   return formData.value
 }
 
+let inventoryId
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+  inventoryId = id
 
   const formTypeOperate = {
     create: () => {
@@ -465,4 +489,16 @@ const buttonExist = computed(
       formType.value
     )
 )
+
+const refreshDetail = () => {
+  open(formType.value, inventoryId)
+}
+const operateImportFormData = (data) => {
+  formData.value = data
+  formRef.value.initForm()
+}
+const createExist = computed(() => ['create'].includes(formType.value))
+const inventoryExist = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
+const { importMap, templateObj, smImportFileRef, handleImport, importUrlFn } =
+  useImport(refreshDetail,operateImportFormData)
 </script>

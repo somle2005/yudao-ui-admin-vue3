@@ -79,6 +79,15 @@ export const InboundItemApi = {
     return await request.download({ url: `/wms/inbound-item/export-excel`, data, method: 'POST' })
   },
 
+  // 导出批次库存 Excel
+  exportInboundItemExcelBin: async (data) => {
+    return await request.download({
+      url: `/wms/inbound-item/export-excel-bin`,
+      data,
+      method: 'POST'
+    })
+  },
+
   // 待上架的入库明细
   getPickupPendingPage: async (params: InboundPickupPendingVO) => {
     return await request.get({ url: `/wms/inbound-item/pickup-pending`, params })
