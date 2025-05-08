@@ -90,7 +90,7 @@
           type="primary"
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
           v-if="
-            hasAllPermission(['wms:inventory:update', 'wms:outbound:agree']) &&
+            hasAllPermission(['wms:inventory:update', 'wms:outbound:agree', 'wms:inventory-bin:append']) &&
             !hideInventoryList.includes(scope.row.auditStatus)
           "
         >

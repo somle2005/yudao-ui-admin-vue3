@@ -319,6 +319,35 @@ const getFormData = () => {
   return formData.value
 }
 
+const resolveDetailData = (data, type) => {
+  getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+  data.binItemList.forEach((item) => {
+    item.actualQty = item.expectedQty
+  })
+
+  if (type === OPERATE_MAP.inventory) {
+    data.binItemList.forEach((item) => {
+      item.originBin = true
+    })
+  }
+
+  formData.value = data
+  formRef.value.initForm()
+  // if (type === OPERATE_MAP.inventory) {
+  //   data.productItemList.forEach((item) => {
+  //     item.actualQty = item.expectedQty
+  //   })
+  // }
+  // if (type === OPERATE_MAP.append) {
+  //   data.binItemList.forEach((item) => {
+  //     item.actualQty = item.expectedQty
+  //     item.id = undefined
+  //   })
+  //   getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+  //   data.productItemList = data.binItemList
+  // }
+}
+
 let inventoryId
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -362,33 +391,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       let data = await InventoryApi.getInventory(id)
-      getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
-      data.binItemList.forEach((item) => {
-        item.actualQty = item.expectedQty
-      })
-
-      if (type === OPERATE_MAP.inventory) {
-        data.binItemList.forEach((item) => {
-          item.originBin = true
-        })
-      }
-
-      // if (type === OPERATE_MAP.inventory) {
-      //   data.productItemList.forEach((item) => {
-      //     item.actualQty = item.expectedQty
-      //   })
-      // }
-      // if (type === OPERATE_MAP.append) {
-      //   data.binItemList.forEach((item) => {
-      //     item.actualQty = item.expectedQty
-      //     item.id = undefined
-      //   })
-      //   getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
-      //   data.productItemList = data.binItemList
-      // }
-
-      formData.value = data
-      formRef.value.initForm()
+      resolveDetailData(data, type)
     } finally {
       formLoading.value = false
     }
@@ -403,10 +406,18 @@ const submitForm = async (type?: string) => {
   await formRef.value.validate()
   await itemFormRef.value.validate()
 
+  const getAppendList = (data) => {
+    return data.binItemList
+      .filter((item) => !item.id)
+      .map((item) =>
+        filterObjKey(item, ['productId', 'inventoryId', 'expectedQty', 'actualQty', 'binId'])
+      )
+  }
+
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as InventoryVO as any
+    let data = formData.value as unknown as InventoryVO as any
     if (formType.value === 'create') {
       const billId = await InventoryApi.createInventory(data)
       await InventoryApi.submitInventoryAudit({ billId, comment: data.comment })
@@ -421,6 +432,13 @@ const submitForm = async (type?: string) => {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+        // 追加库位inventoryId为undefined的追加过去-只能追加新的
+        const queryData = getAppendList(data)
+
+        await InventoryBinApi.appendInventoryBin(queryData)
+        data = await InventoryApi.getInventory(inventoryId)
+        resolveDetailData(data, type)
+
         await InventoryBinApi.updateInventoryBinActualQuantity(data.binItemList)
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
@@ -433,9 +451,7 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.append) {
       // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-      const queryData = data.binItemList.map((item) =>
-        filterObjKey(item, ['productId', 'inventoryId', 'expectedQty', 'actualQty', 'binId'])
-      )
+      const queryData = getAppendList(data)
       await InventoryBinApi.appendInventoryBin(queryData)
       message.success(t('common.updateSuccess'))
     }
@@ -499,6 +515,8 @@ const operateImportFormData = (data) => {
 }
 const createExist = computed(() => ['create'].includes(formType.value))
 const inventoryExist = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
-const { importMap, templateObj, smImportFileRef, handleImport, importUrlFn } =
-  useImport(refreshDetail,operateImportFormData)
+const { importMap, templateObj, smImportFileRef, handleImport, importUrlFn } = useImport(
+  refreshDetail,
+  operateImportFormData
+)
 </script>
