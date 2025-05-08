@@ -59,7 +59,7 @@ const resetFormData = () => {
     applicantId: undefined,
     applicationDeptId: undefined,
     supplierId: undefined,
-    deliveryDelivery: '',
+    delivery: '',
     items: [] as any
   }
 }
