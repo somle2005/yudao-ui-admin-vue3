@@ -191,7 +191,7 @@ const createRequestFormOptions = () => {
     {
       type: 'date-picker',
       placeholder: '请选择单据日期',
-      prop: 'noTime',
+      prop: 'billTime',
       label: '单据日期',
       attrs: {
         clearable: true,
