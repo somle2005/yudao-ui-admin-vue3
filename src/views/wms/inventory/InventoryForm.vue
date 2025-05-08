@@ -39,20 +39,20 @@
         >确 定</el-button
       >
       <template v-if="auditType">
-        <el-button
+        <!-- <el-button
           type="danger"
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.reject)"
           v-hasPermi="['wms:inventory:reject']"
         >
           不同意</el-button
-        >
+        > -->
         <el-button
           type="primary"
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.agreeInventory)"
         >
-          同意盘点</el-button
+          确认盘点</el-button
         >
       </template>
 
