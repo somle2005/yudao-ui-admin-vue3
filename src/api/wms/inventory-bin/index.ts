@@ -90,5 +90,10 @@ export const InventoryBinApi = {
   //  导入盘点产品
   importInventoryProductExcel: async (data: any) => {
     return await request.upload({ url: `/wms/inventory-product/import-excel`, data })
+  },
+
+  //  产品库位转换
+  parseInventoryProductBin: async (data: any) => {
+    return await request.upload({ url: `/wms/inventory-bin/parse-product-bin`, data })
   }
 }

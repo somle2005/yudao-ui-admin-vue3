@@ -95,7 +95,8 @@ const submitForm = async () => {
     formData.append('file', file.value as Blob)
     await props.importUrlFn(formData)
     submitFormSuccess(formData)
-  } catch {
+  } catch(e) {
+    console.log(e,'导入报错')
     submitFormError()
   } finally {
     formLoading.value = false

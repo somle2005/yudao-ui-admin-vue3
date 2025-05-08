@@ -1,7 +1,7 @@
 import * as CustomerApi from '@/api/crm/customer'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
 
-export const useImport = (refreshDetail, operateImportFormData) => {
+export const useImport = (refreshDetail, operateImportFormData, formData, inventoryId) => {
   const message = useMessage() // 消息弹窗
 
   const templateObj = ref({
@@ -42,16 +42,17 @@ export const useImport = (refreshDetail, operateImportFormData) => {
       console.log(e, '报错')
     }
   }
-  const importUrlFn = (formData) => {
+  const importUrlFn = (importData) => {
     const fnMap = {
       [importMap.create]: () => {
-        return InventoryBinApi.importInventoryProductExcel(formData).then((res) => {
-          operateImportFormData(res)
-          console.log(res, '进行处理')
+        importData.append('warehouseId', formData.value.warehouseId)
+        return InventoryBinApi.parseInventoryProductBin(importData).then((res) => {
+          operateImportFormData(res.data)
         })
       },
       [importMap.inventory]: () => {
-        return InventoryBinApi.importInventoryBinExcel(formData).then((res) => {
+        importData.append('inventoryId', inventoryId.value)
+        return InventoryBinApi.importInventoryBinExcel(importData).then((res) => {
           refreshDetail()
           console.log(res, '进行处理')
         })

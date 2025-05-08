@@ -25,8 +25,9 @@
           type="primary"
           @click="handleImport(importMap.create)"
           style="margin-bottom: 10px"
-          v-hasPermi="['wms:stock-warehouse:query']"
+          v-hasPermi="['wms:inbound-item:parse-product-bin']"
           v-if="createExist"
+          :disabled="!formData.warehouseId"
           >导入盘点产品</el-button
         >
 
@@ -34,7 +35,7 @@
           type="primary"
           @click="handleImport(importMap.inventory)"
           style="margin-bottom: 10px"
-          v-hasPermi="['wms:stock-warehouse:query']"
+          v-hasPermi="['wms:inbound-item:import']"
           v-if="inventoryExist"
           >导入盘点结果</el-button
         >
@@ -348,14 +349,14 @@ const resolveDetailData = (data, type) => {
   // }
 }
 
-let inventoryId
+const inventoryId = ref()
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  inventoryId = id
+  inventoryId.value = id
 
   const formTypeOperate = {
     create: () => {
@@ -436,7 +437,7 @@ const submitForm = async (type?: string) => {
         const queryData = getAppendList(data)
 
         await InventoryBinApi.appendInventoryBin(queryData)
-        data = await InventoryApi.getInventory(inventoryId)
+        data = await InventoryApi.getInventory(inventoryId.value)
         resolveDetailData(data, type)
 
         await InventoryBinApi.updateInventoryBinActualQuantity(data.binItemList)
@@ -506,17 +507,30 @@ const buttonExist = computed(
     )
 )
 
-const refreshDetail = () => {
-  open(formType.value, inventoryId)
+const refreshDetail = async () => {
+  // open(formType.value, inventoryId.value)
+  let data = await InventoryApi.getInventory(inventoryId.value)
+  resolveDetailData(data, formType.value)
 }
 const operateImportFormData = (data) => {
-  formData.value = data
+  if (!data?.length) {
+    message.warning('暂无数据')
+    return
+  }
+  data.forEach((item) => {
+    item.expectedQty = item.availableQty
+    item.productBarCode = item?.product?.barCode
+  })
+
+  formData.value.binItemList = data
   formRef.value.initForm()
 }
 const createExist = computed(() => ['create'].includes(formType.value))
 const inventoryExist = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
 const { importMap, templateObj, smImportFileRef, handleImport, importUrlFn } = useImport(
   refreshDetail,
-  operateImportFormData
+  operateImportFormData,
+  formData,
+  inventoryId
 )
 </script>
