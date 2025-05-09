@@ -159,7 +159,7 @@ const open = async (type: string, id?: number, row?: any) => {
       requestFormOptions.value = moveFormOptions()
       dialogTitle.value = '移库位'
 
-      const { binAvailableQty, binName, binId, productId, productBarCode, warehouseId } = row
+      const { binAvailableQty, binName, binId, productId, productBarCode, warehouseId,inboundId } = row
       const obj: any = {
         binAvailableQty,
         fromBinId: binId,
@@ -167,7 +167,8 @@ const open = async (type: string, id?: number, row?: any) => {
         productId,
         productBarCode,
         qty: binAvailableQty,
-        warehouseId
+        warehouseId,
+        inboundId
       }
 
       nextTick(() => {
