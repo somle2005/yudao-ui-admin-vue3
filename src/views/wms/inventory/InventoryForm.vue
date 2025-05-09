@@ -67,6 +67,10 @@
         >
           不同意</el-button
         > -->
+        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(OPERATE_MAP.append)">
+          保存</el-button
+        >
+
         <el-button
           type="primary"
           :disabled="formLoading"
@@ -429,17 +433,31 @@ const submitForm = async (type?: string) => {
     } else if (formType.value === OPERATE_MAP.abandon) {
       await InventoryApi.abandonInventory({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
+    } 
+    // 追加盘点保存优先级高于-确认盘点
+    else if (formType.value === OPERATE_MAP.append || type === OPERATE_MAP.append) {
+      // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+      const queryData = getAppendList(data)
+      await InventoryBinApi.appendInventoryBin(queryData)
+      message.success(t('common.updateSuccess'))
+      if (type === OPERATE_MAP.append) {
+        return
+      }
     } else if (formType.value === OPERATE_MAP.inventory) {
       if (type === AUDIT_TYPE.agreeInventory) {
+        const queryData = getAppendList(data)
+        if (queryData?.length) {
+          message.warning('请先进行保存 再进行确认盘点')
+          return
+        }
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
         // 追加库位inventoryId为undefined的追加过去-只能追加新的
-        const queryData = getAppendList(data)
+        // const queryData = getAppendList(data)
+        // await InventoryBinApi.appendInventoryBin(queryData)
 
-        await InventoryBinApi.appendInventoryBin(queryData)
         data = await InventoryApi.getInventory(inventoryId.value)
         resolveDetailData(data, type)
-
         await InventoryBinApi.updateInventoryBinActualQuantity(data.binItemList)
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
@@ -449,11 +467,6 @@ const submitForm = async (type?: string) => {
         await InventoryApi.rejectInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 
-      message.success(t('common.updateSuccess'))
-    } else if (formType.value === OPERATE_MAP.append) {
-      // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-      const queryData = getAppendList(data)
-      await InventoryBinApi.appendInventoryBin(queryData)
       message.success(t('common.updateSuccess'))
     }
 
