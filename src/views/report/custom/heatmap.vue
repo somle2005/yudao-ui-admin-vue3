@@ -7,7 +7,7 @@
       seamless
       frameBorder="0"
       scrolling="no"
-      src="http://192.168.10.199:8088/superset/dashboard/p/MznB30DQOkV?hiddenDashboards=1"
+      :src="toUrl('http://192.168.10.199:8088/superset/dashboard/p/MznB30DQOkV?hiddenDashboards=1')"
     >
     </iframe>
 
@@ -17,6 +17,9 @@
 </template>
 <script setup lang="ts">
 import { createMapStyle } from './utils'
+import { toUrl } from '@/views/report/custom/utils';
+
+
 
 const mapStyle = createMapStyle('热力图高度')
 </script>
