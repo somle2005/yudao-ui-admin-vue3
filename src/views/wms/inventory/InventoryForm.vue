@@ -433,13 +433,17 @@ const submitForm = async (type?: string) => {
     } else if (formType.value === OPERATE_MAP.abandon) {
       await InventoryApi.abandonInventory({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
-    } 
+    }
     // 追加盘点保存优先级高于-确认盘点
     else if (formType.value === OPERATE_MAP.append || type === OPERATE_MAP.append) {
       // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
       const queryData = getAppendList(data)
-      if(!queryData.length) return // 如果没有新加的就不进行追加
+      if (!queryData.length) return // 如果没有新加的就不进行追加
       await InventoryBinApi.appendInventoryBin(queryData)
+
+      let detailData = await InventoryApi.getInventory(inventoryId.value)
+      resolveDetailData(detailData, type)
+
       message.success(t('common.updateSuccess'))
       if (type === OPERATE_MAP.append) {
         return
