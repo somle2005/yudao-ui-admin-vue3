@@ -97,7 +97,7 @@ const submitForm = async () => {
     submitFormSuccess(formData)
   } catch(e) {
     console.log(e,'导入报错')
-    submitFormError()
+    // submitFormError()
   } finally {
     formLoading.value = false
   }

@@ -216,7 +216,7 @@ const submitForm = async () => {
       data.itemList = [
         filterObjKey(data, ['binMoveId', 'productId', 'fromBinId', 'toBinId', 'qty'])
       ]
-      data = filterObjKey(data, ['warehouseId', 'itemList'])
+      data = filterObjKey(data, ['inboundId', 'warehouseId', 'itemList'])
       await StockBinMoveApi.createStockBinMove(data)
       message.success(t('common.updateSuccess'))
     }
