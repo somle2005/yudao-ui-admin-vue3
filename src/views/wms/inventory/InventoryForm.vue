@@ -67,9 +67,7 @@
         >
           不同意</el-button
         > -->
-        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(OPERATE_MAP.append)">
-          保存</el-button
-        >
+   
 
         <el-button
           type="primary"
@@ -103,6 +101,8 @@ import { InventoryBinApi } from '@/api/wms/inventory-bin'
 import { addComment } from '../utils'
 import { getIntDictOptions } from '@/utils/dict'
 import { useImport } from './hooks/import'
+import { isEmpty } from '@/utils/is'
+
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -326,6 +326,7 @@ const getFormData = () => {
 
 const resolveDetailData = (data, type) => {
   getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+
   data.binItemList.forEach((item) => {
     item.actualQty = item.expectedQty
   })
@@ -435,35 +436,29 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     }
     // 追加盘点保存优先级高于-确认盘点
-    else if (formType.value === OPERATE_MAP.append || type === OPERATE_MAP.append) {
+    else if (formType.value === OPERATE_MAP.append) {
       // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
       const queryData = getAppendList(data)
       if (!queryData.length) return // 如果没有新加的就不进行追加
       await InventoryBinApi.appendInventoryBin(queryData)
-
-      let detailData = await InventoryApi.getInventory(inventoryId.value)
-      resolveDetailData(detailData, type)
-
       message.success(t('common.updateSuccess'))
-      if (type === OPERATE_MAP.append) {
-        return
-      }
     } else if (formType.value === OPERATE_MAP.inventory) {
       if (type === AUDIT_TYPE.agreeInventory) {
-        const queryData = getAppendList(data)
-        if (queryData?.length) {
-          message.warning('请先进行保存 再进行确认盘点')
-          return
-        }
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
         // 追加库位inventoryId为undefined的追加过去-只能追加新的
-        // const queryData = getAppendList(data)
-        // await InventoryBinApi.appendInventoryBin(queryData)
+        
+        // 先设置数量
+        await InventoryBinApi.updateInventoryBinActualQuantity(data.binItemList.filter(item => !isEmpty(item.id)))
 
+        // 追加的库位必须是原先盘点单已有产品下的
+        // 再追加库位
+        const queryData = getAppendList(data)
+        await InventoryBinApi.appendInventoryBin(queryData)
+        // 再刷新详情
         data = await InventoryApi.getInventory(inventoryId.value)
         resolveDetailData(data, type)
-        await InventoryBinApi.updateInventoryBinActualQuantity(data.binItemList)
+        // 再同意
         await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 
@@ -543,11 +538,29 @@ const operateImportFormData = (data) => {
   formData.value.binItemList = data
   formRef.value.initForm()
 }
+
+// 操作导入盘点结果
+const operateImportFormDataResult = (data) => {
+  if (!data?.length) {
+    message.warning('暂无数据')
+    return
+  }
+  data.forEach((item) => {
+    // item.expectedQty = item.availableQty
+    item.inventoryId = inventoryId.value
+    item.productBarCode = item?.product?.barCode
+  })
+  formData.value.binItemList = data
+  formRef.value.initForm()
+}
+
+
 const createExist = computed(() => ['create'].includes(formType.value))
 const inventoryExist = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
 const { importMap, templateObj, smImportFileRef, handleImport, importUrlFn } = useImport(
   refreshDetail,
   operateImportFormData,
+  operateImportFormDataResult,
   formData,
   inventoryId
 )

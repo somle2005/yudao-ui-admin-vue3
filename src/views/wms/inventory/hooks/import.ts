@@ -1,7 +1,7 @@
 import * as CustomerApi from '@/api/crm/customer'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
 
-export const useImport = (refreshDetail, operateImportFormData, formData, inventoryId) => {
+export const useImport = (refreshDetail, operateImportFormData,operateImportFormDataResult, formData, inventoryId) => {
   const message = useMessage() // 消息弹窗
 
   const templateObj = ref({
@@ -53,7 +53,8 @@ export const useImport = (refreshDetail, operateImportFormData, formData, invent
       [importMap.inventory]: () => {
         importData.append('inventoryId', inventoryId.value)
         return InventoryBinApi.importInventoryBinExcel(importData).then((res) => {
-          refreshDetail()
+          operateImportFormDataResult(res.data)
+          // refreshDetail()
         })
       }
     }
