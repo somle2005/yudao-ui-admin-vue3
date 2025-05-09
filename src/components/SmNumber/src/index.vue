@@ -10,6 +10,13 @@ const props = defineProps({
   modelValue: {
     type: Number,
     default: undefined
+  },
+  // 支持将配置参数带入-因为有部分keyMap已经存在props所以无法通过v-bind带入
+  attrs: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
 
@@ -33,6 +40,19 @@ watch(
   () => bindVal.value,
   (val) => {
     emitModelValue(val)
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  () => props.attrs,
+  (val) => {
+    if (Object.keys(val).length > 0) {
+      // const data = val?.data
+      // if (data) {
+      //   selectList.value = data.value
+      // }
+    }
   },
   { deep: true, immediate: true }
 )

@@ -21,6 +21,10 @@
 import { StockOwnershipApi, StockOwnershipVO } from '@/api/wms/stock-ownership'
 import { OPERATE_MAP } from './constant'
 import { StockOwnershipMoveApi } from '@/api/wms/stock-ownership-move'
+import { addProperty } from '@/components/SmForm/src/utils'
+import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
+import { filterObjKey } from '@/utils/transformData'
 
 /** 所有者库存 表单 */
 defineOptions({ name: 'StockOwnershipForm' })
@@ -40,85 +44,135 @@ const initFormData = () => {
     executeStatus: undefined,
     warehouseId: undefined,
     itemList: []
-  }
+  } as any
 }
 
 const formData = ref(initFormData())
 
 const formRef = ref() // 表单 Ref
+const productList = ref([]) // 产品列表
+const WMSWarehouseList = ref([])
+const financeSubjectList = ref([])
+const deptList = ref([])
+let defaultProps = {}
 
 const requestFormOptions: any = ref([])
 const moveFormOptions = () => {
-  // const list = [
-  //   {
-  //     type: 'select',
-  //     label: '仓库',
-  //     prop: 'warehouseId',
-  //     attrs: {
-  //       style: { width: '100%' },
-  //       disabled: true,
-  //       filterable: true,
-  //       clearable: true
-  //     },
-  //     children: WMSWarehouseList
-  //   },
-  //   // productId
-  //   {
-  //     type: 'input',
-  //     prop: 'productBarCode',
-  //     label: '产品编码',
-  //     attrs: {
-  //       disabled: true,
-  //       filterable: true,
-  //       clearable: true,
-  //       style: {
-  //         width: '100%'
-  //       }
-  //     }
-  //   },
-  //   // fromBinId
-  //   {
-  //     type: 'input',
-  //     prop: 'binName',
-  //     label: '调出库位',
-  //     attrs: {
-  //       disabled: true,
-  //       filterable: true,
-  //       clearable: true,
-  //       style: {
-  //         width: '100%'
-  //       }
-  //     }
-  //   },
-  //   {
-  //     type: 'select',
-  //     label: '调入库位',
-  //     prop: 'toBinId',
-  //     placeholder: '请选择调入库位',
-  //     attrs: {
-  //       style: { width: '100%' },
-  //       filterable: true,
-  //       clearable: true
-  //     },
-  //     children: warehouseBinList
-  //   },
-  //   {
-  //     requiredFlag: true,
-  //     componentType: 'sm-number',
-  //     prop: 'qty',
-  //     label: '移动数量',
-  //     attrs: {
-  //       filterable: true,
-  //       clearable: true,
-  //       max: formData.value.binAvailableQty,
-  //       style: {
-  //         width: '100%'
-  //       }
-  //     }
-  //   }
-  // ]
-  // addProperty(list)
-  const list = []
+  const list = [
+    {
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      attrs: {
+        style: { width: '100%' },
+        disabled: true,
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
+    },
+    {
+      type: 'select',
+      placeholder: '请选择产品编码',
+      prop: 'productId',
+      label: '产品编码',
+      attrs: {
+        disabled: true,
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: productList
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择调出库存公司',
+      prop: 'fromCompanyId',
+      label: '调出库存公司',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+
+    {
+      type: 'tree-select',
+      label: '调出库存归属',
+      prop: 'fromDeptId',
+      placeholder: '请选择调出库存归属',
+      attrs: {
+        'node-key': 'id',
+        'check-strictly': true,
+        props: defaultProps,
+        data: deptList,
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      }
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择调入库存公司',
+      prop: 'toCompanyId',
+      label: '调入库存公司',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: financeSubjectList
+    },
+    {
+      type: 'tree-select',
+      label: '调入库存归属',
+      prop: 'toDeptId',
+      placeholder: '请选择调入库存归属',
+      attrs: {
+        'node-key': 'id',
+        'check-strictly': true,
+        props: defaultProps,
+        data: deptList,
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      }
+    },
+    {
+      requiredFlag: true,
+      componentType: 'sm-number',
+      prop: 'qty',
+      label: '移动数量',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      }
+    },
+
+    {
+      type: 'input',
+      label: '备注',
+      prop: 'remark',
+      placeholder: '请输入备注',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    }
+  ]
+  addProperty(list)
   return list
 }
 
@@ -133,29 +187,32 @@ const open = async (type: string, id?: number, row?: any) => {
   formType.value = type
   resetForm()
 
+  getProductList(productList)
+  getWMSWarehouseList(WMSWarehouseList)
+  getFinanceSubjectList(financeSubjectList)
+  defaultProps = getDeptTree(deptList).defaultProps
+
   const formTypeOperate = {
     [OPERATE_MAP.moveOwnership]: () => {
       requestFormOptions.value = moveFormOptions()
       dialogTitle.value = OPERATE_MAP.moveOwnership
 
-      // const { binAvailableQty, binName, binId, productId, productBarCode, warehouseId } = row
-      // const obj: any = {
-      //   binAvailableQty,
-      //   fromBinId: binId,
-      //   binName,
-      //   productId,
-      //   productBarCode,
-      //   qty: binAvailableQty,
-      //   warehouseId
-      // }
+      const { warehouseId, companyId, deptId, productId, availableQty } = row
+      const obj: any = {
+        warehouseId,
+        productId: productId,
+        fromCompanyId: companyId,
+        fromDeptId: deptId,
+        qty: availableQty
+      }
 
-      // nextTick(() => {
-      //   const qtyItem = requestFormOptions.value.find((item) => item.prop === 'qty')
-      //   qtyItem.attrs.max = obj.binAvailableQty
-      //   formData.value = obj
-      //   getWarehouseBinList(warehouseBinList, { warehouseId })
-      //   formRef.value.initForm()
-      // })
+      nextTick(() => {
+        const qtyItem = requestFormOptions.value.find((item) => item.prop === 'qty')
+        qtyItem.attrs.max = availableQty
+
+        formData.value = obj
+        formRef.value.initForm()
+      })
     }
   }
   formTypeOperate[type]()
@@ -180,9 +237,21 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as StockOwnershipVO
+    let data = formData.value as unknown as StockOwnershipVO as any
 
     if (formType.value === OPERATE_MAP.moveOwnership) {
+      data.itemList = [
+        filterObjKey(data, [
+          'productId',
+          'fromCompanyId',
+          'fromDeptId',
+          'toCompanyId',
+          'toDeptId',
+          'qty',
+          'remark'
+        ])
+      ]
+      data = filterObjKey(data, ['warehouseId', 'itemList'])
       await StockOwnershipMoveApi.createStockOwnershipMove(data)
       message.success(t('common.updateSuccess'))
     }

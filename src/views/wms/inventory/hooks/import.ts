@@ -54,7 +54,6 @@ export const useImport = (refreshDetail, operateImportFormData, formData, invent
         importData.append('inventoryId', inventoryId.value)
         return InventoryBinApi.importInventoryBinExcel(importData).then((res) => {
           refreshDetail()
-          console.log(res, '进行处理')
         })
       }
     }
