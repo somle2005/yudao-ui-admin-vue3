@@ -22,6 +22,16 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+
+        <el-button
+          type="success"
+          plain
+          @click="handleImport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:stock-ownership-move:import']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 批量调归属
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -37,8 +47,18 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-      <!-- <template #operate="{ scope }">
+      <template #operate="{ scope }">
         <el-button
+          link
+          type="primary"
+          :loading="exportLoading"
+          @click="openForm(OPERATE_MAP.moveOwnership, undefined, scope.row)"
+          v-hasPermi="['wms:stock-ownership-move:create']"
+        >
+          调归属
+        </el-button>
+
+        <!-- <el-button
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
@@ -53,13 +73,19 @@
             v-hasPermi="['wms:stock-ownership:delete']"
           >
             删除
-          </el-button>
-      </template> -->
+          </el-button> -->
+      </template>
     </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
   <StockOwnershipForm ref="formRef" @success="getList" />
+
+  <SmImportFile
+    ref="smImportFileRef"
+    :importUrlFn="StockOwnershipMoveApi.importStockOwnershipMove"
+    :templateObj="templateObj"
+  />
 </template>
 
 <script setup lang="ts">
@@ -69,6 +95,9 @@ import { StockOwnershipApi, StockOwnershipVO } from '@/api/wms/stock-ownership'
 import StockOwnershipForm from './StockOwnershipForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { StockOwnershipMoveApi } from '@/api/wms/stock-ownership-move'
+import { OPERATE_MAP } from './constant/index'
+import * as CustomerApi from '@/api/crm/customer'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -93,21 +122,17 @@ const fieldMap = {
     formatter: dateFormatter,
     width: '200px'
   },
-  creatorName: '创建人'
-  // operate: {
-  //   label: '操作',
-  //   slot: 'operate',
-  //   fixed: 'right',
-  //   width: '200px'
-  // }
+  creatorName: '创建人',
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '100px'
+  }
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  noComputePropList: [
-    'warehouseName',
-    'productName',
-    'productBarCode',
-  ]
+  noComputePropList: ['warehouseName', 'productName', 'productBarCode']
 })
 
 /** 所有者库存 列表 */
@@ -166,8 +191,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, row?: any) => {
+  formRef.value.open(type, id, row)
 }
 
 /** 删除按钮操作 */
@@ -199,6 +224,16 @@ const handleExport = async () => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const templateObj = ref({
+  url: CustomerApi.importCustomerTemplate,
+  name: '调归属模版.xls'
+})
+const smImportFileRef = ref()
+/** 导入按钮操作 */
+const handleImport = async () => {
+  smImportFileRef.value.open()
+}
 
 /** 初始化 **/
 onMounted(() => {

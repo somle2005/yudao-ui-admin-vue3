@@ -1,34 +1,16 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form
+    <SmForm
+      class="-mb-15px"
       ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
+      isCol
+      label-width="150px"
+      v-model="formData"
       v-loading="formLoading"
-    >
-      <el-form-item label="仓库ID" prop="warehouseId">
-        <el-input v-model="formData.warehouseId" placeholder="请输入仓库ID" />
-      </el-form-item>
-      <el-form-item label="产品ID" prop="productId">
-        <el-input v-model="formData.productId" placeholder="请输入产品ID" />
-      </el-form-item>
-      <el-form-item label="产品SKU" prop="productSku">
-        <el-input v-model="formData.productSku" placeholder="请输入产品SKU" />
-      </el-form-item>
-      <el-form-item label="库存主体ID" prop="inventorySubjectId">
-        <el-input v-model="formData.inventorySubjectId" placeholder="请输入库存主体ID" />
-      </el-form-item>
-      <el-form-item label="库存归属ID" prop="inventoryOwnerId">
-        <el-input v-model="formData.inventoryOwnerId" placeholder="请输入库存归属ID" />
-      </el-form-item>
-      <el-form-item label="可用库存" prop="availableQuantity">
-        <el-input v-model="formData.availableQuantity" placeholder="请输入可用库存" />
-      </el-form-item>
-      <el-form-item label="待出库库存" prop="pendingOutboundQuantity">
-        <el-input v-model="formData.pendingOutboundQuantity" placeholder="请输入待出库库存" />
-      </el-form-item>
-    </el-form>
+      :options="requestFormOptions"
+      :getModelValue="getFormData"
+    />
+
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -37,6 +19,8 @@
 </template>
 <script setup lang="ts">
 import { StockOwnershipApi, StockOwnershipVO } from '@/api/wms/stock-ownership'
+import { OPERATE_MAP } from './constant'
+import { StockOwnershipMoveApi } from '@/api/wms/stock-ownership-move'
 
 /** 所有者库存 表单 */
 defineOptions({ name: 'StockOwnershipForm' })
@@ -48,31 +32,134 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
-  id: undefined,
-  warehouseId: undefined,
-  productId: undefined,
-  productSku: undefined,
-  inventorySubjectId: undefined,
-  inventoryOwnerId: undefined,
-  availableQuantity: undefined,
-  pendingOutboundQuantity: undefined,
-})
-const formRules = reactive({
-  warehouseId: [{ required: true, message: '仓库ID不能为空', trigger: 'blur' }],
-  inventorySubjectId: [{ required: true, message: '库存主体ID不能为空', trigger: 'blur' }],
-  inventoryOwnerId: [{ required: true, message: '库存归属ID不能为空', trigger: 'blur' }],
-  availableQuantity: [{ required: true, message: '可用库存不能为空', trigger: 'blur' }],
-  pendingOutboundQuantity: [{ required: true, message: '待出库库存不能为空', trigger: 'blur' }],
-})
+
+const initFormData = () => {
+  return {
+    id: undefined,
+    no: undefined,
+    executeStatus: undefined,
+    warehouseId: undefined,
+    itemList: []
+  }
+}
+
+const formData = ref(initFormData())
+
 const formRef = ref() // 表单 Ref
 
+const requestFormOptions: any = ref([])
+const moveFormOptions = () => {
+  // const list = [
+  //   {
+  //     type: 'select',
+  //     label: '仓库',
+  //     prop: 'warehouseId',
+  //     attrs: {
+  //       style: { width: '100%' },
+  //       disabled: true,
+  //       filterable: true,
+  //       clearable: true
+  //     },
+  //     children: WMSWarehouseList
+  //   },
+  //   // productId
+  //   {
+  //     type: 'input',
+  //     prop: 'productBarCode',
+  //     label: '产品编码',
+  //     attrs: {
+  //       disabled: true,
+  //       filterable: true,
+  //       clearable: true,
+  //       style: {
+  //         width: '100%'
+  //       }
+  //     }
+  //   },
+  //   // fromBinId
+  //   {
+  //     type: 'input',
+  //     prop: 'binName',
+  //     label: '调出库位',
+  //     attrs: {
+  //       disabled: true,
+  //       filterable: true,
+  //       clearable: true,
+  //       style: {
+  //         width: '100%'
+  //       }
+  //     }
+  //   },
+  //   {
+  //     type: 'select',
+  //     label: '调入库位',
+  //     prop: 'toBinId',
+  //     placeholder: '请选择调入库位',
+  //     attrs: {
+  //       style: { width: '100%' },
+  //       filterable: true,
+  //       clearable: true
+  //     },
+  //     children: warehouseBinList
+  //   },
+  //   {
+  //     requiredFlag: true,
+  //     componentType: 'sm-number',
+  //     prop: 'qty',
+  //     label: '移动数量',
+  //     attrs: {
+  //       filterable: true,
+  //       clearable: true,
+  //       max: formData.value.binAvailableQty,
+  //       style: {
+  //         width: '100%'
+  //       }
+  //     }
+  //   }
+  // ]
+  // addProperty(list)
+  const list = []
+  return list
+}
+
+const getFormData = () => {
+  return formData.value
+}
+
 /** 打开弹窗 */
-const open = async (type: string, id?: number) => {
+const open = async (type: string, id?: number, row?: any) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+
+  const formTypeOperate = {
+    [OPERATE_MAP.moveOwnership]: () => {
+      requestFormOptions.value = moveFormOptions()
+      dialogTitle.value = OPERATE_MAP.moveOwnership
+
+      // const { binAvailableQty, binName, binId, productId, productBarCode, warehouseId } = row
+      // const obj: any = {
+      //   binAvailableQty,
+      //   fromBinId: binId,
+      //   binName,
+      //   productId,
+      //   productBarCode,
+      //   qty: binAvailableQty,
+      //   warehouseId
+      // }
+
+      // nextTick(() => {
+      //   const qtyItem = requestFormOptions.value.find((item) => item.prop === 'qty')
+      //   qtyItem.attrs.max = obj.binAvailableQty
+      //   formData.value = obj
+      //   getWarehouseBinList(warehouseBinList, { warehouseId })
+      //   formRef.value.initForm()
+      // })
+    }
+  }
+  formTypeOperate[type]()
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -94,13 +181,19 @@ const submitForm = async () => {
   formLoading.value = true
   try {
     const data = formData.value as unknown as StockOwnershipVO
-    if (formType.value === 'create') {
-      await StockOwnershipApi.createStockOwnership(data)
-      message.success(t('common.createSuccess'))
-    } else {
-      await StockOwnershipApi.updateStockOwnership(data)
+
+    if (formType.value === OPERATE_MAP.moveOwnership) {
+      await StockOwnershipMoveApi.createStockOwnershipMove(data)
       message.success(t('common.updateSuccess'))
     }
+
+    // if (formType.value === 'create') {
+    //   await StockOwnershipApi.createStockOwnership(data)
+    //   message.success(t('common.createSuccess'))
+    // } else {
+    //   await StockOwnershipApi.updateStockOwnership(data)
+    //   message.success(t('common.updateSuccess'))
+    // }
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
@@ -111,16 +204,7 @@ const submitForm = async () => {
 
 /** 重置表单 */
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    warehouseId: undefined,
-    productId: undefined,
-    productSku: undefined,
-    inventorySubjectId: undefined,
-    inventoryOwnerId: undefined,
-    availableQuantity: undefined,
-    pendingOutboundQuantity: undefined,
-  }
+  formData.value = initFormData()
   formRef.value?.resetFields()
 }
 </script>
