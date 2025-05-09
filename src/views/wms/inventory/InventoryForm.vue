@@ -438,6 +438,7 @@ const submitForm = async (type?: string) => {
     else if (formType.value === OPERATE_MAP.append || type === OPERATE_MAP.append) {
       // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
       const queryData = getAppendList(data)
+      if(!queryData.length) return // 如果没有新加的就不进行追加
       await InventoryBinApi.appendInventoryBin(queryData)
       message.success(t('common.updateSuccess'))
       if (type === OPERATE_MAP.append) {
