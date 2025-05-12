@@ -40,7 +40,7 @@ export const StockOwnershipApi = {
   },
 
   // 导出所有者库存 Excel
-  exportStockOwnership: async (params) => {
-    return await request.download({ url: `/wms/stock-ownership/export-excel`, params })
+  exportStockOwnership: async (data) => {
+    return await request.download({ url: `/wms/stock-ownership/export-excel`, data, method: 'POST' })
   },
 }

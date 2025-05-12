@@ -75,8 +75,17 @@ export const InboundItemApi = {
   },
 
   // 导出入库单详情 Excel
-  exportInboundItem: async (params) => {
-    return await request.download({ url: `/wms/inbound-item/export-excel`, params })
+  exportInboundItem: async (data) => {
+    return await request.download({ url: `/wms/inbound-item/export-excel`, data, method: 'POST' })
+  },
+
+  // 导出批次库存 Excel
+  exportInboundItemExcelBin: async (data) => {
+    return await request.download({
+      url: `/wms/inbound-item/export-excel-bin`,
+      data,
+      method: 'POST'
+    })
   },
 
   // 待上架的入库明细

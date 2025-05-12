@@ -45,7 +45,7 @@ export const WarehouseZoneApi = {
   },
 
   // 获得库区精简列表
-  getWarehouseZoneSimpleList: async () => {
-    return await request.get({ url: '/wms/warehouse-zone/simple-list' })
+  getWarehouseZoneSimpleList: async (params: any) => {
+    return await request.get({ url: '/wms/warehouse-zone/simple-list', params })
   }
 }

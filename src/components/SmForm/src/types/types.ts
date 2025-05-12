@@ -32,7 +32,7 @@ type FormType =
   | 'tree-select'
   | 'text'
 
-type FormComponentType = 'sm-remote-select' | 'sm-radio-group' | 'sm-range'
+type FormComponentType = 'sm-remote-select' | 'sm-radio-group' | 'sm-range' | 'sm-selct'
 
 // 表单每一项的配置选项
 export interface FormOptions {

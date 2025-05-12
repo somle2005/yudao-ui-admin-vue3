@@ -93,6 +93,13 @@ export const distinctList = (sourceList: any[], selectList: any[], compareKey = 
   return list
 }
 
+// 获取相同项SameKeyItem
+export const getSameKeyItemList = (list, sameKey = 'id') => {
+  if (!list?.length) return list
+  const baseId = list[0][sameKey]
+  return list.filter((item) => item[sameKey] === baseId)
+}
+
 /**
  * 计算税额和价税合计
  * @param list

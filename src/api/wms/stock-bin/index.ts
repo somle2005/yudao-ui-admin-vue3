@@ -39,12 +39,17 @@ export const StockBinApi = {
   },
 
   // 导出仓位库存 Excel
-  exportStockBin: async (params) => {
-    return await request.download({ url: `/wms/stock-bin/export-excel`, params })
+  exportStockBin: async (data) => {
+    return await request.download({ url: `/wms/stock-bin/export-excel`, data, method: 'POST' })
   },
 
   // 获得按产品分组的仓位库存分页
   getStockBinGroupedPage: async (data: any) => {
     return await request.post({ url: `/wms/stock-bin/grouped-page`, data })
+  },
+
+  // 获得产品的仓位库存
+  getStockBinStocks: async (params: any) => {
+    return await request.get({ url: `/wms/stock-bin/stocks`, params })
   }
 }

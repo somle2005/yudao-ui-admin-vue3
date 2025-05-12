@@ -44,8 +44,8 @@ export const StockWarehouseApi = {
   },
 
   // 导出仓库库存 Excel
-  exportStockWarehouse: async (params) => {
-    return await request.download({ url: `/wms/stock-warehouse/export-excel`, params })
+  exportStockWarehouse: async (data) => {
+    return await request.download({ url: `/wms/stock-warehouse/export-excel`, data, method: 'POST' })
   },
 
   // 获得分组的仓库库存分页

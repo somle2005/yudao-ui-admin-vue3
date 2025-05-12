@@ -196,7 +196,7 @@ const props = defineProps({
   // 是否隐藏额外内容并在单元格悬停时使用 Tooltip 显示它
   showOverflowTooltip: {
     type: Boolean,
-    default: true
+    default: false
   },
   // 编辑显示的图标
   editIcon: {
@@ -218,10 +218,6 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  tooltip: {
-    type: Boolean,
-    default: false
-  }
 })
 
 const emits = defineEmits([

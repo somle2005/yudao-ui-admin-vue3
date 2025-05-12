@@ -69,6 +69,13 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  // 支持将配置参数带入-因为有部分keyMap已经存在props所以无法通过v-bind带入
+  attrs: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 
   // // 是否在加载中
@@ -89,6 +96,19 @@ const emitModelValue = (val) => {
     emits('update:modelValue', val)
   }
 }
+
+watch(
+  () => props.attrs,
+  (val) => {
+    if (Object.keys(val).length > 0) {
+      const data = val?.data
+      if (data) {
+        selectList.value = data.value
+      }
+    }
+  },
+  { deep: true, immediate: true }
+)
 
 watch(
   () => props.api,
@@ -123,7 +143,7 @@ watch(
   (val) => {
     if (val?.length) {
       selectList.value = cloneDeep(val).map((item: any) => {
-        const { label, value } = props.keyMap
+        const { label, value } = props.attrs.keyMap || props.keyMap
         item.label = item[label]
         item.value = item[value]
         bindMap.value[item.value] = item.label
