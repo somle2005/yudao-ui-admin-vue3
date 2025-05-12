@@ -56,7 +56,12 @@
         <el-table-column label="包装宽(cm)" prop="packageWidth" width="100" align="center" />
         <el-table-column label="包装高(cm)" prop="packageHeight" width="100" align="center" />
         <el-table-column label="毛重(kg)" prop="packageWeight" width="100" align="center" />
-        <el-table-column label="体积(m³)" prop="volume" width="100" align="center" />
+
+        <el-table-column label="体积(m³)" prop="volume" width="120" align="center">
+          <template #default="{ row }">
+            <SmNumber :precision="3" disabled v-model="row.volume" />
+          </template>
+        </el-table-column>
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
@@ -131,8 +136,7 @@ watch(
 
 watch(
   () => props.warehouse,
-  (val) => {
-  },
+  (val) => {},
   { immediate: true, deep: true }
 )
 
@@ -232,7 +236,7 @@ const changeProduct = async (row, index, val) => {
     }
 
     const data = await CustomRuleApi.getCustomRulePage(query)
-    if(data?.list?.length) {
+    if (data?.list?.length) {
       row.fbaBarCode = data.list[0].fbaBarCode
     }
   } catch (e) {

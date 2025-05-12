@@ -44,9 +44,9 @@ export const mergeItemsUpToList = (list: any[], itemKey = 'items') => {
     if (item[itemKey]?.length) {
       item[itemKey].forEach((obj) => {
         const newItem = {
-          ...obj
+          ...item
         }
-        for (const key in item) {
+        for (const key in obj) {
           // key首字母大写
           newItem[itemKey + key[0].toUpperCase() + key.slice(1)] = obj[key]
         }

@@ -101,6 +101,11 @@
       @pagination="getList"
       @selection-change="handleSelectionChange"
     >
+      <template #request="{ scope }">
+        <div>申请人:{{ scope.row.requestUserName }}</div>
+        <div>申请部门:{{ scope.row.requestDeptName }}</div>
+      </template>
+
       <template #operate="{ scope }">
         <el-button
           link
@@ -303,7 +308,7 @@ const {
   handleUpdateStatus,
   handleSubmitAuditBatch,
   handleUpdateStatusEnableBatch
-} = useBatch(wholeOrderEnable,selectionList, getList, openForm)
+} = useBatch(wholeOrderEnable, selectionList, getList, openForm)
 
 const { handleWholeOrderEnable } = useWholeOrder(
   allOptions,
