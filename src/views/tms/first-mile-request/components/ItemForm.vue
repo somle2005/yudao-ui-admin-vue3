@@ -83,6 +83,7 @@ import { computeTargetQty } from '@/utils/transformData'
 import { hasRepeat } from '@/utils/judge'
 import { getProductList } from '@/commonData'
 import { changeAppStatus } from '@/api/pay/app'
+import { CustomRuleApi } from '@/api/tms/customrule'
 
 const productList = getProductList()
 
@@ -103,7 +104,7 @@ const props = defineProps({
     default: ''
   },
   warehouse: {
-    type: Number,
+    type: Object,
     default: null
   },
   itemIdKey: {
@@ -130,14 +131,9 @@ watch(
 
 watch(
   () => props.warehouse,
-  (val: any) => {
-    if (val) {
-      const country = val.country
-    } else {
-    }
-    console.log(val, '目的仓库')
-    // getWarehouseBinList(warehouseBinList, { warehouseId: val })
-  }
+  (val) => {
+  },
+  { immediate: true, deep: true }
 )
 
 /** 初始化设置入库项 */
@@ -219,19 +215,29 @@ const computeVolume = (item) => {
   }
 }
 
-const changeProduct = (row, index, val) => {
-  const product = productList.value.find((item) => item.id === val)
-  if (!product) return
+const changeProduct = async (row, index, val) => {
+  try {
+    const product = productList.value.find((item) => item.id === val)
+    if (!product) return
 
-  const { packageHeight, packageLength, packageWidth, packageWeight } = product
-  row.packageHeight = packageHeight
-  row.packageLength = packageLength
-  row.packageWidth = packageWidth
-  row.packageWeight = packageWeight
+    const { packageHeight, packageLength, packageWidth, packageWeight } = product
+    row.packageHeight = packageHeight
+    row.packageLength = packageLength
+    row.packageWidth = packageWidth
+    row.packageWeight = packageWeight
 
-  console.log(product, 'product')
+    const query: any = {
+      countryCode: props.warehouse.countryCode, // country
+      productId: val
+    }
 
-  console.log(row, index, val, 'row,index,val-row,index,val')
+    const data = await CustomRuleApi.getCustomRulePage(query)
+    if(data?.list?.length) {
+      row.fbaBarCode = data.list[0].fbaBarCode
+    }
+  } catch (e) {
+    console.log(e, '报错')
+  }
 }
 
 /** 初始化 */

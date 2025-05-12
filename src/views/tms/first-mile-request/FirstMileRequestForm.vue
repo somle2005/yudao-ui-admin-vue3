@@ -21,6 +21,7 @@
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="头程申请表清单" name="firstMileRequestItem">
             <ItemForm
+              v-if="formData.toWarehouseId"
               ref="itemFormRef"
               :items="formData.items"
               :warehouse="warehouse"
