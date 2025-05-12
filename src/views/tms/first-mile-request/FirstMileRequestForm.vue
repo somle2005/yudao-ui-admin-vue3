@@ -44,7 +44,7 @@ import { FirstMileRequestApi, FirstMileRequestVO } from '@/api/tms/first-mile-re
 import ItemForm from './components/ItemForm.vue'
 import { addProperty } from '@/components/SmForm/src/utils'
 import { useOutData } from './components/hooks/outdata'
-import { getDeptTree } from '@/commonData'
+import { getDeptTree, getUserList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getIntDictOptions } from '@/utils/dict'
 
@@ -79,6 +79,7 @@ const deptList = ref([])
 const defaultProps = ref({})
 const WMSWarehouseList = ref([])
 const warehouse = ref({})
+const userList = ref([])
 
 /** 子表的表单 */
 const subTabsName = ref('firstMileRequestItem')
@@ -95,6 +96,7 @@ const open = async (type: string, id?: number) => {
   const deptObj = getDeptTree(deptList)
   defaultProps.value = deptObj.defaultProps
   getWMSWarehouseList(WMSWarehouseList)
+  getUserList(userList)
 
   if (type === 'create') {
     FirstMileRequestApi.getFirstMileRequestLatestNo().then((res) => {
@@ -130,10 +132,28 @@ const createRequestFormOptions = () => {
       }
     },
     {
+      requiredFlag: true,
+      type: 'select',
+      placeholder: '请选择申请人',
+      prop: 'requesterId',
+      label: '申请人',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: userList
+    },
+
+    {
+      requiredFlag: true,
       type: 'tree-select',
-      label: '库存归属',
-      prop: 'deptId',
-      placeholder: '请选择库存归属',
+      label: '申请部门',
+      prop: 'requestDeptId',
+      placeholder: '请选择申请部门',
       attrs: {
         'node-key': 'id',
         'check-strictly': true,

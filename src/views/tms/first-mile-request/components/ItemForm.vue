@@ -44,7 +44,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申请数量" width="100" align="center">
+        <el-table-column label="数量" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <SmNumber :disabled="disabled" v-model="row.qty" />
@@ -119,7 +119,7 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  qty: [{ required: true, message: '本次上架数不能为空', trigger: 'blur' }],
+  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   fbaBarCode: [{ required: true, message: '请输入FBA条码', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
