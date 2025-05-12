@@ -90,7 +90,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.COUNTRY_CODE).map((item: any) => {
-        item.value = item.label
+        // item.value = item.label
         return item
       })
     },
