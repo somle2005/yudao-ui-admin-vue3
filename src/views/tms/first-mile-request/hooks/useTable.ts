@@ -5,6 +5,7 @@ import {
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
+import { formatDecimalFormatter } from '@/utils/num'
 import { mergeItemsUpToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
 
@@ -24,7 +25,7 @@ export const useTable = () => {
 
     request: {
       label: '申请人 申请部门',
-      slot: 'request',
+      slot: 'request'
     }, //申请人-申请部门
     // requestUserName: '申请人名称',
     // requestDeptName: '申请部门名称',
@@ -39,12 +40,13 @@ export const useTable = () => {
       label: '关闭状态',
       slot: 'offStatus',
       dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
-      
     },
     itemCount: '产品总数量',
     totalWeight: '总重量(kg)',
-    totalVolume: '总体积(m³)',
-
+    totalVolume: {
+      label: '总体积(m³)',
+      formatter: formatDecimalFormatter
+    },
 
     auditStatus: {
       label: '审核状态',
@@ -52,17 +54,45 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
+    // 已订购数	销售公司	逻辑库存	采购在途数	包装长宽高	毛重	体积
 
-
-
-    // 	FBA条码	数量	行订购状态	行关闭状态	已订购数	销售公司	逻辑库存	采购在途数	包装长宽高	毛重	体积
-
-    
     itemsBarCode: {
       label: '产品编码',
+      width: '150px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    }, 
+    },
+    itemsFbaBarCode: {
+      label: 'FBA条码',
+      width: '150px',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsQty: '数量',
+    itemsOrderStatus: {
+      label: '行订购状态',
+      slot: 'itemsOrderStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_ORDER_STATUS },
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsOffStatus: {
+      label: '行关闭状态',
+      slot: 'itemsOffStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS },
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
 
+    orderClosedQty: '已订购数',
+    salesCompanyName: '销售公司',
+    package: {
+      label: '包装长宽高',
+      slot: 'package'
+    },
+
+    // 逻辑库存	采购在途数
+    itemsPackageWeight: '毛重(kg)',
+    itemsVolume: {
+      label: '体积(m³)',
+      formatter: formatDecimalFormatter
+    },
 
     // comment: '审批意见',
     // remark: '备注',
@@ -87,7 +117,7 @@ export const useTable = () => {
   }
   const allOptions = transformTableOptions(fieldMap, {
     wrapList: ['code'],
-    noComputePropList: ['code', 'auditStatus', 'orderStatus', 'offStatus']
+    noComputePropList: ['code', 'auditStatus', 'orderStatus', 'offStatus', 'itemsBarCode']
   })
 
   tableOptions.value = createBranchOrder(cloneDeep(allOptions))

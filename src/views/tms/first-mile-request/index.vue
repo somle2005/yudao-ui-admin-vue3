@@ -106,6 +106,12 @@
         <div>申请部门:{{ scope.row.requestDeptName }}</div>
       </template>
 
+      <template #package="{ scope }">
+        <div>包装长:{{ scope.row.itemsPackageLength }}</div>
+        <div>包装宽:{{ scope.row.itemsPackageWidth }}</div>
+        <div>包装高:{{ scope.row.itemsPackageHeight }}</div>
+      </template>
+
       <template #operate="{ scope }">
         <el-button
           link

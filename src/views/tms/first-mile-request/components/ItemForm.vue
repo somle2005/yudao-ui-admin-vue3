@@ -56,12 +56,18 @@
         <el-table-column label="包装宽(cm)" prop="packageWidth" width="100" align="center" />
         <el-table-column label="包装高(cm)" prop="packageHeight" width="100" align="center" />
         <el-table-column label="毛重(kg)" prop="packageWeight" width="100" align="center" />
-
-        <el-table-column label="体积(m³)" prop="volume" width="120" align="center">
+        <el-table-column
+          label="体积(m³)"
+          prop="volume"
+          width="120"
+          align="center"
+          :formatter="formatDecimalFormatter"
+        />
+        <!-- <el-table-column label="体积(m³)" prop="volume" width="120" align="center">
           <template #default="{ row }">
             <SmNumber :precision="3" disabled v-model="row.volume" />
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
@@ -89,6 +95,8 @@ import { hasRepeat } from '@/utils/judge'
 import { getProductList } from '@/commonData'
 import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
+import { getIntDictOptions } from '@/utils/dict'
+import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
 
 const productList = getProductList()
 
@@ -215,14 +223,28 @@ const handleAdd = () => {
 const computeVolume = (item) => {
   const { packageHeight, packageLength, packageWidth, qty } = item
   if ([packageHeight, packageLength, packageWidth, qty].every((item) => item)) {
-    item.volume = (packageHeight * packageLength * packageWidth * qty) / 1000000
+    item.volume = Number(
+      formatDecimal((packageHeight * packageLength * packageWidth * qty) / 1000000, 3)
+    )
   }
 }
 
 const changeProduct = async (row, index, val) => {
   try {
     const product = productList.value.find((item) => item.id === val)
-    if (!product) return
+    if (!product) {
+      ;[
+        'packageHeight',
+        'packageLength',
+        'packageWidth',
+        'packageWeight',
+        'fbaBarCode',
+        'volume'
+      ].forEach((key) => {
+        row[key] = undefined
+      })
+      return
+    }
 
     const { packageHeight, packageLength, packageWidth, packageWeight } = product
     row.packageHeight = packageHeight
@@ -230,14 +252,25 @@ const changeProduct = async (row, index, val) => {
     row.packageWidth = packageWidth
     row.packageWeight = packageWeight
 
+    const country = props.warehouse.country
+    const countryList = getIntDictOptions(DICT_TYPE.COUNTRY_CODE)
+    const countryCode = countryList.find((item) => country === item.label)?.value
+
+    if (!countryCode && countryCode != 0) {
+      row.fbaBarCode = undefined
+      return
+    }
+
     const query: any = {
-      countryCode: props.warehouse.countryCode, // country
+      countryCode,
       productId: val
     }
 
     const data = await CustomRuleApi.getCustomRulePage(query)
     if (data?.list?.length) {
       row.fbaBarCode = data.list[0].fbaBarCode
+    } else {
+      row.fbaBarCode = undefined
     }
   } catch (e) {
     console.log(e, '报错')
