@@ -12,6 +12,27 @@ export interface FirstMileRequestVO {
   items: any[] // 头程申请表明细列表
 }
 
+export interface FirstMileRequestAuditVO {
+  /**
+   * 通过与否
+   * 审核通过/不通过
+   */
+  pass: boolean
+  /**
+   * 头程申请单ID集合
+   */
+  requestId: number
+  /**
+   * 审核意见
+   */
+  reviewComment?: string
+  /**
+   * 审核/反审核
+   * 审核通过/审核撤销
+   */
+  reviewed: boolean
+}
+
 // 头程申请单 API
 export const FirstMileRequestApi = {
   // 查询头程申请单分页
@@ -61,11 +82,20 @@ export const FirstMileRequestApi = {
 
   // 头程申请单 提交审核
   submitFirstMileRequestAudit: async (data: { ids: number[] }) => {
-    return await request.post({ url: `/tms/first-mile-request/submit-audit`, data })
+    return await request.put({ url: `/tms/first-mile-request/submit-audit`, data })
   },
 
   // 头程申请单 启用/禁用申请单子项
   updateFirstMileRequestItemStatus: async (data: { itemIds: number[]; enable: boolean }) => {
     return await request.put({ url: `/tms/first-mile-request/update-item-status`, data })
-  }
+  },
+
+  // 头程申请单 审核/反审核
+  auditFirstMileRequestStatus: async (params: FirstMileRequestAuditVO) => {
+    return await request.put({ url: `/tms/first-mile-request/audit-status`, params })
+  },
+  // 头程申请单 合并头程申请单
+  mergeFirstMileRequest: async (data: any) => {
+    return await request.post({ url: `/tms/first-mile-request/merge`, data })
+  },
 }

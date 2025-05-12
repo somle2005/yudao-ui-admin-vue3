@@ -34,19 +34,32 @@
     </SmForm>
 
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button v-if="!auditType" @click="submitFormDB" type="primary" :disabled="formLoading"
+        >确 定</el-button
+      >
       <el-button @click="dialogVisible = false">取 消</el-button>
+      <template v-if="auditType">
+        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+          不同意</el-button
+        >
+        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
+          同意</el-button
+        >
+      </template>
     </template>
   </Dialog>
 </template>
 <script setup lang="ts">
 import { FirstMileRequestApi, FirstMileRequestVO } from '@/api/tms/first-mile-request'
 import ItemForm from './components/ItemForm.vue'
-import { addProperty } from '@/components/SmForm/src/utils'
+import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { useOutData } from './components/hooks/outdata'
 import { getDeptTree, getUserList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getIntDictOptions } from '@/utils/dict'
+import { createDBFn } from '@/utils/decorate'
+import { AUDIT_TYPE } from '@/utils/constant'
+import { addComment } from '@/views/wms/utils'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -72,9 +85,11 @@ const initFormData = () => {
     items: []
   }
 }
+
+const auditType = computed(() => formType.value === 'audit')
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
-const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
+const itemsFormdisabled = computed(() => ['detail', 'audit'].includes(formType.value))
 const deptList = ref([])
 const defaultProps = ref({})
 const WMSWarehouseList = ref([])
@@ -84,39 +99,6 @@ const userList = ref([])
 /** 子表的表单 */
 const subTabsName = ref('firstMileRequestItem')
 const itemFormRef = ref()
-
-/** 打开弹窗 */
-const open = async (type: string, id?: number) => {
-  dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
-  formType.value = type
-  resetForm()
-
-  warehouse.value = {}
-  const deptObj = getDeptTree(deptList)
-  defaultProps.value = deptObj.defaultProps
-  getWMSWarehouseList(WMSWarehouseList)
-  getUserList(userList)
-
-  if (type === 'create') {
-    FirstMileRequestApi.getFirstMileRequestLatestNo().then((res) => {
-      const modelValue = formRef.value.getFormData()
-      modelValue.code = res
-    })
-  }
-
-  // 修改时，设置数据
-  if (id) {
-    formLoading.value = true
-    try {
-      formData.value = await FirstMileRequestApi.getFirstMileRequest(id)
-      formRef.value.initForm()
-    } finally {
-      formLoading.value = false
-    }
-  }
-}
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -206,7 +188,75 @@ const createRequestFormOptions = () => {
   addProperty(list)
   return list
 }
-requestFormOptions.value = createRequestFormOptions()
+
+const createAuditFormOptions = (formOptions) => {
+  addDisabled(formOptions)
+  addComment(formOptions)
+  return formOptions
+}
+
+const createDetailFormOptions = (formOptions) => {
+  addComment(formOptions)
+  return formOptions
+}
+
+const mergeOptions = (formOptions) => {
+  return formOptions
+}
+
+/** 打开弹窗 */
+const open = async (type: string, id?: number) => {
+  dialogVisible.value = true
+  dialogTitle.value = t('action.' + type)
+  formType.value = type
+  resetForm()
+
+  const formTypeOperate = {
+    detail: () => {
+      requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
+    },
+    create: () => {
+      requestFormOptions.value = createRequestFormOptions()
+    },
+    update: () => {
+      requestFormOptions.value = createRequestFormOptions()
+    },
+    audit: () => {
+      requestFormOptions.value = createAuditFormOptions(createRequestFormOptions())
+    },
+    merge: () => {
+      dialogTitle.value = '合并头程申请单'
+      requestFormOptions.value = mergeOptions(createRequestFormOptions())
+    }
+  }
+  const fn = formTypeOperate[type]
+  fn && fn()
+
+  warehouse.value = {}
+  const deptObj = getDeptTree(deptList)
+  defaultProps.value = deptObj.defaultProps
+  getWMSWarehouseList(WMSWarehouseList)
+  getUserList(userList)
+
+  if (type === 'create') {
+    FirstMileRequestApi.getFirstMileRequestLatestNo().then((res) => {
+      const modelValue = formRef.value.getFormData()
+      modelValue.code = res
+    })
+  }
+
+  // 修改时，设置数据
+  if (id) {
+    formLoading.value = true
+    try {
+      formData.value = await FirstMileRequestApi.getFirstMileRequest(id)
+      formRef.value.initForm()
+    } finally {
+      formLoading.value = false
+    }
+  }
+}
+defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 const getFormData = () => {
   return formData.value
@@ -214,7 +264,7 @@ const getFormData = () => {
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
-const submitForm = async () => {
+const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
   // 校验子表单
@@ -222,12 +272,20 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as FirstMileRequestVO
+    const data = formData.value as unknown as FirstMileRequestVO as any
     if (formType.value === 'create') {
       await FirstMileRequestApi.createFirstMileRequest(data)
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
       await FirstMileRequestApi.updateFirstMileRequest(data)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'audit') {
+      await FirstMileRequestApi.auditFirstMileRequestStatus({
+        reviewed: true,
+        pass: type === AUDIT_TYPE.agree,
+        requestId: data.id,
+        reviewComment: data.reviewComment
+      })
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -237,6 +295,8 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
+
+const submitFormDB = createDBFn(submitForm)
 
 /** 重置表单 */
 const resetForm = () => {
