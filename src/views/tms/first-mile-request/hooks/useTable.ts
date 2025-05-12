@@ -66,7 +66,10 @@ export const useTable = () => {
       width: '150px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    itemsQty: '数量',
+    itemsQty: {
+      label: '数量',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
     itemsOrderStatus: {
       label: '行订购状态',
       slot: 'itemsOrderStatus',
@@ -80,18 +83,29 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    orderClosedQty: '已订购数',
-    salesCompanyName: '销售公司',
-    package: {
+    itemsOrderClosedQty: {
+      label: '已订购数',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsSalesCompanyName: {
+      label: '销售公司',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsPackage: {
       label: '包装长宽高',
-      slot: 'package'
+      slot: 'itemsPackage',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     // 逻辑库存	采购在途数
-    itemsPackageWeight: '毛重(kg)',
+    itemsPackageWeight: {
+      label: '毛重(kg)',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
     itemsVolume: {
       label: '体积(m³)',
-      formatter: formatDecimalFormatter
+      formatter: formatDecimalFormatter,
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     // comment: '审批意见',
@@ -138,6 +152,7 @@ export const useTable = () => {
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
+    console.log(list.value,'list.value')
   }
 
   return {
