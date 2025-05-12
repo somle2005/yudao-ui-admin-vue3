@@ -97,12 +97,7 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
   },
   companyName: '公司名称',
-  // country: '国家编码',
-  country: {
-    label: '国家编码',
-    slot: 'country',
-    dictAttrs: { type: DICT_TYPE.COUNTRY_CODE }
-  },
+  country: '国家编码',
   province: '省/州',
   city: '城市',
   addressLine1: '地址1',
