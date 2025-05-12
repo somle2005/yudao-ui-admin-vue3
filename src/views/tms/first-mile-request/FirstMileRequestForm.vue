@@ -23,6 +23,7 @@
             <ItemForm
               ref="itemFormRef"
               :items="formData.items"
+              :warehouse="warehouse"
               :formType="formType"
               :disabled="itemsFormdisabled"
             />
@@ -73,8 +74,10 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
-let { deptList, defaultProps } = { deptList: [], defaultProps: {} }
-const WMSWarehouseList = getWMSWarehouseList()
+const deptList = ref([])
+const defaultProps = ref({})
+const WMSWarehouseList = ref([])
+const warehouse = ref({})
 
 /** 子表的表单 */
 const subTabsName = ref('firstMileRequestItem')
@@ -86,8 +89,11 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+
+  warehouse.value = {}
   const deptObj = getDeptTree(deptList)
-  defaultProps = deptObj.defaultProps
+  defaultProps.value = deptObj.defaultProps
+  getWMSWarehouseList(WMSWarehouseList)
 
   if (type === 'create') {
     FirstMileRequestApi.getFirstMileRequestLatestNo().then((res) => {
@@ -119,7 +125,7 @@ const createRequestFormOptions = () => {
       placeholder: '保存时自动生成',
       attrs: {
         style: { width: '100%' },
-        clearable: true,
+        clearable: true
       }
     },
     {
@@ -150,6 +156,7 @@ const createRequestFormOptions = () => {
     //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
     // },
     {
+      requiredFlag: true,
       type: 'select',
       label: '目的仓',
       prop: 'toWarehouseId',
@@ -157,7 +164,11 @@ const createRequestFormOptions = () => {
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true
+        clearable: true,
+        onChange: (val) => {
+          warehouse.value = WMSWarehouseList.value.find((item: any) => item.value === val) || {}
+          console.log(val, '目的仓')
+        }
       },
       children: WMSWarehouseList
     },
