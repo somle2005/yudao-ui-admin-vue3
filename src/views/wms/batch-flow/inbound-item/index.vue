@@ -133,7 +133,7 @@ const fieldMap = {
 
   // binName: '库位',
   // deptName: '库存归属',
-  // companyName: '库存主体',
+  // companyName: '库存公司',
   // inboundDeptName: '入库库存归属',
   // inboundCompanyName: '入库库存归属',
   // inboundStatus: {

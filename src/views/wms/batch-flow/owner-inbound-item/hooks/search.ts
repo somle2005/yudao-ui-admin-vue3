@@ -62,9 +62,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // },
     // {
     //   type: 'select',
-    //   placeholder: '请选择库存主体',
+    //   placeholder: '请选择库存公司',
     //   prop: 'companyId',
-    //   label: '库存主体',
+    //   label: '库存公司',
     //   attrs: {
     //     filterable: true,
     //     clearable: true,
