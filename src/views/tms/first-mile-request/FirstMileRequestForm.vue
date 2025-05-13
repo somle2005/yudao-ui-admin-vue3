@@ -77,6 +77,7 @@ import { addComment } from '@/views/wms/utils'
 import { FirstMileApi } from '@/api/tms/first-mile'
 import { useMergeFirstMileOptions, computeFirstMileList } from '../common/utils'
 import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
+import { cloneDeep } from 'lodash-es'
 
 /** 头程申请单 表单 */
 defineOptions({ name: 'FirstMileRequestForm' })
@@ -255,11 +256,11 @@ const open = async (type: string, id?: number, data?: any) => {
       })
       getFinanceSubjectList(financeSubjectList)
 
-      data.forEach((item) => {
+      formData.value.firstMileItems = cloneDeep(data).map((item) => {
         item.weight = item.productWeight
+        item.id = undefined
+        return item
       })
-
-      formData.value.firstMileItems = data
       console.log(formData.value.firstMileItems, 'formData.value.firstMileItems', data)
       nextTick(() => {
         formRef.value.initForm()
@@ -297,11 +298,12 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
-  // 校验子表单
-  await itemFormRef.value.validate()
 
   if (formType.value === 'merge') {
     await firstMileItemFormRef.value.validate()
+  } else {
+    // 校验子表单
+    await itemFormRef.value.validate()
   }
 
   // 提交请求

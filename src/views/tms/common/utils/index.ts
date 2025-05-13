@@ -1,7 +1,8 @@
 import { addProperty } from '@/components/SmForm/src/utils'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { formatDecimal } from '@/utils/num'
-import { PRODUCT_WEIGHT, VOLUMN_PRECISION } from '../constant'
+import { VOLUMN_PRECISION } from '../constant'
+import { CustomRuleApi } from '@/api/tms/customrule'
 
 // 合并头程申请单 头程申请合并和头程订单复用
 export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSubjectList) => {
@@ -236,7 +237,10 @@ export const computeVolume = (item) => {
   const { packageHeight, packageLength, packageWidth, qty } = item
   if ([packageHeight, packageLength, packageWidth, qty].every((item) => item)) {
     item.volume = Number(
-      formatDecimal((packageHeight * packageLength * packageWidth * qty) / 1000000, VOLUMN_PRECISION)
+      formatDecimal(
+        (packageHeight * packageLength * packageWidth * qty) / 1000000,
+        VOLUMN_PRECISION
+      )
     )
   }
 }
@@ -271,4 +275,32 @@ export const computeFirstMileList = (list: any[], data: any) => {
     { computeKey: 'qty', targetKey: 'totalQty' }
   ]
   return computeList(mapList, list, data)
+}
+
+// 编辑回显也给它最新带过来
+export const addFbaBarCode = (val, formData) => {
+  if (!val?.country) return
+  // 合并的时候props.items后进来所以需要延迟调用-但是变化核心是这里
+  setTimeout(async () => {
+    const productIds = formData.value.map((item) => item.productId)
+    if (!productIds?.length) return
+    try {
+      const data = await CustomRuleApi.getCustomRuleListByCountryProduct({
+        country: val.country,
+        productIds
+      })
+      if (data?.length) {
+        formData.value.forEach((item) => {
+          const fbaBarCode = data.find((a) => a.productId === item.productId)?.fbaBarCode
+          item.fbaBarCode = fbaBarCode
+        })
+      } else {
+        formData.value.forEach((item) => {
+          item.fbaBarCode = undefined
+        })
+      }
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  }, 100)
 }

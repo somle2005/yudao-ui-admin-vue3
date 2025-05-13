@@ -17,158 +17,156 @@ import request from '@/config/axios'
 //   fbaBarCode?: string // FBA条码
 // }
 
-
 export interface CustomRuleVO {
   /**
    * 国家编码
    */
-  countryCode: number;
+  countryCode: number
   /**
    * 申报品名
    */
-  declaredType?: string;
+  declaredType?: string
   /**
    * 申报品名（英文）
    */
-  declaredTypeEn: string;
+  declaredTypeEn: string
   /**
    * 申报金额
    */
-  declaredValue: number;
+  declaredValue: number
   /**
    * 申报金额币种
    */
-  declaredValueCurrencyCode: number;
+  declaredValueCurrencyCode: number
   /**
    * 条形码
    */
-  fbaBarCode?: string;
+  fbaBarCode?: string
   /**
    * hs编码
    */
-  hscode?: string;
+  hscode?: string
   /**
    * 海关规则id
    */
-  id?: number;
+  id?: number
   /**
    * 物流属性
    */
-  logisticAttribute?: number;
+  logisticAttribute?: number
   /**
    * 产品id
    */
-  productId: number;
+  productId: number
   /**
    * 税率
    */
-  taxRate?: number;
+  taxRate?: number
 }
 
 export interface CustomRuleDTO {
   /**
    * SKU（编码）
    */
-  barCode?: string;
+  barCode?: string
   /**
    * 品牌
    */
-  brand?: string;
+  brand?: string
   /**
    * 产品分类编号
    */
-  categoryId?: number;
+  categoryId?: number
   /**
    * 颜色
    */
-  color?: string;
+  color?: string
   /**
    * 创建时间
    */
-  createTime?: string[];
+  createTime?: string[]
   /**
    * 部门id
    */
-  deptId?: number;
+  deptId?: number
   /**
    * 基础高度（mm）
    */
-  height?: number;
+  height?: number
   /**
    * ID工业设计id
    */
-  industrialDesignerId?: number;
+  industrialDesignerId?: number
   /**
    * 基础长度（mm）
    */
-  length?: number;
+  length?: number
   /**
    * 维护工程师id
    */
-  maintenanceEngineerId?: number;
+  maintenanceEngineerId?: number
   /**
    * 材料（中文）
    */
-  material?: string;
+  material?: string
   /**
    * 型号
    */
-  model?: string;
+  model?: string
   /**
    * 产品名称
    */
-  name?: string;
+  name?: string
   /**
    * 页码，从 1 开始
    */
-  pageNo: number;
+  pageNo: number
   /**
    * 每页条数，最大值为 100
    */
-  pageSize: number;
+  pageSize: number
   /**
    * 生产编号
    */
-  productionNo?: string;
+  productionNo?: string
   /**
    * PO产品经理id
    */
-  productOwnerId?: number;
+  productOwnerId?: number
   /**
    * 备注
    */
-  remark?: string;
+  remark?: string
   /**
    * RD研发工程师id
    */
-  researchDeveloperId?: number;
+  researchDeveloperId?: number
   /**
    * 流水号
    */
-  serial?: number;
+  serial?: number
   /**
    * 系列
    */
-  series?: string;
+  series?: string
   /**
    * 产品状态（1启用，0禁用）
    */
-  status?: boolean;
+  status?: boolean
   /**
    * 单位编号
    */
-  unitId?: number;
+  unitId?: number
   /**
    * 基础重量（kg）
    */
-  weight?: number;
+  weight?: number
   /**
    * 基础宽度（mm）
    */
-  width?: number;
-  productId?: number;
+  width?: number
+  productId?: number
 }
-
 
 // ERP 海关规则 API
 export const CustomRuleApi = {
@@ -200,5 +198,10 @@ export const CustomRuleApi = {
   // 导出ERP 海关规则 Excel
   exportCustomRule: async (params) => {
     return await request.download({ url: `/tms/custom-rule/export-excel`, params })
+  },
+
+  // 根据国别和产品ID集合获得海关规则
+  getCustomRuleListByCountryProduct: async (data: { country: string; productIds: number[] }) => {
+    return await request.post({ url: `/tms/custom-rule/list-by-country-product`, data })
   }
 }

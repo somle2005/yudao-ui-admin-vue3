@@ -109,7 +109,7 @@ import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
-import { computeVolume } from '../../common/utils'
+import { addFbaBarCode, computeVolume } from '../../common/utils'
 
 const productList = getProductList()
 const financeSubjectList = getFinanceSubjectList()
@@ -160,7 +160,9 @@ watch(
 
 watch(
   () => props.warehouse,
-  (val) => {},
+  (val) => {
+     addFbaBarCode(val,formData)
+  },
   { immediate: true, deep: true }
 )
 
@@ -253,7 +255,7 @@ const changeProduct = async (row, index, val) => {
       })
       return
     }
-    
+
     row.weight = product.weight
     const { packageHeight, packageLength, packageWidth, packageWeight } = product
     row.packageHeight = packageHeight

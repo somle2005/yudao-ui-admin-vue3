@@ -96,7 +96,6 @@
           </template>
         </el-table-column>
 
-
         <el-table-column label="发出仓" width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.fromWarehouseId`" class="mb-0px!">
@@ -117,7 +116,6 @@
             </el-form-item>
           </template>
         </el-table-column>
-    
 
         <el-table-column label="包装长(cm)" prop="packageLength" width="100" align="center" />
         <el-table-column label="包装宽(cm)" prop="packageWidth" width="100" align="center" />
@@ -190,6 +188,7 @@ import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
 import { computeVolume } from '../utils'
+import { addFbaBarCode } from '../utils'
 
 const productList = getProductList()
 const warehouseList = getWarehouseList()
@@ -236,7 +235,6 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 
-
 watch(
   () => props.itemIdKey,
   (val) => {}
@@ -244,7 +242,9 @@ watch(
 
 watch(
   () => props.warehouse,
-  (val) => {},
+  async (val) => {
+    addFbaBarCode(val,formData)
+  },
   { immediate: true, deep: true }
 )
 
@@ -257,6 +257,7 @@ watch(
       formData.value.forEach((item) => {
         computeVolume(item)
       })
+      console.log(formData.value, 'formData.value')
     }
   },
   { immediate: true, deep: true }
@@ -318,7 +319,6 @@ const handleAdd = () => {
   }
   formData.value.push(row)
 }
-
 
 const changeProduct = async (row, index, val) => {
   try {
