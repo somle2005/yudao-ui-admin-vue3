@@ -31,6 +31,21 @@
           </el-tab-pane>
         </el-tabs>
       </template>
+
+      <template #mergeItems>
+        <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="头程单清单" name="firstMileItem">
+            <ItemForm
+              v-if="formData.toWarehouseId"
+              ref="firstMileItemFormRef"
+              :items="formData.firstMileItems"
+              :warehouse="warehouse"
+              :formType="formType"
+              :disabled="itemsFormdisabled"
+            />
+          </el-tab-pane>
+        </el-tabs>
+      </template>
     </SmForm>
 
     <template #footer>
@@ -53,15 +68,13 @@
 import { FirstMileRequestApi, FirstMileRequestVO } from '@/api/tms/first-mile-request'
 import ItemForm from './components/ItemForm.vue'
 import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
-import { useOutData } from './components/hooks/outdata'
 import { getDeptTree, getUserList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getIntDictOptions } from '@/utils/dict'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { addComment } from '@/views/wms/utils'
-
-const { addItemRef, openAddItem } = useOutData()
+import { FirstMileApi } from '@/api/tms/first-mile'
 
 /** 头程申请单 表单 */
 defineOptions({ name: 'FirstMileRequestForm' })
@@ -82,7 +95,8 @@ const initFormData = () => {
     toWarehouseId: undefined,
     totalWeight: undefined,
     totalVolume: undefined,
-    items: []
+    items: [],
+    firstMileItems: [] // 合并时存在
   }
 }
 
@@ -99,6 +113,9 @@ const userList = ref([])
 /** 子表的表单 */
 const subTabsName = ref('firstMileRequestItem')
 const itemFormRef = ref()
+
+const mergeTabsName = ref('firstMileItem')
+const firstMileItemFormRef = ref()
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -200,12 +217,94 @@ const createDetailFormOptions = (formOptions) => {
   return formOptions
 }
 
-const mergeOptions = (formOptions) => {
-  return formOptions
+const mergeOptions = () => {
+  const list = [
+    {
+      type: 'input',
+      label: '单据编号',
+      prop: 'code',
+      placeholder: '保存时自动生成',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    // {
+    //   requiredFlag: true,
+    //   type: 'select',
+    //   placeholder: '请选择申请人',
+    //   prop: 'requesterId',
+    //   label: '申请人',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: userList
+    // },
+
+    // {
+    //   requiredFlag: true,
+    //   type: 'tree-select',
+    //   label: '申请部门',
+    //   prop: 'requestDeptId',
+    //   placeholder: '请选择申请部门',
+    //   attrs: {
+    //     'node-key': 'id',
+    //     'check-strictly': true,
+    //     props: defaultProps,
+    //     data: deptList,
+    //     style: { width: '100%' },
+    //     filterable: true,
+    //     clearable: true
+    //   }
+    // },
+    // // {
+    // //   type: 'select',
+    // //   label: '审核状态',
+    // //   prop: 'auditStatus',
+    // //   placeholder: '请选择审核状态',
+    // //   attrs: {
+    // //     style: { width: '100%' },
+    // //     filterable: true,
+    // //     clearable: true
+    // //   },
+    // //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    // // },
+    // {
+    //   requiredFlag: true,
+    //   type: 'select',
+    //   label: '目的仓',
+    //   prop: 'toWarehouseId',
+    //   placeholder: '请选择目的仓',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     filterable: true,
+    //     clearable: true,
+    //     onChange: (val) => {
+    //       warehouse.value = WMSWarehouseList.value.find((item: any) => item.value === val) || {}
+    //       console.log(val, '目的仓')
+    //     }
+    //   },
+    //   children: WMSWarehouseList
+    // },
+
+    {
+      colConfig: { span: 24 },
+      slot: 'mergeItems',
+      formItemConfig: {
+        class: 'common-form-items'
+      }
+    }
+  ]
+  return list
 }
 
 /** 打开弹窗 */
-const open = async (type: string, id?: number) => {
+const open = async (type: string, id?: number, data?: any) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
@@ -217,6 +316,10 @@ const open = async (type: string, id?: number) => {
     },
     create: () => {
       requestFormOptions.value = createRequestFormOptions()
+      FirstMileRequestApi.getFirstMileRequestLatestNo().then((res) => {
+        const modelValue = formRef.value.getFormData()
+        modelValue.code = res
+      })
     },
     update: () => {
       requestFormOptions.value = createRequestFormOptions()
@@ -226,7 +329,12 @@ const open = async (type: string, id?: number) => {
     },
     merge: () => {
       dialogTitle.value = '合并头程申请单'
-      requestFormOptions.value = mergeOptions(createRequestFormOptions())
+      requestFormOptions.value = mergeOptions()
+      FirstMileApi.getFirstMileLatestNo().then((res) => {
+        const modelValue = formRef.value.getFormData()
+        modelValue.code = res
+      })
+      formData.value.firstMileItems = data
     }
   }
   const fn = formTypeOperate[type]
@@ -237,13 +345,6 @@ const open = async (type: string, id?: number) => {
   defaultProps.value = deptObj.defaultProps
   getWMSWarehouseList(WMSWarehouseList)
   getUserList(userList)
-
-  if (type === 'create') {
-    FirstMileRequestApi.getFirstMileRequestLatestNo().then((res) => {
-      const modelValue = formRef.value.getFormData()
-      modelValue.code = res
-    })
-  }
 
   // 修改时，设置数据
   if (id) {

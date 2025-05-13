@@ -58,17 +58,24 @@ export const FirstMileApi = {
     return await request.download({ url: `/tms/first-mile/export-excel`, params })
   },
 
-// ==================== 子表（头程单明细） ====================
+  // ==================== 子表（头程单明细） ====================
 
   // 获得头程单明细列表
   getFirstMileItemListByFirstMileId: async (firstMileId) => {
-    return await request.get({ url: `/tms/first-mile/first-mile-item/list-by-first-mile-id?firstMileId=` + firstMileId })
+    return await request.get({
+      url: `/tms/first-mile/first-mile-item/list-by-first-mile-id?firstMileId=` + firstMileId
+    })
   },
 
-// ==================== 子表（出运订单费用明细） ====================
+  // ==================== 子表（出运订单费用明细） ====================
 
   // 获得出运订单费用明细列表
   getFeeListBySourceId: async (sourceId) => {
     return await request.get({ url: `/tms/first-mile/fee/list-by-source-id?sourceId=` + sourceId })
   },
-}
+
+  // 获取最新的单据编号
+  getFirstMileLatestNo: async () => {
+    return await request.get({ url: `/tms/first-mile/get-latest-no` })
+  }
+}

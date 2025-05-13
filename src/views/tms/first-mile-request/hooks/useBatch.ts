@@ -63,19 +63,11 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
       console.log('开启关闭报错', e)
     }
   }
-  
+
   // 合并头程申请单
   const handleMerge = async () => {
-    // 前端无法穷尽所有情况，所以取后端校验作为告警信息
     try {
-      // const text = enable ? '开启' : '关闭'
-      // await message.exportConfirm('是否确认' + text)
-      // const itemIds = getBatchId(wholeOrderEnable, selectionList)
-
-      // await FirstMileRequestApi.updateFirstMileRequestItemStatus({ itemIds, enable })
-      // message.success(text + '成功')
-      // 刷新列表
-      await getList()
+      openForm('merge', null, selectionList.value)
     } catch (e) {
       console.log('开启关闭报错', e)
     }
