@@ -20,7 +20,6 @@
               class="mb-0px!"
             >
               <SmSelect
-                :disabled="disabled"
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 :data="productList"
@@ -44,13 +43,81 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="数量" width="100" align="center">
+        <el-table-column label="件数" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-              <SmNumber :disabled="disabled" v-model="row.qty" />
+              <SmNumber v-model="row.qty" />
             </el-form-item>
           </template>
         </el-table-column>
+
+        <el-table-column label="箱数" width="100" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.boxQty`" :rules="formRules.boxQty" class="mb-0px!">
+              <SmNumber v-model="row.boxQty" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="库存公司" width="200" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
+              <SmSelect
+                v-model="row.companyId"
+                placeholder="请选择库存公司"
+                :data="financeSubjectList"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="库存归属" width="200">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.deptId`" class="mb-0px!">
+              <el-tree-select
+                filterable
+                clearable
+                :disabled="disabled"
+                v-model="row.deptId"
+                :data="deptList"
+                :props="defaultProps"
+                check-strictly
+                node-key="id"
+                placeholder="请选择库存归属"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="计划发货数" width="100" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.outboundPlanQty`" class="mb-0px!">
+              <SmNumber v-model="row.outboundPlanQty" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column label="发出仓" width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.fromWarehouseId`" class="mb-0px!">
+              <el-select
+                :disabled="disabled"
+                v-model="row.fromWarehouseId"
+                clearable
+                filterable
+                placeholder="请选择发出仓"
+              >
+                <el-option
+                  v-for="item in warehouseList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </template>
+        </el-table-column>
+    
 
         <el-table-column label="包装长(cm)" prop="packageLength" width="100" align="center" />
         <el-table-column label="包装宽(cm)" prop="packageWidth" width="100" align="center" />
@@ -81,6 +148,19 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="备注" width="150">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input
+                v-model.trim="row.remark"
+                :disabled="disabled"
+                type="textarea"
+                placeholder="请输入备注"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button @click="handleDelete($index)" link> — </el-button>
@@ -104,14 +184,16 @@ import {
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
 import { hasRepeat } from '@/utils/judge'
-import { getFinanceSubjectList, getProductList } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList, getProductList, getWarehouseList } from '@/commonData'
 import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
 
 const productList = getProductList()
+const warehouseList = getWarehouseList()
 const financeSubjectList = getFinanceSubjectList()
+const { defaultProps, deptList } = getDeptTree()
 
 const props = defineProps({
   items: {
@@ -148,9 +230,11 @@ const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  fbaBarCode: [{ required: true, message: '请输入FBA条码', trigger: 'blur' }]
+  fbaBarCode: [{ required: true, message: 'FBA条码不能为空', trigger: 'blur' }],
+  boxQty: [{ required: true, message: '箱数不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
+
 
 watch(
   () => props.itemIdKey,

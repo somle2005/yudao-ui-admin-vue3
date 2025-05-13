@@ -77,6 +77,17 @@
           </template>
         </el-dropdown>
 
+        <el-button
+          :disabled="disabledBtn"
+          class="ml-10px"
+          type="primary"
+          plain
+          @click="handleMerge"
+          v-hasPermi="['tms:first-mile-request:merge']"
+        >
+          合并
+        </el-button>
+
         <el-switch
           v-model="wholeOrderEnable"
           active-text="整单"
@@ -313,7 +324,8 @@ const {
   oneSelectDisabledBtn,
   handleUpdateStatus,
   handleSubmitAuditBatch,
-  handleUpdateStatusEnableBatch
+  handleUpdateStatusEnableBatch,
+  handleMerge
 } = useBatch(wholeOrderEnable, selectionList, getList, openForm)
 
 const { handleWholeOrderEnable } = useWholeOrder(
