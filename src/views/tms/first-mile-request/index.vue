@@ -279,8 +279,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, data?: any) => {
+  formRef.value.open(type, id, data)
 }
 
 /** 删除按钮操作 */

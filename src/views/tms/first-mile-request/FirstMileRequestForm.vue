@@ -35,7 +35,7 @@
       <template #mergeItems>
         <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="头程单清单" name="firstMileItem">
-            <ItemForm
+            <FirsetMileMergeItemForm
               v-if="formData.toWarehouseId"
               ref="firstMileItemFormRef"
               :items="formData.firstMileItems"
@@ -68,13 +68,15 @@
 import { FirstMileRequestApi, FirstMileRequestVO } from '@/api/tms/first-mile-request'
 import ItemForm from './components/ItemForm.vue'
 import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
-import { getDeptTree, getUserList } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList, getUserList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getIntDictOptions } from '@/utils/dict'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { addComment } from '@/views/wms/utils'
 import { FirstMileApi } from '@/api/tms/first-mile'
+import { useMergeFirstMileOptions, computeFirstMileList } from '../common/utils'
+import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
 
 /** 头程申请单 表单 */
 defineOptions({ name: 'FirstMileRequestForm' })
@@ -109,6 +111,7 @@ const defaultProps = ref({})
 const WMSWarehouseList = ref([])
 const warehouse = ref({})
 const userList = ref([])
+const financeSubjectList = ref([])
 
 /** 子表的表单 */
 const subTabsName = ref('firstMileRequestItem')
@@ -217,134 +220,7 @@ const createDetailFormOptions = (formOptions) => {
   return formOptions
 }
 
-const mergeOptions = () => {
-  const list = [
-    {
-      type: 'input',
-      label: '单据编号',
-      prop: 'code',
-      placeholder: '请输入单据编号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    // {
-    //   type: 'date-picker',
-    //   placeholder: '请选择单据日期',
-    //   prop: 'billTime',
-    //   label: '单据日期',
-    //   attrs: {
-    //     clearable: true,
-    //     type: 'date',
-    //     'value-format': 'x',
-    //     class: '!w-1/1',
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   }
-    // },
-
-    {
-      type: 'date-picker',
-      placeholder: '请选择结算日期',
-      prop: 'settlementDate',
-      label: '结算日期',
-      attrs: {
-        clearable: true,
-        type: 'date',
-        'value-format': 'x',
-        class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
-      }
-    },
-
-    {
-      componentType: 'input',
-      label: '应付款余额',
-      prop: 'balance',
-      placeholder: '请输入应付款余额',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-
-    // {
-    //   requiredFlag: true,
-    //   type: 'select',
-    //   placeholder: '请选择申请人',
-    //   prop: 'requesterId',
-    //   label: '申请人',
-    //   attrs: {
-    //     class: '!w-240px',
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: userList
-    // },
-
-    // {
-    //   requiredFlag: true,
-    //   type: 'tree-select',
-    //   label: '申请部门',
-    //   prop: 'requestDeptId',
-    //   placeholder: '请选择申请部门',
-    //   attrs: {
-    //     'node-key': 'id',
-    //     'check-strictly': true,
-    //     props: defaultProps,
-    //     data: deptList,
-    //     style: { width: '100%' },
-    //     filterable: true,
-    //     clearable: true
-    //   }
-    // },
-    // // {
-    // //   type: 'select',
-    // //   label: '审核状态',
-    // //   prop: 'auditStatus',
-    // //   placeholder: '请选择审核状态',
-    // //   attrs: {
-    // //     style: { width: '100%' },
-    // //     filterable: true,
-    // //     clearable: true
-    // //   },
-    // //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
-    // // },
-    // {
-    //   requiredFlag: true,
-    //   type: 'select',
-    //   label: '目的仓',
-    //   prop: 'toWarehouseId',
-    //   placeholder: '请选择目的仓',
-    //   attrs: {
-    //     style: { width: '100%' },
-    //     filterable: true,
-    //     clearable: true,
-    //     onChange: (val) => {
-    //       warehouse.value = WMSWarehouseList.value.find((item: any) => item.value === val) || {}
-    //       console.log(val, '目的仓')
-    //     }
-    //   },
-    //   children: WMSWarehouseList
-    // },
-
-    {
-      colConfig: { span: 24 },
-      slot: 'mergeItems',
-      formItemConfig: {
-        class: 'common-form-items'
-      }
-    }
-  ]
-  return list
-}
+const { mergeOptions } = useMergeFirstMileOptions(warehouse, WMSWarehouseList, financeSubjectList)
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number, data?: any) => {
@@ -377,7 +253,12 @@ const open = async (type: string, id?: number, data?: any) => {
         const modelValue = formRef.value.getFormData()
         modelValue.code = res
       })
+      getFinanceSubjectList(financeSubjectList)
       formData.value.firstMileItems = data
+      console.log(formData.value.firstMileItems, 'formData.value.firstMileItems', data)
+      nextTick(() => {
+        formRef.value.initForm()
+      })
     }
   }
   const fn = formTypeOperate[type]
@@ -413,6 +294,11 @@ const submitForm = async (type?: string) => {
   await formRef.value.validate()
   // 校验子表单
   await itemFormRef.value.validate()
+
+  if (formType.value === 'merge') {
+    await firstMileItemFormRef.value.validate()
+  }
+
   // 提交请求
   formLoading.value = true
   try {
@@ -450,4 +336,24 @@ const resetForm = () => {
   formData.value = initFormData()
   formRef.value?.resetFields()
 }
+
+/** 计算值 */
+watch(
+  () => formData.value.firstMileItems,
+  (val) => {
+    if (!val) {
+      return
+    }
+    if (formType.value !== 'merge') {
+      return
+    }
+
+    // 编辑回显
+    computeFirstMileList(val, formData)
+    formRef?.value?.initForm()
+
+    // console.log(formData.value, 'formData.value')
+  },
+  { deep: true }
+)
 </script>

@@ -1,6 +1,7 @@
 import { FirstMileRequestApi } from '@/api/tms/first-mile-request'
 import { PurchaseInApi } from '@/api/srm/in'
 import { getBatchId } from '@/hooks/common/wholeOrder'
+import { cloneDeep } from 'lodash-es'
 
 export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => {
   const message = useMessage() // 消息弹窗
@@ -67,7 +68,18 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
   // 合并头程申请单
   const handleMerge = async () => {
     try {
-      openForm('merge', null, selectionList.value)
+      // 如果要携带合并主单数据放在第一个[0]上面
+      const list = cloneDeep(selectionList.value)
+      const arr: any = []
+      // 取出所有items作为记录但是要去重 id不能相同
+      const map: any = {}
+      list.forEach((item: any) => {
+        if (!map[item.id]) {
+          map[item.id] = 1
+          arr.push(...item.items)
+        }
+      })
+      openForm('merge', null, arr)
     } catch (e) {
       console.log('开启关闭报错', e)
     }

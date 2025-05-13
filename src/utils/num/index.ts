@@ -1,3 +1,4 @@
+import { VOLUMN_PRECISION } from '@/views/tms/common/constant'
 import { TableColumnCtx } from 'element-plus'
 
 // js保留n位小数 不四舍五入补0
@@ -22,5 +23,5 @@ export const formatDecimalFormatter = (
   _column: TableColumnCtx<any>,
   cellValue: any
 ): string => {
-  return formatDecimal(cellValue, 3)
+  return formatDecimal(cellValue, VOLUMN_PRECISION)
 }

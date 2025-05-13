@@ -189,6 +189,7 @@ import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
+import { computeVolume } from '../utils'
 
 const productList = getProductList()
 const warehouseList = getWarehouseList()
@@ -318,15 +319,6 @@ const handleAdd = () => {
   formData.value.push(row)
 }
 
-// 体积= 长*宽*高*数量
-const computeVolume = (item) => {
-  const { packageHeight, packageLength, packageWidth, qty } = item
-  if ([packageHeight, packageLength, packageWidth, qty].every((item) => item)) {
-    item.volume = Number(
-      formatDecimal((packageHeight * packageLength * packageWidth * qty) / 1000000, 3)
-    )
-  }
-}
 
 const changeProduct = async (row, index, val) => {
   try {

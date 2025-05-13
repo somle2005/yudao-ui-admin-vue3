@@ -283,5 +283,9 @@ export enum DICT_TYPE {
   SRM_ORDER_STATUS = 'srm_order_status', // SRM 采购订购状态
   SRM_PAYMENT_STATUS = 'srm_payment_status', // SRM 采购付款状态
   SRM_OFF_STATUS = 'srm_off_status', // SRM 开关状态
-  SRM_AUDIT_STATUS = 'srm_audit_status' // SRM 审批状态
+  SRM_AUDIT_STATUS = 'srm_audit_status', // SRM 审批状态
+
+  // ========== TMS - 运输管理系统  ==========
+  TMS_CABINET_TYPE = 'tms_cabinet_type', // TMS 柜型
+  FEE_TYPE='fee_type', // 费用类型
 }

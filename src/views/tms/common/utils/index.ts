@@ -1,0 +1,274 @@
+import { addProperty } from '@/components/SmForm/src/utils'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { formatDecimal } from '@/utils/num'
+import { PRODUCT_WEIGHT, VOLUMN_PRECISION } from '../constant'
+
+// 合并头程申请单 头程申请合并和头程订单复用
+export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSubjectList) => {
+  const mergeOptions = () => {
+    const list = [
+      {
+        type: 'input',
+        label: '单据编号',
+        prop: 'code',
+        placeholder: '请输入单据编号',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        type: 'date-picker',
+        placeholder: '请选择结算日期',
+        prop: 'settlementDate',
+        label: '结算日期',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'input-number',
+        label: '应付款余额',
+        prop: 'balance',
+        placeholder: '请输入应付款余额',
+        attrs: {
+          // controls: true,
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        requiredFlag: true,
+        type: 'select',
+        label: '目的仓',
+        prop: 'toWarehouseId',
+        placeholder: '请选择目的仓',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true,
+          onChange: (val) => {
+            warehouse.value = WMSWarehouseList.value.find((item: any) => item.value === val) || {}
+            console.log(val, '目的仓')
+          }
+        },
+        children: WMSWarehouseList
+      },
+
+      {
+        type: 'input',
+        label: '提单号',
+        prop: 'ladingNo',
+        placeholder: '请输入提单号',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+
+      {
+        type: 'select',
+        label: '柜型',
+        prop: 'cabinetType',
+        placeholder: '请选择柜型',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: getIntDictOptions(DICT_TYPE.TMS_CABINET_TYPE)
+      },
+
+      {
+        type: 'date-picker',
+        placeholder: '请选择装柜日期',
+        prop: 'packTime',
+        label: '装柜日期',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'select',
+        placeholder: '请选择销售公司',
+        prop: 'salesCompanyId',
+        label: '销售公司',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: financeSubjectList
+      },
+      {
+        type: 'date-picker',
+        placeholder: '请选择预计到货日期',
+        prop: 'arrivePlanTime',
+        label: '预计到货日期',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'date-picker',
+        placeholder: '请选择预计送仓时间',
+        prop: 'deliveryEstimateTime',
+        label: '预计送仓时间',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'date-picker',
+        placeholder: '请选择实际送仓时间',
+        prop: 'deliveryActualTime',
+        label: '实际送仓时间',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+
+      {
+        type: 'input-number',
+        label: '货柜体积(m³)',
+        prop: 'totalVolume',
+        attrs: {
+          disabled: true,
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        type: 'input-number',
+        label: '货柜毛重(kg)',
+        prop: 'totalWeight',
+        attrs: {
+          disabled: true,
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        type: 'input-number',
+        label: '货柜净重(kg)',
+        prop: 'netWeight',
+        attrs: {
+          disabled: true,
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+
+      // totalValue 货柜货值（按最近采购价） 问后端哪里去取-后端说先空着
+
+      {
+        type: 'input-number',
+        label: '货柜件数',
+        prop: 'totalQty',
+        attrs: {
+          disabled: true,
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+
+      {
+        type: 'input',
+        label: '备注',
+        prop: 'remark',
+        placeholder: '请输入备注',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        colConfig: { span: 24 },
+        slot: 'mergeItems',
+        formItemConfig: {
+          class: 'common-form-items'
+        }
+      }
+    ]
+
+    addProperty(list)
+    return list
+  }
+  return {
+    mergeOptions
+  }
+}
+
+// 体积= 长*宽*高*数量
+export const computeVolume = (item) => {
+  const { packageHeight, packageLength, packageWidth, qty } = item
+  if ([packageHeight, packageLength, packageWidth, qty].every((item) => item)) {
+    item.volume = Number(
+      formatDecimal((packageHeight * packageLength * packageWidth * qty) / 1000000, VOLUMN_PRECISION)
+    )
+  }
+}
+
+export const computeList = (
+  mapList: Array<{ computeKey: string; targetKey: string }>,
+  list: any[],
+  data: any
+) => {
+  // 用来存储变量的
+  const map: any = {}
+  mapList.forEach((item) => {
+    map[item.targetKey] = 0
+  })
+
+  list.forEach((item) => {
+    mapList.forEach((mapItem) => {
+      map[mapItem.targetKey] += (item[mapItem.computeKey] || 0) * item.qty
+    })
+  })
+  for (const key in map) {
+    unref(data)[key] = Number(formatDecimal(map[key], VOLUMN_PRECISION))
+  }
+  return data
+}
+
+export const computeFirstMileList = (list: any[], data: any) => {
+  const mapList = [
+    { computeKey: 'volume', targetKey: 'totalVolume' },
+    { computeKey: 'packageWeight', targetKey: 'totalWeight' },
+    { computeKey: PRODUCT_WEIGHT, targetKey: 'netWeight' },
+    { computeKey: 'qty', targetKey: 'totalQty' }
+  ]
+  return computeList(mapList, list, data)
+}
