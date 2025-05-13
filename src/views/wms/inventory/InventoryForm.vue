@@ -533,9 +533,14 @@ const operateImportFormData = (data) => {
   data.forEach((item) => {
     item.expectedQty = item.availableQty
     item.productBarCode = item?.product?.barCode
+    // 用来去重
+    item[itemIdKey] = item.id + '导入盘点产品'
   })
 
   formData.value.binItemList = data
+
+  
+
   formRef.value.initForm()
 }
 
@@ -549,6 +554,8 @@ const operateImportFormDataResult = (data) => {
     // item.expectedQty = item.availableQty
     item.inventoryId = inventoryId.value
     item.productBarCode = item?.product?.barCode
+    // 用来去重
+    item[itemIdKey] = item.id + '导入盘点结果'
   })
   formData.value.binItemList = data
   formRef.value.initForm()
