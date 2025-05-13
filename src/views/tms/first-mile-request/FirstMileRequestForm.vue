@@ -223,12 +223,55 @@ const mergeOptions = () => {
       type: 'input',
       label: '单据编号',
       prop: 'code',
-      placeholder: '保存时自动生成',
+      placeholder: '请输入单据编号',
       attrs: {
         style: { width: '100%' },
         clearable: true
       }
     },
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择单据日期',
+    //   prop: 'billTime',
+    //   label: '单据日期',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'date',
+    //     'value-format': 'x',
+    //     class: '!w-1/1',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
+
+    {
+      type: 'date-picker',
+      placeholder: '请选择结算日期',
+      prop: 'settlementDate',
+      label: '结算日期',
+      attrs: {
+        clearable: true,
+        type: 'date',
+        'value-format': 'x',
+        class: '!w-1/1',
+        style: {
+          width: '100%'
+        }
+      }
+    },
+
+    {
+      componentType: 'input',
+      label: '应付款余额',
+      prop: 'balance',
+      placeholder: '请输入应付款余额',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+
     // {
     //   requiredFlag: true,
     //   type: 'select',
@@ -387,6 +430,9 @@ const submitForm = async (type?: string) => {
         requestId: data.id,
         reviewComment: data.reviewComment
       })
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'merge') {
+      await FirstMileRequestApi.mergeFirstMileRequest(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
