@@ -254,6 +254,11 @@ const open = async (type: string, id?: number, data?: any) => {
         modelValue.code = res
       })
       getFinanceSubjectList(financeSubjectList)
+
+      data.forEach((item) => {
+        item.weight = item.productWeight
+      })
+
       formData.value.firstMileItems = data
       console.log(formData.value.firstMileItems, 'formData.value.firstMileItems', data)
       nextTick(() => {

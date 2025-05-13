@@ -218,7 +218,6 @@ import { CustomRuleApi, CustomRuleVO } from '@/api/tms/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
-// import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
 import { useTableData } from '@/components/SmTable/src/utils'
 // import { getProductNameList } from '@/commonData'
@@ -314,7 +313,6 @@ const getList = async () => {
   try {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
     list.value = data.list.map((item: any) => {
-      // item.type = typeFind(item.type)
       item['product-name'] = item.product.name
       item['product-barCode'] = item.product.barCode
       item.primaryImageUrl = item.product.primaryImageUrl

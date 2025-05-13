@@ -267,7 +267,7 @@ export const computeFirstMileList = (list: any[], data: any) => {
   const mapList = [
     { computeKey: 'volume', targetKey: 'totalVolume' },
     { computeKey: 'packageWeight', targetKey: 'totalWeight' },
-    { computeKey: PRODUCT_WEIGHT, targetKey: 'netWeight' },
+    { computeKey: 'weight', targetKey: 'netWeight' },
     { computeKey: 'qty', targetKey: 'totalQty' }
   ]
   return computeList(mapList, list, data)

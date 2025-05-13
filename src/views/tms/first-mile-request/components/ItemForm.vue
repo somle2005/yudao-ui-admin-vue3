@@ -253,7 +253,8 @@ const changeProduct = async (row, index, val) => {
       })
       return
     }
-
+    
+    row.weight = product.weight
     const { packageHeight, packageLength, packageWidth, packageWeight } = product
     row.packageHeight = packageHeight
     row.packageLength = packageLength
