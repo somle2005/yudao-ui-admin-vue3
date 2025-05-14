@@ -110,6 +110,7 @@ import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
 import { addFbaBarCode, computeVolume } from '../../common/utils'
+import { useInitNum } from '../../common/hooks'
 
 const productList = getProductList()
 const financeSubjectList = getFinanceSubjectList()
@@ -153,6 +154,8 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 
+const { addInitNum, judgeNum } = useInitNum()
+
 watch(
   () => props.itemIdKey,
   (val) => {}
@@ -161,7 +164,8 @@ watch(
 watch(
   () => props.warehouse,
   (val) => {
-     addFbaBarCode(val,formData)
+    if (judgeNum()) return
+    addFbaBarCode(val, formData)
   },
   { immediate: true, deep: true }
 )
@@ -175,6 +179,8 @@ watch(
       formData.value.forEach((item) => {
         computeVolume(item)
       })
+
+      addInitNum()
     }
   },
   { immediate: true, deep: true }
@@ -236,8 +242,6 @@ const handleAdd = () => {
   }
   formData.value.push(row)
 }
-
-
 
 const changeProduct = async (row, index, val) => {
   try {

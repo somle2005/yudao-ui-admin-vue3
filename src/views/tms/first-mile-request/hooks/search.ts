@@ -1,7 +1,13 @@
+import { getDeptTree, getUserList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
+  const WMSWarehouseList = getWMSWarehouseList()
+  const { deptList, defaultProps } = getDeptTree()
+  getWMSWarehouseList(WMSWarehouseList)
+  const userList = getUserList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -34,6 +40,53 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //     }
     //   }
     // },
+
+    {
+      type: 'select',
+      label: '目的仓',
+      prop: 'toWarehouseId',
+      placeholder: '请选择目的仓',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
+    },
+
+    {
+      requiredFlag: true,
+      type: 'select',
+      placeholder: '请选择申请人',
+      prop: 'requesterId',
+      label: '申请人',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: userList
+    },
+
+    {
+      requiredFlag: true,
+      type: 'tree-select',
+      label: '申请部门',
+      prop: 'requestDeptId',
+      placeholder: '请选择申请部门',
+      attrs: {
+        'node-key': 'id',
+        'check-strictly': true,
+        props: defaultProps,
+        data: deptList,
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      }
+    },
 
     {
       type: 'select',
@@ -70,10 +123,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.SRM_ORDER_STATUS)
-    },
-
-
-
+    }
   ])
 
   const events = {

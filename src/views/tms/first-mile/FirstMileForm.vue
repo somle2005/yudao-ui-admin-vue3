@@ -59,6 +59,7 @@ import { addDisabled } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { addComment } from '@/views/wms/utils'
+import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
 
 /** 头程单 表单 */
 defineOptions({ name: 'FirstMileForm' })

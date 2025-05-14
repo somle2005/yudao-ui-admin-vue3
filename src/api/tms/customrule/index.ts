@@ -201,7 +201,7 @@ export const CustomRuleApi = {
   },
 
   // 根据国别和产品ID集合获得海关规则
-  getCustomRuleListByCountryProduct: async (data: { country: string; productIds: number[] }) => {
+  getCustomRuleListByCountryProduct: async (data: { countryCode: number; productIds: number[] }) => {
     return await request.post({ url: `/tms/custom-rule/list-by-country-product`, data })
   }
 }

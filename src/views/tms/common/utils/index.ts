@@ -285,8 +285,23 @@ export const addFbaBarCode = (val, formData) => {
     const productIds = formData.value.map((item) => item.productId)
     if (!productIds?.length) return
     try {
+      const countryList = getIntDictOptions(DICT_TYPE.COUNTRY_CODE)
+      const countryCode = countryList.find((item) => val.country === item.label)?.value as number
+
+      const changeUnde = () => {
+        formData.value.forEach((item) => {
+          item.fbaBarCode = undefined
+        })
+      }
+
+      if (!countryCode && countryCode !== 0) {
+        changeUnde()
+        return
+      }
+
       const data = await CustomRuleApi.getCustomRuleListByCountryProduct({
-        country: val.country,
+        // country: val.country,
+        countryCode,
         productIds
       })
       if (data?.length) {
@@ -295,9 +310,7 @@ export const addFbaBarCode = (val, formData) => {
           item.fbaBarCode = fbaBarCode
         })
       } else {
-        formData.value.forEach((item) => {
-          item.fbaBarCode = undefined
-        })
+        changeUnde()
       }
     } catch (e) {
       console.log(e, 'e')
