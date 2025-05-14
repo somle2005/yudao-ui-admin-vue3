@@ -41,7 +41,7 @@ const resolveConfig = (tableOption, config) => {
     item.slot = item.prop
     item.wrap = true
     if (!item.noWidth) {
-      item.width = '200px'
+      item.width = '180px'
     }
   }
 
@@ -51,12 +51,13 @@ const resolveConfig = (tableOption, config) => {
       item.slot = item.prop
       item.wrap = true
       if (!item.noWidth) {
-        item.width = '200px'
+        item.width = '180px'
       }
     }
   }
 
   const noWidthListDeal = (noWidthList, item) => {
+    if (!item.noWidth) return
     if (!noWidthList?.length) return
     if (noWidthList.includes(item.prop)) {
       item.width = undefined
@@ -64,6 +65,7 @@ const resolveConfig = (tableOption, config) => {
   }
 
   const scaleComputeWidth = (item) => {
+    if (!item.noWidth) return
     const scale = 20
     const len = item.label.length
     if (len <= 4) {
@@ -76,7 +78,8 @@ const resolveConfig = (tableOption, config) => {
   // 默认20px 1字符
   const computePropListWidth = (computePropList, item) => {
     if (!computePropList?.length) return
-    if (computePropList.includes(item.prop)) {
+    const flag = computePropList.includes(item.prop) && item.noWidth
+    if (flag) {
       scaleComputeWidth(item)
     }
   }
@@ -85,7 +88,9 @@ const resolveConfig = (tableOption, config) => {
     if (!noComputePropList?.length) return
     const ignoreList = ['Time', 'operate']
     const everyIgnore = ignoreList.every((a) => !item.prop.includes(a))
-    if (!noComputePropList.includes(item.prop) && everyIgnore) {
+    // 手动设置宽度不计算-自动设置的宽度才进行计算
+    const flag = !noComputePropList.includes(item.prop) && everyIgnore && item.noWidth
+    if (flag) {
       scaleComputeWidth(item)
     }
   }
