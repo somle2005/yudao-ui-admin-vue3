@@ -30,7 +30,7 @@ export interface FirstMileVO {
 export const FirstMileApi = {
   // 查询头程单分页
   getFirstMilePage: async (params: any) => {
-    return await request.get({ url: `/tms/first-mile/page`, params })
+    return await request.post({ url: `/tms/first-mile/page`, params })
   },
 
   // 查询头程单详情

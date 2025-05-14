@@ -158,58 +158,6 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { useTable } from './hooks/useTable'
 
-// const { tableOptions, transformTableOptions } = useTableData()
-
-// const fieldMap = {
-//   code: '单据编码',
-//   requestUserName: '申请人名称',
-//   requestDeptName: '申请部门名称',
-//   toWarehouseName: '目的仓名称',
-//   totalWeight: '总重量(kg)',
-//   totalVolume: '总体积(m³)',
-//   itemCount: '明细数量',
-
-//   auditStatus: {
-//     label: '审核状态',
-//     slot: 'auditStatus',
-//     dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
-//   },
-//   orderStatus: {
-//     label: '审核状态',
-//     slot: 'orderStatus',
-//     dictAttrs: { type: DICT_TYPE.SRM_ORDER_STATUS }
-//   },
-//   offStatus: {
-//     label: '关闭状态',
-//     slot: 'offStatus',
-//     dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
-//   },
-
-//   // comment: '审批意见',
-//   // remark: '备注',
-//   // updateTime: {
-//   //   label: '更新时间',
-//   //   formatter: dateFormatter,
-//   //   width: '200px'
-//   // },
-//   // updaterName: '更新人',
-//   createTime: {
-//     label: '创建时间',
-//     formatter: dateFormatter,
-//     width: '200px'
-//   },
-//   // creatorName: '创建人',
-//   operate: {
-//     label: '操作',
-//     slot: 'operate',
-//     fixed: 'right',
-//     width: '200px'
-//   }
-// }
-// tableOptions.value = transformTableOptions(fieldMap, {
-//   wrapList: ['code'],
-//   noComputePropList: ['code', 'auditStatus', 'orderStatus', 'offStatus']
-// })
 
 let {
   allOptions,
@@ -257,8 +205,8 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await FirstMileRequestApi.getFirstMileRequestPage(queryParams)
-    list.value = data.list
-    total.value = data.total
+    // list.value = data.list
+    // total.value = data.total
     switchList(list, total, data)
   } finally {
     loading.value = false
