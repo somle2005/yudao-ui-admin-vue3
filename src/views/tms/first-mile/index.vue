@@ -76,30 +76,30 @@
       @selection-change="handleSelectionChange"
     >
       <template #geometry="{ scope }">
-        <div>总箱数:{{ scope.row.totalBoxQty }}</div>
-        <div>数量:{{ scope.row.totalQty }}</div>
-        <div>重量:{{ scope.row.totalWeight }}</div>
-        <div>体积:{{ scope.row.totalVolume }}</div>
+        <div class="common-text">总箱数:{{ scope.row.totalBoxQty }}</div>
+        <div class="common-text">数量:{{ scope.row.totalQty }}</div>
+        <div class="common-text">重量:{{ scope.row.totalWeight }}</div>
+        <div class="common-text">体积:{{ scope.row.totalVolume }}</div>
       </template>
 
       <template #loadOutbound="{ scope }">
-        <div>装柜日期:{{ formatDate(scope.row.packTime, 'YYYY-MM-DD') }}</div>
-        <div>出库时间:{{ formatDate(scope.row.outboundTime) }}</div>
+        <div class="common-text">装柜日期:{{ formatDate(scope.row.packTime, 'YYYY-MM-DD') }}</div>
+        <div class="common-text">出库时间:{{ formatDate(scope.row.outboundTime) }}</div>
       </template>
       <template #company="{ scope }">
-        <div>出口公司:{{ scope.row.exportCompanyShortName }}</div>
-        <div>中转公司:{{ scope.row.transitCompanyShortName }}</div>
+        <div class="common-text">出口公司:{{ scope.row.exportCompanyShortName }}</div>
+        <div class="common-text">中转公司:{{ scope.row.transitCompanyShortName }}</div>
       </template>
 
       <template #voyageNo="{ scope }">
-        <div>提单号:{{ scope.row.ladingNo }}</div>
-        <div>箱号:{{ scope.row.containerNo }}</div>
-        <div>航次:{{ scope.row.voyage }}</div>
+        <div class="common-text">提单号:{{ scope.row.ladingNo }}</div>
+        <div class="common-text">箱号:{{ scope.row.containerNo }}</div>
+        <div class="common-text">航次:{{ scope.row.voyage }}</div>
       </template>
 
       <template #create="{ scope }">
-        <div>创建人:{{ scope.row.creator }}</div>
-        <div>创建时间:{{ formatDate(scope.row.createTime) }}</div>
+        <div class="common-text">创建人:{{ scope.row.creator }}</div>
+        <div class="common-text">创建时间:{{ formatDate(scope.row.createTime) }}</div>
       </template>
 
       <template #operate="{ scope }">

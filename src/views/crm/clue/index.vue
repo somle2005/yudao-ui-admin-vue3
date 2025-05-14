@@ -334,6 +334,5 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-// @import '@/styles/common.scss'
-@use '../../../styles/comon.scss' as *;
+// @use '../../../styles/comon.scss' as *;
 </style>
