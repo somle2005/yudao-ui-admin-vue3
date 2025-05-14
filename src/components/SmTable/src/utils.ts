@@ -120,7 +120,7 @@ export const transformTableOptions = (
     if (fieldMap[key] instanceof Object) {
       Object.assign(obj, fieldMap[key])
       // 打赏自动设置宽度的标记
-      if (!fieldMap.width) {
+      if (!fieldMap[key].width) {
         obj.noWidth = true
       }
       // 只能对时间字段-时间戳进行排序
