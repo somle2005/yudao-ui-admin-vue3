@@ -30,6 +30,33 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['tms:first-mile:audit']"
+        >
+          提交审核
+        </el-button>
+
+        <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['tms:first-mile:review']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </template>
     </SmForm>
   </ContentWrap>
@@ -108,6 +135,7 @@ import FirstMileForm from './FirstMileForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTable } from './hooks/useTable'
 import { formatDate } from '@/utils/formatTime'
+import { useBatch } from './hooks/useBatch'
 
 let { tableOptions } = useTable()
 
@@ -218,6 +246,12 @@ const handleSelectionChange = (rows: any[]) => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const { disabledBtn, oneSelectDisabledBtn, handleUpdateStatus, handleSubmitAuditBatch } = useBatch(
+  selectionList,
+  getList,
+  openForm
+)
 
 /** 初始化 **/
 onMounted(() => {

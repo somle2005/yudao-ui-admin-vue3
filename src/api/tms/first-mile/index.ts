@@ -26,11 +26,32 @@ export interface FirstMileVO {
   inboundTime: Date // 入库时间
 }
 
+export interface FirstMileAuditVO {
+  /**
+   * 通过与否
+   * 审核通过/不通过
+   */
+  pass: boolean
+  /**
+   * 头程申请单ID集合
+   */
+  requestId: number
+  /**
+   * 审核意见
+   */
+  reviewComment?: string
+  /**
+   * 审核/反审核
+   * 审核通过/审核撤销
+   */
+  reviewed: boolean
+}
+
 // 头程单 API
 export const FirstMileApi = {
   // 查询头程单分页
-  getFirstMilePage: async (params: any) => {
-    return await request.post({ url: `/tms/first-mile/page`, params })
+  getFirstMilePage: async (data: any) => {
+    return await request.post({ url: `/tms/first-mile/page`, data })
   },
 
   // 查询头程单详情
@@ -77,5 +98,15 @@ export const FirstMileApi = {
   // 获取最新的单据编号
   getFirstMileLatestNo: async () => {
     return await request.get({ url: `/tms/first-mile/get-latest-no` })
+  },
+
+  // 头程申请单 提交审核
+  submitFirstMileAudit: async (data:number[]) => {
+    return await request.put({ url: `/tms/first-mile/submit-audit`, data })
+  },
+
+  // 头程申请单 审核/反审核
+  auditFirstMileStatus: async (params: FirstMileAuditVO) => {
+    return await request.put({ url: `/tms/first-mile-request/audit-status`, params })
   }
 }

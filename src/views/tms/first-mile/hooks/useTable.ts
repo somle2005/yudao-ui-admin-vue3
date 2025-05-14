@@ -46,18 +46,19 @@ export const useTable = () => {
 
     create: {
       label: '创建人 创建时间',
+      width: '250px',
       slot: 'create'
     },
 
     outboundStatus: {
       label: '发货状态',
       slot: 'outboundStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_ORDER_STATUS }
+      dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_STATUS }
     },
     inboundStatus: {
       label: '入库状态',
       slot: 'inboundStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
+      dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
     },
 
     // comment: '审批意见',

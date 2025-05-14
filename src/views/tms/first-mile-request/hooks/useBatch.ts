@@ -1,5 +1,4 @@
 import { FirstMileRequestApi } from '@/api/tms/first-mile-request'
-import { PurchaseInApi } from '@/api/srm/in'
 import { getBatchId } from '@/hooks/common/wholeOrder'
 import { cloneDeep } from 'lodash-es'
 
@@ -38,10 +37,11 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
       // 审核的二次确认
       await message.confirm(`确定反审核该申请吗？`)
       // 发起审核
-      await PurchaseInApi.updatePurchaseInAuditStatus({
-        reviewed,
-        pass: true,
-        inId: id
+      await FirstMileRequestApi.auditFirstMileRequestStatus({
+        reviewed, // 反审核false
+        pass: true, // 反审核无意义
+        requestId: id,
+        // reviewComment: data.reviewComment 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
       })
       message.success('反审核成功')
       // 刷新列表

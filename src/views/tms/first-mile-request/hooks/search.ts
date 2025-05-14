@@ -61,7 +61,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      label: '审核状态',
+      label: '订购状态',
       prop: 'orderStatus',
       placeholder: '请选择订购状态',
       attrs: {

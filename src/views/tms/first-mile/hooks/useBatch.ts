@@ -1,9 +1,6 @@
-import { FirstMileRequestApi } from '@/api/tms/first-mile-request'
-import { PurchaseInApi } from '@/api/srm/in'
-import { getBatchId } from '@/hooks/common/wholeOrder'
-import { cloneDeep } from 'lodash-es'
+import { FirstMileApi } from '@/api/tms/first-mile'
 
-export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => {
+export const useBatch = (selectionList, getList, openForm) => {
   const message = useMessage() // 消息弹窗
 
   const handleSubmitAuditBatch = async () => {
@@ -12,7 +9,7 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
 
       const ids: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
 
-      await FirstMileRequestApi.submitFirstMileRequestAudit({ ids })
+      await FirstMileApi.submitFirstMileAudit(ids)
       message.success('提交审核成功')
       // 刷新列表
       await getList()
@@ -38,51 +35,16 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
       // 审核的二次确认
       await message.confirm(`确定反审核该申请吗？`)
       // 发起审核
-      await PurchaseInApi.updatePurchaseInAuditStatus({
-        reviewed,
-        pass: true,
-        inId: id
+      await FirstMileApi.auditFirstMileStatus({
+        reviewed, // 反审核false
+        pass: true, // 反审核无意义
+        requestId: id
+        // reviewComment: data.reviewComment 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
       })
       message.success('反审核成功')
       // 刷新列表
       await getList()
     } catch {}
-  }
-
-  const handleUpdateStatusEnableBatch = async (enable: boolean) => {
-    // 前端无法穷尽所有情况，所以取后端校验作为告警信息
-    try {
-      const text = enable ? '开启' : '关闭'
-      await message.exportConfirm('是否确认' + text)
-      const itemIds = getBatchId(wholeOrderEnable, selectionList)
-
-      await FirstMileRequestApi.updateFirstMileRequestItemStatus({ itemIds, enable })
-      message.success(text + '成功')
-      // 刷新列表
-      await getList()
-    } catch (e) {
-      console.log('开启关闭报错', e)
-    }
-  }
-
-  // 合并头程申请单
-  const handleMerge = async () => {
-    try {
-      // 如果要携带合并主单数据放在第一个[0]上面
-      const list = cloneDeep(selectionList.value)
-      const arr: any = []
-      // 取出所有items作为记录但是要去重 id不能相同
-      const map: any = {}
-      list.forEach((item: any) => {
-        if (!map[item.id]) {
-          map[item.id] = 1
-          arr.push(...item.items)
-        }
-      })
-      openForm('merge', null, arr)
-    } catch (e) {
-      console.log('开启关闭报错', e)
-    }
   }
 
   const disabledBtn = computed(() => selectionList.value.length === 0)
@@ -92,8 +54,6 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
     disabledBtn,
     oneSelectDisabledBtn,
     handleSubmitAuditBatch,
-    handleUpdateStatus,
-    handleUpdateStatusEnableBatch,
-    handleMerge
+    handleUpdateStatus
   }
 }

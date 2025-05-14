@@ -54,9 +54,6 @@
       >
       <el-button @click="dialogVisible = false">取 消</el-button>
       <template v-if="auditType">
-        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
-          不同意</el-button
-        >
         <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
           同意</el-button
         >
@@ -100,6 +97,7 @@ const initFormData = () => {
     totalVolume: undefined,
     items: [],
     firstMileItems: [] // 合并时存在
+    // fees:[],
   }
 }
 
@@ -109,9 +107,10 @@ const formRef = ref() // 表单 Ref
 const itemsFormdisabled = computed(() => ['detail', 'audit'].includes(formType.value))
 const deptList = ref([])
 const defaultProps = ref({})
+const userList = ref([])
+
 const WMSWarehouseList = ref([])
 const warehouse = ref({})
-const userList = ref([])
 const financeSubjectList = ref([])
 
 /** 子表的表单 */
@@ -210,14 +209,14 @@ const createRequestFormOptions = () => {
   return list
 }
 
-const createAuditFormOptions = (formOptions) => {
+const auditFormOptions = (formOptions) => {
   addDisabled(formOptions)
   addComment(formOptions)
   return formOptions
 }
 
-const createDetailFormOptions = (formOptions) => {
-  addComment(formOptions)
+const detailFormOptions = (formOptions) => {
+  addDisabled(formOptions)
   return formOptions
 }
 
@@ -232,7 +231,7 @@ const open = async (type: string, id?: number, data?: any) => {
 
   const formTypeOperate = {
     detail: () => {
-      requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
+      requestFormOptions.value = detailFormOptions(createRequestFormOptions())
     },
     create: () => {
       requestFormOptions.value = createRequestFormOptions()
@@ -245,7 +244,7 @@ const open = async (type: string, id?: number, data?: any) => {
       requestFormOptions.value = createRequestFormOptions()
     },
     audit: () => {
-      requestFormOptions.value = createAuditFormOptions(createRequestFormOptions())
+      requestFormOptions.value = auditFormOptions(createRequestFormOptions())
     },
     merge: () => {
       dialogTitle.value = '合并头程申请单'
@@ -261,7 +260,6 @@ const open = async (type: string, id?: number, data?: any) => {
         item.id = undefined
         return item
       })
-      console.log(formData.value.firstMileItems, 'formData.value.firstMileItems', data)
       nextTick(() => {
         formRef.value.initForm()
       })
