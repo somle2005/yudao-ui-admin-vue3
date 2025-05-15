@@ -105,6 +105,13 @@
       <template #operate="{ scope }">
         <el-button
           link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['tms:first-mile:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['tms:first-mile:update']"

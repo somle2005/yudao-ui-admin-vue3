@@ -10,9 +10,9 @@
       :disabled="disabled"
     >
       <el-table border :data="formData" class="-mt-10px">
-        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column label="序号" type="index" width="60" align="center" />
 
-        <el-table-column label="产品编码" width="150">
+        <el-table-column label="产品编码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -32,7 +32,7 @@
         </el-table-column>
 
         <!-- 自动带出该目的仓库所在国家的产品FBA条码 -->
-        <el-table-column label="FBA条码" width="150">
+        <el-table-column label="FBA条码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.fbaBarCode`"
