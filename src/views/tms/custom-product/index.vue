@@ -8,7 +8,7 @@
       :inline="true"
       label-width="100px"
     >
-      <el-form-item label="SKU" prop="productId">
+      <el-form-item label="产品编码" prop="productId">
         <!-- <el-input
           v-model="queryParams.productId"
           placeholder="请输入产品id"
@@ -20,7 +20,7 @@
           v-model="queryParams.productId"
           clearable
           filterable
-          placeholder="请选择SKU"
+          placeholder="请选择产品编码"
           @keyup.enter="handleQuery"
           class="!w-240px"
         >
@@ -111,7 +111,7 @@
           <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column label="SKU" align="center" prop="barCode" width="200px" />
+      <el-table-column label="产品编码" align="center" prop="barCode" width="200px" />
       <el-table-column label="产品名称" align="center" prop="productName" width="200px" />
       <!-- <el-table-column label="海关分类id" align="center" prop="customCategoryId" /> -->
       <el-table-column label="海关分类名称" align="center" prop="combinedValue" width="200px" />

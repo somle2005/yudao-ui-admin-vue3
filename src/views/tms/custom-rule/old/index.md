@@ -24,10 +24,10 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="SKU" prop="barCode">
+      <el-form-item label="产品编码" prop="barCode">
         <!-- <el-input
           v-model="queryParams.barCode"
-          placeholder="请输入SKU"
+          placeholder="请输入产品编码"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -36,13 +36,13 @@
           v-model.trim="queryParams.barCode"
           clearable
           filterable
-          placeholder="请选择SKU"
+          placeholder="请选择产品编码"
           @keyup.enter="handleQuery"
           @input="insertBarcode"
           class="!w-240px"
         >
           <el-option
-            v-for="item in productSkuList"
+            v-for="item in product产品编码List"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -170,7 +170,7 @@
   <!--  <ContentWrap>
     <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
 
-      <el-table-column label="SKU" align="center" prop="product-barCode" />
+      <el-table-column label="产品编码" align="center" prop="product-barCode" />
       <el-table-column label="国家编码" align="center" prop="countryCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
@@ -337,7 +337,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { getProductNameList } from '@/commonData'
 import { insertSearchVal } from '@/utils/high'
 
-const { productSkuList } = getProductNameList()
+const { product产品编码List } = getProductNameList()
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -348,7 +348,7 @@ const fieldMap = {
     width: '100px'
   },
   'product-barCode': {
-    label: 'SKU',
+    label: '产品编码',
     width: '180px'
   },
   countryCode: {
@@ -490,7 +490,7 @@ const copyForm = (id?: number) => {
 }
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
-const insertBarcode = insertSearchVal(productSkuList)
+const insertBarcode = insertSearchVal(product产品编码List)
 
 const createTimeChange = (val: any) => {
   queryParams.createTime = val

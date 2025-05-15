@@ -1,4 +1,4 @@
-import { getDeptTree, getUserList } from '@/commonData'
+import { getDeptTree, getProductList, getUserList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
@@ -8,6 +8,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const { deptList, defaultProps } = getDeptTree()
   getWMSWarehouseList(WMSWarehouseList)
   const userList = getUserList()
+  const productList = getProductList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -22,38 +23,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       }
     },
-    // {
-    //   type: 'date-picker',
-    //   placeholder: '请选择创建时间',
-    //   prop: 'createTime',
-    //   label: '创建时间',
-    //   attrs: {
-    //     clearable: true,
-    //     type: 'daterange',
-    //     'value-format': 'x',
-    //     'start-placeholder': '开始日期',
-    //     'end-placeholder': '结束日期',
-    //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
-    //     class: '!w-240px',
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   }
-    // },
-
-    {
-      type: 'select',
-      label: '目的仓',
-      prop: 'toWarehouseId',
-      placeholder: '请选择目的仓',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      },
-      children: WMSWarehouseList
-    },
-
     {
       requiredFlag: true,
       type: 'select',
@@ -87,30 +56,46 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
+    {
+      type: 'select',
+      label: '目的仓',
+      prop: 'toWarehouseId',
+      placeholder: '请选择目的仓',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
+    },
 
     {
       type: 'select',
-      label: '审核状态',
+      placeholder: '请选择产品编码',
+      prop: 'productId',
+      label: '产品编码',
+      attrs: {
+        clearable: true,
+        filterable: true,
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      },
+      children: productList
+    },
+
+    {
+      type: 'select',
+      label: '状态',
       prop: 'auditStatus',
-      placeholder: '请选择审核状态',
+      placeholder: '请选择状态',
       attrs: {
         style: { width: '100%' },
         filterable: true,
         clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
-    },
-    {
-      type: 'select',
-      label: '关闭状态',
-      prop: 'offStatus',
-      placeholder: '请选择关闭状态',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      },
-      children: getIntDictOptions(DICT_TYPE.SRM_OFF_STATUS)
     },
     {
       type: 'select',
@@ -123,7 +108,37 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       },
       children: getIntDictOptions(DICT_TYPE.SRM_ORDER_STATUS)
+    },
+    {
+      type: 'select',
+      label: '关闭状态',
+      prop: 'offStatus',
+      placeholder: '请选择关闭状态',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_OFF_STATUS)
     }
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择创建时间',
+    //   prop: 'createTime',
+    //   label: '创建时间',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'daterange',
+    //     'value-format': 'x',
+    //     'start-placeholder': '开始日期',
+    //     'end-placeholder': '结束日期',
+    //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+    //     class: '!w-240px',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
   ])
 
   const events = {
