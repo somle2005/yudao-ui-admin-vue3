@@ -10,36 +10,10 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
     const list = [
       {
         type: 'input',
-        label: '单据编号',
+        label: '单据编码',
         prop: 'code',
-        placeholder: '请输入单据编号',
+        placeholder: '请输入单据编码',
         attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
-      {
-        type: 'date-picker',
-        placeholder: '请选择结算日期',
-        prop: 'settlementDate',
-        label: '结算日期',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input-number',
-        label: '应付款余额',
-        prop: 'balance',
-        placeholder: '请输入应付款余额',
-        attrs: {
-          // controls: true,
           style: { width: '100%' },
           clearable: true
         }
@@ -100,20 +74,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
             width: '100%'
           }
         }
-      },
-      {
-        type: 'select',
-        placeholder: '请选择销售公司',
-        prop: 'salesCompanyId',
-        label: '销售公司',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: financeSubjectList
       },
       {
         type: 'date-picker',
@@ -225,6 +185,11 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
     ]
 
     addProperty(list)
+    list.forEach((item) => {
+      if (item.slot !== 'mergeItems') {
+        item.colConfig = { span: 8 }
+      }
+    })
     return list
   }
   return {

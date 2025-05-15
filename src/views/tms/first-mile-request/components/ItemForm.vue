@@ -69,9 +69,26 @@
           </template>
         </el-table-column> -->
 
+        <el-table-column label="备注" width="150" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+              <el-input
+                v-model.trim="row.remark"
+                :disabled="disabled"
+                type="textarea"
+                placeholder="请输入备注"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column label="销售公司" width="200" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.salesCompanyId`" class="mb-0px!">
+            <el-form-item
+              :prop="`${$index}.salesCompanyId`"
+              :rules="formRules.salesCompanyId"
+              class="mb-0px!"
+            >
               <SmSelect
                 v-model="row.salesCompanyId"
                 placeholder="请选择库存公司"
@@ -150,7 +167,8 @@ const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  fbaBarCode: [{ required: true, message: '请输入FBA条码', trigger: 'blur' }]
+  fbaBarCode: [{ required: true, message: 'FBA条码不能为空', trigger: 'blur' }],
+  salesCompanyId: [{ required: true, message: '销售公司不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 

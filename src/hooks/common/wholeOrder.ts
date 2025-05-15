@@ -109,13 +109,15 @@ export const getBatchId = (wholeOrderEnable, selectionList) => {
     selectionList.value.forEach((item: any) => {
       if (item?.items?.length) {
         item.items.forEach((a: any) => {
-          ids.push({ id: a.id })
+          // ids.push({ id: a.id })
+          ids.push(a.id)
         })
       }
     })
   } else {
     ids = selectionList.value.map((item: any) => {
-      return { id: item.itemsId }
+      // return { id: item.itemsId }
+      return item.itemsId
     })
   }
   return ids

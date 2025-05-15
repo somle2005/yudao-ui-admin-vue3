@@ -124,8 +124,9 @@ const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
   const list = [
     {
+      requiredFlag: true,
       type: 'input',
-      label: '单据编号',
+      label: '单据编码',
       prop: 'code',
       placeholder: '保存时自动生成',
       attrs: {
@@ -257,9 +258,12 @@ const open = async (type: string, id?: number, data?: any) => {
 
       formData.value.firstMileItems = cloneDeep(data).map((item) => {
         item.weight = item.productWeight
-        item.id = undefined
+        // item.id = undefined
         return item
       })
+
+      formData.value.toWarehouseId = data[0].toWarehouseId
+      console.log(formData.value.toWarehouseId,'formData.value.toWarehouseId',data)
       nextTick(() => {
         formRef.value.initForm()
       })

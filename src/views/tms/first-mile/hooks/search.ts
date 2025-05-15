@@ -9,9 +9,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
-      placeholder: '请输入单据编号',
+      placeholder: '请输入单据编码',
       prop: 'code',
-      label: '单据编号',
+      label: '单据编码',
       attrs: {
         filterable: true,
         clearable: true,

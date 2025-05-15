@@ -40,7 +40,7 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
       await FirstMileRequestApi.auditFirstMileRequestStatus({
         reviewed, // 反审核false
         pass: true, // 反审核无意义
-        requestId: id,
+        requestId: id
         // reviewComment: data.reviewComment 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
       })
       message.success('反审核成功')
@@ -72,10 +72,24 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
       const list = cloneDeep(selectionList.value)
       const arr: any = []
       // 取出所有items作为记录但是要去重 id不能相同
+
+      const toWarehouseIdList = Array.from(
+        new Set(selectionList.value.map((item) => item.toWarehouseId))
+      )
+
+      if (toWarehouseIdList?.length > 1) {
+        message.error('合并项仓库必须相同')
+        return
+      }
+
       const map: any = {}
       list.forEach((item: any) => {
         if (!map[item.id]) {
           map[item.id] = 1
+          item.items.forEach((a) => {
+            a.toWarehouseId = item.toWarehouseId
+            a.deptId = item.requestDeptId
+          })
           arr.push(...item.items)
         }
       })

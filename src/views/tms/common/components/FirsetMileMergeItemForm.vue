@@ -63,6 +63,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
               <SmSelect
+                :disabled="getStoreDisabled(row)"
                 v-model="row.companyId"
                 placeholder="请选择库存公司"
                 :data="financeSubjectList"
@@ -74,9 +75,9 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`" class="mb-0px!">
               <el-tree-select
+                :disabled="getStoreDisabled(row)"
                 filterable
                 clearable
-                :disabled="disabled"
                 v-model="row.deptId"
                 :data="deptList"
                 :props="defaultProps"
@@ -224,6 +225,21 @@ const props = defineProps({
 })
 
 const updateShow = computed(() => props.formType === 'update')
+
+/**
+ * 头程单新增 有上游单据号的  也就是说从申请单过来的不可编辑  智能系统赋值 无上游单据号非合并过来 可以编辑
+ * 头程申请单合并 选中项无法修改
+ * 新加项可以修改
+ */
+
+const getStoreDisabled = (item) => {
+  if (item.upstreamCode) {
+    return true
+  }
+  if (props.formType === 'merge' && item.id) {
+    return true
+  }
+}
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
