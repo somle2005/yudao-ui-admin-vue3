@@ -114,6 +114,10 @@ const fieldMap = {
     label: '平台SKU',
     width: '180px'
   },
+  productCodeAndQty:  {
+    label: '产品编码*数量',
+    width: '180px'
+  },
   name: {
     label: '平台产品名称',
     width: '180px'
@@ -134,7 +138,7 @@ const fieldMap = {
     slot: 'deptName',
     wrap: true
   },
-  qty: {
+  sellableQty: {
     label: '可售数量',
     width: '250px'
   },
@@ -188,7 +192,7 @@ const getList = async () => {
     try {
       list.value = data.list.map((item) => {
         if (item.shop !== null) {
-          item.platformShopName = item.shop.platformShopName
+          item.platformShopName = item.shop.externalName
           item.platform = item.shop.platformCode
           item.shopName = item.shop.name
         }

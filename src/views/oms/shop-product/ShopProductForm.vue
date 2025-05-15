@@ -13,7 +13,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="店铺名称">
+          <el-form-item label="店铺别名">
             <!-- <el-input
               :disabled="disabled"
               v-model="formData.shop.account"

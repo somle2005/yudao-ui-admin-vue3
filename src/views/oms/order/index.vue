@@ -269,7 +269,7 @@
     >
       <el-table-column width="30" label="选择" type="selection" />
       <el-table-column min-width="180" label="订单单号" align="center" prop="code" />
-      <el-table-column min-width="180" label="外部单据编码" align="center" prop="externalCode" />
+      <el-table-column min-width="200" label="外部单据编码" align="center" prop="externalCode" />
       <el-table-column min-width="180" label="所属店铺" align="center" prop="shopName" />
       <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
       <el-table-column label="买家姓名" min-width="180" align="center" prop="buyerName" />
@@ -289,15 +289,23 @@
         label="订单创建时间"
         align="center"
         prop="orderCreateTime"
-        :formatter="dateFormatter2"
+        :formatter="dateFormatter"
         width="120px"
       />
 
       <el-table-column
-        label="最迟送达时间"
+        label="最晚出库时间"
         align="center"
-        prop="deliveryLatestTime"
-        :formatter="dateFormatter2"
+        prop="outboundLatestTime"
+        :formatter="dateFormatter"
+        width="120px"
+      />
+
+      <el-table-column
+        label="最晚到货时间"
+        align="center"
+        prop="receiveLatestTime"
+        :formatter="dateFormatter"
         width="120px"
       />
 
@@ -305,7 +313,7 @@
         label="付款时间"
         align="center"
         prop="payTime"
-        :formatter="dateFormatter2"
+        :formatter="dateFormatter"
         width="120px"
       />
 
@@ -386,7 +394,7 @@
 
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { dateFormatter2 } from '@/utils/formatTime'
+import {dateFormatter, dateFormatter2} from '@/utils/formatTime'
 import download from '@/utils/download'
 import { SaleOrderApi, SaleOrderVO } from '@/api/oms/order'
 import SaleOrderForm from './SaleOrderForm.vue'

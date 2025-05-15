@@ -106,8 +106,9 @@ const fieldMap = {
     label: '平台',
     width: '180px'
   },
-  name:  {
-    label: '店铺名称',
+
+  externalId: {
+    label: '平台店铺编码',
     width: '180px'
   },
 
@@ -119,9 +120,8 @@ const fieldMap = {
     label: '店铺编码',
     width: '180px'
   },
-
-  platformShopCode: {
-    label: '平台店铺编码',
+  name:  {
+    label: '店铺别名',
     width: '180px'
   },
   createTime: {
