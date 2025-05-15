@@ -10,6 +10,21 @@
       :options="requestFormOptions"
       :getModelValue="getFormData"
     >
+      <template #vesselTrackingItems>
+        <el-tabs v-model="vesselTrackingTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="船期信息" name="vesselTrackingTabsName">
+            <SmForm
+              class="-mb-15px"
+              ref="vesselTrackingFormRef"
+              isCol
+              label-width="150px"
+              v-loading="formLoading"
+              :options="vesselTrackingItemsOptions"
+              :getModelValue="getVesselTrackingFormData"
+            />
+          </el-tab-pane>
+        </el-tabs>
+      </template>
       <template #mergeItems>
         <!-- <el-button
           type="primary"
@@ -96,7 +111,7 @@ const initFormData = () => {
     inboundStatus: undefined,
     inboundTime: undefined,
     firstMileItems: [],
-    vesselTracking: {},
+    vesselTracking: {}
     // fees:[],
   }
 }
@@ -115,12 +130,16 @@ const feeFormRef = ref()
 const firstMileItemFormRef = ref()
 const mergeTabsName = ref('firstMileItem')
 
+const vesselTrackingTabsName = ref('vesselTrackingTabsName')
+const vesselTrackingFormRef = ref()
+
 const requestFormOptions: any = ref([])
-const { mergeOptions: createRequestFormOptions } = useMergeFirstMileOptions(
+const { mergeOptions: createRequestFormOptions, vesselTrackingOptions } = useMergeFirstMileOptions(
   warehouse,
   WMSWarehouseList,
   financeSubjectList
 )
+const vesselTrackingItemsOptions: any = ref(vesselTrackingOptions())
 
 const detailFormOptions = (formOptions) => {
   addDisabled(formOptions)
@@ -181,6 +200,9 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 const getFormData = () => {
   return formData.value
 }
+const getVesselTrackingFormData = () => {
+  return formData.value.vesselTracking
+}
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
@@ -189,6 +211,7 @@ const submitForm = async (type?: string) => {
   await formRef.value.validate()
   // 校验子表单
   await firstMileItemFormRef.value.validate()
+  await vesselTrackingFormRef.value.validate()
 
   // 提交请求
   formLoading.value = true

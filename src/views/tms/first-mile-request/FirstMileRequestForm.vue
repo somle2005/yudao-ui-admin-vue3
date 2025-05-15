@@ -32,6 +32,22 @@
         </el-tabs>
       </template>
 
+      <template #vesselTrackingItems>
+        <el-tabs v-model="vesselTrackingTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="船期信息" name="vesselTrackingTabsName">
+            <SmForm
+              class="-mb-15px"
+              ref="vesselTrackingFormRef"
+              isCol
+              label-width="150px"
+              v-loading="formLoading"
+              :options="vesselTrackingItemsOptions"
+              :getModelValue="getVesselTrackingFormData"
+            />
+          </el-tab-pane>
+        </el-tabs>
+      </template>
+
       <template #mergeItems>
         <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="头程单清单" name="firstMileItem">
@@ -97,7 +113,7 @@ const initFormData = () => {
     totalVolume: undefined,
     items: [],
     firstMileItems: [], // 合并时存在
-    vesselTracking: {},
+    vesselTracking: {}
     // fees:[],
   }
 }
@@ -120,6 +136,9 @@ const itemFormRef = ref()
 
 const mergeTabsName = ref('firstMileItem')
 const firstMileItemFormRef = ref()
+
+const vesselTrackingTabsName = ref('vesselTrackingTabsName')
+const vesselTrackingFormRef = ref()
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -222,7 +241,12 @@ const detailFormOptions = (formOptions) => {
   return formOptions
 }
 
-const { mergeOptions } = useMergeFirstMileOptions(warehouse, WMSWarehouseList, financeSubjectList)
+const { mergeOptions, vesselTrackingOptions } = useMergeFirstMileOptions(
+  warehouse,
+  WMSWarehouseList,
+  financeSubjectList
+)
+const vesselTrackingItemsOptions: any = ref([])
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number, data?: any) => {
@@ -251,6 +275,8 @@ const open = async (type: string, id?: number, data?: any) => {
     merge: () => {
       dialogTitle.value = '合并头程申请单'
       requestFormOptions.value = mergeOptions()
+      vesselTrackingItemsOptions.value = vesselTrackingOptions()
+
       FirstMileApi.getFirstMileLatestNo().then((res) => {
         const modelValue = formRef.value.getFormData()
         modelValue.code = res
@@ -264,7 +290,7 @@ const open = async (type: string, id?: number, data?: any) => {
       })
 
       formData.value.toWarehouseId = data[0].toWarehouseId
-      console.log(formData.value.toWarehouseId,'formData.value.toWarehouseId',data)
+      console.log(formData.value.toWarehouseId, 'formData.value.toWarehouseId', data)
       nextTick(() => {
         formRef.value.initForm()
       })
@@ -296,6 +322,10 @@ const getFormData = () => {
   return formData.value
 }
 
+const getVesselTrackingFormData = () => {
+  return formData.value.vesselTracking
+}
+
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async (type?: string) => {
@@ -304,6 +334,7 @@ const submitForm = async (type?: string) => {
 
   if (formType.value === 'merge') {
     await firstMileItemFormRef.value.validate()
+    await vesselTrackingFormRef.value.validate()
   } else {
     // 校验子表单
     await itemFormRef.value.validate()

@@ -3,6 +3,7 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { formatDecimal } from '@/utils/num'
 import { VOLUMN_PRECISION } from '../constant'
 import { CustomRuleApi } from '@/api/tms/customrule'
+import { getFinanceSubjectList } from '@/commonData'
 
 // 合并头程申请单 头程申请合并和头程订单复用
 export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSubjectList) => {
@@ -177,6 +178,13 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
       },
       {
         colConfig: { span: 24 },
+        slot: 'vesselTrackingItems',
+        formItemConfig: {
+          class: 'common-form-tabs-items'
+        }
+      },
+      {
+        colConfig: { span: 24 },
         slot: 'mergeItems',
         formItemConfig: {
           class: 'common-form-items'
@@ -185,15 +193,98 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
     ]
 
     addProperty(list)
-    list.forEach((item) => {
-      if (item.slot !== 'mergeItems') {
+    list.forEach((item: any) => {
+      if (!['mergeItems', 'vesselTrackingItems'].includes(item.slot)) {
         item.colConfig = { span: 8 }
       }
     })
     return list
   }
+
+  const vesselTrackingOptions = () => {
+    // 船名-航次-货代公司-装运港-中转港-目的港-出口公司-中转公司-箱号-船公司
+    const financeSubjectList = getFinanceSubjectList()
+    const list = [
+      {
+        type: 'input',
+        label: '船名',
+        prop: 'vessel',
+        placeholder: '请输入船名',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        type: 'input',
+        label: '航次',
+        prop: 'voyage',
+        placeholder: '请输入航次',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+
+      {
+        type: 'select',
+        label: '货代公司',
+        prop: 'forwarderCompanyId',
+        placeholder: '请选择货代公司',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: financeSubjectList
+      },
+
+      // 装运港-中转港-目的港 字典-做一个信息表
+      // 缺少 出口公司-中转公司
+
+      {
+        type: 'select',
+        label: '柜型',
+        prop: 'cabinetType',
+        placeholder: '请选择柜型',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: getIntDictOptions(DICT_TYPE.TMS_CABINET_TYPE)
+      },
+
+      {
+        type: 'input',
+        label: '箱号',
+        prop: 'containerNo',
+        placeholder: '请输入箱号',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        type: 'select',
+        label: '船公司',
+        prop: 'carrierCompanyId',
+        placeholder: '请选择船公司',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: financeSubjectList
+      }
+    ]
+
+    return list
+  }
+
   return {
-    mergeOptions
+    mergeOptions,
+    vesselTrackingOptions
   }
 }
 

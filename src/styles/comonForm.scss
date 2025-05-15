@@ -7,3 +7,9 @@
 :global(.common-form-items .el-form-item__content) {
   margin-left: 0 !important;
 }
+:deep(.common-form-tabs-items .el-form-item__content) {
+  margin-left: 0 !important;
+}
+:deep(.common-form-tabs-items .el-form-item) {
+  margin-bottom: 15px!important;
+}
