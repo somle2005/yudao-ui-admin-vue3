@@ -4,6 +4,7 @@ import { formatDecimal } from '@/utils/num'
 import { VOLUMN_PRECISION } from '../constant'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getFinanceSubjectList } from '@/commonData'
+import { getPortInfoList } from '@/commonData/tms'
 
 // 合并头程申请单 头程申请合并和头程订单复用
 export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSubjectList) => {
@@ -204,6 +205,8 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
   const vesselTrackingOptions = () => {
     // 船名-航次-货代公司-装运港-中转港-目的港-出口公司-中转公司-箱号-船公司
     const financeSubjectList = getFinanceSubjectList()
+    const portInfoList = getPortInfoList()
+
     const list = [
       {
         type: 'input',
@@ -239,20 +242,68 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         children: financeSubjectList
       },
 
-      // 装运港-中转港-目的港 字典-做一个信息表
-      // 缺少 出口公司-中转公司
-
       {
         type: 'select',
-        label: '柜型',
-        prop: 'cabinetType',
-        placeholder: '请选择柜型',
+        label: '装运港',
+        prop: 'fromPort',
+        placeholder: '请选择装运港',
         attrs: {
           style: { width: '100%' },
           filterable: true,
           clearable: true
         },
-        children: getIntDictOptions(DICT_TYPE.TMS_CABINET_TYPE)
+        children: portInfoList
+      },
+      {
+        type: 'select',
+        label: '中转港',
+        prop: 'fromPort',
+        placeholder: '请选择中转港',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: portInfoList
+      },
+      {
+        type: 'select',
+        label: '目的港',
+        prop: 'toPort',
+        placeholder: '请选择中转港',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: portInfoList
+      },
+
+      // 缺少 出口公司-中转公司-等后端提供字段
+
+      {
+        type: 'select',
+        label: '出口公司',
+        prop: 'exportCompanyId',
+        placeholder: '请选择出口公司',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: financeSubjectList
+      },
+      {
+        type: 'select',
+        label: '中转公司',
+        prop: 'transitCompanyId',
+        placeholder: '请选择中转公司',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: financeSubjectList
       },
 
       {
