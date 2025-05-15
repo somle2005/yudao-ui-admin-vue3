@@ -95,7 +95,8 @@ const initFormData = () => {
     outboundTime: undefined,
     inboundStatus: undefined,
     inboundTime: undefined,
-    firstMileItems: []
+    firstMileItems: [],
+    vesselTracking: {},
     // fees:[],
   }
 }

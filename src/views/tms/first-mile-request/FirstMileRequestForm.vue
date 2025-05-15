@@ -96,7 +96,8 @@ const initFormData = () => {
     totalWeight: undefined,
     totalVolume: undefined,
     items: [],
-    firstMileItems: [] // 合并时存在
+    firstMileItems: [], // 合并时存在
+    vesselTracking: {},
     // fees:[],
   }
 }
