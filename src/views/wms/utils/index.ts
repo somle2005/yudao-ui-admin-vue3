@@ -60,8 +60,11 @@ export const getBinIdRules = (formData) => {
 }
 
 export const codeTypeList = [
-  { name: '入库', type: 1, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' }, // split('.')[0][1]
-  { name: '拣货', type: 2, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' },
+  // { name: '入库', type: 1, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' }, // split('.')[0][1]
+  // { name: '拣货', type: 2, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' },
+
+  { name: '入库', type: 1, dictType: 'wms_inbound_type', getValue: 'inbound.type' }, // split('.')[0][1]
+  { name: '拣货', type: 2, dictType: 'wms_inbound_type', getValue: 'inbound.type' },
 
   { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
   { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
