@@ -33,8 +33,8 @@ export const useTable = () => {
       formatter: dateFormatter,
       width: '180px'
     },
-    updater: '更新人',
-    creator: '创建人',
+    updaterName: '更新人',
+    creatorName: '创建人',
     createTime: {
       label: '创建时间',
       formatter: dateFormatter,

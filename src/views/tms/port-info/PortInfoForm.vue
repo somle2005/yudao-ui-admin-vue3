@@ -81,6 +81,16 @@ const createRequestFormOptions = () => {
       }
     },
     {
+      type: 'input',
+      label: '国家描述',
+      prop: 'countryName',
+      placeholder: '请输入国家描述',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
       type: 'select',
       label: '国家代码',
       prop: 'countryCode',
