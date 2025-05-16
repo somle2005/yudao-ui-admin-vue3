@@ -188,7 +188,14 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await FirstMileApi.getFirstMile(id)
+      let data = await FirstMileApi.getFirstMile(id)
+      if (!data.fees) {
+        data.fees = []
+      }
+      if (!data.vesselTracking) {
+        data.vesselTracking = {}
+      }
+      formData.value = data
       formRef.value.initForm()
     } finally {
       formLoading.value = false

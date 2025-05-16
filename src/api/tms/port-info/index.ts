@@ -47,6 +47,6 @@ export const PortInfoApi = {
 
   // TMS港口信息精简列表
   getPortInfoSimpleList: async (params?: any) => {
-    return await request.get({ url: `/tms/port-info/simple-list`, params })
+    return await request.get({ url: `/tms/port-info/list-simple`, params })
   }
 }

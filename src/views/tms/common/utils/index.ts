@@ -257,7 +257,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
       {
         type: 'select',
         label: '中转港',
-        prop: 'fromPort',
+        prop: 'transitPort',
         placeholder: '请选择中转港',
         attrs: {
           style: { width: '100%' },
@@ -270,7 +270,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         type: 'select',
         label: '目的港',
         prop: 'toPort',
-        placeholder: '请选择中转港',
+        placeholder: '请选择目的港',
         attrs: {
           style: { width: '100%' },
           filterable: true,
