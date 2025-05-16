@@ -57,7 +57,6 @@ const resolveConfig = (tableOption, config) => {
   }
 
   const noWidthListDeal = (noWidthList, item) => {
-    if (!item.noWidth) return
     if (!noWidthList?.length) return
     if (noWidthList.includes(item.prop)) {
       item.width = undefined
@@ -65,7 +64,6 @@ const resolveConfig = (tableOption, config) => {
   }
 
   const scaleComputeWidth = (item) => {
-    if (!item.noWidth) return
     const scale = 20
     const len = item.label.length
     if (len <= 4) {
