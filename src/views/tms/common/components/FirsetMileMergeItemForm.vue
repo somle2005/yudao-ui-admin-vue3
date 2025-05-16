@@ -263,6 +263,8 @@ watch(
   async (val) => {
     if (judgeNum()) return
     addFbaBarCode(val, formData)
+    
+    // val仓库id-formData companyId 库存归属deptId-批量去弄
   },
   { immediate: true, deep: true }
 )

@@ -424,3 +424,53 @@ export const addFbaBarCode = (val, formData) => {
     }
   }, 100)
 }
+
+
+export const addCompanyList = (val, formData) => {
+  // if (!val?.country) return
+  if (!val?.value) return
+  // 合并的时候props.items后进来所以需要延迟调用-但是变化核心是这里
+  setTimeout(async () => {
+    const productIds = formData.value.map((item) => item.productId)
+    const deptIds = formData.value.map((item) => item.deptId)
+    if (!productIds?.length || !deptIds?.length) return
+    try {
+
+      // const countryList = getIntDictOptions(DICT_TYPE.COUNTRY_CODE)
+      // const countryCode = countryList.find((item) => val.country === item.label)?.value as number
+
+
+      // const data = await CustomRuleApi.getCustomRuleListByCountryProduct({
+      //   : val.country,
+      //   productIds
+      // })
+
+      // const changeUnde = () => {
+      //   formData.value.forEach((item) => {
+      //     item.fbaBarCode = undefined
+      //   })
+      // }
+
+      // if (!countryCode && countryCode !== 0) {
+      //   changeUnde()
+      //   return
+      // }
+
+      // const data = await CustomRuleApi.getCustomRuleListByCountryProduct({
+      //   // country: val.country,
+      //   countryCode,
+      //   productIds
+      // })
+      // if (data?.length) {
+      //   formData.value.forEach((item) => {
+      //     const fbaBarCode = data.find((a) => a.productId === item.productId)?.fbaBarCode
+      //     item.fbaBarCode = fbaBarCode
+      //   })
+      // } else {
+      //   changeUnde()
+      // }
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  }, 100)
+}
