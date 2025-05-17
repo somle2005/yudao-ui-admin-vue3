@@ -425,20 +425,66 @@ export const addFbaBarCode = (val, formData) => {
   }, 100)
 }
 
-
 export const addCompanyList = (val, formData) => {
-  // if (!val?.country) return
-  if (!val?.value) return
+  const changeUnde = () => {
+    formData.value.forEach((item) => {
+      item.companyList = []
+    })
+  }
+
+  // 目的仓被叉掉删除
+  if (!val?.value) {
+    changeUnde()
+    return
+  }
+
+  // 伪代码开发
   // 合并的时候props.items后进来所以需要延迟调用-但是变化核心是这里
   setTimeout(async () => {
-    const productIds = formData.value.map((item) => item.productId)
-    const deptIds = formData.value.map((item) => item.deptId)
-    if (!productIds?.length || !deptIds?.length) return
+    // const productIds = formData.value.map((item) => item.productId)
+    // const deptIds = formData.value.map((item) => item.deptId)
+    // if (!productIds?.length || !deptIds?.length) return
+
     try {
+      const idList: any = []
+      formData.value.forEach((item) => {
+        const obj = {
+          productId: item.productId,
+          deptId: item.deptId
+        }
+        idList.push(obj)
+      })
+
+      if (!idList?.length) return
+
+      const queryData = {
+        warehouseId: val.value,
+        idList
+      }
+
+      // 假设查询到了数据
+      // const data = await CustomRuleApi.getCustomRuleListByCountryProduct(queryData)
+      const data = [{ companyList: [], productId: 1, deptId: 1 }] as any // 二维数组
+
+      // 返回的应该是对应companyList数组
+
+      if (data?.length) {
+        formData.value.forEach((item) => {
+          const target = data.find(
+            (a) => a.productId === item.productId && a.deptId === item.deptId
+          )
+          if (target) {
+            item.companyList = target.companyList || []
+          } else {
+            item.companyList = []
+          }
+        })
+      } else {
+        changeUnde()
+      }
 
       // const countryList = getIntDictOptions(DICT_TYPE.COUNTRY_CODE)
       // const countryCode = countryList.find((item) => val.country === item.label)?.value as number
-
 
       // const data = await CustomRuleApi.getCustomRuleListByCountryProduct({
       //   : val.country,
@@ -469,6 +515,53 @@ export const addCompanyList = (val, formData) => {
       // } else {
       //   changeUnde()
       // }
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  }, 100)
+}
+
+// 添加单个company
+export const addCompany = (warehouse, row) => {
+  // const changeUnde = () => {
+  //   formData.value.forEach((item) => {
+  //     item.companyList = []
+  //   })
+  // }
+
+  // 目的仓被叉掉删除-批量监听warehouse会替你处理
+  if (!warehouse?.value) {
+    // changeUnde()
+    return
+  }
+  if (!row.productId || row.deptId) {
+    row.companyList = []
+    return
+  }
+
+  // 伪代码开发
+  // 合并的时候props.items后进来所以需要延迟调用-但是变化核心是这里
+  setTimeout(async () => {
+    try {
+      const { productId, deptId } = row
+      const idList = [{ productId, deptId }]
+      if (!idList?.length) return
+
+      const queryData = {
+        warehouseId: warehouse.value,
+        idList
+      }
+
+      // 假设查询到了数据
+      // const data = await CustomRuleApi.getCustomRuleListByCountryProduct(queryData)
+      const data = [{ companyList: [], productId: 1, deptId: 1 }] as any // 二维数组
+
+      // 返回的应该是对应companyList数组
+      if (data?.length) {
+        row.companyList = data[0].companyList || []
+      } else {
+        row.companyList = []
+      }
     } catch (e) {
       console.log(e, 'e')
     }

@@ -84,6 +84,7 @@
                 check-strictly
                 node-key="id"
                 placeholder="请选择库存归属"
+                @change="(val) => changeDept(row, $index, val)"
               />
             </el-form-item>
           </template>
@@ -188,7 +189,7 @@ import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
-import { computeVolume, addFbaBarCode } from '../utils'
+import { computeVolume, addFbaBarCode, addCompanyList, addCompany } from '../utils'
 import { useInitNum } from '../hooks'
 
 const productList = getProductList()
@@ -263,7 +264,7 @@ watch(
   async (val) => {
     if (judgeNum()) return
     addFbaBarCode(val, formData)
-    
+    // addCompanyList(val, formData)
     // val仓库id-formData companyId 库存归属deptId-批量去弄
   },
   { immediate: true, deep: true }
@@ -344,6 +345,8 @@ const handleAdd = () => {
 
 const changeProduct = async (row, index, val) => {
   try {
+    // addCompany(props.warehouse, row)
+
     const product = productList.value.find((item) => item.id === val)
     if (!product) {
       ;[
@@ -385,6 +388,14 @@ const changeProduct = async (row, index, val) => {
     } else {
       row.fbaBarCode = undefined
     }
+  } catch (e) {
+    console.log(e, '报错')
+  }
+}
+
+const changeDept = async (row, index, val) => {
+  try {
+    // addCompany(props.warehouse, row)
   } catch (e) {
     console.log(e, '报错')
   }
