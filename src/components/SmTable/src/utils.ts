@@ -116,8 +116,6 @@ export const transformTableOptions = (
       width: '100px'
     }
     if (fieldMap[key] instanceof Object) {
-      Object.assign(obj, fieldMap[key])
-      // 打赏自动设置宽度的标记
       if (!fieldMap[key].width) {
         obj.noWidth = true
       }
@@ -125,10 +123,12 @@ export const transformTableOptions = (
       if (fieldMap[key].formatter) {
         obj.sortable = true
       }
+      Object.assign(obj, fieldMap[key])
+    } else {
+      obj.noWidth = true
     }
     tableOption.push(obj)
   }
-
   resolveConfig(tableOption, config)
 
   return tableOption

@@ -83,7 +83,6 @@
 </template>
 
 <script setup lang="ts">
-
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { StockFlowApi, StockFlowVO } from '@/api/wms/stock-flow'
@@ -109,10 +108,16 @@ import { getCodeType, getCodeValue } from '@/views/wms/utils/index'
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
-  productBarCode: '产品编码',
-  productName: '产品名称',
+  productBarCode: {
+    label: '产品编码',
+     width: '160px',
+  },
+  productName: {
+    label: '产品名称',
+    width: '200px'
+  },
   companyName: '库存公司',
-  deptName:'库存归属',
+  deptName: '库存归属',
   flowTime: {
     label: '操作时间',
     formatter: dateFormatter,
@@ -125,14 +130,17 @@ const fieldMap = {
     slot: 'deltaQty'
   },
   inboundItemFlowOutboundAvailableQty: '批次当前库存',
-  warehouseName: '仓库',
+  warehouseName: {
+    label: '仓库',
+    width: '160px'
+  },
   stockWarehouseAvailableQty1: '仓库当前库存',
   stockWarehouseAvailableQty: '仓库可用库存',
   stockWarehouseSellableQty: '仓库可售库存',
 
   codeType: {
     label: '单据类型',
-    width: '200px',
+    width: '120px',
     slot: 'codeType'
   },
   operateNo: {
@@ -140,9 +148,8 @@ const fieldMap = {
     slot: 'operateNo',
     width: '250px'
   },
-  updaterName: '操作人',
+  updaterName: '操作人'
 
-  
   // reason: {
   //   label: '操作类型',
   //   width: '200px',
@@ -166,16 +173,9 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_STOCK_FLOW_DIRECTION }
   // },
 
-
   // inboundCode: '入库单号',
   // outboundCode: '出库单号',
   // pickupCode: '上架单号',
-
-
- 
- 
-
-
 
   // outboundPendingQty: '待出库数',
   // purchasePlanQty: '采购计划数',
@@ -183,7 +183,6 @@ const fieldMap = {
   // returnTransitQty: '退件在途数数',
   // sellableQty: '可售数',
   // shelvingPendingQty: '待上架数数',
-
 
   // updateTime: {
   //   label: '更新时间',
@@ -205,7 +204,7 @@ const fieldMap = {
   // }
 }
 tableOptions.value = transformTableOptions(fieldMap, {
-  allWrap: true,
+  // allWrap: true,
   noComputePropList: [
     'warehouseName',
     'productBarCode',
@@ -268,9 +267,7 @@ const getList = async () => {
       { prop: 'inboundItemFlow', keyList: ['outboundAvailableQty'] },
 
       { prop: 'dept', keyList: ['name'] },
-      { prop: 'company', keyList: ['name'] },
-
-    
+      { prop: 'company', keyList: ['name'] }
     ]) as any
 
     list.value.forEach((item: any) => {
