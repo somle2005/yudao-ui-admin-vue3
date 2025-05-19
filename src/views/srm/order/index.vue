@@ -253,11 +253,11 @@ const fieldMap = {
   },
 
   // productBarCode: {
-  //   label: 'SKU',
+  //   label: '产品编码',
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
   barCode: {
-    label: 'SKU',
+    label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   productName: {

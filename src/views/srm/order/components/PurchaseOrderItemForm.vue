@@ -45,7 +45,7 @@
           </el-table-column>
         </template>
 
-        <el-table-column label="SKU" width="180">
+        <el-table-column label="产品编码" width="180">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -59,7 +59,7 @@
                 filterable
                 @change="onChangeProduct($event, row)"
                 @update:model-value="updateModelValue"
-                placeholder="请选择SKU"
+                placeholder="请选择产品编码"
                 :disabled="disabled"
               >
                 <el-option
@@ -73,7 +73,7 @@
               <SmSelect
                 :disabled="disabled"
                 v-model="row.productId"
-                placeholder="请选择SKU"
+                placeholder="请选择产品编码"
                 @change="
                   (val) =>
                     updateModelValue(

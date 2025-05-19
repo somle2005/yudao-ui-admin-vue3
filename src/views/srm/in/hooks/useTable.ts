@@ -16,7 +16,7 @@ import { cloneDeep } from 'lodash-es'
 审核状态-1
 付款状态-1
 成交金额-1
-SKU-1
+产品编码-1
 商品名称(产品名称)-1
 海关品名
 仓库-1
@@ -57,9 +57,9 @@ export const useTable = () => {
       width: '200px'
     },
 
-    // items-product带出barCode SKU name
+    // items-product带出barCode 产品编码 name
     productBarCode: {
-      label: 'SKU',
+      label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 

@@ -262,7 +262,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   productBarCode: {
-    label: 'SKU',
+    label: '产品编码',
     slot: 'productBarCode',
     width: '200px',
     wrap: true,

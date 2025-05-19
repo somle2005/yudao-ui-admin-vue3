@@ -64,7 +64,7 @@ export const useApplicantTable = () => {
       slot: 'rowOffStatus'
     },
     productBarCode: {
-      label: 'SKU',
+      label: '产品编码',
       slot: 'productBarCode',
       width: '200px',
       wrap: true

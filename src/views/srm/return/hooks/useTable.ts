@@ -11,7 +11,7 @@ import { cloneDeep } from 'lodash-es'
 审核状态-1
 退款状态-1 缺后端字典
 供应商-1 
-SKU编码-1
+产品编码编码-1
 商品名称-1
 仓库-1
 数量-count产品数量
@@ -39,9 +39,9 @@ export const useTable = () => {
       width: '200px'
     },
 
-    // items-product带出barCode SKU name
+    // items-product带出barCode 产品编码 name
     barCode: {
-      label: 'SKU',
+      label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
   

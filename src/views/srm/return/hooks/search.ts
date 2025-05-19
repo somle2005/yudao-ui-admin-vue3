@@ -25,12 +25,12 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
-    // 产品用SKU
+    // 产品用产品编码
     {
       type: 'select',
-      placeholder: '请选择SKU',
+      placeholder: '请选择产品编码',
       prop: 'productId',
-      label: 'SKU',
+      label: '产品编码',
       attrs: {
         clearable: true,
         filterable: true,

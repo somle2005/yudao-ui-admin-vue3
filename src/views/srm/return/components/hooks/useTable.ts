@@ -30,9 +30,9 @@ export const useTable = () => {
       width: '200px'
     },
 
-    // items-product带出barCode SKU name
+    // items-product带出barCode 产品编码 name
     productBarCode: {
-      label: 'SKU',
+      label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 

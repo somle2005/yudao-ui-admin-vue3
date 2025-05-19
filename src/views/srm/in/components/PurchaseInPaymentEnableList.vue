@@ -157,7 +157,7 @@ const fieldMap = {
   // 8:  '入库核销状态',
 
   barCode: {
-    label: 'SKU',
+    label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   productName: {

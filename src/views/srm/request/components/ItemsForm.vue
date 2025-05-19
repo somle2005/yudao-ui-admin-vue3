@@ -16,7 +16,7 @@
           <el-text>{{ row.id }}</el-text>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="SKU" min-width="180">
+      <!-- <el-table-column label="产品编码" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <el-select
@@ -24,7 +24,7 @@
               clearable
               filterable
               @change="onChangeProduct($event, row)"
-              placeholder="请选择SKU"
+              placeholder="请选择产品编码"
               :disabled="disabled"
             >
               <el-option
@@ -38,13 +38,13 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column label="SKU" width="180">
+      <el-table-column label="产品编码" width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <SmSelect
               :disabled="productDisabled"
               v-model="row.productId"
-              placeholder="请选择SKU"
+              placeholder="请选择产品编码"
               @change="
                 (val) =>
                   updateModelValue(
@@ -379,7 +379,7 @@ import { getDeclaredType } from '@/utils/operate/purchase'
     税额 = 单价 * 税率
     税额 = 含税单价 * (税率/(1+税率))
 
-    产品带出 产品编码sku-barCode-change事件赋予值联动即可
+    产品带出 产品编码产品编码-barCode-change事件赋予值联动即可
  */
 
 const props = defineProps({
@@ -415,10 +415,10 @@ const noCreate = computed(() => !['create'].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
-// 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-SKU(产品名称-单位) 申请数量
+// 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-产品编码(产品名称-单位) 申请数量
 const formRules = reactive({
   deliveryTime: [{ required: true, message: '交货日期不能为空', trigger: 'blur' }],
-  productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
+  productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
   orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],
   declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
