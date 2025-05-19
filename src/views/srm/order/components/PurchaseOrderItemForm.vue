@@ -103,7 +103,6 @@
         </el-table-column>
 
         <el-table-column label="海关品名" width="180" align="center">
-          <!-- :rules="formRules.declaredType" -->
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.declaredType`" class="mb-0px!">
               <el-input :disabled="disabled" v-model.trim="row.declaredType" />
@@ -111,7 +110,6 @@
           </template>
         </el-table-column>
         <el-table-column label="海关品名(英文)" width="180" align="center">
-          <!-- :rules="formRules.declaredTypeEn" -->
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
               <el-input :disabled="disabled" v-model="row.declaredTypeEn" />

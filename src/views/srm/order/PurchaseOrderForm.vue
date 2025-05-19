@@ -649,9 +649,16 @@ const submitForm = async () => {
       const queryData: any = filterObjKey(
         {
           ...data,
-          itemIds: items.map((item) => item.id) as number[]
+          items: items.map((item) => {
+            return {
+              itemId: item.id,
+              qty: item.qty
+            }
+          })
+          // itemIds: items.map((item) => item.id) as number[]
         },
         [
+          'items',
           'billTime',
           'supplierId',
           'address',
@@ -661,7 +668,7 @@ const submitForm = async () => {
           'otherPrice',
           'fileUrl',
           'remark',
-          'itemIds',
+          // 'itemIds',
           'currencyName',
           'currencyId'
         ]
@@ -734,7 +741,8 @@ const addItem = (selectionList) => {
       } = item
       const obj = {
         purchaseApplyItemId,
-        count: approvedQty || 0,
+        // count: approvedQty || 0,
+        qty: approvedQty || 0,
         actTaxPrice,
         taxPercent,
         taxPrice, //税额需要动态计算

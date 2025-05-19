@@ -58,6 +58,12 @@
             <el-text>{{ row.declaredType }}</el-text>
           </template>
         </el-table-column>
+        <el-table-column label="海关品名(英文)" width="180" align="center">
+          <template #default="{ row }">
+            <el-text>{{ row.declaredTypeEn }}</el-text>
+          </template>
+        </el-table-column>
+
         <!-- <el-table-column label="型号规格" width="180">
           <template #default="{ row }">
             <el-text>{{ row.model }}</el-text>
@@ -480,5 +486,4 @@ const validate = () => {
   return formRef.value.validate()
 }
 defineExpose({ validate, formData })
-
 </script>
