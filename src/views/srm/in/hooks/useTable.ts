@@ -58,7 +58,8 @@ export const useTable = () => {
     },
 
     // items-product带出barCode 产品编码 name
-    productBarCode: {
+    // productBarCode: {
+    rowBarCode: {
       label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -81,10 +82,10 @@ export const useTable = () => {
       slot: 'payStatus',
       dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
     },
-    reconciliationStatus: {
-      label: '对账状态',
-      slot: 'reconciliationStatus'
-    },
+    // reconciliationStatus: {
+    //   label: '对账状态',
+    //   slot: 'reconciliationStatus'
+    // },
     rowPayStatus: {
       label: '行付款状态',
       slot: 'rowPayStatus',
@@ -204,25 +205,38 @@ export const useTable = () => {
     }
   }
 
-  const allOptions = transformTableOptions(fieldMap)
-  const wrapList = [
-    'code',
-    'supplierName',
-    'productBarCode',
-    'reviewComment',
-    'productName',
-    'remark',
-    'orderNo',
-    'warehouseName',
-    'declaredType'
-  ]
-  allOptions.forEach((item: any) => {
-    if (wrapList.includes(item.prop)) {
-      item.slot = item.prop
-      item.wrap = true
-      item.width = '200px'
-    }
+  const allOptions = transformTableOptions(fieldMap, {
+    allWrap: true,
+    noComputePropList: [
+      'creator',
+      'applicantName',
+      'auditorName',
+      'itemTotalPrice',
+      'qty',
+      'remark',
+      'actTaxPrice',
+      'allAmount'
+    ]
   })
+
+  // const wrapList = [
+  //   'code',
+  //   'supplierName',
+  //   'productBarCode',
+  //   'reviewComment',
+  //   'productName',
+  //   'remark',
+  //   'orderNo',
+  //   'warehouseName',
+  //   'declaredType'
+  // ]
+  // allOptions.forEach((item: any) => {
+  //   if (wrapList.includes(item.prop)) {
+  //     item.slot = item.prop
+  //     item.wrap = true
+  //     item.width = '200px'
+  //   }
+  // })
 
   tableOptions.value = createBranchOrder(cloneDeep(allOptions))
 

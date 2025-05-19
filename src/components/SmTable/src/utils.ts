@@ -40,7 +40,7 @@ const resolveConfig = (tableOption, config) => {
 
     item.slot = item.prop
     item.wrap = true
-    if (!item.noWidth) {
+    if (item.noWidth) {
       item.width = '180px'
     }
   }
@@ -50,7 +50,7 @@ const resolveConfig = (tableOption, config) => {
     if (wrapList.includes(item.prop)) {
       item.slot = item.prop
       item.wrap = true
-      if (!item.noWidth) {
+      if (item.noWidth) {
         item.width = '180px'
       }
     }
