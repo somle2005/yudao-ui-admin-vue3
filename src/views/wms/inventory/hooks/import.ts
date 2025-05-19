@@ -5,8 +5,8 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
   const message = useMessage() // 消息弹窗
 
   const templateObj = ref({
-    url: CustomerApi.importCustomerTemplate,
-    name: '客户导入模版.xls'
+    url: undefined as any,
+    name: ''
   })
 
   const importMap = {
@@ -22,14 +22,16 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
       // templateObj进行操作处理-对导入模板和name进行处理
       const fnMap = {
         [importMap.create]: () => {
+          // wms:inbound-item:download-product-template
           templateObj.value = {
-            url: CustomerApi.importCustomerTemplate,
+            url: InventoryBinApi.downloadInventoryBinProductTemplate,
             name: '导入盘点产品模板.xls'
           }
         },
         [importMap.inventory]: () => {
+          // wms:inbound-item:download-template
           templateObj.value = {
-            url: CustomerApi.importCustomerTemplate,
+            url: InventoryBinApi.downloadInventoryBinTemplate,
             name: '导入盘点结果模板.xls'
           }
         }

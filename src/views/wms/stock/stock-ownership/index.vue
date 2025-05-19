@@ -97,7 +97,6 @@ import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { StockOwnershipMoveApi } from '@/api/wms/stock-ownership-move'
 import { OPERATE_MAP } from './constant/index'
-import * as CustomerApi from '@/api/crm/customer'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -225,8 +224,9 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
+// wms:stock-ownership-move:download-template
 const templateObj = ref({
-  url: CustomerApi.importCustomerTemplate,
+  url: StockOwnershipMoveApi.downloadStockOwnershipMoveTemplate,
   name: '调归属模版.xls'
 })
 const smImportFileRef = ref()

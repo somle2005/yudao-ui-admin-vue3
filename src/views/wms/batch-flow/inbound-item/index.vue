@@ -82,8 +82,8 @@
 
   <SmImportFile
     ref="smImportFileRef"
-    v-model="importFile"
     :importUrlFn="StockBinMoveApi.importStockBinMove"
+    :templateObj="templateObj"
   />
 </template>
 
@@ -267,8 +267,13 @@ const handleExport = async () => {
   }
 }
 
-const importFile = ref()
+
 const smImportFileRef = ref()
+// wms:stock-bin-move:download-template
+const templateObj = ref({
+  url: StockBinMoveApi.downloadStockBinMoveTemplate,
+  name: '批量库位模版.xls'
+})
 /** 导入按钮操作 */
 const handleImport = async () => {
   smImportFileRef.value.open()

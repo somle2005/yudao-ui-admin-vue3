@@ -72,5 +72,10 @@ export const StockOwnershipMoveApi = {
   // 调归属 创建所有者库存移动
   createStockOwnershipMove: async (data: StockOwnershipMoveVO) => {
     return await request.post({ url: `/wms/stock-ownership-move/create`, data })
+  },
+
+  // 下载模板 库存归属
+  downloadStockOwnershipMoveTemplate: async (params) => {
+    return await request.download({ url: `/wms/stock-ownership-move/download-template`, params })
   }
 }

@@ -95,5 +95,15 @@ export const InventoryBinApi = {
   //  产品库位转换
   parseInventoryProductBin: async (data: any) => {
     return await request.upload({ url: `/wms/inventory-bin/parse-product-bin`, data })
+  },
+
+  // 下载模板 盘点导入产品转换
+  downloadInventoryBinProductTemplate: async (params) => {
+    return await request.download({ url: `/wms/inventory-bin/download-product-template`, params })
+  },
+
+  // 下载模板 盘点结果
+  downloadInventoryBinTemplate: async (params) => {
+    return await request.download({ url: `/wms/inventory-bin/download-template`, params })
   }
 }

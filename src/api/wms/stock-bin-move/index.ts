@@ -70,6 +70,10 @@ export const StockBinMoveApi = {
 
   importStockBinMove: async (formData: any) => {
     return await request.upload({ url: `/wms/stock-bin-move/import-excel`, data: formData })
+  },
+
+  // 下载模板 批量库位
+  downloadStockBinMoveTemplate: async (params) => {
+    return await request.download({ url: `/wms/stock-bin-move/download-template`, params })
   }
 }
-
