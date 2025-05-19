@@ -110,7 +110,7 @@ const initFormData = () => {
   return {
     id: undefined,
     code: undefined,
-    noTime: undefined,
+    billTime: undefined,
     supplierId: undefined,
     accountId: undefined,
     settlementDate: undefined,
@@ -191,7 +191,7 @@ const createRequestFormOptions = () => {
     {
       type: 'date-picker',
       placeholder: '请选择单据日期',
-      prop: 'noTime',
+      prop: 'billTime',
       label: '单据日期',
       attrs: {
         clearable: true,
@@ -792,7 +792,7 @@ const open = async (type: string, id?: number, data?: any) => {
 
       if (type === 'generateContract') {
         formData.value.signingPlace = '浙江宁波'
-        formData.value.signingDate = formData.value.noTime
+        formData.value.signingDate = formData.value.billTime
         formData.value.partyAId = formData.value.purchaseCompanyId
         formData.value.partyBId = formData.value.supplierId
       }
@@ -907,7 +907,7 @@ const submitForm = async () => {
           itemIds: items.map((item) => item.id) as number[]
         },
         [
-          'noTime',
+          'billTime',
           'supplierId',
           'address',
           'settlementDate',

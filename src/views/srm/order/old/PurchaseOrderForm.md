@@ -189,7 +189,7 @@ const initFormData = () => {
   return {
     // id: 0,
     code: undefined,
-    noTime: undefined,
+    billTime: undefined,
     supplierId: undefined,
     accountId: undefined,
     settlementDate: undefined,

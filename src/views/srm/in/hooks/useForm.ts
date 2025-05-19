@@ -38,7 +38,7 @@ export const useForm = (formType) => {
       {
         type: 'date-picker',
         placeholder: '请选择单据日期',
-        prop: 'noTime',
+        prop: 'billTime',
         label: '单据日期',
         attrs: {
           clearable: true,
@@ -239,7 +239,7 @@ export const useForm = (formType) => {
       }
     ]
 
-    const requireList = ['noTime','supplierId']
+    const requireList = ['billTime','supplierId']
     requireList.forEach(prop => {
       const target = list.find(item => item.prop === prop) as any
       if(!target) return
