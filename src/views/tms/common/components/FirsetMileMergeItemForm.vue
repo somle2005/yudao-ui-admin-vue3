@@ -60,15 +60,26 @@
         </el-table-column>
 
         <el-table-column label="库存公司" width="200" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
+          <!-- <template #default="{ row, $index }"> -->
+          <template #default>
+            <!-- <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
               <SmSelect
                 :disabled="getStoreDisabled(row)"
                 v-model="row.companyId"
                 placeholder="请选择库存公司"
                 :data="financeSubjectList"
               />
-            </el-form-item>
+            </el-form-item> -->
+            <div
+              v-for="item in [
+                { companyName: '库存公司名称', availableQty: '60', id: 1 },
+                { companyName: '库存公司名称1212', availableQty: '80', id: 2 }
+              ]"
+              :key="item.id"
+              class="common-text"
+            >
+              {{ item.companyName }} * {{ item.availableQty }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="库存归属" width="200" align="center">

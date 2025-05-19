@@ -92,6 +92,8 @@ import { DICT_TYPE, getStrDictOptions } from '@/utils/dict'
 import { useSupplierChange } from '@/utils/operate/purchase'
 import { cloneDeep } from 'lodash-es'
 import { InfoKeyOpenFormData } from './hooks/injectKeys'
+import { getPortInfoList } from '@/commonData/tms'
+import { useMergeOrderOptions } from '../common/hooks'
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -176,279 +178,23 @@ const itemsFormdisabled = computed(() =>
   ['audit', 'detail', 'merge', 'generateContract'].includes(formType.value)
 )
 const supplierChange = useSupplierChange(supplierList, formRef)
-const createRequestFormOptions = () => {
-  const list = [
-    {
-      type: 'input',
-      label: '单据编号',
-      prop: 'code',
-      placeholder: '请输入单据编号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'date-picker',
-      placeholder: '请选择单据日期',
-      prop: 'billTime',
-      label: '单据日期',
-      attrs: {
-        clearable: true,
-        type: 'date',
-        'value-format': 'x',
-        class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
-      }
-      // rules: [
-      //   {
-      //     required: true,
-      //     message: '单据日期不能为空',
-      //     trigger: 'blur'
-      //   }
-      // ]
-    },
+const portInfoList = ref([])
 
-    {
-      type: 'select',
-      placeholder: '请选择供应商',
-      prop: 'supplierId',
-      label: '供应商',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        },
-        onChange: supplierChange
-      },
-      children: supplierList
-    },
-
-    {
-      type: 'select',
-      placeholder: '请选择采购公司',
-      prop: 'purchaseCompanyId',
-      label: '采购公司',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: financeSubjectList
-    },
-
-    // {
-    //   type: 'cascader',
-    //   placeholder: '请选择付款条款',
-    //   prop: 'paymentTerms',
-    //   label: '付款条款',
-    //   attrs: {
-    //     'show-all-levels': false,
-    //     props: { emitPath: false },
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     },
-    //     options: paymentTermsList
-    //   }
-    // },
-    {
-      type: 'select',
-      placeholder: '请选择付款条款',
-      prop: 'paymentTerms',
-      label: '付款条款',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: paymentTermsList
-    },
-
-    {
-      type: 'select',
-      placeholder: '请选择币种',
-      prop: 'currencyName',
-      label: '币种',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        },
-        onChange: (val) => {
-          const item = currencyList.value.find((item) => item.label === val)
-          if (item) {
-            const formData = getFormData()
-            formData.currencyId = item.id
-          }
-        }
-      },
-      children: currencyList
-    },
-    {
-      type: 'select',
-      placeholder: '请选择装运港',
-      prop: 'portOfLoading',
-      label: '装运港',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
-    },
-    {
-      type: 'select',
-      placeholder: '请选择目的港',
-      prop: 'portOfDischarge',
-      label: '目的港',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_DISCHARGE)
-    },
-    // {
-    //   type: 'date-picker',
-    //   placeholder: '请选择结算日期',
-    //   prop: 'settlementDate',
-    //   label: '结算日期',
-    //   attrs: {
-    //     clearable: true,
-    //     type: 'date',
-    //     'value-format': 'x',
-    //     class: '!w-1/1',
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   }
-    // },
-
-    {
-      type: 'input',
-      label: '收货地址',
-      prop: 'address',
-      placeholder: '请输入收货地址',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-
-    {
-      type: 'input',
-      label: '备注',
-      prop: 'remark',
-      placeholder: '请输入备注',
-      attrs: {
-        type: 'textarea',
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      colConfig: { span: 24 },
-      prop: 'fileUrl',
-      label: '附件',
-      slot: 'fileUrl'
-    },
-    {
-      colConfig: { span: 24 },
-      slot: 'items',
-      formItemConfig: {
-        class: 'purchase-request-items'
-      }
-    },
-
-    {
-      type: 'input-number',
-      placeholder: '请输入优惠率',
-      prop: 'discountPercent',
-      label: '优惠率%',
-      attrs: {
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'input-number',
-      prop: 'discountPrice',
-      label: '付款优惠',
-      attrs: {
-        disabled: true,
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'input-number',
-      prop: 'totalPrice',
-      label: '优惠后金额',
-      attrs: {
-        disabled: true,
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'input-number',
-      placeholder: '请输入定金金额',
-      prop: 'depositPrice',
-      label: '定金金额',
-      attrs: {
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'select',
-      placeholder: '请选择结算账户',
-      prop: 'accountId',
-      label: '结算账户',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: accountList
-    }
-  ]
-
-  addRules(list, ['purchaseCompanyId', 'paymentTerms', 'supplierId', 'currencyName'])
-  return list
+const getFormData = () => {
+  return formData.value
 }
+
+const { mergeRequestOrderOptions: createRequestFormOptions } = useMergeOrderOptions(
+  accountList,
+  portInfoList,
+  currencyList,
+  financeSubjectList,
+  supplierChange,
+  supplierList,
+  paymentTermsList,
+  getFormData
+)
+
 const requestFormOptions = ref(createRequestFormOptions())
 
 const createAuditFormOptions = (formOptions, auditType) => {
@@ -721,7 +467,9 @@ const operateAudit = (type) => {
     },
     generateContract: () => {
       dialogTitle.value = '生成采购合同'
-      requestFormOptions.value = createGenerateContractFormOptions(createRequestFormOptions())
+      requestFormOptions.value = createGenerateContractFormOptions(
+        createRequestFormOptions()
+      ) as any
     }
   }
   const fn = map[type]
@@ -729,10 +477,6 @@ const operateAudit = (type) => {
     fn()
     return
   }
-}
-
-const getFormData = () => {
-  return formData.value
 }
 
 // 合并 合并入库时列表勾选中传递的items数据
@@ -752,6 +496,7 @@ const open = async (type: string, id?: number, data?: any) => {
   operateAudit(type)
   resetForm()
 
+  getPortInfoList(portInfoList)
   getPaymentTermsList(paymentTermsList)
   getCurrencyList(currencyList)
   // 加载供应商列表
@@ -934,7 +679,7 @@ const submitForm = async () => {
         'currencyId',
         'partyAId',
         'partyBId',
-        'paymentTerms',
+        'paymentTerms'
       ])
       queryData = transformPaymentTerms(queryData)
       const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract(queryData)
