@@ -12,6 +12,28 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" width="60" align="center" />
 
+
+         <el-table-column label="上游单据编号" width="150" prop="requestCode" align="center" />
+
+        <el-table-column label="产品编码" width="150" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item
+              :prop="`${$index}.productId`"
+              :rules="formRules.productId"
+              class="mb-0px!"
+            >
+              <SmSelect
+                v-model="row.productId"
+                placeholder="请选择产品编码"
+                :data="productList"
+                :keyMap="{ label: 'barCode', value: 'id' }"
+                @change="(val) => changeProduct(row, $index, val)"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+
         <el-table-column label="产品编码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item

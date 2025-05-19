@@ -33,6 +33,21 @@ export interface FirstMileRequestAuditVO {
   reviewed: boolean
 }
 
+export interface FirstMileRequestProductStockVO {
+  /**
+   * 国家
+   */
+  country: string
+  /**
+   * 部门编号
+   */
+  deptId: number
+  /**
+   * 产品编号列表
+   */
+  productIds: number[]
+}
+
 // 头程申请单 API
 export const FirstMileRequestApi = {
   // 查询头程申请单分页
@@ -98,4 +113,9 @@ export const FirstMileRequestApi = {
   mergeFirstMileRequest: async (data: any) => {
     return await request.post({ url: `/tms/first-mile-request/merge`, data })
   },
+
+  // 获取产品可用库存 权限字符 tms:first-mile-request:query
+  getFirstMileRequestProductStock: async (data: FirstMileRequestProductStockVO) => {
+    return await request.post({ url: `/tms/first-mile-request/get-product-stock`, data })
+  }
 }

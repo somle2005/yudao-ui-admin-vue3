@@ -89,6 +89,7 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
           item.items.forEach((a) => {
             a.toWarehouseId = item.toWarehouseId
             a.deptId = item.requestDeptId
+            a.requestCode = item.code
           })
           arr.push(...item.items)
         }
