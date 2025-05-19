@@ -8,9 +8,9 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="单据编号" prop="no">
+      <el-form-item label="单据编号" prop="code">
         <el-input
-          v-model="queryParams.no"
+          v-model="queryParams.code"
           placeholder="请输入单据编号"
           clearable
           @keyup.enter="handleQuery"
@@ -219,7 +219,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column width="30" label="选择" type="selection" />
-      <el-table-column min-width="180" label="申请单号" align="center" prop="no" />
+      <el-table-column min-width="180" label="申请单号" align="center" prop="code" />
       <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
       <!~~ <el-table-column label="供应商" align="center" prop="supplierName" /> ~~>
       <el-table-column
@@ -533,7 +533,7 @@ const { tableOptions, transformTableOptions } = useTableData()
 
 /**
 1-单据日期-有-billTime
-2-单据编号-有-no
+2-单据编号-有-code
 3-申请人-有-applicant
 4-申请部门-有-applicationDept
 5-审核状态-有-status
@@ -566,7 +566,7 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '180px'
   },
-  no: {
+  code: {
     label: '单据编号',
     width: '200px'
   },
@@ -638,7 +638,7 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   // supplierId: undefined,
   productId: undefined,
   billTime: [],
@@ -673,7 +673,7 @@ const getList = async () => {
     // var testData = [
     //   {
     //     id: 32561,
-    //     no: 'string',
+    //     code: 'string',
     //     applicant: 'string',
     //     applicantName: '芋道',
     //     applicationDept: 'string',

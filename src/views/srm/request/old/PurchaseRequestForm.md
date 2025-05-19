@@ -10,8 +10,8 @@
     >
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="申请单号" prop="no">
-            <el-input disabled v-model="formData.no" placeholder="保存时自动生成" />
+          <el-form-item label="申请单号" prop="code">
+            <el-input disabled v-model="formData.code" placeholder="保存时自动生成" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -121,7 +121,7 @@ const formData = ref({
   remark: undefined,
   fileUrl: '',
   items: [],
-  no: undefined // 申请单号，后端返回
+  code: undefined // 申请单号，后端返回
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],

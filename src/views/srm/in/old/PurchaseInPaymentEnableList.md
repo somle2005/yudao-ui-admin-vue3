@@ -16,9 +16,9 @@
         :inline="true"
         label-width="68px"
       >
-        <el-form-item label="入库单号" prop="no">
+        <el-form-item label="入库单号" prop="code">
           <el-input
-            v-model="queryParams.no"
+            v-model="queryParams.code"
             placeholder="请输入入库单号"
             clearable
             @keyup.enter="handleQuery"
@@ -68,7 +68,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column width="30" label="选择" type="selection" />
-        <el-table-column min-width="180" label="入库单号" align="center" prop="no" />
+        <el-table-column min-width="180" label="入库单号" align="center" prop="code" />
         <el-table-column label="供应商" align="center" prop="supplierName" />
         <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
         <el-table-column
@@ -132,7 +132,7 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   productId: undefined,
   inTime: [],
   paymentEnable: true,

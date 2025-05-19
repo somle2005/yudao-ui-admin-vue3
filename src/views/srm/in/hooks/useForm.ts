@@ -20,7 +20,7 @@ export const useForm = (formType) => {
       {
         type: 'input',
         label: '单据编号',
-        prop: 'no',
+        prop: 'code',
         placeholder: '保存时自动生成',
         attrs: {
           style: { width: '100%' },

@@ -10,8 +10,8 @@
     >
       <el-row :gutter="24">
         <el-col :span="12">
-          <el-form-item label="单据编号" prop="no">
-            <el-input disabled v-model="formData.no" placeholder="保存时自动生成" />
+          <el-form-item label="单据编号" prop="code">
+            <el-input disabled v-model="formData.code" placeholder="保存时自动生成" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -188,7 +188,7 @@ const formData: any = ref({})
 const initFormData = () => {
   return {
     // id: 0,
-    no: undefined,
+    code: undefined,
     noTime: undefined,
     supplierId: undefined,
     accountId: undefined,
@@ -270,7 +270,7 @@ const openPurchaseRequestOrderEnableList = () => {
 const handlePurchaseRequestChange = (request: PurchaseRequestVO) => {
   // 将申请单设置到订单
   formData.value.requestId = request.id
-  formData.value.requestNo = request.no
+  formData.value.requestNo = request.code
   formData.value.accountId = request.accountId
   formData.value.remark = request.remark
   formData.value.fileUrl = request.fileUrl

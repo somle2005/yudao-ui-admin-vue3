@@ -113,7 +113,7 @@ const initFormData = () => {
     otherPrice: 0,
     orderNo: undefined,
     items: [],
-    no: undefined // 入库单号，后端返回
+    code: undefined // 入库单号，后端返回
   }
 }
 const formData: any = ref(initFormData())
@@ -245,7 +245,7 @@ const addItem = (selectionList: any[]) => {
     const selectList = selectionList.map((item: any) => {
       // 采购订单分页需带出数据
       const {
-        no,
+        code,
         rowItemsId, //list记得转化
         productId,
         productName,
@@ -281,7 +281,7 @@ const addItem = (selectionList: any[]) => {
        * 无法带出的内容有 exchangeRate-source
        */
       const obj = {
-        // orderNo: no,
+        // orderNo: code,
         [itemIdKey]: rowItemsId, //list记得转化
         productId,
         productName,

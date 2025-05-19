@@ -211,10 +211,10 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '180px'
   },
-  no: {
+  code: {
     label: '单据编号',
     width: '200px',
-    slot: 'no',
+    slot: 'code',
     wrap: true
   },
   applicant: '申请人',
@@ -360,7 +360,7 @@ const wholeOrderTotal = ref(0) // 整单总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   // supplierId: undefined,
   productId: undefined,
   billTime: [],

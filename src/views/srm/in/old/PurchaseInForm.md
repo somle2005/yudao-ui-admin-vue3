@@ -10,8 +10,8 @@
     >
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="入库单号" prop="no">
-            <el-input disabled v-model="formData.no" placeholder="保存时自动生成" />
+          <el-form-item label="入库单号" prop="code">
+            <el-input disabled v-model="formData.code" placeholder="保存时自动生成" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -194,7 +194,7 @@ const formData = ref({
   otherPrice: 0,
   orderNo: undefined,
   items: [],
-  no: undefined // 入库单号，后端返回
+  code: undefined // 入库单号，后端返回
 })
 const formRules = reactive({
   supplierId: [{ required: true, message: '供应商不能为空', trigger: 'blur' }],
@@ -264,7 +264,7 @@ const openPurchaseOrderInEnableList = () => {
 const handlePurchaseOrderChange = (order: PurchaseOrderVO) => {
   // 将订单设置到入库单
   formData.value.orderId = order.id
-  formData.value.orderNo = order.no
+  formData.value.orderNo = order.code
   formData.value.supplierId = order.supplierId
   formData.value.accountId = order.accountId
   formData.value.discountPercent = order.discountPercent

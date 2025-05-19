@@ -173,7 +173,7 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   supplierId: undefined,
   productId: undefined,
   warehouseId: undefined,

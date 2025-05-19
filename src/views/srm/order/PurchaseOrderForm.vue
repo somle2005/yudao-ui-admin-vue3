@@ -109,7 +109,7 @@ const formData: any = ref({})
 const initFormData = () => {
   return {
     id: undefined,
-    no: undefined,
+    code: undefined,
     noTime: undefined,
     supplierId: undefined,
     accountId: undefined,
@@ -181,7 +181,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '单据编号',
-      prop: 'no',
+      prop: 'code',
       placeholder: '请输入单据编号',
       attrs: {
         style: { width: '100%' },
@@ -771,7 +771,7 @@ const open = async (type: string, id?: number, data?: any) => {
   if (type === 'create') {
     PurchaseOrderApi.getPurchaseOrderNo().then((res) => {
       const modelValue = formRef.value.getFormData()
-      modelValue.no = res
+      modelValue.code = res
     })
   }
 
@@ -938,7 +938,7 @@ const submitForm = async () => {
       ])
       queryData = transformPaymentTerms(queryData)
       const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract(queryData)
-      download.pdf(downLoadData, `${data.no}.pdf`)
+      download.pdf(downLoadData, `${data.code}.pdf`)
       message.success('生成采购合同成功')
     }
     dialogVisible.value = false
@@ -973,7 +973,7 @@ const addItem = (selectionList) => {
         taxPrice,
         warehouseId,
         expectArrivalDate,
-        no,
+        code,
         applicantId,
         applicationDeptId,
         applicant,
@@ -996,7 +996,7 @@ const addItem = (selectionList) => {
         warehouseId,
         expectArrivalDate,
         deliveryTime: expectArrivalDate,
-        erpPurchaseRequestItemNo: no,
+        erpPurchaseRequestItemNo: code,
         applicantId,
         applicationDeptId,
         departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName

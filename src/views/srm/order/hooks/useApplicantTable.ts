@@ -21,10 +21,10 @@ export const useApplicantTable = () => {
       formatter: dateFormatter2, // 年月日-金蝶
       width: '180px'
     },
-    no: {
+    code: {
       label: '单据编号',
       width: '200px',
-      slot: 'no',
+      slot: 'code',
       wrap: true
     },
     applicant: '申请人',
@@ -118,7 +118,7 @@ export const useApplicantTable = () => {
   //   // const initQueryParams = {
   //   //   pageNo: 1,
   //   //   pageSize: 10,
-  //   //   no: undefined,
+  //   //   code: undefined,
   //   //   // supplierId: undefined,
   //   //   productId: undefined,
   //   //   billTime: [],
@@ -186,7 +186,7 @@ export const useApplicantTable = () => {
     {
       type: 'input',
       label: '单据编号',
-      prop: 'no',
+      prop: 'code',
       placeholder: '请输入单据编号',
       attrs: {
         class: '!w-160px',

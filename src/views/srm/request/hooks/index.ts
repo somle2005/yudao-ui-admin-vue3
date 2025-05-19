@@ -134,7 +134,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       {
         type: 'input',
         label: '单据编号',
-        prop: 'no',
+        prop: 'code',
         placeholder: '请输入单据编号',
         attrs: {
           style: { width: '100%' },
@@ -303,7 +303,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       {
         type: 'input',
         label: '单据编号',
-        prop: 'no',
+        prop: 'code',
         placeholder: '请输入单据编号',
         attrs: {
           class: '!w-240px',
@@ -647,13 +647,13 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     if (type === 'create') {
       PurchaseRequestApi.getPurchaseRequestNo().then((res) => {
         const modelValue = smFormRef.value.getFormData()
-        modelValue.no = res
+        modelValue.code = res
       })
     }
     if (type === 'merge') {
       PurchaseOrderApi.getPurchaseOrderNo().then((res) => {
         const modelValue = smFormRef.value.getFormData()
-        modelValue.no = res
+        modelValue.code = res
       })
       getPaymentTermsList(paymentTermsList)
     }

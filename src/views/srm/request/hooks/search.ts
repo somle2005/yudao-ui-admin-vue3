@@ -28,7 +28,7 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'input',
       label: '单据编号',
-      prop: 'no',
+      prop: 'code',
       placeholder: '请输入单据编号',
       attrs: {
         class: '!w-240px',

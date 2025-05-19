@@ -214,7 +214,7 @@ const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
 const fieldMap = {
-  no: '单据编号', // 采购单编号
+  code: '单据编号', // 采购单编号
   noTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
@@ -427,7 +427,7 @@ const fieldMap = {
 
 const allOptions = transformTableOptions(fieldMap)
 const wrapList = [
-  'no',
+  'code',
   'supplierName',
   'barCode',
   'reviewComment',
@@ -466,7 +466,7 @@ const wholeOrderTotal = ref(0) // 整单总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   supplierId: undefined,
   productId: undefined,
   noTime: [],
