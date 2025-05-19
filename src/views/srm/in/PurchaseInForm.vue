@@ -274,6 +274,10 @@ const addItem = (selectionList: any[]) => {
         applicantName,
         applicationDeptId,
         departmentName,
+
+        payPrice,
+        xcode,
+        declaredTypeEn
       } = item
 
       /**
@@ -294,7 +298,7 @@ const addItem = (selectionList: any[]) => {
         productPrice,
         qty,
         declaredType,
-       
+
         taxPercent,
         taxPrice,
         actTaxPrice,
@@ -312,6 +316,10 @@ const addItem = (selectionList: any[]) => {
         applicantName,
         applicationDeptId,
         applicationDeptName: departmentName,
+
+        payPrice,
+        xcode,
+        declaredTypeEn
       }
       return obj
     })
