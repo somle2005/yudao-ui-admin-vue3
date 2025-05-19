@@ -12,12 +12,12 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
+        <el-table-column v-if="formType !== 'create'" label="编号" min-width="120" align="center">
           <template #default="{ row }">
             <el-text>{{ row.id }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column label="产品编码" width="180">
+        <el-table-column label="产品编码" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -43,17 +43,17 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="产品名称" width="180">
+        <el-table-column label="产品名称" width="180" align="center">
           <template #default="{ row }">
             <el-text>{{ row.productName }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column label="单位" min-width="60">
+        <el-table-column label="单位" min-width="60" align="center">
           <template #default="{ row }">
             <el-text>{{ row.productUnitName }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column label="海关品名" width="180">
+        <el-table-column label="海关品名" width="180" align="center">
           <template #default="{ row }">
             <el-text>{{ row.declaredType }}</el-text>
           </template>
@@ -64,13 +64,13 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="采购订单编号" width="200">
+        <el-table-column label="采购订单编号" width="200" align="center">
           <template #default="{ row }">
             <el-text>{{ row.orderNo }}</el-text>
           </template>
         </el-table-column>
 
-        <el-table-column label="申请人" width="200">
+        <el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
               <!-- <el-select
@@ -94,7 +94,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="部门" width="200">
+        <el-table-column label="部门" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
               <!-- <el-tree-select
@@ -141,7 +141,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="币种" prop="currencyName" width="120">
+        <el-table-column label="币种" prop="currencyName" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyName`" class="mb-0px!">
               <el-text>{{ row.currencyName }}</el-text>
@@ -163,7 +163,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="仓库" width="150">
+        <el-table-column label="仓库" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
               <el-select
@@ -185,7 +185,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="数量" width="120">
+        <el-table-column label="数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <el-input-number
@@ -198,7 +198,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="含税单价" width="120">
+        <el-table-column label="含税单价" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
               <el-input-number
@@ -212,13 +212,13 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="单价" width="200">
+        <el-table-column label="单价" width="200" align="center">
           <template #default="{ row }">
             <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
           </template>
         </el-table-column>
 
-        <el-table-column label="税率%" width="115">
+        <el-table-column label="税率%" width="115" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
               <el-input-number
@@ -233,7 +233,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="税额" prop="taxPrice" width="120">
+        <el-table-column label="税额" prop="taxPrice" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
               <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
@@ -242,7 +242,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="价税合计" min-width="150">
+        <el-table-column label="价税合计" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.source`" class="mb-0px!">
               <el-text>{{ row.allAmount }}</el-text>
@@ -250,7 +250,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="箱率" width="120">
+        <el-table-column label="箱率" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
               <el-input disabled v-model.trim="row.containerRate" class="!w-100%" />
@@ -258,7 +258,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="源单类型" min-width="150">
+        <el-table-column label="源单类型" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.source`" class="mb-0px!">
               <!-- <el-input v-model.trim="row.source"  placeholder="请输入源单类型" /> -->
@@ -267,7 +267,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" min-width="150">
+        <el-table-column label="备注" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />

@@ -11,14 +11,14 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="!showCreate" label="编号" min-width="120">
+        <el-table-column v-if="!showCreate" label="编号" min-width="120" align="center">
           <template #default="{ row }">
             <el-text>{{ row.id }}</el-text>
           </template>
         </el-table-column>
 
         <template v-if="formType === 'detail'">
-          <el-table-column label="验货单" width="200">
+          <el-table-column label="验货单" width="200" align="center">
             <template #default="{ $index }">
               <el-button
                 :disabled="jsonDisabled"
@@ -31,7 +31,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="完工单" width="200">
+          <el-table-column label="完工单" width="200" align="center">
             <template #default="{ $index }">
               <el-button
                 :disabled="jsonDisabled"
@@ -45,7 +45,7 @@
           </el-table-column>
         </template>
 
-        <el-table-column label="产品编码" width="180">
+        <el-table-column label="产品编码" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -96,13 +96,13 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="产品名称" width="120">
+        <el-table-column label="产品名称" width="120" align="center">
           <template #default="{ row }">
             <el-text>{{ row.productName }}</el-text>
           </template>
         </el-table-column>
 
-        <el-table-column label="海关品名" width="180">
+        <el-table-column label="海关品名" width="180" align="center">
           <!-- :rules="formRules.declaredType" -->
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.declaredType`" class="mb-0px!">
@@ -110,7 +110,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="海关品名(英文)" width="180">
+        <el-table-column label="海关品名(英文)" width="180" align="center">
           <!-- :rules="formRules.declaredTypeEn" -->
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
@@ -119,26 +119,26 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="条码" width="120">
+        <el-table-column label="条码" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
               <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="箱率" width="120">
+        <el-table-column label="箱率" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
               <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="单位" min-width="60">
+        <el-table-column label="单位" min-width="60" align="center">
           <template #default="{ row }">
             <el-text>{{ row.productUnitName }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column label="仓库" width="150">
+        <el-table-column label="仓库" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
               <el-select
@@ -161,7 +161,7 @@
 
         <!-- 因为详情拿不到 未订购数量-统一让后端原子性判断报错。前端不做最大值限制 -->
 
-        <el-table-column v-if="!showOringinCount" label="下单数量" width="120">
+        <el-table-column v-if="!showOringinCount" label="下单数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <el-input-number
@@ -175,7 +175,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="showOringinCount" label="入库数量" width="120">
+        <el-table-column v-if="showOringinCount" label="入库数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <el-input-number
@@ -189,7 +189,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column v-if="showOringinCount" label="下单数量" width="120">
+        <el-table-column v-if="showOringinCount" label="下单数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.originCount`" class="mb-0px!">
               <el-text>{{ row.originCount }}</el-text>
@@ -235,7 +235,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="含税单价" width="120">
+        <el-table-column label="含税单价" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.actTaxPrice`"
@@ -254,13 +254,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="单价" width="200">
+        <el-table-column label="单价" width="200" align="center">
           <template #default="{ row }">
             <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
           </template>
         </el-table-column>
 
-        <el-table-column label="税率%" width="115">
+        <el-table-column label="税率%" width="115" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
               <el-input-number
@@ -275,7 +275,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="税额" prop="taxPrice" width="120">
+        <el-table-column label="税额" prop="taxPrice" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
               <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
@@ -285,7 +285,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="价税合计" min-width="150">
+        <el-table-column label="价税合计" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.source`" class="mb-0px!">
               <el-text>{{ row.allAmount }}</el-text>
@@ -293,7 +293,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="showCreate" label="期望到货日期" min-width="150">
+        <el-table-column v-if="showCreate" label="期望到货日期" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
               <el-date-picker
@@ -308,7 +308,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="交货日期" width="180">
+        <el-table-column label="交货日期" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deliveryTime`" class="mb-0px!">
               <el-date-picker
@@ -323,7 +323,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" min-width="150">
+        <el-table-column label="备注" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input
@@ -335,13 +335,13 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="源单单号" width="200">
+        <el-table-column label="源单单号" width="200" align="center">
           <template #default="{ row }">
             <el-text>{{ row.erpPurchaseRequestItemNo }}</el-text>
           </template>
         </el-table-column>
 
-        <el-table-column label="申请人" width="200">
+        <el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
               <el-select
@@ -363,7 +363,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="申请部门" width="200">
+        <el-table-column label="申请部门" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
               <el-tree-select

@@ -45,7 +45,10 @@ export const useTable = () => {
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
   const fieldMap = {
-    code: '单据编号', // 采购单编号
+    code: {
+      label: '单据编号',
+      width: '200px',
+    }, // 采购单编号
     billTime: {
       label: '单据日期',
       formatter: dateFormatter2, // 年月日-金蝶
@@ -61,6 +64,7 @@ export const useTable = () => {
     // productBarCode: {
     rowBarCode: {
       label: '产品编码',
+      width: '200px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
@@ -208,14 +212,8 @@ export const useTable = () => {
   const allOptions = transformTableOptions(fieldMap, {
     allWrap: true,
     noComputePropList: [
-      'creator',
-      'applicantName',
-      'auditorName',
-      'itemTotalPrice',
-      'qty',
-      'remark',
-      'actTaxPrice',
-      'allAmount'
+      'code',
+      'rowBarCode',
     ]
   })
 
