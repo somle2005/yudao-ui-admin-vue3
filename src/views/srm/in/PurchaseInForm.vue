@@ -61,9 +61,9 @@
       </el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
       <template v-if="auditType">
-        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+        <!-- <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
           不同意</el-button
-        >
+        > -->
         <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
           同意</el-button
         >
