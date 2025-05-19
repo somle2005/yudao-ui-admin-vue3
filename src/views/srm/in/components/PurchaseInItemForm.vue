@@ -174,7 +174,7 @@
                 placeholder="请选择仓库"
               >
                 <el-option
-                  v-for="item in warehouseList"
+                  v-for="item in WMSWarehouseList"
                   :key="item.id"
                   :label="item.name"
                   :value="item.id"
@@ -305,6 +305,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { currencyNameChange } from '@/utils/operate/purchase'
+import { getWMSWarehouseList } from '@/commonData/wms'
 
 const props = defineProps({
   items: {
@@ -336,7 +337,7 @@ const formRules = reactive({
 const formRef = ref([]) // 表单 Ref
 // const defaultWarehouse = ref<WarehouseVO>(undefined) // 默认仓库
 const productList = getProductList() // 产品列表
-const warehouseList = getWarehouseList()
+const WMSWarehouseList = getWMSWarehouseList()
 // const { deptList, defaultProps } = getDeptTree()
 // const userList = getUserList()
 
@@ -480,9 +481,4 @@ const validate = () => {
 }
 defineExpose({ validate, formData })
 
-/** 初始化 */
-onMounted(async () => {
-  // warehouseList.value = await WarehouseApi.getWarehouseSimpleList()
-  // defaultWarehouse.value = warehouseList.value.find((item) => item.defaultStatus)
-})
 </script>

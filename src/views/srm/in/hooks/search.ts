@@ -5,6 +5,7 @@ import {
   getUserList,
   getWarehouseList
 } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
@@ -12,7 +13,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
   const userList = getUserList()
   const productList = getProductList(null, { label: 'barCode', value: 'id' })
   const supplierList = getSupplierList()
-  const warehouseList = getWarehouseList()
+  const WMSWarehouseList = getWMSWarehouseList()
   const accountList = getAccountList()
   const searchFormOptions = ref<Array<FormOptions>>([
     // 入库单号
@@ -92,7 +93,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: warehouseList
+      children: WMSWarehouseList
     },
 
     // 制单人-创建人-注意后端是否处理了

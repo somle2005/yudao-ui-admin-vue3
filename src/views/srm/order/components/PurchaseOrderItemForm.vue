@@ -149,7 +149,7 @@
                 placeholder="请选择仓库"
               >
                 <el-option
-                  v-for="item in warehouseList"
+                  v-for="item in WMSWarehouseList"
                   :key="item.id"
                   :label="item.name"
                   :value="item.id"
@@ -434,6 +434,7 @@ import { getDeclaredType, currencyNameChange, currencyChange } from '@/utils/ope
 import InspectionJsonForm from './InspectionJsonForm.vue'
 import CompletionJsonForm from './CompletionJsonForm.vue'
 import { InfoKeyOpenFormData } from '../hooks/injectKeys'
+import { getWMSWarehouseList } from '@/commonData/wms'
 
 const props = defineProps({
   items: {
@@ -471,7 +472,7 @@ const formRules = reactive({
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
-const warehouseList = getWarehouseList()
+const WMSWarehouseList = getWMSWarehouseList()
 const deptList: any = ref([])
 const userList: any = ref([])
 getUserList(userList)

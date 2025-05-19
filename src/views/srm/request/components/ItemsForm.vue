@@ -129,7 +129,7 @@
               placeholder="请选择仓库"
             >
               <el-option
-                v-for="item in warehouseList"
+                v-for="item in WMSWarehouseList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
@@ -356,6 +356,7 @@ import { changeValLimit } from '@/utils/high/index'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { updateModelValue } from '@/utils/high/index'
 import { getDeclaredType } from '@/utils/operate/purchase'
+import { getWMSWarehouseList } from '@/commonData/wms'
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -588,7 +589,7 @@ const validate = () => {
   return formRef.value.validate()
 }
 
-const warehouseList = getWarehouseList()
+const WMSWarehouseList = getWMSWarehouseList()
 
 defineExpose({ validate })
 

@@ -38,14 +38,14 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['srm:purchase-in:submitAudit']"
+          v-hasPermi="['srm:purchase-in:submit-audit']"
         >
           提交审核
         </el-button>
 
         <el-dropdown
           :disabled="oneSelectDisabledBtn"
-          class="ml-10px"
+          class="ml-10px mr-10px"
           split-button
           type="primary"
           v-hasPermi="['srm:purchase-in:review']"

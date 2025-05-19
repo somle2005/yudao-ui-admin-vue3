@@ -214,6 +214,8 @@ export const useTable = () => {
     noComputePropList: [
       'code',
       'rowBarCode',
+      'supplierName',
+      'warehouseName'
     ]
   })
 
