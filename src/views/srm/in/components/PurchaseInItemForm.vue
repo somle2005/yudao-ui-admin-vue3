@@ -12,11 +12,20 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="formType !== 'create'" label="编号" min-width="120" align="center">
+        <el-table-column v-if="!showCreate" label="编号" min-width="60" align="center">
           <template #default="{ row }">
             <el-text>{{ row.id }}</el-text>
           </template>
         </el-table-column>
+
+        <el-table-column v-if="showPay" label="付款金额" width="120" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.payPrice`" class="mb-0px!">
+              <SmNumber v-model="row.payPrice" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="barCode" label="产品编码" width="180" align="center" />
         <!--<el-table-column label="产品编码" width="180" align="center">
           <template #default="{ row, $index }">
@@ -178,7 +187,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
               <el-select
-                :disabled="disabled"
+                :disabled="disabled || !showPay"
                 v-model="row.warehouseId"
                 clearable
                 filterable
@@ -205,7 +214,7 @@
                 :min="1"
                 class="!w-100%"
               /> -->
-              <SmNumber v-model="row.qty" />
+              <SmNumber :disabled="!showPay" v-model="row.qty" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -228,7 +237,7 @@
         <el-table-column label="单价" width="200" align="center">
           <template #default="{ row }">
             <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
-              <SmNumber disabled :precision="2" v-model="row.productPrice" />
+            <SmNumber disabled :precision="2" v-model="row.productPrice" />
           </template>
         </el-table-column>
 
@@ -252,18 +261,13 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
               <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-                <el-input disabled v-model="row.taxPrice" :formatter="erpPriceInputFormatter" />
+                <!-- <el-input disabled v-model="row.taxPrice" :formatter="erpPriceInputFormatter" /> -->
+                <SmNumber disabled :precision="2" v-model="row.taxPrice" />
               </el-form-item>
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="价税合计" min-width="150" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-              <el-text>{{ row.allAmount }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="allAmount" label="价税合计" min-width="150" align="center" />
 
         <el-table-column label="箱率" width="120" align="center">
           <template #default="{ row, $index }">
@@ -273,26 +277,24 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="源单类型" min-width="150" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-              <!-- <el-input v-model.trim="row.source"  placeholder="请输入源单类型" /> -->
-              <el-text>{{ row.source }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="source" label="源单类型" min-width="150" align="center"/>
 
         <el-table-column label="备注" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-              <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
+              <el-input
+                :disabled="!showPay"
+                v-model.trim="row.remark"
+                type="textarea"
+                placeholder="请输入备注"
+              />
             </el-form-item>
           </template>
         </el-table-column>
 
         <!-- allAmount价税合计-orderItemId 采购订单项id  不展示传参带过去 -->
 
-        <el-table-column align="center" fixed="right" label="操作" width="60">
+        <el-table-column v-if="!showPay" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
               —
@@ -321,6 +323,7 @@ import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { currencyNameChange } from '@/utils/operate/purchase'
 import { getWMSWarehouseList } from '@/commonData/wms'
+import { SRM_OPERATE_MAP } from '../../common/constant'
 
 const props = defineProps({
   items: {
@@ -339,6 +342,11 @@ const props = defineProps({
     default: ''
   }
 })
+
+const showCreate = computed(() => ['create'].includes(props.formType))
+const showPay = computed(() =>
+  [SRM_OPERATE_MAP.pay, SRM_OPERATE_MAP.revokePay].includes(props.formType)
+)
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])

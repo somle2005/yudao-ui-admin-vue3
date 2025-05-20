@@ -1,5 +1,6 @@
 import { PurchaseInApi } from '@/api/srm/in'
-import { getWholeOrderItemsId } from '@/hooks/common/wholeOrder'
+import { getWholeOrderItems, getWholeOrderItemsId } from '@/hooks/common/wholeOrder'
+import { SRM_OPERATE_MAP } from '../../common/constant'
 
 export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => {
   const message = useMessage() // 消息弹窗
@@ -51,19 +52,17 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
 
   /** 付款/撤销付款 */
   const changePayStatusBatch = async (list: any[], pass: boolean) => {
-    const str = pass ? '付款' : '撤销付款'
+    // const str = pass ? '付款' : '撤销付款'
 
     try {
-      await message.confirm(`确定${str}吗？`)
-      await PurchaseInApi.changePurchaseInPayStatus({
-        // inItemIds: list.map((item) => item.rowItemsId),
-        // 整单分行-行id获取要做区分
-        inItemIds: getWholeOrderItemsId(list, wholeOrderEnable, 'rowItemsId'),
-        pass
-      })
-      message.success(`${str}成功`)
-      // 刷新列表
-      await getList()
+      // await message.confirm(`确定${str}吗？`)
+      // 整单还是分行取items里面的内容-去重即可-且整单带上了标记rowItemsId
+      const arr = getWholeOrderItems(list, wholeOrderEnable, 'rowItemsId')
+      if (pass) {
+        openForm(SRM_OPERATE_MAP.pay, null, arr)
+      } else {
+        openForm(SRM_OPERATE_MAP.revokePay, null, arr)
+      }
     } catch {}
   }
 

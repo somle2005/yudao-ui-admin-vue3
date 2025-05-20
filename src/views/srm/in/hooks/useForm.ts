@@ -1,5 +1,7 @@
 import { getAccountList, getSupplierList } from '@/commonData'
+import { addDisabled } from '@/components/SmForm/src/utils'
 import { RECONCILIATION_STSTUS } from '@/utils/constant'
+import { SRM_OPERATE_MAP } from '../../common/constant'
 
 export const useForm = (formType) => {
   const supplierList = ref<any[]>([]) // 供应商列表
@@ -10,7 +12,7 @@ export const useForm = (formType) => {
   const itemsFormdisabled = computed(
     () => formType.value === 'audit' || formType.value === 'detail'
   )
- 
+
   /**
    * 必填项 单据编号(后端生成)-单据日期-供应商-币别-汇率-单位-数量-含税单价
    * 这里只有单据日期-供应商是必填项其余都是非必填项 - 其余都在items里面作为必填项了
@@ -222,7 +224,7 @@ export const useForm = (formType) => {
           }
         },
         children: accountList
-      },
+      }
       // {
       //   type: 'select',
       //   placeholder: '请选择对账状态',
@@ -239,10 +241,10 @@ export const useForm = (formType) => {
       // }
     ]
 
-    const requireList = ['billTime','supplierId']
-    requireList.forEach(prop => {
-      const target = list.find(item => item.prop === prop) as any
-      if(!target) return
+    const requireList = ['billTime', 'supplierId']
+    requireList.forEach((prop) => {
+      const target = list.find((item) => item.prop === prop) as any
+      if (!target) return
       target.rules = [
         {
           required: true,
@@ -300,7 +302,21 @@ export const useForm = (formType) => {
     return formOptions
   }
 
-  const operateAudit = (type) => {
+  const detailFormOptions = () => {
+    // addDisabled(formOptions)
+    const formOptions = [
+      {
+        colConfig: { span: 24 },
+        slot: 'items',
+        formItemConfig: {
+          class: 'purchase-request-items'
+        }
+      }
+    ]
+    return formOptions
+  }
+
+  const operateAudit = (type, dialogTitle) => {
     const map = {
       detail: () => {
         // requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
@@ -313,6 +329,15 @@ export const useForm = (formType) => {
       },
       update: () => {
         requestFormOptions.value = updateFormOptions(createRequestFormOptions())
+      },
+      [SRM_OPERATE_MAP.pay]: () => {
+        dialogTitle.value = SRM_OPERATE_MAP.pay
+        // requestFormOptions.value = detailFormOptions(createRequestFormOptions())
+        requestFormOptions.value = detailFormOptions()
+      },
+      [SRM_OPERATE_MAP.revokePay]: () => {
+        dialogTitle.value = SRM_OPERATE_MAP.revokePay
+        requestFormOptions.value = detailFormOptions()
       }
     }
     const fn = map[type]

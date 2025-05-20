@@ -60,12 +60,13 @@
           </template>
         </el-dropdown>
 
+        <!-- v-hasPermi="['srm:purchase-in:change-pay-status']" -->
         <el-button
           :disabled="disabledBtn"
           type="primary"
           plain
           @click="changePayStatusBatch(selectionList, true)"
-          v-hasPermi="['srm:purchase-in:changePayStatus']"
+          v-hasPermi="['srm:purchase-in:change-pay-status']"
         >
           付款
         </el-button>
@@ -74,7 +75,7 @@
           type="primary"
           plain
           @click="changePayStatusBatch(selectionList, false)"
-          v-hasPermi="['srm:purchase-in:changePayStatus']"
+          v-hasPermi="['srm:purchase-in:change-pay-status']"
         >
           撤销付款
         </el-button>
@@ -240,7 +241,6 @@ const getList = async () => {
     //     // item.itemApplicationDeptName = item.applicationDeptName
     //   })
     // })
-    console.log(data.list,'data.list')
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
@@ -251,7 +251,7 @@ const getList = async () => {
       inStatus: 'rowInStatus',
       payStatus: 'rowPayStatus',
       totalPrice: 'itemTotalPrice',
-      barCode: 'rowBarCode',
+      barCode: 'rowBarCode'
     })
 
     switchList(list, total, data)
@@ -276,8 +276,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, data?: any) => {
+  formRef.value.open(type, id, data)
 }
 
 /** 删除按钮操作 */

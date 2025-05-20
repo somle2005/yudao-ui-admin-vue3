@@ -122,3 +122,23 @@ export const getBatchId = (wholeOrderEnable, selectionList) => {
   }
   return ids
 }
+
+export const getWholeOrderItems = (
+  selectionList: any[],
+  wholeOrderEnable: any,
+  itemIdKey: string
+) => {
+  let list: any = []
+  if (wholeOrderEnable.value) {
+    selectionList.forEach((item: any) => {
+      if (!item?.items?.length) return
+      item.items.forEach((a) => {
+        a[itemIdKey] = a.id
+        list.push(a)
+      })
+    })
+  } else {
+    list = selectionList
+  }
+  return list
+}

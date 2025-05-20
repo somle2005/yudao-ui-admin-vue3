@@ -13,6 +13,7 @@ export interface PurchaseInVO {
   outCount: number // 采购出库数量
   returnCount: number // 采购退货数量
   reviewComment?: string // 审核意见
+  items: any[]
 }
 
 // ERP 采购入库 API
@@ -85,7 +86,10 @@ export const PurchaseInApi = {
   },
 
   // 采购入库切换付款状态
-  changePurchaseInPayStatus: async (data: { inItemIds: number[]; pass: boolean }) => {
+  changePurchaseInPayStatus: async (data: {
+    items: { id: number; payPrice: number }[]
+    pass: boolean
+  }) => {
     return await request.post({
       url: `/srm/purchase-in/changePayStatus`,
       data

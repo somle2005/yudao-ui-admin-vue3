@@ -30,11 +30,7 @@
       </template>
 
       <template #items>
-        <el-button
-          :disabled="itemsFormdisabled"
-          type="primary"
-          @click="openAddItem"
-          style="margin-bottom: 10px"
+        <el-button v-if="showAddBtn" type="primary" @click="openAddItem" style="margin-bottom: 10px"
           >选择订单项</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
@@ -84,6 +80,7 @@ import { createDBFn } from '@/utils/decorate'
 import { useForm } from './hooks/useForm'
 import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
 import { useOutData } from './components/hooks/outdata'
+import { SRM_OPERATE_MAP } from '../common/constant'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -116,6 +113,11 @@ const initFormData = () => {
 }
 const formData: any = ref(initFormData())
 
+const showAddBtn = computed(
+  () =>
+    !['audit', 'detail', SRM_OPERATE_MAP.pay, SRM_OPERATE_MAP.revokePay].includes(formType.value)
+)
+
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
 
@@ -146,15 +148,18 @@ watch(
 )
 
 /** 打开弹窗 */
-const open = async (type: string, id?: number) => {
+const open = async (type: string, id?: number, data?: any) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  operateAudit(type)
+  operateAudit(type, dialogTitle)
 
   // 初始化弹窗接口数据
   initDialogData()
+  if (data) {
+    formData.value.items = data
+  }
 
   // 修改时，设置数据
   if (id) {
@@ -183,6 +188,19 @@ const open = async (type: string, id?: number) => {
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
+const changePayStatus = async (data: any, pass: boolean) => {
+  return await PurchaseInApi.changePurchaseInPayStatus({
+    items: data.items.map((item) => {
+      return {
+        payPrice: item.payPrice,
+        id: item.rowItemsId // 防止整单分行冲突
+      }
+    }),
+    pass
+    // pass: true
+  })
+}
+
 const auditBtnType = ref(AUDIT_TYPE.agree)
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
@@ -207,6 +225,12 @@ const submitForm = async () => {
         inId: data.id,
         reviewComment: data.reviewComment
       })
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === SRM_OPERATE_MAP.pay) {
+      await changePayStatus(data, true)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === SRM_OPERATE_MAP.revokePay) {
+      await changePayStatus(data, false)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
