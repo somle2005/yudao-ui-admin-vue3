@@ -93,8 +93,8 @@ const fieldMap = {
 
   actualQty: '批次数量',
   stockWarehouseTotalQty: '库存总数', // availableQty+shelvingPendingQty
-
-  outboundAvailableQty: '待出数量',
+  outboundPendingQty: '待出数量',
+  // outboundAvailableQty: '待出数量',
   inboundCode: '入库单号',
   stockType: {
     label: '存货类型',
