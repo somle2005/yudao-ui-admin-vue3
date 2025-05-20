@@ -162,12 +162,18 @@
         <el-table-column v-if="!showOringinCount" label="下单数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="countDisabled"
                 v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"
+              /> -->
+              <SmNumber
+                :min="1"
+                :max="row.originCount"
+                :disabled="countDisabled"
+                v-model="row.qty"
               />
             </el-form-item>
           </template>
@@ -176,13 +182,19 @@
         <el-table-column v-if="showOringinCount" label="入库数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="countDisabled"
                 v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 :max="row.originCount"
                 class="!w-100%"
+              /> -->
+              <SmNumber
+                :disabled="countDisabled"
+                :min="1"
+                :max="row.originCount"
+                v-model="row.qty"
               />
             </el-form-item>
           </template>
@@ -240,34 +252,42 @@
               :rules="formRules.actTaxPrice"
               class="mb-0px!"
             >
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="disabled"
                 v-model="row.actTaxPrice"
                 controls-position="right"
                 :min="0.01"
                 :precision="2"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.actTaxPrice" />
             </el-form-item>
           </template>
         </el-table-column>
 
         <el-table-column label="单价" width="200" align="center">
           <template #default="{ row }">
-            <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+            <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
+            <SmNumber disabled :precision="2" v-model="row.productPrice" />
           </template>
         </el-table-column>
 
         <el-table-column label="税率%" width="115" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="disabled"
                 v-model="row.taxPercent"
                 controls-position="right"
                 :min="0"
                 :precision="2"
                 class="!w-100%"
+              /> -->
+              <SmNumber
+                :disabled="disabled"
+                :precision="2"
+                :max="row.originCount"
+                v-model="row.taxPercent"
               />
             </el-form-item>
           </template>

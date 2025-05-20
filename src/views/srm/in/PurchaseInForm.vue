@@ -256,6 +256,7 @@ const addItem = (selectionList: any[]) => {
         productPrice,
         qty,
         declaredType,
+        currencyName,
 
         taxPercent = TAX_PERCENT,
         taxPrice,
@@ -298,6 +299,7 @@ const addItem = (selectionList: any[]) => {
         productPrice,
         qty,
         declaredType,
+        currencyName,
 
         taxPercent,
         taxPrice,

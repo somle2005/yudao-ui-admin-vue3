@@ -17,14 +17,15 @@
             <el-text>{{ row.id }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column label="产品编码" width="180" align="center">
+        <el-table-column prop="barCode" label="产品编码" width="180" align="center" />
+        <!--<el-table-column label="产品编码" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
               :rules="formRules.productId"
               class="mb-0px!"
             >
-              <!-- <el-select
+              <!~~ <el-select
                 v-model="row.productId"
                 clearable
                 filterable
@@ -38,11 +39,11 @@
                   :label="item.barCode"
                   :value="item.id"
                 />
-              </el-select> -->
+              </el-select> ~~>
               <el-text> {{ row.barCode }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="产品名称" width="180" align="center">
           <template #default="{ row }">
             <el-text>{{ row.productName }}</el-text>
@@ -76,10 +77,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="申请人" width="200" align="center">
+        <el-table-column prop="applicantName" label="申请人" width="100" align="center" />
+        <el-table-column prop="applicationDeptName" label="部门" width="200" align="center" />
+        <el-table-column prop="currencyName" label="币种" width="120" align="center" />
+
+        <!--<el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
-              <!-- <el-select
+              <!~~ <el-select
                 v-if="!row.orderNo"
                 :disabled="disabled"
                 v-model="row.applicantId"
@@ -94,16 +99,16 @@
                   :value="item.id"
                 />
               </el-select>
-              <el-text v-if="row.orderNo">{{ row.applicantName }}</el-text> -->
+              <el-text v-if="row.orderNo">{{ row.applicantName }}</el-text> ~~>
               <el-text>{{ row.applicantName }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column>-->
 
-        <el-table-column label="部门" width="200" align="center">
+        <!-- <el-table-column label="部门" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
-              <!-- <el-tree-select
+              <!~~ <el-tree-select
                 v-if="!row.orderNo"
                 :disabled="disabled"
                 v-model="row.applicationDeptId"
@@ -113,11 +118,11 @@
                 node-key="id"
                 placeholder="请选择部门"
               />
-              <el-text v-if="row.orderNo">{{ row.applicationDeptName }}</el-text> -->
+              <el-text v-if="row.orderNo">{{ row.applicationDeptName }}</el-text> ~~>
               <el-text>{{ row.applicationDeptName }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <!-- 
         <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
@@ -147,13 +152,13 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="币种" prop="currencyName" width="120" align="center">
+        <!-- <el-table-column label="币种" prop="currencyName" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyName`" class="mb-0px!">
               <el-text>{{ row.currencyName }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <!-- <el-table-column label="汇率" width="115">
           <template #default="{ row, $index }">
@@ -194,12 +199,13 @@
         <el-table-column label="数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber v-model="row.qty" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -207,34 +213,37 @@
         <el-table-column label="含税单价" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 disabled
                 v-model="row.actTaxPrice"
                 controls-position="right"
                 :min="0.01"
                 :precision="2"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber disabled :min="0.01" :precision="2" v-model="row.actTaxPrice" />
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="单价" width="200" align="center">
           <template #default="{ row }">
-            <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+            <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
+              <SmNumber disabled :precision="2" v-model="row.productPrice" />
           </template>
         </el-table-column>
 
         <el-table-column label="税率%" width="115" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 disabled
                 v-model="row.taxPercent"
                 controls-position="right"
                 :min="0"
                 :precision="2"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber disabled :precision="2" v-model="row.taxPercent" />
             </el-form-item>
           </template>
         </el-table-column>

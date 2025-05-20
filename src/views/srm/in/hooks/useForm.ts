@@ -223,20 +223,20 @@ export const useForm = (formType) => {
         },
         children: accountList
       },
-      {
-        type: 'select',
-        placeholder: '请选择对账状态',
-        prop: 'reconciliationStatus',
-        label: '对账状态',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: RECONCILIATION_STSTUS
-      }
+      // {
+      //   type: 'select',
+      //   placeholder: '请选择对账状态',
+      //   prop: 'reconciliationStatus',
+      //   label: '对账状态',
+      //   attrs: {
+      //     filterable: true,
+      //     clearable: true,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   },
+      //   children: RECONCILIATION_STSTUS
+      // }
     ]
 
     const requireList = ['billTime','supplierId']

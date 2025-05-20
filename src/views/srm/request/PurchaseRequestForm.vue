@@ -14,18 +14,17 @@
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="申请产品清单" name="item">
             <ItemsForm
-              v-if="!mergeType"
               ref="itemFormRef"
               :items="formData.items"
               :formType="formType"
             />
             
-            <MergeOrderForm
+            <!-- <MergeOrderForm
               v-if="mergeType"
               ref="itemFormRef"
               :items="formData.items"
               :formType="formType"
-            />
+            /> -->
           </el-tab-pane>
         </el-tabs>
       </template>
@@ -57,7 +56,7 @@
 <script setup lang="ts">
 import { usePurchaseRequestForm } from './hooks'
 import ItemsForm from './components/ItemsForm.vue'
-import MergeOrderForm from '@/views/srm/common/components/MergeOrderForm.vue'
+// import MergeOrderForm from '@/views/srm/common/components/MergeOrderForm.vue'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { computeDiscountPriceAndTotalPrice } from '@/utils/transformData'

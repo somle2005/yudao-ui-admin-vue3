@@ -155,12 +155,17 @@
             :rules="formRules.orderQuantity"
             class="mb-0px!"
           >
-            <el-input-number
+            <!-- <el-input-number
               v-model="row.orderQuantity"
               controls-position="right"
               :min="0"
               :max="row.unOrderCount"
               class="!w-100%"
+              @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
+            /> -->
+            <SmNumber
+              :max="row.unOrderCount"
+              v-model="row.orderQuantity"
               @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
             />
           </el-form-item>
@@ -178,13 +183,14 @@
       <el-table-column label="申请数量" prop="qty" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="productDisabled"
               v-model="row.qty"
               controls-position="right"
               :min="1"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber :disabled="productDisabled" :min="1" v-model="row.qty" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -192,13 +198,20 @@
       <el-table-column v-if="approveCountShow" label="批准数量" prop="approvedQty" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.approvedQty`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="approveCountDisabled"
               v-model="row.approvedQty"
               controls-position="right"
               :min="1"
               :max="row.qty"
               class="!w-100%"
+              @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
+            /> -->
+            <SmNumber
+              :disabled="approveCountDisabled"
+              :min="1"
+              :max="row.qty"
+              v-model="row.approvedQty"
               @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
             />
           </el-form-item>
@@ -208,35 +221,38 @@
       <el-table-column label="含税单价" prop="actTaxPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="disabled"
               v-model="row.actTaxPrice"
               controls-position="right"
               :min="0.01"
               :precision="2"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.actTaxPrice" />
           </el-form-item>
         </template>
       </el-table-column>
 
       <el-table-column label="单价" width="200">
         <template #default="{ row }">
-          <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+          <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
+          <SmNumber disabled :min="0.01" :precision="2" v-model="row.productPrice" />
         </template>
       </el-table-column>
 
       <el-table-column label="税率%" prop="taxPercent" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="disabled"
               v-model="row.taxPercent"
               controls-position="right"
               :min="0"
               :precision="2"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber disabled :precision="2" v-model="row.taxPercent" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -260,14 +276,15 @@
       <el-table-column label="参考单价" prop="referenceUnitPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="disabled"
               v-model="row.referenceUnitPrice"
               controls-position="right"
               :min="0.01"
               :precision="2"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.referenceUnitPrice" />
           </el-form-item>
         </template>
       </el-table-column>

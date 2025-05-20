@@ -11,7 +11,7 @@
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table border :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
-      <el-table-column v-if="!showCreate" label="编号" min-width="120">
+      <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
         <template #default="{ row }">
           <el-text>{{ row.id }}</el-text>
         </template>
@@ -74,20 +74,22 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="条码" width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
-            <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column label="箱率" width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-            <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
-          </el-form-item>
-        </template>
-      </el-table-column>
+ 
+        <el-table-column label="条码" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
+              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="箱率" width="120">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
+              <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
 
       <el-table-column label="单位" min-width="60">
         <template #default="{ row }">
@@ -125,26 +127,31 @@
       </el-table-column>
     -->
 
-      <el-table-column label="下单数量" prop="orderQuantity" min-width="120">
+      <el-table-column  label="下单数量" prop="orderQuantity" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.orderQuantity`"
             :rules="formRules.orderQuantity"
             class="mb-0px!"
           >
-            <el-input-number
+            <!-- <el-input-number
               v-model="row.orderQuantity"
               controls-position="right"
               :min="0"
               :max="row.unOrderCount"
               class="!w-100%"
               @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
+            /> -->
+            <SmNumber
+              :max="row.unOrderCount"
+              v-model="row.orderQuantity"
+              @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
             />
           </el-form-item>
         </template>
       </el-table-column>
 
-      <el-table-column label="未订购数量" prop="unOrderCount" min-width="120">
+      <el-table-column  label="未订购数量" prop="unOrderCount" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.unOrderCount`" class="mb-0px!">
             <el-text>{{ row.unOrderCount }}</el-text>
@@ -155,13 +162,14 @@
       <el-table-column label="申请数量" prop="qty" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="productDisabled"
               v-model="row.qty"
               controls-position="right"
               :min="1"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber :disabled="productDisabled" :min="1" v-model="row.qty" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -169,13 +177,20 @@
       <el-table-column v-if="approveCountShow" label="批准数量" prop="approvedQty" min-width="120">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.approvedQty`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="approveCountDisabled"
               v-model="row.approvedQty"
               controls-position="right"
               :min="1"
               :max="row.qty"
               class="!w-100%"
+              @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
+            /> -->
+            <SmNumber
+              :disabled="approveCountDisabled"
+              :min="1"
+              :max="row.qty"
+              v-model="row.approvedQty"
               @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
             />
           </el-form-item>
@@ -185,35 +200,38 @@
       <el-table-column label="含税单价" prop="actTaxPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="disabled"
               v-model="row.actTaxPrice"
               controls-position="right"
               :min="0.01"
               :precision="2"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.actTaxPrice" />
           </el-form-item>
         </template>
       </el-table-column>
 
       <el-table-column label="单价" width="200">
         <template #default="{ row }">
-          <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+          <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
+          <SmNumber disabled :min="0.01" :precision="2" v-model="row.productPrice" />
         </template>
       </el-table-column>
 
       <el-table-column label="税率%" prop="taxPercent" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="disabled"
               v-model="row.taxPercent"
               controls-position="right"
               :min="0"
               :precision="2"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber disabled :precision="2" v-model="row.taxPercent" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -237,14 +255,15 @@
       <el-table-column label="参考单价" prop="referenceUnitPrice" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
-            <el-input-number
+            <!-- <el-input-number
               :disabled="disabled"
               v-model="row.referenceUnitPrice"
               controls-position="right"
               :min="0.01"
               :precision="2"
               class="!w-100%"
-            />
+            /> -->
+            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.referenceUnitPrice" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -264,7 +283,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="交货日期" min-width="150">
+      <el-table-column  label="交货日期" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.deliveryTime`"
@@ -283,7 +302,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="备注" min-width="150">
+      <el-table-column  label="备注" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
             <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
@@ -291,14 +310,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="申请人" width="200">
+      <el-table-column  label="申请人" width="200">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
             <el-text>{{ row.applicant }}</el-text>
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="申请部门" width="200">
+      <el-table-column  label="申请部门" width="200">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
             <el-text>{{ row.applicationDept }}</el-text>
@@ -334,6 +353,16 @@ import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { updateModelValue } from '@/utils/high/index'
 import { getDeclaredType } from '@/utils/operate/purchase'
 import { getWMSWarehouseList } from '@/commonData/wms'
+
+
+
+/**
+ * MergeOrderForm-采购申请合并-逻辑还是写在一块
+ * 因为本地merge逻辑就是对申请部分项的补充-而且-展示内容和采购订单新增 行信息有一些区别
+ * 
+ */
+
+
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -378,7 +407,8 @@ const props = defineProps({
 const productDisabled = computed(() => ['audit', 'detail', 'merge'].includes(props.formType))
 const allDisabled = computed(() => ['detail'].includes(props.formType))
 const disabled = computed(() => ['audit', 'detail'].includes(props.formType))
-
+// 批准数量在merge下要禁用
+const mergeDisabled = computed(() => props.formType === 'merge')
 const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')
 const showOperate = computed(() => ['create', 'update'].includes(props.formType))
 
@@ -386,8 +416,6 @@ const approveCountDisabled = computed(() => !['audit'].includes(props.formType))
 const approveCountShow = computed(() =>
   ['detail', 'update', 'merge', 'audit'].includes(props.formType)
 )
-
-const showCreate = computed(() => ['create'].includes(props.formType))
 
 // 非新增下才会展示税额-价税合计
 const noCreate = computed(() => !['create'].includes(props.formType))
