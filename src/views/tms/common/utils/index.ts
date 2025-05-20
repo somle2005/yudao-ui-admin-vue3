@@ -5,6 +5,8 @@ import { VOLUMN_PRECISION } from '../constant'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getFinanceSubjectList } from '@/commonData'
 import { getPortInfoList } from '@/commonData/tms'
+import { FirstMileRequestApi } from '@/api/tms/first-mile-request'
+import { debounce } from 'lodash-es'
 
 // 合并头程申请单 头程申请合并和头程订单复用
 export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSubjectList) => {
@@ -567,3 +569,83 @@ export const addCompany = (warehouse, row) => {
     }
   }, 100)
 }
+
+/**
+ * 追加需要实时显示的一些数量  使用场景: 头程新增 头程申请-申请合并
+ * 实际出库数不展示（要实际出库以后才有）逻辑库存 采购在途数实时变化 （编辑回显 不取原来新增时实时的数据）
+ * 逻辑库存 自动带出该库存归属部门的该sku的所有该出运仓库库存-  清单行发出仓-进行联合查询
+ * 因为每次都是实时查-所以全部批量查询
+ * 考虑防抖-因为考虑到编辑回显-单独一个监听又太麻烦-外部可能会带入数据-防止bug
+ * 
+ * 简单处理 watch监听 formData-但是其他也会触发-(优点逻辑集中-且容易维护)
+ * 优化处理 点击详情的回显的时候才去触发接口相关数据处理-处理完后进去。
+ * 然后触发对应的下拉框的change事件才去触发接口相关数据处理
+ */
+export const addShowQty = async (formData) => {
+  try {
+    const changeUnde = () => {
+      formData.value.forEach((item) => {
+        item.availableQty = undefined // 逻辑库存
+        item.purchaseTransitQty = undefined // 采购在途数
+      })
+    }
+
+    const relations: any = []
+
+    formData.value.forEach((item) => {
+      const { deptId, productId, fromWarehouseId } = item
+
+      if (deptId && productId && fromWarehouseId) {
+        const obj = { deptId, productId, warehouseId: fromWarehouseId }
+        relations.push(obj)
+      } else {
+        item.availableQty = undefined // 逻辑库存
+        item.purchaseTransitQty = undefined // 采购在途数
+      }
+    })
+
+    if (!relations?.length) {
+      changeUnde()
+      return
+    }
+
+    const queryData = {
+      relations
+    }
+    const data = await FirstMileRequestApi.getFirstMileRequestProductStock(queryData)
+    const resolveItem = (item) => {
+      let target: any = {}
+
+      data.productStocks.forEach((a) => {
+        const { deptId, productId, warehouseId } = a
+        if (
+          item.deptId === deptId &&
+          item.productId === productId &&
+          item.fromWarehouseId === warehouseId
+        ) {
+          target = a
+        }
+      })
+
+      if (Object.keys(target).length) {
+        item.availableQty = target.availableQty
+        item.purchaseTransitQty = target.purchaseTransitQty
+      } else {
+        item.availableQty = undefined // 逻辑库存
+        item.purchaseTransitQty = undefined // 采购在途数
+      }
+    }
+
+    if (data?.productStocks?.length) {
+      formData.value.forEach((item) => {
+        resolveItem(item)
+      })
+    } else {
+      changeUnde()
+    }
+  } catch (e) {
+    console.log(e, 'e')
+  }
+}
+
+export const addShowQtyDB = debounce(addShowQty, 100)

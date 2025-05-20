@@ -35,17 +35,20 @@ export interface FirstMileRequestAuditVO {
 
 export interface FirstMileRequestProductStockVO {
   /**
-   * 国家
+   * 产品部门对应关系列表
    */
-  country: string
+  relations: FirstMileRequestRelation[]
+}
+export interface FirstMileRequestRelation {
   /**
    * 部门编号
    */
   deptId: number
   /**
-   * 产品编号列表
+   * 产品编号
    */
-  productIds: number[]
+  productId: number
+  warehouseId: number
 }
 
 // 头程申请单 API
@@ -114,8 +117,18 @@ export const FirstMileRequestApi = {
     return await request.post({ url: `/tms/first-mile-request/merge`, data })
   },
 
-  // 获取产品可用库存 权限字符 tms:first-mile-request:query
+  // 获取产品可用库存 权限字符 tms:first-mile-request:query 逻辑库存-采购在途数量 purchase_transit_qty
   getFirstMileRequestProductStock: async (data: FirstMileRequestProductStockVO) => {
-    return await request.post({ url: `/tms/first-mile-request/get-product-stock`, data })
+    console.log('进来了多少次')
+    const copyData = JSON.parse(JSON.stringify(data)) as any
+    copyData.relations.forEach((item) => {
+      item.availableQty = 100 
+      item.purchaseTransitQty = 200 
+    })
+    const bodyData = {
+      productStocks: copyData.relations
+    }
+    return await Promise.resolve(bodyData)
+    // return await request.post({ url: `/tms/first-mile-request/get-product-stock`, data })
   }
 }

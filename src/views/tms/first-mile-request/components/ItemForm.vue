@@ -52,6 +52,9 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="逻辑库存" prop="availableQty" width="100" align="center" />
+        <el-table-column label="采购在途数" prop="purchaseTransitQty" width="100" align="center" />
+
         <el-table-column label="包装长(cm)" prop="packageLength" width="100" align="center" />
         <el-table-column label="包装宽(cm)" prop="packageWidth" width="100" align="center" />
         <el-table-column label="包装高(cm)" prop="packageHeight" width="100" align="center" />
@@ -126,7 +129,7 @@ import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
-import { addFbaBarCode, computeVolume } from '../../common/utils'
+import { addFbaBarCode, addShowQtyDB, computeVolume } from '../../common/utils'
 import { useInitNum } from '../../common/hooks'
 
 const productList = getProductList()
@@ -197,7 +200,7 @@ watch(
       formData.value.forEach((item) => {
         computeVolume(item)
       })
-
+      addShowQtyDB(formData)
       addInitNum()
     }
   },

@@ -12,8 +12,7 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" width="60" align="center" />
 
-
-         <el-table-column label="上游单据编号" width="150" prop="requestCode" align="center" />
+        <el-table-column label="上游单据编号" width="150" prop="requestCode" align="center" />
 
         <el-table-column label="产品编码" width="150" align="center">
           <template #default="{ row, $index }">
@@ -32,7 +31,6 @@
             </el-form-item>
           </template>
         </el-table-column>
-
 
         <el-table-column label="产品编码" width="150" align="center">
           <template #default="{ row, $index }">
@@ -142,7 +140,7 @@
                 placeholder="请选择发出仓"
               >
                 <el-option
-                  v-for="item in warehouseList"
+                  v-for="item in WMSWarehouseList"
                   :key="item.id"
                   :label="item.name"
                   :value="item.id"
@@ -151,6 +149,9 @@
             </el-form-item>
           </template>
         </el-table-column>
+
+        <el-table-column label="逻辑库存" prop="availableQty" width="100" align="center" />
+        <el-table-column label="采购在途数" prop="purchaseTransitQty" width="100" align="center" />
 
         <el-table-column label="包装长(cm)" prop="packageLength" width="100" align="center" />
         <el-table-column label="包装宽(cm)" prop="packageWidth" width="100" align="center" />
@@ -222,11 +223,12 @@ import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
-import { computeVolume, addFbaBarCode, addCompanyList, addCompany } from '../utils'
+import { computeVolume, addFbaBarCode, addCompanyList, addCompany, addShowQtyDB } from '../utils'
 import { useInitNum } from '../hooks'
+import { getWMSWarehouseList } from '@/commonData/wms'
 
 const productList = getProductList()
-const warehouseList = getWarehouseList()
+const WMSWarehouseList = getWMSWarehouseList()
 const financeSubjectList = getFinanceSubjectList()
 const { defaultProps, deptList } = getDeptTree()
 
@@ -312,7 +314,7 @@ watch(
       formData.value.forEach((item) => {
         computeVolume(item)
       })
-
+      addShowQtyDB(formData)
       addInitNum()
     }
   },

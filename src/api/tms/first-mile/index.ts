@@ -47,6 +47,27 @@ export interface FirstMileAuditVO {
   reviewed: boolean
 }
 
+export interface FirstMileStockListVO {
+  /**
+   * 产品部门对应关系列表
+   */
+  relations: FirstMileRelation[]
+  /**
+   * 仓库编号
+   */
+  warehouseId: number
+}
+export interface FirstMileRelation {
+  /**
+   * 部门编号
+   */
+  deptId: number
+  /**
+   * 产品编号
+   */
+  productId: number
+}
+
 // 头程单 API
 export const FirstMileApi = {
   // 查询头程单分页
@@ -101,12 +122,17 @@ export const FirstMileApi = {
   },
 
   // 头程申请单 提交审核
-  submitFirstMileAudit: async (data:number[]) => {
+  submitFirstMileAudit: async (data: number[]) => {
     return await request.put({ url: `/tms/first-mile/submit-audit`, data })
   },
 
   // 头程申请单 审核/反审核
   auditFirstMileStatus: async (params: FirstMileAuditVO) => {
     return await request.put({ url: `/tms/first-mile-request/audit-status`, params })
+  },
+
+  // 批量查询产品库存信息 批量查询库存公司
+  getFirstMileStockList: async (data: FirstMileStockListVO) => {
+    return await request.post({ url: `/tms/first-mile/stock/list`, data })
   }
 }
