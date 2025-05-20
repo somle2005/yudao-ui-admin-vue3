@@ -139,6 +139,8 @@ x编码-xcode
 已付款金额-payPrice
 付款状态-payStatus
 这四个字段需要带给你吗
+payStatus-这个不用带 其他都是采购订单项-合并时候带出 或者 采购到货项编辑回显
+
  */
 
 const mergeOrder = {

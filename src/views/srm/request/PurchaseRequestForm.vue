@@ -1,5 +1,5 @@
 <template>
-  <Dialog width="1400" :title="dialogTitle" v-model="dialogVisible">
+  <Dialog :title="dialogTitle" v-model="dialogVisible">
     <SmForm
       class="-mb-15px"
       ref="smFormRef"

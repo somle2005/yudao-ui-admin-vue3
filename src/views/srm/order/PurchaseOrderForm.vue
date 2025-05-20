@@ -1,6 +1,6 @@
 <template>
   <div style="display: contents">
-    <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000">
+    <Dialog :title="dialogTitle" v-model="dialogVisible">
       <SmForm
         class="-mb-15px"
         ref="formRef"

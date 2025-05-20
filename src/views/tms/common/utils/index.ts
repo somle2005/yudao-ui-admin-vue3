@@ -578,8 +578,7 @@ export const addCompany = (warehouse, row) => {
  * 考虑防抖-因为考虑到编辑回显-单独一个监听又太麻烦-外部可能会带入数据-防止bug
  * 
  * 简单处理 watch监听 formData-但是其他也会触发-(优点逻辑集中-且容易维护)
- * 优化处理 点击详情的回显的时候才去触发接口相关数据处理-处理完后进去。
- * 然后触发对应的下拉框的change事件才去触发接口相关数据处理
+ * 优化处理 点击详情的回显的时候才去触发接口相关数据处理-处理完后进去。 然后触发对应的下拉框的change事件才去触发接口相关数据处理
  */
 export const addShowQty = async (formData) => {
   try {

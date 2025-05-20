@@ -1,6 +1,6 @@
-<!-- 可付款的采购入库单列表 选择采购入库（仅展示可付款）-->
+<!-- 可付款的采购入库单列表 选择采购入库（仅展示可付款）width="1000"-->
 <template>
-  <Dialog title="选择采购申请项（仅展示已审核）" v-model="dialogVisible" width="1000">
+  <Dialog title="选择采购申请项（仅展示已审核）" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
@@ -240,7 +240,8 @@ const fieldMap = {
     width: '200px'
   },
 
-  auditorName: '审核人',
+  // auditorName: '审核人',
+  auditor: '审核人',
   auditTime: {
     label: '审核时间',
     formatter: dateFormatter, // 年月日-金蝶
