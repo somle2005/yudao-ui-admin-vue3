@@ -327,9 +327,9 @@ const getFormData = () => {
 const resolveDetailData = (data, type) => {
   getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
 
-  data.binItemList.forEach((item) => {
-    item.actualQty = item.expectedQty
-  })
+  // data.binItemList.forEach((item) => {
+  //   item.actualQty = item.expectedQty
+  // })
 
   if (type === OPERATE_MAP.inventory) {
     data.binItemList.forEach((item) => {
