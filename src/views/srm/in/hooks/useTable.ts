@@ -34,6 +34,9 @@ import { cloneDeep } from 'lodash-es'
 
 暂无
 海关品名
+
+
+单据日期	单据编码	供应商	审核状态	入库状态	金额	数量	总毛重	总体积	创建人	创建日期	审核人	审核日期
  */
 
 export const useTable = () => {
@@ -45,89 +48,35 @@ export const useTable = () => {
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
   const fieldMap = {
-    code: {
-      label: '单据编号',
-      width: '200px',
-    }, // 采购单编号
     billTime: {
       label: '单据日期',
       formatter: dateFormatter2, // 年月日-金蝶
       width: '200px'
     },
-    inTime: {
-      label: '入库时间',
-      formatter: dateFormatter, // 年月日-金蝶
-      width: '200px'
-    },
-
-    // items-product带出barCode 产品编码 name
-    // productBarCode: {
-    rowBarCode: {
-      label: '产品编码',
+    code: {
+      label: '单据编号',
       width: '200px',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
+    }, // 采购单编号
 
     supplierName: '供应商',
 
-    auditStatus: {
-      label: '审核状态',
-      slot: 'auditStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
+
+    inStatus: {
+      label: '入库状态-缺后端字段',
+      slot: 'inStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
     },
 
-    // inStatus: {
-    //   label: '入库状态',
-    //   slot: 'inStatus',
-    //   dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
-    // },
-    payStatus: {
-      label: '付款状态',
-      slot: 'payStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
-    },
-    // reconciliationStatus: {
-    //   label: '对账状态',
-    //   slot: 'reconciliationStatus'
-    // },
-    rowPayStatus: {
-      label: '行付款状态',
-      slot: 'rowPayStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-
-    // rowPayStatus: {
-    //   label: '行付款状态',
-    //   slot: 'rowPayStatus',
-    //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
-    // },
-
-    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
     totalPrice: {
-      label: '成交金额',
+      // label: '成交金额',
+      label: '金额',
       wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
 
-    // 分行才展示
+     // 分行才展示
     itemTotalPrice: {
-      label: '总价',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-
-    productName: {
-      label: '产品名称',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-    // 海关品名 产品id里面有(能带出来吗)等后端
-
-    declaredType: {
-      label: '海关品名',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-
-    warehouseName: {
-      label: '仓库',
+      // label: '总价',
+      label: '金额',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
@@ -136,14 +85,84 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
 
+    qty44: {
+      label: '实际数量-缺后端字段',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    },
+
+    qty1: '总毛重-缺后端字段',
+    qty2: '总体积-缺后端字段',
+
+
+    // 状态字段好像缺失了
+    auditStatus: {
+      label: '审核状态',
+      slot: 'auditStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
+    },
+    payStatus: {
+      label: '付款状态',
+      slot: 'payStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
+    },
+    rowPayStatus: {
+      label: '行付款状态',
+      slot: 'rowPayStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+
+    // 产品编码	产品名称	仓库	数量	实际数量	订单数量	箱率	单价	含税单价	税额	价税合计	申请部门	创建人	创建日期	审核人	审核日期
+
+     rowBarCode: {
+      label: '产品编码',
+      width: '200px',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+    productName: {
+      label: '产品名称',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+    warehouseName: {
+      label: '仓库',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+
+
+
+    qty3: '实际数量-缺后端字段',
+    qty4: '订单数量-缺后端字段',
+
+    containerRate: {
+      label: '箱率',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    productPrice: {
+       label: '单价',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    
+  
+    // 海关品名 产品id里面有(能带出来吗)等后端
+
+    declaredType: {
+      label: '海关品名',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+   
     actTaxPrice: {
       label: '含税单价',
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
-    // taxPrice: {
-    //   label: '税额',
-    //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
-    // },
+    taxPrice: {
+      label: '税额',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    },
     allAmount: {
       label: '价税合计',
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
@@ -157,8 +176,11 @@ export const useTable = () => {
       label: '申请部门',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    source: '源单类型',
-    orderNo: '源单单号',
+
+    // source: '源单类型',
+    // orderNo: '源单单号',
+    // reviewComment: '审核意见',
+
 
     creator: '制单人',
     createTime: {
@@ -173,6 +195,35 @@ export const useTable = () => {
       formatter: dateFormatter,
       width: '200px'
     },
+
+
+  
+    // inTime: {
+    //   label: '入库时间',
+    //   formatter: dateFormatter, // 年月日-金蝶
+    //   width: '200px'
+    // },
+
+    // items-product带出barCode 产品编码 name
+    // productBarCode: {
+  
+
+    // reconciliationStatus: {
+    //   label: '对账状态',
+    //   slot: 'reconciliationStatus'
+    // },
+ 
+
+    // rowPayStatus: {
+    //   label: '行付款状态',
+    //   slot: 'rowPayStatus',
+    //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
+    // },
+
+    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
+
+
+   
 
     // rowExecuteStatus: {
     //   label: '行执行状态',
@@ -199,7 +250,7 @@ export const useTable = () => {
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
 
-    reviewComment: '审核意见',
+   
 
     operate: {
       label: '操作',

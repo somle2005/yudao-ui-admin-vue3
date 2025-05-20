@@ -10,7 +10,7 @@
       :options="requestFormOptions"
       :getModelValue="getFormData"
     >
-      <template #vesselTrackingItems>
+      <!-- <template #vesselTrackingItems>
         <el-tabs v-model="vesselTrackingTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="船期信息" name="vesselTrackingTabsName">
             <SmForm
@@ -24,7 +24,7 @@
             />
           </el-tab-pane>
         </el-tabs>
-      </template>
+      </template> -->
       <template #mergeItems>
         <!-- <el-button
           type="primary"
@@ -34,7 +34,7 @@
           >选择上架产品</el-button
         > -->
         <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="头程单清单" name="firstMileItem">
+          <el-tab-pane label="头程单清单" :name="mergeItemsTabsName.firstMileItem">
             <FirsetMileMergeItemForm
               v-if="formData.toWarehouseId"
               ref="firstMileItemFormRef"
@@ -42,6 +42,17 @@
               :warehouse="warehouse"
               :formType="formType"
               :disabled="itemsFormdisabled"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="船期信息" :name="mergeItemsTabsName.vesselTrackingTabsName">
+            <SmForm
+              class="-mb-15px common-form-tabs-items"
+              ref="vesselTrackingFormRef"
+              isCol
+              label-width="150px"
+              v-loading="formLoading"
+              :options="vesselTrackingItemsOptions"
+              :getModelValue="getVesselTrackingFormData"
             />
           </el-tab-pane>
           <!-- <el-tab-pane label="出运订单费用明细" name="fee">
@@ -75,6 +86,7 @@ import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { addComment } from '@/views/wms/utils'
 import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
+import { mergeItemsTabsName } from '@/views/tms/common/constant/index'
 
 /** 头程单 表单 */
 defineOptions({ name: 'FirstMileForm' })
@@ -216,9 +228,13 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
+
   // 校验子表单
-  await firstMileItemFormRef.value.validate()
-  await vesselTrackingFormRef.value.validate()
+  if (mergeTabsName.value === mergeItemsTabsName.vesselTrackingTabsName) {
+    await vesselTrackingFormRef.value.validate()
+  } else if (mergeTabsName.value === mergeItemsTabsName.firstMileItem) {
+    await firstMileItemFormRef.value.validate()
+  }
 
   // 提交请求
   formLoading.value = true

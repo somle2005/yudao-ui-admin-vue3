@@ -32,7 +32,7 @@
         </el-tabs>
       </template>
 
-      <template #vesselTrackingItems>
+      <!-- <template #vesselTrackingItems>
         <el-tabs v-model="vesselTrackingTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="船期信息" name="vesselTrackingTabsName">
             <SmForm
@@ -46,11 +46,11 @@
             />
           </el-tab-pane>
         </el-tabs>
-      </template>
+      </template> -->
 
       <template #mergeItems>
         <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="头程单清单" name="firstMileItem">
+          <el-tab-pane label="头程单清单" :name="mergeItemsTabsName.firstMileItem">
             <FirsetMileMergeItemForm
               v-if="formData.toWarehouseId"
               ref="firstMileItemFormRef"
@@ -58,6 +58,17 @@
               :warehouse="warehouse"
               :formType="formType"
               :disabled="itemsFormdisabled"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="船期信息" :name="mergeItemsTabsName.vesselTrackingTabsName">
+            <SmForm
+              class="-mb-15px common-form-tabs-items"
+              ref="vesselTrackingFormRef"
+              isCol
+              label-width="150px"
+              v-loading="formLoading"
+              :options="vesselTrackingItemsOptions"
+              :getModelValue="getVesselTrackingFormData"
             />
           </el-tab-pane>
         </el-tabs>
@@ -91,6 +102,7 @@ import { FirstMileApi } from '@/api/tms/first-mile'
 import { useMergeFirstMileOptions, computeFirstMileList } from '../common/utils'
 import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
 import { cloneDeep } from 'lodash-es'
+import { mergeItemsTabsName } from '@/views/tms/common/constant/index'
 
 /** 头程申请单 表单 */
 defineOptions({ name: 'FirstMileRequestForm' })
@@ -118,6 +130,7 @@ const initFormData = () => {
   }
 }
 
+const mergeType = computed(() => formType.value === 'merge')
 const auditType = computed(() => formType.value === 'audit')
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
@@ -333,8 +346,11 @@ const submitForm = async (type?: string) => {
   await formRef.value.validate()
 
   if (formType.value === 'merge') {
-    await firstMileItemFormRef.value.validate()
-    await vesselTrackingFormRef.value.validate()
+    if (mergeTabsName.value === mergeItemsTabsName.vesselTrackingTabsName) {
+      await vesselTrackingFormRef.value.validate()
+    } else if (mergeTabsName.value === mergeItemsTabsName.firstMileItem) {
+      await firstMileItemFormRef.value.validate()
+    }
   } else {
     // 校验子表单
     await itemFormRef.value.validate()

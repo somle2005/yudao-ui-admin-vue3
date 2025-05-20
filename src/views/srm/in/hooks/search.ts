@@ -46,25 +46,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
 
     {
-      type: 'date-picker',
-      placeholder: '请选择入库时间',
-      prop: 'inTime',
-      label: '入库时间',
-      attrs: {
-        clearable: true,
-        type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
-        'start-placeholder': '开始日期',
-        'end-placeholder': '结束日期',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
-        class: '!w-240px',
-        style: {
-          width: '100%'
-        }
-      }
-    },
-
-    {
       type: 'select',
       placeholder: '请选择供应商',
       prop: 'auditorId',
@@ -81,78 +62,15 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
 
     {
-      type: 'select',
-      placeholder: '请选择仓库',
-      prop: 'warehouseId',
-      label: '仓库',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: WMSWarehouseList
-    },
-
-    // 制单人-创建人-注意后端是否处理了
-    {
-      type: 'select',
-      placeholder: '请选择制单人',
-      prop: 'creator',
-      label: '制单人',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: userList
-    }, 
-    // 关联订单
-    {
       type: 'input',
-      label: '源单单号',
+      label: '上游单据编码',
       prop: 'orderNo',
-      placeholder: '请输入源单单号',
+      placeholder: '请输入上游单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
         clearable: true
       }
-    },
-    // {
-    //   type: 'select',
-    //   placeholder: '请选择结算账户',
-    //   prop: 'accountId',
-    //   label: '结算账户',
-    //   attrs: {
-    //     class: '!w-240px',
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: accountList
-    // },
-    {
-      type: 'select',
-      placeholder: '请选择付款状态',
-      prop: 'payStatus',
-      label: '付款状态',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.SRM_PAYMENT_STATUS)
     },
     {
       type: 'select',
@@ -168,7 +86,107 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择入库状态-缺后端字段',
+      prop: 'status',
+      label: '入库状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
     }
+
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择入库时间',
+    //   prop: 'inTime',
+    //   label: '入库时间',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'daterange',
+    //     'value-format': 'YYYY-MM-DD HH:mm:ss',
+    //     'start-placeholder': '开始日期',
+    //     'end-placeholder': '结束日期',
+    //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+    //     class: '!w-240px',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
+
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择仓库',
+    //   prop: 'warehouseId',
+    //   label: '仓库',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: WMSWarehouseList
+    // },
+
+    // 制单人-创建人-注意后端是否处理了
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择制单人',
+    //   prop: 'creator',
+    //   label: '制单人',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: userList
+    // },
+    // 关联订单
+
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择结算账户',
+    //   prop: 'accountId',
+    //   label: '结算账户',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: accountList
+    // },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择付款状态',
+    //   prop: 'payStatus',
+    //   label: '付款状态',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.SRM_PAYMENT_STATUS)
+    // },
   ])
 
   const events = {
