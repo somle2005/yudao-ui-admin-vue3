@@ -40,7 +40,7 @@
     >
       <template #deltaQty="{ scope }">
         <div class="green" v-if="scope.row.deltaQty > 0">+{{ scope.row.deltaQty }}</div>
-        <div class="red" v-else-if="scope.row.deltaQty < 0">-{{ scope.row.deltaQty }}</div>
+        <div class="red" v-else-if="scope.row.deltaQty < 0">{{ scope.row.deltaQty }}</div>
         <div v-else-if="scope.row.deltaQty === 0">{{ scope.row.deltaQty }}</div>
       </template>
 
