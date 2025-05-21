@@ -86,7 +86,7 @@
           @click="mergeOrder"
           v-hasPermi="['srm:purchase-order:merge']"
         >
-          合并入库
+          合并到货
         </el-button>
 
         <el-button

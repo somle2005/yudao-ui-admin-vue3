@@ -451,7 +451,7 @@ const warehouseDisabled = computed(() =>
   ['audit', 'detail', 'generateContract'].includes(props.formType)
 )
 
-// 合并入库的时候有入库数量
+// 合并到货的时候有入库数量
 const countDisabled = computed(() =>
   ['audit', 'detail', 'generateContract'].includes(props.formType)
 )

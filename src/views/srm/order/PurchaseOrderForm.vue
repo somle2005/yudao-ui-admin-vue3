@@ -479,7 +479,7 @@ const operateAudit = (type) => {
   }
 }
 
-// 合并 合并入库时列表勾选中传递的items数据
+// 合并 合并到货时列表勾选中传递的items数据
 const mergeSelectItemsData = (formData, data) => {
   // count-数量要能够修改不能超过原始值
   data.items.forEach((item) => {
@@ -543,7 +543,7 @@ const open = async (type: string, id?: number, data?: any) => {
       }
 
       if (type === 'merge') {
-        dialogTitle.value = '合并入库'
+        dialogTitle.value = '合并到货'
         // const inFormData = getFormData()
         // mergeSelectItemsData(inFormData, data)
       }
@@ -674,7 +674,7 @@ const submitForm = async () => {
         ]
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
-      message.success('合并入库成功')
+      message.success('合并到货成功')
     } else if (formType.value === 'generateContract') {
       data.orderId = data.id
       let queryData: any = filterObjKey(data, [
