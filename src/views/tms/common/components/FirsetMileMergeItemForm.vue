@@ -32,24 +32,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="产品编码" width="150" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.productId`"
-              :rules="formRules.productId"
-              class="mb-0px!"
-            >
-              <SmSelect
-                v-model="row.productId"
-                placeholder="请选择产品编码"
-                :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
-                @change="(val) => changeProduct(row, $index, val)"
-              />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
         <!-- 自动带出该目的仓库所在国家的产品FBA条码 -->
         <el-table-column label="FBA条码" width="150" align="center">
           <template #default="{ row, $index }">
