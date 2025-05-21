@@ -220,7 +220,7 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
-  erpPurchaseRequestItemNo: {
+  purchaseApplyCode: {
     label: '源单单号',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -435,7 +435,7 @@ const wrapList = [
   'remark',
   'declaredType',
   'declaredTypeEn',
-  'erpPurchaseRequestItemNo',
+  'purchaseApplyCode',
   'portOfLoading',
   'portOfDischarge'
 ]

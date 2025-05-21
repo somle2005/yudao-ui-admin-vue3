@@ -92,7 +92,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
       type: 'select',
       placeholder: '请选择入库状态-缺后端字段',
       prop: 'status',
-      label: '入库状态',
+      label: '入库状态-缺后端字段',
       attrs: {
         class: '!w-240px',
         filterable: true,

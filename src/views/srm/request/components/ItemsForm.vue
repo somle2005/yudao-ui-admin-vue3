@@ -318,7 +318,7 @@
       <!-- applicantId -->
       <el-table-column v-if="mergeDisabled" prop="applicant" label="申请人" width="200" />
       <!-- applicationDeptId -->
-      <el-table-column v-if="mergeDisabled" prop="applicationDept" label="申请部门" width="200"/>
+      <el-table-column v-if="mergeDisabled" prop="applicationDept" label="申请部门" width="200" />
 
       <el-table-column v-if="showOperate" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">

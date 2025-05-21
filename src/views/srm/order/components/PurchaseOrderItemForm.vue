@@ -336,7 +336,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="erpPurchaseRequestItemNo"
+          prop="purchaseApplyCode"
           label="源单单号"
           width="200"
           align="center"
@@ -346,7 +346,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
               <el-select
-                v-if="!row.erpPurchaseRequestItemNo"
+                v-if="!row.purchaseApplyCode"
                 :disabled="disabled"
                 v-model="row.applicantId"
                 clearable
@@ -360,7 +360,7 @@
                   :value="item.id"
                 />
               </el-select>
-              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.applicantName }}</el-text>
+              <el-text v-if="row.purchaseApplyCode">{{ row.applicantName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -368,7 +368,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
               <el-tree-select
-                v-if="!row.erpPurchaseRequestItemNo"
+                v-if="!row.purchaseApplyCode"
                 filterable
                 clearable
                 :disabled="disabled"
@@ -379,7 +379,7 @@
                 node-key="id"
                 placeholder="请选择申请部门"
               />
-              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.departmentName }}</el-text>
+              <el-text v-if="row.purchaseApplyCode">{{ row.departmentName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -581,7 +581,7 @@ const handleAdd = () => {
     xcode: undefined,
     containerRate: undefined,
     purchaseApplyItemId: undefined,
-    erpPurchaseRequestItemNo: undefined,
+    purchaseApplyCode: undefined,
     qty: undefined,
     inspectionJson: [],
     completionJson: []

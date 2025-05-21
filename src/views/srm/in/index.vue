@@ -7,7 +7,7 @@
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
       v-model="queryParams"
       :options="searchFormOptions"
       :getModelValue="getSearchFormData"
@@ -61,7 +61,7 @@
         </el-dropdown>
 
         <!-- v-hasPermi="['srm:purchase-in:change-pay-status']" -->
-        <el-button
+        <!-- <el-button
           :disabled="disabledBtn"
           type="primary"
           plain
@@ -85,7 +85,7 @@
           active-text="整单"
           class="ml-10px"
           @change="handleWholeOrderEnable"
-        />
+        /> -->
         <!-- <el-button
           type="danger"
           plain

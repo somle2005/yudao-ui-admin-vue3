@@ -749,7 +749,7 @@ const addItem = (selectionList) => {
         warehouseId,
         expectArrivalDate,
         deliveryTime: expectArrivalDate,
-        erpPurchaseRequestItemNo: code,
+        purchaseApplyCode: code,
         applicantId,
         applicationDeptId,
         departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName

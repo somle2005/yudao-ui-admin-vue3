@@ -78,7 +78,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '源单单号',
-      prop: 'erpPurchaseRequestItemNo',
+      prop: 'purchaseApplyCode',
       placeholder: '请输入源单单号',
       attrs: {
         class: '!w-240px',
