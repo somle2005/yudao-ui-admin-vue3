@@ -206,6 +206,11 @@ const { tableOptions, transformTableOptions } = useTableData()
 const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 
 const fieldMap = {
+  purchaseOrderId: {
+    label: '行id',
+    width: '60px',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
   billTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
@@ -244,7 +249,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   }, // 批准数量➖已订购数量后端计算返回
   orderClosedQty: {
-    label:'已订购数量',
+    label: '已订购数量',
     wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
   // inQty: '已入库数量',
@@ -471,7 +476,7 @@ const handleUpdateStatus = async (row: any, reviewed: boolean) => {
       pass: true,
       items: items.map((item) => {
         return {
-          id: item.id,
+          id: item.id
           // pass: item.approvedQty
         }
       })

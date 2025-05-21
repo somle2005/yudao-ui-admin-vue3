@@ -214,6 +214,11 @@ const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
 const fieldMap = {
+  rowItemsId: {
+    label: '行id',
+    width: '60px',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
   code: '单据编号', // 采购单编号
   billTime: {
     label: '单据日期',
