@@ -81,8 +81,8 @@
 
   <!-- 列表 -->
   <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="主键" align="center" prop="id" />
+    <el-table v-loading="loading" :data="list" border :stripe="true" :show-overflow-tooltip="true">
+      <!-- <el-table-column label="主键" align="center" prop="id" /> -->
       <el-table-column
         label="创建时间"
         align="center"
@@ -150,7 +150,7 @@ const queryParams = reactive({
   paymentTermZh: undefined,
   paymentTermZhForeign: undefined,
   paymentTermEnForeign: undefined,
-  remark: undefined,
+  remark: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中

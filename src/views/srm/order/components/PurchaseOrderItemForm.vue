@@ -11,11 +11,7 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="!showCreate" label="编号" min-width="120" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.id }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="120" align="center"/>
 
         <template v-if="formType === 'detail'">
           <el-table-column label="验货单" width="200" align="center">
@@ -96,11 +92,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="产品名称" width="120" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.productName }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column prop="productName" label="产品名称" width="120" align="center" />
 
         <el-table-column label="海关品名" width="180" align="center">
           <template #default="{ row, $index }">
@@ -131,11 +123,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="单位" min-width="60" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.productUnitName }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
         <el-table-column label="仓库" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
@@ -199,13 +187,13 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column v-if="showOringinCount" label="下单数量" width="120" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.originCount`" class="mb-0px!">
-              <el-text>{{ row.originCount }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column
+          v-if="showOringinCount"
+          prop="originCount"
+          label="下单数量"
+          width="120"
+          align="center"
+        />
 
         <!-- <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
@@ -303,13 +291,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="价税合计" min-width="150" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-              <el-text>{{ row.allAmount }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="allAmount" label="价税合计" min-width="150" align="center" />
 
         <el-table-column v-if="showCreate" label="期望到货日期" min-width="150" align="center">
           <template #default="{ row, $index }">
@@ -353,11 +335,12 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="源单单号" width="200" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.erpPurchaseRequestItemNo }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column
+          prop="erpPurchaseRequestItemNo"
+          label="源单单号"
+          width="200"
+          align="center"
+        />
 
         <el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">

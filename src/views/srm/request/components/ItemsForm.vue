@@ -11,11 +11,7 @@
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
     <el-table border :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" align="center" width="100" />
-      <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
-        <template #default="{ row }">
-          <el-text>{{ row.id }}</el-text>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="formType !== 'create'" prop="id" label="编号" min-width="120" />
       <!-- <el-table-column label="产品编码" min-width="180">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
@@ -112,11 +108,7 @@
         </el-table-column>
       </template>
 
-      <el-table-column label="单位" min-width="60">
-        <template #default="{ row }">
-          <el-text>{{ row.productUnitName }}</el-text>
-        </template>
-      </el-table-column>
+      <el-table-column prop="productUnitName" label="单位" min-width="60" />
 
       <el-table-column label="仓库" min-width="150">
         <template #default="{ row, $index }">
@@ -172,13 +164,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="mergeDisabled" label="未订购数量" prop="unOrderCount" min-width="120">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.unOrderCount`" class="mb-0px!">
-            <el-text>{{ row.unOrderCount }}</el-text>
-          </el-form-item>
-        </template>
-      </el-table-column>
+      <el-table-column
+        v-if="mergeDisabled"
+        prop="unOrderCount"
+        label="未订购数量"
+        min-width="120"
+      />
 
       <el-table-column label="申请数量" prop="qty" min-width="120">
         <template #default="{ row, $index }">
@@ -258,20 +249,8 @@
       </el-table-column>
 
       <template v-if="noCreate">
-        <el-table-column label="税额" prop="taxPrice" min-width="140">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-              {{ row.taxPrice }}
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column label="价税合计" min-width="150">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-              <el-text>{{ row.allAmount }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="taxPrice" label="税额" min-width="140" />
+        <el-table-column prop="allAmount" label="价税合计" min-width="150" />
       </template>
       <el-table-column label="参考单价" prop="referenceUnitPrice" min-width="140">
         <template #default="{ row, $index }">
@@ -284,7 +263,12 @@
               :precision="2"
               class="!w-100%"
             /> -->
-            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.referenceUnitPrice" />
+            <SmNumber
+              :disabled="disabled"
+              :min="0.01"
+              :precision="2"
+              v-model="row.referenceUnitPrice"
+            />
           </el-form-item>
         </template>
       </el-table-column>
@@ -331,20 +315,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="mergeDisabled" label="申请人" width="200">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
-            <el-text>{{ row.applicant }}</el-text>
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="mergeDisabled" label="申请部门" width="200">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
-            <el-text>{{ row.applicationDept }}</el-text>
-          </el-form-item>
-        </template>
-      </el-table-column>
+      <!-- applicantId -->
+      <el-table-column v-if="mergeDisabled" prop="applicant" label="申请人" width="200" />
+      <!-- applicationDeptId -->
+      <el-table-column v-if="mergeDisabled" prop="applicationDept" label="申请部门" width="200"/>
 
       <el-table-column v-if="showOperate" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
