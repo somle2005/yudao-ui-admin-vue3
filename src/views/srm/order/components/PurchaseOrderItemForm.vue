@@ -11,7 +11,7 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="120" align="center"/>
+        <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="120" align="center" />
 
         <template v-if="formType === 'detail'">
           <el-table-column label="验货单" width="200" align="center">
@@ -128,7 +128,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
               <el-select
-                :disabled="disabled"
+                :disabled="warehouseDisabled"
                 v-model="row.warehouseId"
                 clearable
                 filterable
@@ -335,12 +335,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="purchaseApplyCode"
-          label="源单单号"
-          width="200"
-          align="center"
-        />
+        <el-table-column prop="purchaseApplyCode" label="源单单号" width="200" align="center" />
 
         <el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">
@@ -451,6 +446,10 @@ const props = defineProps({
     default: ''
   }
 })
+
+const warehouseDisabled = computed(() =>
+  ['audit', 'detail', 'generateContract'].includes(props.formType)
+)
 
 // 合并入库的时候有入库数量
 const countDisabled = computed(() =>
