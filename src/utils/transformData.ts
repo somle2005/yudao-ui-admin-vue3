@@ -35,9 +35,10 @@ export const mergeItemsToList = (list: any[], mapKey = {}) => {
 /**
  *
  * @param list
+ * @param mapKey 用来弥补itemsQty 合并计算 映射和内容不items-qty冲突问题
  * 提取list中的items合并当前list项 展示每一项的items 合并进行数组- 小驼峰形式拼接字段
  */
-export const mergeItemsUpToList = (list: any[], itemKey = 'items') => {
+export const mergeItemsUpToList = (list: any[], itemKey = 'items', mapKey = {}) => {
   if (!list?.length) return []
   const arr: any = []
   cloneDeep(list).forEach((item: any) => {
@@ -49,6 +50,9 @@ export const mergeItemsUpToList = (list: any[], itemKey = 'items') => {
         for (const key in obj) {
           // key首字母大写
           newItem[itemKey + key[0].toUpperCase() + key.slice(1)] = obj[key]
+        }
+        for (const key in mapKey) {
+          newItem[mapKey[key]] = obj[key]
         }
         arr.push(newItem)
       })

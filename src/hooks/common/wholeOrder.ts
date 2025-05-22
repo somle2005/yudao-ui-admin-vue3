@@ -83,6 +83,50 @@ export const useWholeOrderMergeCompute = () => {
   }
 }
 
+/*
+ 因为计算的是items里面的可能需要转化一下
+ 外部list显示itemsTaxPrice
+ */
+export const useWholeOrderMergeComputeUp = () => {
+  const wholeOrderMergeCompute = (list: any[], branchOptions, transformKey = 'items') => {
+    const computeSum = (items: any[], key: string) => {
+      if (!items?.length) return
+      return items.reduce((prev, cur) => {
+        if (cur[key]) {
+          return cur[key] + prev
+        }
+        return prev
+      }, 0)
+    }
+
+    const transformKeyStr = (key: string, transformKey: string) => {
+      try {
+        const len = transformKey.length
+        let str = key.slice(len)
+        str = str[0].toLowerCase() + str.slice(1)
+        return str
+      } catch (e) {
+        console.log(e, 'e-key',key)
+      }
+    }
+
+    const keyList = branchOptions
+      .filter((item) => item.wholeOrderEnable === WHOLE_ORDER_TYPE.mergeCompute)
+      .map((item) => item.prop)
+    return cloneDeep(list).map((item) => {
+      keyList.forEach((key) => {
+        item[key] = computeSum(item.items, transformKeyStr(key, transformKey)!)
+      })
+      return item
+    })
+  }
+
+  return {
+    wholeOrderMergeCompute,
+    WHOLE_ORDER_TYPE
+  }
+}
+
 export const getWholeOrderItemsId = (
   selectionList: any[],
   wholeOrderEnable: any,

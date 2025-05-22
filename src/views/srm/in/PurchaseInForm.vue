@@ -193,7 +193,7 @@ const changePayStatus = async (data: any, pass: boolean) => {
     items: data.items.map((item) => {
       return {
         payPrice: item.payPrice,
-        id: item.rowItemsId // 防止整单分行冲突
+        id: item.itemsId // 防止整单分行冲突
       }
     }),
     pass
@@ -268,7 +268,7 @@ const addItem = (selectionList: any[]) => {
       // 采购订单分页需带出数据
       const {
         code,
-        rowItemsId, //list记得转化
+        itemsId, //list记得转化
 
         productId,
         productName,
@@ -311,7 +311,7 @@ const addItem = (selectionList: any[]) => {
        */
       const obj = {
         orderNo: code,
-        [itemIdKey]: rowItemsId, //list记得转化
+        [itemIdKey]: itemsId, //list记得转化
 
         productId,
         productName,

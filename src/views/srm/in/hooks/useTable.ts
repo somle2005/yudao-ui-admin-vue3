@@ -2,10 +2,11 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import {
   useWholeOrderMergeCompute,
   useWholeOrder,
-  createBranchOrder
+  createBranchOrder,
+  useWholeOrderMergeComputeUp
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
-import { mergeItemsToList } from '@/utils/transformData'
+import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
 
 /**
@@ -42,13 +43,13 @@ import { cloneDeep } from 'lodash-es'
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
 
-  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
+  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeComputeUp()
 
   // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
   const fieldMap = {
-    rowItemsId: {
+    itemsId: {
       label: '行id',
       width: '60px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -66,9 +67,16 @@ export const useTable = () => {
     supplierName: '供应商',
 
     inStatus: {
-      label: '入库状态-缺后端字段',
+      label: '入库状态',
       slot: 'inStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
+      dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
+      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 入库状态
+    },
+    itemsInStatus: {
+      label: '行入库状态',
+      slot: 'inStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     totalPrice: {
@@ -78,24 +86,19 @@ export const useTable = () => {
     },
 
     // 分行才展示
-    itemTotalPrice: {
+    itemsTotalPrice: {
       // label: '总价',
       label: '金额',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    qty: {
-      label: '数量',
+    itemsQty: {
+      label: '总数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
 
-    qty44: {
-      label: '实际数量-缺后端字段',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
-    },
-
-    qty1: '总毛重-缺后端字段',
-    qty2: '总体积-缺后端字段',
+    totalWeight: '总毛重',
+    totalVolume: '总体积',
 
     // 状态字段好像缺失了
     auditStatus: {
@@ -108,68 +111,80 @@ export const useTable = () => {
     //   slot: 'payStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
     // },
-    // rowPayStatus: {
+    // itemsPayStatus: {
     //   label: '行付款状态',
-    //   slot: 'rowPayStatus',
+    //   slot: 'itemsPayStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
 
     // 产品编码	产品名称	仓库	数量	实际数量	订单数量	箱率	单价	含税单价	税额	价税合计	申请部门	创建人	创建日期	审核人	审核日期
 
-    rowBarCode: {
+    itemsBarCode: {
       label: '产品编码',
       width: '200px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    productName: {
+    itemsProductName: {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    warehouseName: {
+    itemsWarehouseName: {
       label: '仓库',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    qty3: '实际数量-缺后端字段',
+    itemsQty1: {
+      label: '数量',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsQty44: {
+      label: '实际数量-缺后端字段',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    },
     qty4: '订单数量-缺后端字段',
 
-    containerRate: {
+    itemsContainerRate: {
       label: '箱率',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    productPrice: {
+    itemsProductPrice: {
       label: '单价',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     // 海关品名 产品id里面有(能带出来吗)等后端
 
-    declaredType: {
+    itemsDeclaredType: {
       label: '海关品名',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    actTaxPrice: {
+    // 行才展示这些价格就不汇总计算了-接口items里面有返回
+    itemsActTaxPrice: {
       label: '含税单价',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
-    taxPrice: {
+    itemsTaxPrice: {
       label: '税额',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
-    allAmount: {
+    itemsAllAmount: {
       label: '价税合计',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
 
-    applicantName: {
+    itemsApplicantName: {
       label: '申请人',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    applicationDeptName: {
+    itemsApplicationDeptName: {
       label: '申请部门',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -206,35 +221,35 @@ export const useTable = () => {
     //   slot: 'reconciliationStatus'
     // },
 
-    // rowPayStatus: {
+    // itemsPayStatus: {
     //   label: '行付款状态',
-    //   slot: 'rowPayStatus',
+    //   slot: 'itemsPayStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
     // },
 
     // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
 
-    // rowExecuteStatus: {
+    // itemsExecuteStatus: {
     //   label: '行执行状态',
-    //   slot: 'rowExecuteStatus',
+    //   slot: 'itemsExecuteStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
-    // rowInStatus: {
+    // itemsInStatus: {
     //   label: '行入库状态',
-    //   slot: 'rowInStatus',
+    //   slot: 'itemsInStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
-    // rowPayStatus: {
+    // itemsPayStatus: {
     //   label: '行付款状态',
-    //   slot: 'rowPayStatus',
+    //   slot: 'itemsPayStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
-    // rowOffStatus: {
+    // itemsOffStatus: {
     //   label: '行关闭状态',
-    //   slot: 'rowOffStatus',
+    //   slot: 'itemsOffStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
@@ -249,7 +264,7 @@ export const useTable = () => {
 
   const allOptions = transformTableOptions(fieldMap, {
     allWrap: true,
-    noComputePropList: ['code', 'rowBarCode', 'supplierName', 'warehouseName']
+    noComputePropList: ['code', 'itemsBarCode', 'supplierName', 'warehouseName']
   })
 
   // const wrapList = [
@@ -281,6 +296,17 @@ export const useTable = () => {
 
   // 整单分行列表切换
   const switchList = (list: any, total, data: any) => {
+    /**
+     * 防止后期值不明确来自哪里-统一命名-1
+     * WHOLE_ORDER_TYPE.items-状态下的值都需要同步更名-1
+     * 采购到货作为可选列表带出的数据-采购退货也需要进行注意带出的值
+     * PurchaseInPaymentEnableList-可选列表值也要注意修改
+     */
+
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+    itemsList.value = mergeItemsUpToList(data.list, 'items', { qty: 'itemsQty1' })
+    itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
 
@@ -298,9 +324,7 @@ export const useTable = () => {
     itemsTotal,
     wholeOrderTotal,
 
-    wholeOrderMergeCompute,
-    mergeItemsToList,
     switchList,
-    useWholeOrder
+    useWholeOrder,
   }
 }

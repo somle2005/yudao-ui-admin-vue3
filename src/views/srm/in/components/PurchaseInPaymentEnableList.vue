@@ -43,12 +43,12 @@
           <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.offStatus || ''" />
         </template>
 
-        <template #rowOrderStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.SRM_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
+        <template #itemsOrderStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.SRM_ORDER_STATUS" :value="scope.row.itemsOrderStatus || ''" />
         </template>
 
-        <template #rowOffStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+        <template #itemsOffStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.itemsOffStatus || ''" />
         </template>
       </SmTable>
     </ContentWrap>
@@ -62,9 +62,9 @@
 import { DICT_TYPE } from '@/utils/dict'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
-import { mergeItemsToList, resetQueryParams } from '@/utils/transformData'
+import { mergeItemsToList, mergeItemsUpToList, resetQueryParams } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
-import { useWholeOrderMergeCompute } from '@/hooks/common/wholeOrder'
+import { useWholeOrderMergeCompute, useWholeOrderMergeComputeUp } from '@/hooks/common/wholeOrder'
 import { PurchaseOrderApi } from '@/api/srm/order'
 import { useSearchForm } from './hooks/search'
 import { currencyNameChange } from '@/utils/operate/purchase'
@@ -83,7 +83,7 @@ const total = ref(0)
 const list = ref<any[]>([]) // 列表的数据
 const { tableOptions, transformTableOptions } = useTableData()
 
-const { WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
+const { WHOLE_ORDER_TYPE,wholeOrderMergeCompute } = useWholeOrderMergeComputeUp()
 // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
@@ -129,70 +129,70 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
   },
 
-  rowExecuteStatus: {
+  itemsExecuteStatus: {
     label: '行执行状态',
-    slot: 'rowExecuteStatus',
+    slot: 'itemsExecuteStatus',
     dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowInStatus: {
+  itemsInStatus: {
     label: '行入库状态',
-    slot: 'rowInStatus',
+    slot: 'itemsInStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowPayStatus: {
+  itemsPayStatus: {
     label: '行付款状态',
-    slot: 'rowPayStatus',
+    slot: 'itemsPayStatus',
     dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowOffStatus: {
+  itemsOffStatus: {
     label: '行关闭状态',
-    slot: 'rowOffStatus',
+    slot: 'itemsOffStatus',
     dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
   // 8:  '入库核销状态',
 
-  barCode: {
+  itemsBarCode: {
     label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  productName: {
+  itemsProductName: {
     label: '产品名称',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
   // 海关品名
-  containerRate: {
+  itemsContainerRate: {
     label: '箱率',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
-  deliveryDate: {
+  itemsDeliveryDate: {
     label: '交货日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
   // 总验货通过数-只有整单的时候才进行展示
-  totalInspectionPassCount: {
+  itemsTotalInspectionPassCount: {
     width: '250px',
     label: '总验货通过数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  waitInCount: {
+  itemsWaitInCount: {
     label: '待收数量',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  qty: {
+  itemsQty: {
     label: '下单数量',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  inCount: {
+  itemsInCount: {
     label: '已收数量',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   currencyName: '币种',
   // currencyId: {
@@ -201,17 +201,17 @@ const fieldMap = {
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
 
-  actTaxPrice: {
+  itemsActTaxPrice: {
     label: '含税单价',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  taxPrice: {
+  itemsTaxPrice: {
     label: '税额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  allAmount: {
+  itemsAmount: {
     label: '价税合计',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
 
   // 取后端总的税额无法进行分行展示数据了
@@ -224,11 +224,12 @@ const fieldMap = {
   //   wholeOrderEnable: 'items',
   // }, // items
 
-  PRItemCreator: {
+
+  itemsApplicantName: {
     label: '申请人',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  PRItemDepartmentName: {
+  itemsDepartmentName: {
     label: '申请部门',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -279,6 +280,8 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
+    list.value = mergeItemsUpToList(data.list)
+    // list.value = wholeOrderMergeCompute(arr, tableOptions.value)
 
     // data.list.forEach((item) => {
     //   if (!item?.items?.length) return
@@ -301,15 +304,16 @@ const getList = async () => {
     //   })
     // })
 
-    list.value = mergeItemsToList(data.list, {
-      id: 'rowItemsId',
-      status: 'rowStatus',
-      orderStatus: 'rowOrderStatus',
-      offStatus: 'rowOffStatus',
-      executeStatus: 'rowExecuteStatus',
-      inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus'
-    })
+ 
+    // list.value = mergeItemsToList(data.list, {
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inStatus: 'itemsInStatus',
+    //   payStatus: 'itemsPayStatus'
+    // })
 
     // 后续需要补充itemsTotal
     total.value = data.itemsTotal || data.total

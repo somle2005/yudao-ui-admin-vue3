@@ -56,8 +56,8 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
 
     try {
       // await message.confirm(`确定${str}吗？`)
-      // 整单还是分行取items里面的内容-去重即可-且整单带上了标记rowItemsId
-      const arr = getWholeOrderItems(list, wholeOrderEnable, 'rowItemsId')
+      // 整单还是分行取items里面的内容-去重即可-且整单带上了标记itemsId
+      const arr = getWholeOrderItems(list, wholeOrderEnable, 'itemsId')
       if (pass) {
         openForm(SRM_OPERATE_MAP.pay, null, arr)
       } else {

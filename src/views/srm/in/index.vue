@@ -60,6 +60,13 @@
           </template>
         </el-dropdown>
 
+        <el-switch
+          v-model="wholeOrderEnable"
+          active-text="整单"
+          class="ml-10px"
+          @change="handleWholeOrderEnable"
+        />
+
         <!-- v-hasPermi="['srm:purchase-in:change-pay-status']" -->
         <!-- <el-button
           :disabled="disabledBtn"
@@ -215,10 +222,8 @@ let {
   itemsTotal,
   wholeOrderTotal,
 
-  wholeOrderMergeCompute,
-  mergeItemsToList,
   switchList,
-  useWholeOrder
+  useWholeOrder,
 } = useTable()
 
 /** 查询列表 */
@@ -241,22 +246,37 @@ const getList = async () => {
     //     // item.itemApplicationDeptName = item.applicationDeptName
     //   })
     // })
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
-    itemsList.value = mergeItemsToList(data.list, {
-      id: 'rowItemsId',
-      status: 'rowStatus',
-      orderStatus: 'rowOrderStatus',
-      offStatus: 'rowOffStatus',
-      executeStatus: 'rowExecuteStatus',
-      inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus',
-      totalPrice: 'itemTotalPrice',
-      barCode: 'rowBarCode'
-    })
 
     switchList(list, total, data)
-    // list.value = data.list
-    // total.value = data.total
+
+    // 替换后
+
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inStatus: 'itemsInStatus',
+    //   payStatus: 'itemsPayStatus',
+    //   totalPrice: 'itemsTotalPrice',
+    //   barCode: 'itemsBarCode',
+    //   qty: 'itemsQty'
+    // })
+
+    // 替换前
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'rowItemsId',
+    //   status: 'rowStatus',
+    //   orderStatus: 'rowOrderStatus',
+    //   offStatus: 'rowOffStatus',
+    //   executeStatus: 'rowExecuteStatus',
+    //   inStatus: 'rowInStatus',
+    //   payStatus: 'rowPayStatus',
+    //   totalPrice: 'itemTotalPrice',
+    //   barCode: 'rowBarCode',
+    //   qty: 'itemQty'
+    // })
   } finally {
     loading.value = false
   }
