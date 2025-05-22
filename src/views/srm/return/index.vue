@@ -212,19 +212,6 @@ const getList = async () => {
 
     // todo取出items里面对应对象数据
 
-    // data.list.forEach((item) => {
-    //   if (!item?.items?.length) return
-    //   item.items.forEach((a) => {
-    //     if (a.product) {
-    //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
-    //     }
-
-    //     item.itemApplicantName = item.applicantName
-    //     item.itemApplicationDeptName = item.applicationDeptName
-    //   })
-    // })
-
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsToList(data.list, {
       id: 'rowItemsId',
