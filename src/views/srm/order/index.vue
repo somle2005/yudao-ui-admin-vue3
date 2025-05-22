@@ -223,7 +223,7 @@ const fieldMap = {
     width: '60px',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  code: '单据编号', // 采购单编号
+  code: '单据编码', // 采购单编号
   billTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
@@ -231,7 +231,7 @@ const fieldMap = {
   },
   // 手动适配添加
   purchaseApplyCode: {
-    label: '源单单号',
+    label: '上游单据编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   supplierName: '供应商',

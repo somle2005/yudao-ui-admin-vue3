@@ -10,9 +10,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // 订单单号
     {
       type: 'input',
-      label: '单据编号',
+      label: '单据编码',
       prop: 'code',
-      placeholder: '请输入单据编号',
+      placeholder: '请输入单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },

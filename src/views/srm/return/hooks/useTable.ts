@@ -6,7 +6,7 @@ import { cloneDeep } from 'lodash-es'
 
 /**
  * 
-单据编号-1
+单据编码-1
 单据日期-1
 审核状态-1
 退款状态-1 缺后端字典
@@ -16,7 +16,7 @@ import { cloneDeep } from 'lodash-es'
 仓库-1
 数量-count产品数量
 源单类型
-源单单号
+上游单据编码
 制单人-1
 制单时间-1
 审核人-1
@@ -32,7 +32,7 @@ export const useTable = () => {
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
   const fieldMap = {
-    code: '单据编号', // 退货单编号
+    code: '单据编码', // 退货单编号
     returnTime: {
       label: '单据日期', // 退货时间
       formatter: dateFormatter2, // 年月日-金蝶
@@ -104,7 +104,7 @@ export const useTable = () => {
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
     source: '源单类型',
-    orderNo: '源单单号',
+    orderNo: '上游单据编码',
 
     creator: '制单人',
     createTime: {

@@ -19,9 +19,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // 入库单号
     {
       type: 'input',
-      label: '单据编号',
+      label: '单据编码',
       prop: 'code',
-      placeholder: '请输入单据编号',
+      placeholder: '请输入单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
@@ -64,7 +64,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '上游单据编码',
-      prop: 'orderNo',
+      prop: 'orderCode',
       placeholder: '请输入上游单据编码',
       attrs: {
         class: '!w-240px',
@@ -93,6 +93,22 @@ export const useSearchForm = (handleQuery, queryParams) => {
       placeholder: '请选择入库状态',
       prop: 'inStatus',
       label: '入库状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择行入库状态',
+      prop: 'itemsInStatus',
+      label: '行入库状态',
       attrs: {
         class: '!w-240px',
         filterable: true,

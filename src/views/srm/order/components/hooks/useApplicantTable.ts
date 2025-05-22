@@ -22,7 +22,7 @@ export const useApplicantTable = () => {
       width: '180px'
     },
     code: {
-      label: '单据编号',
+      label: '单据编码',
       width: '200px',
       slot: 'code',
       wrap: true
@@ -186,9 +186,9 @@ export const useApplicantTable = () => {
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
-      label: '单据编号',
+      label: '单据编码',
       prop: 'code',
-      placeholder: '请输入单据编号',
+      placeholder: '请输入单据编码',
       attrs: {
         class: '!w-160px',
         style: { width: '100%' },

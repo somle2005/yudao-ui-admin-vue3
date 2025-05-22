@@ -19,8 +19,8 @@ export interface PurchaseInVO {
 // ERP 采购入库 API
 export const PurchaseInApi = {
   // 查询采购入库分页
-  getPurchaseInPage: async (params: any) => {
-    return await request.get({ url: `/srm/purchase-in/page`, params })
+  getPurchaseInPage: async (data: any) => {
+    return await request.post({ url: `/srm/purchase-in/page`, data })
   },
 
   // 查询采购入库详情

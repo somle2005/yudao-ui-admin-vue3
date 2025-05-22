@@ -12,7 +12,7 @@ import { cloneDeep } from 'lodash-es'
 /**
  * 
 单据日期-1
-单据编号-1
+单据编码-1
 供应商-1
 审核状态-1
 付款状态-1
@@ -27,7 +27,7 @@ import { cloneDeep } from 'lodash-es'
 申请人-1
 申请部门-1
 源单类型
-源单单号
+上游单据编码
 制单人-1
 制单时间-1
 审核人-1
@@ -60,17 +60,22 @@ export const useTable = () => {
       width: '120px'
     },
     code: {
-      label: '单据编号',
+      label: '单据编码',
       width: '200px'
     }, // 采购单编号
 
+    itemsOrderCode: {
+      label: '上游单据编码',
+      width: '200px',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
     supplierName: '供应商',
 
     inStatus: {
       label: '入库状态',
       slot: 'inStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
-      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 入库状态
+      dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 入库状态
     },
     itemsInStatus: {
       label: '行入库状态',
@@ -87,7 +92,7 @@ export const useTable = () => {
     },
 
     totalItemsQty: {
-      label: '总数量',
+      label: '总数量'
     },
 
     // 分行才展示
@@ -142,12 +147,15 @@ export const useTable = () => {
       wholeOrderEnable: [WHOLE_ORDER_TYPE.mergeCompute, WHOLE_ORDER_TYPE.items]
     },
 
-    itemsQty44: {
-      label: '实际数量-缺后端字段',
+    actualQty: {
+      label: '实际数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
-    qty4: '订单数量-缺后端字段',
+    orderQty: {
+      label: '订单数量',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
 
     itemsContainerRate: {
       label: '箱率',
@@ -192,7 +200,7 @@ export const useTable = () => {
     },
 
     // source: '源单类型',
-    // orderNo: '源单单号',
+    // orderNo: '上游单据编码',
     // reviewComment: '审核意见',
 
     creator: '制单人',

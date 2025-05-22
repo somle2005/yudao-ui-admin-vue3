@@ -1,9 +1,9 @@
 /**
- * erpPurchaseRequestItemNo 采购申请单No 源单单号 统一修改成 purchaseApplyCode
+ * erpPurchaseRequestItemNo 采购申请单No 上游单据编码 统一修改成 purchaseApplyCode
  * 
  *   // 手动适配添加
   purchaseApplyCode: {
-    label: '源单单号',
+    label: '上游单据编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 

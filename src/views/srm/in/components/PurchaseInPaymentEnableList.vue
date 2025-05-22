@@ -88,7 +88,7 @@ const { WHOLE_ORDER_TYPE,wholeOrderMergeCompute } = useWholeOrderMergeComputeUp(
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
 const fieldMap = {
-  code: '单据编号', // 采购单编号
+  code: '单据编码', // 采购单编号
   billTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶

@@ -217,7 +217,7 @@ const fieldMap = {
     width: '180px'
   },
   code: {
-    label: '单据编号',
+    label: '单据编码',
     width: '200px',
     slot: 'code',
     wrap: true

@@ -184,6 +184,8 @@ import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
+import { cloneDeep } from 'lodash-es'
+import { filterObjKey } from '@/utils/transformData'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseIn' })
@@ -207,7 +209,8 @@ const queryParams = reactive({
   accountId: undefined,
   status: undefined,
   remark: undefined,
-  creator: undefined
+  creator: undefined,
+  itemsInStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -223,14 +226,23 @@ let {
   wholeOrderTotal,
 
   switchList,
-  useWholeOrder,
+  useWholeOrder
 } = useTable()
 
 /** 查询列表 */
 const getList = async () => {
   loading.value = true
   try {
-    const data = await PurchaseInApi.getPurchaseInPage(queryParams)
+    const queryData = cloneDeep(queryParams)
+    const bodyData: any = {
+      mainQuery: {},
+      itemQuery: {}
+    }
+
+    bodyData.mainQuery = filterObjKey(queryData, ['code', 'supplierId', 'auditStatus', 'inStatus'])
+    bodyData.itemQuery = filterObjKey(queryData, ['productId', 'orderCode'])
+    bodyData.itemQuery.inStatus = queryParams.itemsInStatus
+    const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
 

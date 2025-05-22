@@ -16,9 +16,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // 入库单号
     {
       type: 'input',
-      label: '单据编号',
+      label: '单据编码',
       prop: 'code',
-      placeholder: '请输入单据编号',
+      placeholder: '请输入单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
@@ -98,9 +98,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // 关联订单
     // {
     //   type: 'input',
-    //   label: '源单单号',
+    //   label: '上游单据编码',
     //   prop: 'orderNo',
-    //   placeholder: '请输入源单单号',
+    //   placeholder: '请输入上游单据编码',
     //   attrs: {
     //     class: '!w-240px',
     //     style: { width: '100%' },

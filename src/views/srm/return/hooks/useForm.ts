@@ -9,14 +9,14 @@ export const useForm = (formType) => {
   )
 
   /**
-   * 必填项 单据编号(后端生成)-单据日期-供应商-币别-汇率-单位-数量-含税单价
+   * 必填项 单据编码(后端生成)-单据日期-供应商-币别-汇率-单位-数量-含税单价
    * 这里只有单据日期-供应商是必填项其余都是非必填项 - 其余都在items里面作为必填项了
    */
   const createRequestFormOptions = () => {
     const list = [
       {
         type: 'input',
-        label: '单据编号',
+        label: '单据编码',
         prop: 'code',
         placeholder: '保存时自动生成',
         attrs: {

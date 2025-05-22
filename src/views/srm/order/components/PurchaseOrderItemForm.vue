@@ -335,7 +335,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column prop="purchaseApplyCode" label="源单单号" width="200" align="center" />
+        <el-table-column prop="purchaseApplyCode" label="上游单据编码" width="200" align="center" />
 
         <el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">
