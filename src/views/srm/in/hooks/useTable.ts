@@ -78,24 +78,24 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-
+    // 最终合计价格（= 产品价格合计 + 税额合计 - 折扣金额 + 其他金额）  totalPrice-和行合并的值不一致
+    // 目前是前端计算出给后端的totalPrice 没有扣除其他金额-折扣=== 所以如果要扣除也无法扣除目前做的这个折扣是总的-后端也无法进行计算-分行似乎无法展示准确扣除的
     totalPrice: {
+      label: '金额'
       // label: '成交金额',
-      label: '金额',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
+    },
+
+    totalItemsQty: {
+      label: '总数量',
     },
 
     // 分行才展示
-    itemsTotalPrice: {
-      // label: '总价',
-      label: '金额',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-
-    itemsQty: {
-      label: '总数量',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
-    },
+    // itemsTotalPrice: {
+    //   // label: '总价',
+    //   label: '金额',
+    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // },
 
     totalWeight: '总毛重',
     totalVolume: '总体积',
@@ -136,10 +136,12 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    itemsQty1: {
+    itemsQty: {
       label: '数量',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      totalItemsKey: 'totalItemsQty',
+      wholeOrderEnable: [WHOLE_ORDER_TYPE.mergeCompute, WHOLE_ORDER_TYPE.items]
     },
+
     itemsQty44: {
       label: '实际数量-缺后端字段',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -325,6 +327,6 @@ export const useTable = () => {
     wholeOrderTotal,
 
     switchList,
-    useWholeOrder,
+    useWholeOrder
   }
 }

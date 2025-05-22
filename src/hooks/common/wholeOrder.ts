@@ -1,5 +1,17 @@
 import { cloneDeep } from 'lodash-es'
 
+const includesType = (type, compareType) => {
+  if (Array.isArray(type)) {
+    return type.includes(compareType)
+  } else {
+    return type === compareType
+  }
+}
+
+const noIncludesType = (type, compareType) => {
+  return !includesType(type, compareType)
+}
+
 export const WHOLE_ORDER_TYPE = {
   items: 'items', // 分行才进行展示 整单不展示
   mergeCompute: 'mergeCompute',
@@ -7,10 +19,12 @@ export const WHOLE_ORDER_TYPE = {
 }
 
 export const createWholeOrder = (allOptions) => {
-  return allOptions.filter((item) => item.wholeOrderEnable !== WHOLE_ORDER_TYPE.items)
+  return allOptions.filter((item) => noIncludesType(item.wholeOrderEnable, WHOLE_ORDER_TYPE.items))
 }
 export const createBranchOrder = (allOptions) => {
-  return allOptions.filter((item) => item.wholeOrderEnable !== WHOLE_ORDER_TYPE.wholeOrder)
+  return allOptions.filter((item) =>
+    noIncludesType(item.wholeOrderEnable, WHOLE_ORDER_TYPE.wholeOrder)
+  )
 }
 
 export const useWholeOrder = (
@@ -86,6 +100,7 @@ export const useWholeOrderMergeCompute = () => {
 /*
  因为计算的是items里面的可能需要转化一下
  外部list显示itemsTaxPrice
+ 传递的是allOptions进行合并计算否则-就会有部分比如items才能出现的分行
  */
 export const useWholeOrderMergeComputeUp = () => {
   const wholeOrderMergeCompute = (list: any[], branchOptions, transformKey = 'items') => {
@@ -106,16 +121,28 @@ export const useWholeOrderMergeComputeUp = () => {
         str = str[0].toLowerCase() + str.slice(1)
         return str
       } catch (e) {
-        console.log(e, 'e-key',key)
+        console.log(e, 'e-key', key)
       }
     }
 
-    const keyList = branchOptions
-      .filter((item) => item.wholeOrderEnable === WHOLE_ORDER_TYPE.mergeCompute)
-      .map((item) => item.prop)
+    const keyList = branchOptions.filter((item) =>
+      includesType(item.wholeOrderEnable, WHOLE_ORDER_TYPE.mergeCompute)
+    )
+    // .map((item) => item.prop)
+
     return cloneDeep(list).map((item) => {
-      keyList.forEach((key) => {
-        item[key] = computeSum(item.items, transformKeyStr(key, transformKey)!)
+      keyList.forEach((keyItem) => {
+        const { prop, totalItemsKey } = keyItem
+        const sumVal = computeSum(item.items, transformKeyStr(prop, transformKey)!)
+        /**
+         * 通过branchOptions获取 totalItemKey 处理总的totalItemsQty值和itemQty的区分
+         * 如果有值就把值给totalItemsKey展示看- itemsQty依然拿的是分行的值
+         */
+        if (totalItemsKey) {
+          item[totalItemsKey] = sumVal
+        } else {
+          item[prop] = sumVal
+        }
       })
       return item
     })
