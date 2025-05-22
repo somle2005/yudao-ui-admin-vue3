@@ -7,7 +7,7 @@
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
       v-model="queryParams"
       :options="searchFormOptions"
       :getModelValue="getSearchFormData"
@@ -443,7 +443,7 @@ const fieldMap = {
   }
 }
 
-const allOptions = transformTableOptions(fieldMap)
+const allOptions = transformTableOptions(fieldMap, { noComputePropList: [] })
 const wrapList = [
   'code',
   'supplierName',
@@ -501,6 +501,12 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
+    // const bodyData = getMainItemBodyData({
+    //   queryParams,
+    //   mainQueryList: ['code', 'supplierId', 'auditStatus', 'inStatus'],
+    //   itemQueryList: ['productId', 'orderCode']
+    // })
+    // bodyData.itemQuery.inStatus = queryParams.itemsInStatus
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
 
     // data.list.forEach((item) => {

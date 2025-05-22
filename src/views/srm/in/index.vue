@@ -184,8 +184,7 @@ import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
-import { cloneDeep } from 'lodash-es'
-import { filterObjKey } from '@/utils/transformData'
+import { getMainItemBodyData } from '@/utils/transform'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseIn' })
@@ -233,14 +232,11 @@ let {
 const getList = async () => {
   loading.value = true
   try {
-    const queryData = cloneDeep(queryParams)
-    const bodyData: any = {
-      mainQuery: {},
-      itemQuery: {}
-    }
-
-    bodyData.mainQuery = filterObjKey(queryData, ['code', 'supplierId', 'auditStatus', 'inStatus'])
-    bodyData.itemQuery = filterObjKey(queryData, ['productId', 'orderCode'])
+    const bodyData = getMainItemBodyData({
+      queryParams,
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inStatus'],
+      itemQueryList: ['productId', 'orderCode']
+    })
     bodyData.itemQuery.inStatus = queryParams.itemsInStatus
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 

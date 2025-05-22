@@ -79,7 +79,7 @@ export const useTable = () => {
     },
     itemsInStatus: {
       label: '行入库状态',
-      slot: 'inStatus',
+      slot: 'itemsInStatus',
       dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -91,9 +91,7 @@ export const useTable = () => {
       // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
 
-    totalItemsQty: {
-      label: '总数量'
-    },
+    totalItemsQty:'总数量',
 
     // 分行才展示
     // itemsTotalPrice: {
@@ -147,12 +145,12 @@ export const useTable = () => {
       wholeOrderEnable: [WHOLE_ORDER_TYPE.mergeCompute, WHOLE_ORDER_TYPE.items]
     },
 
-    actualQty: {
+    itemsActualQty: {
       label: '实际数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
-    orderQty: {
+    itemsOrderQty: {
       label: '订单数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -311,6 +309,7 @@ export const useTable = () => {
      * WHOLE_ORDER_TYPE.items-状态下的值都需要同步更名-1
      * 采购到货作为可选列表带出的数据-采购退货也需要进行注意带出的值
      * PurchaseInPaymentEnableList-可选列表值也要注意修改
+     * 如果有别名id注意自己进行适配
      */
 
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)

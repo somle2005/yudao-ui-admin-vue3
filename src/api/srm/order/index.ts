@@ -182,8 +182,8 @@ interface PurchaseOrderContractDTO {
 // ERP 采购订单 API
 export const PurchaseOrderApi = {
   // 查询采购订单分页
-  getPurchaseOrderPage: async (params: any) => {
-    return await request.get({ url: `/srm/purchase-order/page`, params })
+  getPurchaseOrderPage: async (data: any) => {
+    return await request.post({ url: `/srm/purchase-order/page`, data })
   },
 
   // 查询采购订单详情
