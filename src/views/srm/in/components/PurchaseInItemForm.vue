@@ -321,7 +321,7 @@ import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/co
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
-import { currencyNameChange } from '@/utils/operate/purchase'
+import { currencyNameChange } from '@/utils/operate/srm'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { SRM_OPERATE_MAP } from '../../common/constant'
 

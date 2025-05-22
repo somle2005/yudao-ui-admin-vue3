@@ -204,7 +204,7 @@ import {
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
 import { useSearchForm } from './hooks/search'
-import { generateContract, mergeItems } from '@/utils/operate/purchase'
+import { generateContract, mergeItems } from '@/utils/operate/srm'
 
 const { tableOptions, transformTableOptions } = useTableData()
 

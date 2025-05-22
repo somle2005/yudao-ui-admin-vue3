@@ -67,7 +67,7 @@ import { cloneDeep } from 'lodash-es'
 import { useWholeOrderMergeCompute, useWholeOrderMergeComputeUp } from '@/hooks/common/wholeOrder'
 import { PurchaseOrderApi } from '@/api/srm/order'
 import { useSearchForm } from './hooks/search'
-import { currencyNameChange } from '@/utils/operate/purchase'
+import { currencyNameChange } from '@/utils/operate/srm'
 
 // 暂时都是分行展示逻辑
 

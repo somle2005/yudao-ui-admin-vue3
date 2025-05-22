@@ -377,7 +377,7 @@ import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { updateModelValue } from '@/utils/high/index'
-import { getDeclaredType } from '@/utils/operate/purchase'
+import { getDeclaredType } from '@/utils/operate/srm'
 import { getWMSWarehouseList } from '@/commonData/wms'
 
 /**
