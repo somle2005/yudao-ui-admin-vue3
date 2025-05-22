@@ -4,7 +4,7 @@ import { FormOptions } from '@/components/SmForm/src/types/types'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { getDictOptions } from '@/utils/dict'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
-import { mergeItemsToList, resetQueryParams } from '@/utils/transformData'
+import { mergeItemsToList, mergeItemsUpToList, resetQueryParams } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
 
 export const useApplicantTable = () => {
@@ -50,38 +50,38 @@ export const useApplicantTable = () => {
       width: '120px'
     },
 
-    unOrderCount: '未订购数量',
-    orderClosedQty: '已订购数量',
-    inQty: '已入库数量',
+    itemsUnOrderCount: '未订购数量',
+    itemsOrderClosedQty: '已订购数量',
+    itemsInQty: '已入库数量',
     // 改造别名
-    rowOrderStatus: {
+    itemsOrderStatus: {
       label: '行采购状态',
-      slot: 'rowOrderStatus'
+      slot: 'itemsOrderStatus'
     },
     // 改造别名
-    rowOffStatus: {
+    itemsOffStatus: {
       label: '行关闭状态',
-      slot: 'rowOffStatus'
+      slot: 'itemsOffStatus'
     },
-    productBarCode: {
+    itemsProductBarCode: {
       label: '产品编码',
       slot: 'productBarCode',
       width: '200px',
       wrap: true
     },
-    productName: {
+    itemsProductName: {
       label: '产品名称',
       slot: 'productName',
       width: '200px',
       wrap: true
     },
-    productUnitName: '单位',
-    count: '申请数量',
-    approvedQty: '批准数量',
-    referenceUnitPrice: '参考单价',
-    actTaxPrice: '含税单价',
-    taxPrice: '税额',
-    allAmount: '价税合计',
+    itemsProductUnitName: '单位',
+    itemsQty: '申请数量',
+    itemsApprovedQty: '批准数量',
+    itemsReferenceUnitPrice: '参考单价',
+    itemsActTaxPrice: '含税单价',
+    itemsTaxPrice: '税额',
+    itemsAllAmount: '价税合计',
 
     creator: '制单人',
     createTime: {
@@ -158,11 +158,12 @@ export const useApplicantTable = () => {
     try {
       // 展示分行数据
       const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-      list.value = mergeItemsToList(data.list, {
-        id: 'purchaseApplyItemId',
-        orderStatus: 'rowOrderStatus',
-        offStatus: 'rowOffStatus'
-      })
+      list.value = mergeItemsUpToList(data.list)
+      // list.value = mergeItemsToList(data.list, {
+      //   id: 'purchaseApplyItemId',
+      //   orderStatus: 'rowOrderStatus',
+      //   offStatus: 'itemsOffStatus'
+      // })
 
       // 内部有按顺序把对应item数据取出操作
 

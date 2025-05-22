@@ -197,7 +197,7 @@ import PurchaseOrderForm from './PurchaseOrderForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { cloneDeep } from 'lodash-es'
-import { mergeItemsToList } from '@/utils/transformData'
+import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
 import {
   useWholeOrder,
   useWholeOrderMergeCompute,
@@ -213,8 +213,12 @@ const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
+/**
+ * 如果要支持整单计算 itemsList.value = mergeItemsUpToList(data.list, 'items', { qty: 'itemsQty1' })
+ * 参照这个items是总数 itemsQty1是适配的分行数
+ */
 const fieldMap = {
-  rowItemsId: {
+  itemsId: {
     label: '行id',
     width: '60px',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -225,6 +229,7 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
+  // 手动适配添加
   purchaseApplyCode: {
     label: '源单单号',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -261,19 +266,19 @@ const fieldMap = {
   //   label: '产品编码',
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
-  barCode: {
+  itemsBarCode: {
     label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  productName: {
+  itemsProductName: {
     label: '产品名称',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  declaredType: {
+  itemsDeclaredType: {
     label: '海关品名',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  declaredTypeEn: {
+  itemsDeclaredTypeEn: {
     label: '海关品名(英文)',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -284,27 +289,27 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
   },
 
-  rowExecuteStatus: {
+  itemsExecuteStatus: {
     label: '行执行状态',
-    slot: 'rowExecuteStatus',
+    slot: 'itemsExecuteStatus',
     dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowInStatus: {
+  itemsInStatus: {
     label: '行入库状态',
-    slot: 'rowInStatus',
+    slot: 'itemsInStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowPayStatus: {
+  itemsPayStatus: {
     label: '行付款状态',
-    slot: 'rowPayStatus',
+    slot: 'itemsPayStatus',
     dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowOffStatus: {
+  itemsOffStatus: {
     label: '行关闭状态',
-    slot: 'rowOffStatus',
+    slot: 'itemsOffStatus',
     dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -312,7 +317,7 @@ const fieldMap = {
   // 8:  '入库核销状态',
 
   // 海关品名
-  containerRate: {
+  itemsContainerRate: {
     label: '箱率',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -322,39 +327,43 @@ const fieldMap = {
   //   formatter: dateFormatter2, // 年月日-金蝶
   //   width: '200px'
   // },
-  deliveryTime: {
+  itemsDeliveryTime: {
     label: '交货日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   // 总验货通过数-只有整单的时候才进行展示
-  totalInspectionPassCount: {
+  itemsTotalInspectionPassCount: {
     width: '250px',
     label: '总验货通过数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  totalCompletionPassCount: {
+  itemsTotalCompletionPassCount: {
     width: '250px',
     label: '总完工数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
-  waitInCount: {
+  itemsWaitInCount: {
     label: '待收数量', // 待入库数量-待收数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  qty: {
+  itemsQty: {
     label: '下单数量', // 产品下单数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  inboundClosedQty: {
+  itemsInboundClosedQty: {
     label: '已入库数量', // 采购入库数量-已收数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  returnCount: {
+  itemsReturnCount: {
     label: '退货数量', // 采购退货数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 整单展示
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 整单展示
   },
   // items-returnCount-采购退货数量
   // currencyId: {
@@ -364,27 +373,31 @@ const fieldMap = {
   // },
 
   currencyName: '币种',
-  // itemCurrencyName: {
+  // itemsCurrencyName: {
   //   label: '币种',
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
 
-  payPrice: {
+  itemsPayPrice: {
     label: '已付款金额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
 
-  actTaxPrice: {
+  itemsActTaxPrice: {
     label: '含税单价',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  taxPrice: {
+  itemsTaxPrice: {
     label: '税额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  allAmount: {
+  itemsAllAmount: {
     label: '价税合计',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
 
   // 取后端总的税额无法进行分行展示数据了
@@ -397,11 +410,11 @@ const fieldMap = {
   //   wholeOrderEnable: 'items',
   // }, // items
 
-  applicantName: {
+  itemsApplicantName: {
     label: '申请人',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  departmentName: {
+  itemsDepartmentName: {
     label: '申请部门',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -509,18 +522,43 @@ const getList = async () => {
     //   })
     // })
 
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+    // 修改前
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'rowItemsId',
+    //   status: 'rowStatus',
+    //   // orderStatus: 'rowOrderStatus', 无该状态
+    //   offStatus: 'rowOffStatus',
+    //   executeStatus: 'rowExecuteStatus',
+    //   inStatus: 'rowInStatus',
+    //   payStatus: 'rowPayStatus'
+    //   // currencyName: 'itemCurrencyName',
+    // })
 
-    itemsList.value = mergeItemsToList(data.list, {
-      id: 'rowItemsId',
-      status: 'rowStatus',
-      // orderStatus: 'rowOrderStatus', 无该状态
-      offStatus: 'rowOffStatus',
-      executeStatus: 'rowExecuteStatus',
-      inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus'
-      // currencyName: 'itemCurrencyName',
+    // 修改后
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   // orderStatus: 'rowOrderStatus', 无该状态
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inStatus: 'itemsInStatus',
+    //   payStatus: 'itemsPayStatus'
+    //   // currencyName: 'itemsCurrencyName',
+    // })
+
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+    itemsList.value = mergeItemsUpToList(data.list, 'items', {
+      purchaseApplyCode: 'purchaseApplyCode'
     })
+
+    /**
+     * 整单的时候才对mergeCompute进行合并计算-展示合并计算的
+     * 如果是分行的时候就要展示分行的
+     * 这样的话比如采购到货的时候 既要展示分行又要展示合并计算的逻辑就行不通了。
+     * 所以要满足这种就得加字段-涉及到options联动-设置表格 通过字段名进行区分
+     */
+    // itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+
     // 后续需要补充itemsTotal
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
@@ -637,7 +675,7 @@ onMounted(async () => {
 })
 
 const mergeOrder = async () => {
-  mergeItems(wholeOrderEnable, selectionList, openForm, 'rowItemsId')
+  mergeItems(wholeOrderEnable, selectionList, openForm, 'itemsId')
 }
 
 const generateContractOrder = async () => {
