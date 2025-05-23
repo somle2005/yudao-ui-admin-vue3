@@ -351,10 +351,10 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         requestFormOptions.value = createAuditFormOptions(createRequestFormOptions(), auditType)
       },
       merge: () => {
-        getPortInfoList(portInfoList)
+        getPortInfoList(portInfoList, { label: 'name', value: 'name' })
         getCurrencyList(currencyList)
         getAccountList(accountList)
-        requestFormOptions.value = createMergeFormOptions()
+        requestFormOptions.value = createMergeFormOptions() as any
       },
       update: () => {
         requestFormOptions.value = updateFormOptions(createRequestFormOptions())

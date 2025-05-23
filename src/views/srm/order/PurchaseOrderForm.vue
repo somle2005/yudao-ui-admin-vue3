@@ -496,7 +496,7 @@ const open = async (type: string, id?: number, data?: any) => {
   operateAudit(type)
   resetForm()
 
-  getPortInfoList(portInfoList)
+  getPortInfoList(portInfoList, { label: 'name', value: 'name' })
   getPaymentTermsList(paymentTermsList)
   getCurrencyList(currencyList)
   // 加载供应商列表
