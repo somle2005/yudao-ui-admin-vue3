@@ -7,7 +7,7 @@
         class="-mb-15px"
         ref="queryFormRef"
         :inline="true"
-        label-width="68px"
+        label-width="100px"
         v-model="queryParams"
         :options="searchFormOptions"
         :getModelValue="getSearchFormData"
@@ -46,11 +46,12 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import { resetQueryParams } from '@/utils/transformData'
+import { mergeItemsUpToList, resetQueryParams } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseInApi } from '@/api/srm/in'
 import { useTable } from './hooks/useTable'
+import { getMainItemBodyData } from '@/utils/transform'
 
 // 暂时都是分行展示逻辑
 
@@ -79,10 +80,7 @@ let {
   itemsTotal,
   wholeOrderTotal,
 
-  wholeOrderMergeCompute,
-  mergeItemsToList,
-  switchList,
-  useWholeOrder
+  switchList
 } = useTable()
 
 // 这里只有整单展示了-退货单是整单退货-带出子项所有id
@@ -90,24 +88,29 @@ const getList = async () => {
   queryParams.auditStatus = 5 // 已审核
   loading.value = true
   try {
-    const data = await PurchaseInApi.getPurchaseInPage(queryParams)
+    const bodyData = getMainItemBodyData({
+      queryParams,
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inStatus'],
+      itemQueryList: ['productId', 'orderCode']
+    })
+    bodyData.itemQuery.inStatus = queryParams.itemsInStatus
+    const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
 
-    data.list.forEach((item) => {
-      if (!item?.items?.length) return
-      item.items.forEach((a) => {
-        if (a.product) {
-          a.productName = a.product.name
-          a.productBarCode = a.product.barCode
-        }
+    // data.list.forEach((item) => {
+    //   if (!item?.items?.length) return
+    //   item.items.forEach((a) => {
+    //     if (a.product) {
+    //       a.productName = a.product.name
+    //       a.productBarCode = a.product.barCode
+    //     }
 
-        item.itemApplicantName = item.applicantName
-        item.itemApplicationDeptName = item.applicationDeptName
-      })
-    })
+    //     item.itemApplicantName = item.applicantName
+    //     item.itemApplicationDeptName = item.applicationDeptName
+    //   })
+    // })
 
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     // itemsList.value = mergeItemsToList(data.list, {
     //   id: 'itemsId',
     //   status: 'itemsStatus',
@@ -119,8 +122,6 @@ const getList = async () => {
     // })
 
     switchList(list, total, data)
-    // list.value = data.list
-    // total.value = data.total
   } finally {
     loading.value = false
   }
@@ -133,20 +134,47 @@ const handleQuery = () => {
 }
 
 const handleCurrentChange = (row: any) => {
-  console.log('当前选中项', row)
   // 转换成整单数据
-  // selectionList.value = [row]
-  selectionList.value = mergeItemsToList([row], {
-    id: 'itemsId',
-    status: 'itemsStatus',
-    orderStatus: 'itemsOrderStatus',
-    offStatus: 'itemsOffStatus',
-    executeStatus: 'itemsExecuteStatus',
-    inStatus: 'itemsInStatus',
-    payStatus: 'itemsPayStatus',
-    currencyId: 'currencyId'
+  selectionList.value = mergeItemsUpToList([row], 'items', {
+    productId: 'productId',
+    productName: 'productName',
+    // productBarCode,
+    barCode: 'barCode',
+    productUnitId: 'productUnitId',
+    productUnitName:'productUnitName',
+    productPrice: 'productPrice',
+    qty: 'qty',
+
+    taxPercent: 'taxPercent',
+    taxPrice: 'taxPrice',
+    actTaxPrice: 'actTaxPrice',
+    allAmount: 'allAmount',
+    // remark:'remark',
+    containerRate: 'containerRate',
+
+    warehouseId: 'warehouseId',
+    warehouseName: 'warehouseName',
+    source: 'source',
+    currencyId: 'currencyId',
+    currencyName: 'currencyName',
+    applicantId: 'applicantId',
+    applicantName: 'applicantName',
+    applicationDeptId: 'applicationDeptId',
+    applicationDeptName: 'applicationDeptName',
+    declaredType: 'declaredType'
   })
-  console.log(selectionList.value, 'selectionList.value')
+  // selectionList.value = mergeItemsToList([row], {
+  //   id: 'itemsId',
+  //   status: 'itemsStatus',
+  //   orderStatus: 'itemsOrderStatus',
+  //   offStatus: 'itemsOffStatus',
+  //   executeStatus: 'itemsExecuteStatus',
+  //   inStatus: 'itemsInStatus',
+  //   payStatus: 'itemsPayStatus',
+  //   currencyId: 'currencyId'
+  // })
+  // console.log(selectionList.value, 'selectionList.value')
+  // console.log('当前选中项', row)
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)

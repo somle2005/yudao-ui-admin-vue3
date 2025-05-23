@@ -5,15 +5,13 @@ import {
   getUserList,
   getWarehouseList
 } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
-  const userList = getUserList()
   const productList = getProductList(null, { label: 'barCode', value: 'id' })
   const supplierList = getSupplierList()
-  const warehouseList = getWarehouseList()
-  const accountList = getAccountList()
   const searchFormOptions = ref<Array<FormOptions>>([
     // 入库单号
     {
@@ -28,39 +26,20 @@ export const useSearchForm = (handleQuery, queryParams) => {
       }
     },
     // 产品用产品编码
-    // {
-    //   type: 'select',
-    //   placeholder: '请选择产品编码',
-    //   prop: 'productId',
-    //   label: '产品编码',
-    //   attrs: {
-    //     clearable: true,
-    //     filterable: true,
-    //     class: '!w-240px',
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: productList
-    // },
-
     {
-      type: 'date-picker',
-      placeholder: '请选择入库时间',
-      prop: 'inTime',
-      label: '入库时间',
+      type: 'select',
+      placeholder: '请选择产品编码',
+      prop: 'productId',
+      label: '产品编码',
       attrs: {
         clearable: true,
-        type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
-        'start-placeholder': '开始日期',
-        'end-placeholder': '结束日期',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+        filterable: true,
         class: '!w-240px',
         style: {
           width: '100%'
         }
-      }
+      },
+      children: productList
     },
 
     {
@@ -80,27 +59,37 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
 
     // {
-    //   type: 'select',
-    //   placeholder: '请选择仓库',
-    //   prop: 'warehouseId',
-    //   label: '仓库',
+    //   type: 'input',
+    //   label: '上游单据编码',
+    //   prop: 'orderCode',
+    //   placeholder: '请输入上游单据编码',
     //   attrs: {
     //     class: '!w-240px',
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: warehouseList
+    //     style: { width: '100%' },
+    //     clearable: true
+    //   }
     // },
+    {
+      type: 'select',
+      placeholder: '请选择审核状态',
+      prop: 'auditStatus',
+      label: '审核状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    },
 
-    // 制单人-创建人-注意后端是否处理了
     {
       type: 'select',
-      placeholder: '请选择制单人',
-      prop: 'creator',
-      label: '制单人',
+      placeholder: '请选择入库状态',
+      prop: 'inStatus',
+      label: '入库状态',
       attrs: {
         class: '!w-240px',
         filterable: true,
@@ -109,25 +98,14 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: userList
+      children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
     },
-    // 关联订单
-    {
-      type: 'input',
-      label: '上游单据编码',
-      prop: 'orderNo',
-      placeholder: '请输入上游单据编码',
-      attrs: {
-        class: '!w-240px',
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
+
     // {
     //   type: 'select',
-    //   placeholder: '请选择结算账户',
-    //   prop: 'auditorId',
-    //   label: '结算账户',
+    //   placeholder: '请选择行入库状态',
+    //   prop: 'itemsInStatus',
+    //   label: '行入库状态',
     //   attrs: {
     //     class: '!w-240px',
     //     filterable: true,
@@ -136,37 +114,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //       width: '100%'
     //     }
     //   },
-    //   children: accountList
-    // },
-    {
-      type: 'select',
-      placeholder: '请选择付款状态',
-      prop: 'payStatus',
-      label: '付款状态',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.SRM_PAYMENT_STATUS)
-    },
-    // {
-    //   type: 'select',
-    //   placeholder: '请选择审核状态',
-    //   prop: 'auditStatus',
-    //   label: '审核状态',
-    //   attrs: {
-    //     class: '!w-240px',
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    //   children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
     // }
   ])
 

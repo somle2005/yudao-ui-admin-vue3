@@ -249,7 +249,8 @@ const addItem = (selectionList: any[]) => {
         itemsId, //list记得转化
         productId,
         productName,
-        productBarCode,
+        // productBarCode,
+        barCode,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         // model, // //列表要转化取item-product里面数据
@@ -261,7 +262,7 @@ const addItem = (selectionList: any[]) => {
         taxPrice,
         actTaxPrice,
         allAmount,
-        remark,
+        itemsRemark,
         containerRate,
 
         warehouseId,
@@ -270,10 +271,12 @@ const addItem = (selectionList: any[]) => {
         source,
 
         currencyId,
+        currencyName,
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName
+        applicationDeptName,
+        declaredType
       } = item
 
       /**
@@ -285,7 +288,8 @@ const addItem = (selectionList: any[]) => {
         [itemIdKey]: itemsId, //list记得转化
         productId,
         productName,
-        productBarCode,
+        // productBarCode,
+        barCode,
         productUnitName, //列表要转化取item-product里面数据
         productUnitId, // 列表要转化取item-product里面数据
         // model, // //列表要转化取item-product里面数据
@@ -297,7 +301,7 @@ const addItem = (selectionList: any[]) => {
         taxPrice,
         actTaxPrice,
         allAmount,
-        remark,
+        remark: itemsRemark,
         containerRate,
 
         warehouseId,
@@ -306,14 +310,27 @@ const addItem = (selectionList: any[]) => {
         source,
 
         currencyId,
+        currencyName,
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName
+        applicationDeptName,
+        declaredType
       }
       return obj
     })
-    formData.value.items = distinctList(items, selectList, itemIdKey)
+    const itemsList = distinctList(items, selectList, itemIdKey)
+    const model = formRef.value.getFormData()
+    if (itemsList?.length) {
+      model.discountPercent = itemsList[0].discountPercent
+      model.otherPrice = itemsList[0].otherPrice
+      model.accountId = itemsList[0].accountId
+    } else {
+      model.discountPercent = undefined
+      model.otherPrice = undefined
+      model.accountId = undefined
+    }
+    formData.value.items = itemsList
   })
 }
 </script>

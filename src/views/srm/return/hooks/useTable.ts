@@ -2,7 +2,8 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import {
   useWholeOrderMergeCompute,
   useWholeOrder,
-  createBranchOrder
+  createBranchOrder,
+  useWholeOrderMergeComputeUp
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
@@ -30,7 +31,7 @@ import { cloneDeep } from 'lodash-es'
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
 
-  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
+  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeComputeUp()
 
   // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
@@ -39,7 +40,7 @@ export const useTable = () => {
     returnTime: {
       label: '单据日期', // 退货时间
       formatter: dateFormatter2, // 年月日-金蝶
-      width: '200px'
+      width: '160px'
     },
     code: '单据编码', // 退货单编号
     supplierName: '供应商',
@@ -96,10 +97,6 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    itemsOrderQty: {
-      label: '订单数量',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
     itemsActTaxPrice: {
       label: '含税单价',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -172,7 +169,7 @@ export const useTable = () => {
       width: '200px'
     },
 
-    auditor: '审核人',
+    auditorName: '审核人',
     auditTime: {
       label: '审核时间',
       formatter: dateFormatter,
@@ -189,7 +186,9 @@ export const useTable = () => {
     }
   }
 
-  const allOptions = transformTableOptions(fieldMap)
+  const allOptions = transformTableOptions(fieldMap,{
+    noComputePropList: ['code', 'itemsBarCode', 'supplierName', 'warehouseName']
+  })
   const wrapList = [
     'code',
     'supplierName',
