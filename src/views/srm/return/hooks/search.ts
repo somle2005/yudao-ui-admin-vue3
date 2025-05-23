@@ -1,19 +1,15 @@
-import {
-  getAccountList,
-  getProductList,
-  getUserList,
-  getWarehouseList
-} from '@/commonData'
+import { getAccountList, getProductList, getSupplierList, getUserList } from '@/commonData'
+import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
-  const userList = getUserList()
+  // const userList = getUserList()
+  // const accountList = getAccountList()
   const productList = getProductList(null, { label: 'barCode', value: 'id' })
-  const warehouseList = getWarehouseList()
-  const accountList = getAccountList()
+  const WMSWarehouseList = getWMSWarehouseList()
+  const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
-    // 入库单号
     {
       type: 'input',
       label: '单据编码',
@@ -25,6 +21,54 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
+
+    {
+      type: 'select',
+      placeholder: '请选择供应商',
+      prop: 'supplierId',
+      label: '供应商',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: supplierList
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择审核状态',
+      prop: 'auditStatus',
+      label: '审核状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择出库状态-缺后端字段',
+      prop: 'auditStatus1',
+      label: '出库状态-缺后端字段',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    },
+
     // 产品用产品编码
     {
       type: 'select',
@@ -43,26 +87,16 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
 
     {
-      type: 'date-picker',
-      placeholder: '请选择单据日期',
-      prop: 'returnTime',
-      label: '单据日期',
+      type: 'input',
+      label: '上游单据编码却后端字段',
+      prop: 'code',
+      placeholder: '请输入上游单单据编码却后端字段',
       attrs: {
-        clearable: true,
-        type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
-        'start-placeholder': '开始日期',
-        'end-placeholder': '结束日期',
-        defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
         class: '!w-240px',
-        style: {
-          width: '100%'
-        }
+        style: { width: '100%' },
+        clearable: true
       }
     },
-
-
-
     {
       type: 'select',
       placeholder: '请选择仓库',
@@ -76,25 +110,44 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: warehouseList
+      children: WMSWarehouseList
     },
 
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择单据日期',
+    //   prop: 'returnTime',
+    //   label: '单据日期',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'daterange',
+    //     'value-format': 'YYYY-MM-DD HH:mm:ss',
+    //     'start-placeholder': '开始日期',
+    //     'end-placeholder': '结束日期',
+    //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
+    //     class: '!w-240px',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
+
     // 制单人-创建人-注意后端是否处理了
-    {
-      type: 'select',
-      placeholder: '请选择制单人',
-      prop: 'creator',
-      label: '制单人',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: userList
-    }, 
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择制单人',
+    //   prop: 'creator',
+    //   label: '制单人',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: userList
+    // }
     // 关联订单
     // {
     //   type: 'input',
@@ -137,21 +190,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   },
     //   children: getIntDictOptions(DICT_TYPE.SRM_PAYMENT_STATUS)
     // },
-    {
-      type: 'select',
-      placeholder: '请选择审核状态',
-      prop: 'auditStatus',
-      label: '审核状态',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
-    },
+
     // refundStatus退款状态
   ])
 

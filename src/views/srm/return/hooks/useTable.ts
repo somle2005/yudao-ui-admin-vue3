@@ -36,19 +36,12 @@ export const useTable = () => {
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
   const fieldMap = {
-    code: '单据编码', // 退货单编号
     returnTime: {
       label: '单据日期', // 退货时间
       formatter: dateFormatter2, // 年月日-金蝶
       width: '200px'
     },
-
-    // items-product带出barCode 产品编码 name
-    itemsBarCode: {
-      label: '产品编码',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-
+    code: '单据编码', // 退货单编号
     supplierName: '供应商',
 
     auditStatus: {
@@ -57,24 +50,31 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
-    refundStatus: {
-      label: '退款状态', // 缺后端字典
-      slot: 'refundStatus',
+    auditStatus1: {
+      label: '出库状态-缺后端字段',
+      slot: 'auditStatus1',
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
-    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
-    totalPrice: {
-      label: '成交金额',
-      // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
-    },
+    price1: '采购总价-缺后端字段',
 
+    totalItemsQty: '总数',
+
+    totalWeight: '总毛重',
+    totalVolume: '总体积',
+
+    // 下面是分行内容
+    // 产品编码	产品名称	仓库	数量	箱率	单价	含税单价	税额	价税合计	上游单据编码	申请部门
+
+    // items-product带出barCode 产品编码 name
+    itemsBarCode: {
+      label: '产品编码',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
     itemsProductName: {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    // 海关品名 产品id里面有(能带出来吗)等后端
-
     itemsWarehouseName: {
       label: '仓库',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -82,8 +82,64 @@ export const useTable = () => {
 
     itemsQty: {
       label: '数量',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+      totalItemsKey: 'totalItemsQty',
+      wholeOrderEnable: [WHOLE_ORDER_TYPE.mergeCompute, WHOLE_ORDER_TYPE.items]
     },
+    itemsContainerRate: {
+      label: '箱率',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+    // 行才展示这些价格就不汇总计算了-接口items里面有返回
+    itemsProductPrice: {
+      label: '单价',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+    itemsOrderQty: {
+      label: '订单数量',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsActTaxPrice: {
+      label: '含税单价',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsTaxPrice: {
+      label: '税额',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+    itemsAllAmount: {
+      label: '价税合计',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    // itemsApplicantName: {
+    //   label: '申请人',
+    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // },
+    itemsOrderCode: {
+      label: '上游单据编码-缺少后端字段',
+      width: '200px',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+    itemsApplicationDeptName: {
+      label: '申请部门',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    },
+
+    // refundStatus: {
+    //   label: '退款状态', // 缺后端字典
+    //   slot: 'refundStatus',
+    //   dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
+    // },
+
+    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
+    // totalPrice: {
+    //   label: '成交金额'
+    //   // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
+    // },
+
+    // 海关品名 产品id里面有(能带出来吗)等后端
 
     // actTaxPrice: {
     //   label: '含税单价',
