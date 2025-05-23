@@ -544,6 +544,7 @@ const open = async (type: string, id?: number, data?: any) => {
 
       if (type === 'merge') {
         dialogTitle.value = '合并到货'
+        formData.value.items = data.items
         // const inFormData = getFormData()
         // mergeSelectItemsData(inFormData, data)
       }
