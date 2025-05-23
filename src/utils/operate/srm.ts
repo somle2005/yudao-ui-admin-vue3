@@ -1,6 +1,7 @@
 import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
 import { CustomProductApi } from '@/api/tms/custom-product'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { isDifferentProp } from '../judge'
 
 const message = useMessage() // 消息弹窗
 export const mergeItems = async (
@@ -18,6 +19,10 @@ export const mergeItems = async (
     return
   }
 
+  if (isDifferentProp(selectionList.value, 'supplierId')) {
+    message.error('不同供应商不能合并到货')
+    return
+  }
   const items: any = []
   // 如果不是审核状态的要进行剔除
   const selectList: any = selectionList.value.filter(
@@ -50,7 +55,10 @@ export const mergeItems = async (
    */
 
   const data = { items }
+  // 传递id通过详情接口查询带出第一个选项的主单数据
+  // 但是内部items数据取的是data数据
   openForm('merge', selectList[0].id, data)
+  // openForm('merge', null, data)
   // mergeLoading.value = false
 }
 

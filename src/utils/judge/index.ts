@@ -70,3 +70,22 @@ export const getRepeatMap = (
     console.log(e, '报错了')
   }
 }
+
+// 查找数组中是否有不同prop属性
+export const isDifferentProp = (list: any[], prop: string) => {
+  // prop-supplierId
+  const saveList: number[] = []
+  let flag = false
+  for (let i = 0; i < list.length; i++) {
+    const propId = list[i][prop]
+    if (!saveList.includes(propId)) {
+      saveList.push(propId)
+      // 说明有不同的
+      if (saveList.length > 1) {
+        flag = true
+        break
+      }
+    }
+  }
+  return flag
+}
