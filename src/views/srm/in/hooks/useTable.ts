@@ -201,7 +201,7 @@ export const useTable = () => {
     // orderNo: '上游单据编码',
     // reviewComment: '审核意见',
 
-    creator: '制单人',
+    creatorName: '制单人',
     createTime: {
       label: '制单时间',
       formatter: dateFormatter,

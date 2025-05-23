@@ -38,12 +38,29 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['srm:purchase-return:submitAudit']"
+          v-hasPermi="['srm:purchase-return:submit-audit']"
         >
           提交审核
         </el-button>
 
-        <el-button
+        <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px mr-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['srm:purchase-return:review']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <!-- <el-button
           :disabled="disabledBtn"
           type="primary"
           plain
@@ -60,7 +77,7 @@
           v-hasPermi="['srm:purchase-return:changeRefundStatus']"
         >
           撤销退款
-        </el-button>
+        </el-button> -->
 
         <el-switch
           v-model="wholeOrderEnable"
@@ -117,7 +134,7 @@
         >
           编辑
         </el-button>
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
@@ -134,7 +151,7 @@
           v-if="scope.row.auditStatus === 5"
         >
           反审核
-        </el-button>
+        </el-button> -->
         <el-button
           link
           type="danger"
@@ -290,8 +307,13 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changeRefundStatusBatch } =
-  useBatch(selectionList, getList, wholeOrderEnable, openForm)
+const {
+  oneSelectDisabledBtn,
+  disabledBtn,
+  handleUpdateStatus,
+  handleSubmitAuditBatch,
+  changeRefundStatusBatch
+} = useBatch(selectionList, getList, wholeOrderEnable, openForm)
 
 /** 初始化 **/
 onMounted(async () => {

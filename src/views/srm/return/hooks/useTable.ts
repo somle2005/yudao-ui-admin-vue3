@@ -44,7 +44,7 @@ export const useTable = () => {
     },
 
     // items-product带出barCode 产品编码 name
-    barCode: {
+    itemsBarCode: {
       label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -66,21 +66,21 @@ export const useTable = () => {
     // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
     totalPrice: {
       label: '成交金额',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
 
-    productName: {
+    itemsProductName: {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
     // 海关品名 产品id里面有(能带出来吗)等后端
 
-    warehouseName: {
+    itemsWarehouseName: {
       label: '仓库',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    qty: {
+    itemsQty: {
       label: '数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
@@ -106,8 +106,8 @@ export const useTable = () => {
     //   label: '申请部门',
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
-    source: '源单类型',
-    orderNo: '上游单据编码',
+    // source: '源单类型',
+    // orderNo: '上游单据编码',
 
     creator: '制单人',
     createTime: {
@@ -141,7 +141,7 @@ export const useTable = () => {
     'reviewComment',
     'productName',
     'remark',
-    'orderNo',
+    // 'orderNo',
     'warehouseName'
   ]
   allOptions.forEach((item: any) => {

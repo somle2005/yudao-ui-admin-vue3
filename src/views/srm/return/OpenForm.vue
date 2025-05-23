@@ -197,16 +197,16 @@ const submitForm = async () => {
   try {
     const data = formData.value as unknown as PurchaseOrderVO
     if (formType.value === 'create') {
-      await PurchaseOrderApi.createPurchaseOrder(data)
+      await PurchaseReturnApi.createPurchaseReturn(data)
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
-      await PurchaseOrderApi.updatePurchaseOrder(data)
+      await PurchaseReturnApi.updatePurchaseReturn(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
-      await PurchaseOrderApi.updatePurchaseOrderAuditStatus({
+      await PurchaseReturnApi.updatePurchaseReturnAuditStatus({
+        ids: [data.id],
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
-        inId: data.id,
         reviewComment: data.reviewComment
       })
       message.success(t('common.updateSuccess'))

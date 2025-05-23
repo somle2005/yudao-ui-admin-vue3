@@ -40,7 +40,8 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
       await PurchaseReturnApi.updatePurchaseReturnAuditStatus({
         reviewed,
         pass: true,
-        ids: [id]
+        ids: [id],
+        // reviewComment
       })
       message.success('反审核成功')
       // 刷新列表
@@ -66,8 +67,10 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
   }
 
   const disabledBtn = computed(() => selectionList.value.length === 0)
+  const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
   return {
+    oneSelectDisabledBtn,
     disabledBtn,
     handleSubmitAuditBatch,
     handleUpdateStatus,
