@@ -1,6 +1,6 @@
 <!-- 选择采购入库（仅展示可付款）-->
 <template>
-  <Dialog title="选择采购入库项（仅展示已审核）" v-model="dialogVisible" width="1000">
+  <Dialog title="选择采购入库项（仅展示已审核）" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
