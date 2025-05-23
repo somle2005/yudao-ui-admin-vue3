@@ -1,7 +1,11 @@
 import { useTableData } from '@/components/SmTable/src/utils'
-import { useWholeOrderMergeCompute, useWholeOrder, createBranchOrder } from '@/hooks/common/wholeOrder'
+import {
+  useWholeOrderMergeCompute,
+  useWholeOrder,
+  createBranchOrder
+} from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
-import { mergeItemsToList } from '@/utils/transformData'
+import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
 
 /**
@@ -44,7 +48,7 @@ export const useTable = () => {
       label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-  
+
     supplierName: '供应商',
 
     auditStatus: {
@@ -59,7 +63,6 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
-    
     // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
     totalPrice: {
       label: '成交金额',
@@ -159,6 +162,11 @@ export const useTable = () => {
 
   // 整单分行列表切换
   const switchList = (list: any, total, data: any) => {
+    itemsList.value = mergeItemsUpToList(data.list, 'items')
+    // todo取出items里面对应对象数据
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+    itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
 
@@ -176,8 +184,6 @@ export const useTable = () => {
     itemsTotal,
     wholeOrderTotal,
 
-    wholeOrderMergeCompute,
-    mergeItemsToList,
     switchList,
     useWholeOrder
   }

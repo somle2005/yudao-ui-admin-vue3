@@ -109,13 +109,13 @@ const getList = async () => {
 
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     // itemsList.value = mergeItemsToList(data.list, {
-    //   id: 'rowItemsId',
-    //   status: 'rowStatus',
-    //   orderStatus: 'rowOrderStatus',
-    //   offStatus: 'rowOffStatus',
-    //   executeStatus: 'rowExecuteStatus',
-    //   inStatus: 'rowInStatus',
-    //   payStatus: 'rowPayStatus'
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inStatus: 'itemsInStatus',
+    //   payStatus: 'itemsPayStatus'
     // })
 
     switchList(list, total, data)
@@ -137,13 +137,13 @@ const handleCurrentChange = (row: any) => {
   // 转换成整单数据
   // selectionList.value = [row]
   selectionList.value = mergeItemsToList([row], {
-    id: 'rowItemsId',
-    status: 'rowStatus',
-    orderStatus: 'rowOrderStatus',
-    offStatus: 'rowOffStatus',
-    executeStatus: 'rowExecuteStatus',
-    inStatus: 'rowInStatus',
-    payStatus: 'rowPayStatus',
+    id: 'itemsId',
+    status: 'itemsStatus',
+    orderStatus: 'itemsOrderStatus',
+    offStatus: 'itemsOffStatus',
+    executeStatus: 'itemsExecuteStatus',
+    inStatus: 'itemsInStatus',
+    payStatus: 'itemsPayStatus',
     currencyId: 'currencyId'
   })
   console.log(selectionList.value, 'selectionList.value')

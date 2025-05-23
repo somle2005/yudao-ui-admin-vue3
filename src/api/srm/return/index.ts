@@ -15,8 +15,8 @@ export interface PurchaseReturnVO {
 // ERP 采购退货 API
 export const PurchaseReturnApi = {
   // 查询采购退货分页
-  getPurchaseReturnPage: async (params: any) => {
-    return await request.get({ url: `/srm/purchase-return/page`, params })
+  getPurchaseReturnPage: async (data: any) => {
+    return await request.post({ url: `/srm/purchase-return/page`, data })
   },
 
   // 查询采购退货详情

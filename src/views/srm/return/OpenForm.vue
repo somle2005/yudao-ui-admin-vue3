@@ -246,7 +246,7 @@ const addItem = (selectionList: any[]) => {
       // 采购订单分页需带出数据
       const {
         code,
-        rowItemsId, //list记得转化
+        itemsId, //list记得转化
         productId,
         productName,
         productBarCode,
@@ -282,7 +282,7 @@ const addItem = (selectionList: any[]) => {
        */
       const obj = {
         // orderNo: code,
-        [itemIdKey]: rowItemsId, //list记得转化
+        [itemIdKey]: itemsId, //list记得转化
         productId,
         productName,
         productBarCode,

@@ -198,8 +198,6 @@ let {
   itemsTotal,
   wholeOrderTotal,
 
-  wholeOrderMergeCompute,
-  mergeItemsToList,
   switchList,
   useWholeOrder
 } = useTable()
@@ -209,21 +207,17 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await PurchaseReturnApi.getPurchaseReturnPage(queryParams)
-
-    // todo取出items里面对应对象数据
-
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
-    itemsList.value = mergeItemsToList(data.list, {
-      id: 'rowItemsId',
-      status: 'rowStatus',
-      orderStatus: 'rowOrderStatus',
-      offStatus: 'rowOffStatus',
-      executeStatus: 'rowExecuteStatus',
-      inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus'
-    })
-
     switchList(list, total, data)
+
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inStatus: 'itemsInStatus',
+    //   payStatus: 'itemsPayStatus'
+    // })
   } finally {
     loading.value = false
   }

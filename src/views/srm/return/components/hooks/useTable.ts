@@ -58,9 +58,9 @@ export const useTable = () => {
       label: '对账状态',
       slot: 'reconciliationStatus'
     },
-    rowPayStatus: {
+    itemsPayStatus: {
       label: '行付款状态',
-      slot: 'rowPayStatus',
+      slot: 'itemsPayStatus',
       dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
