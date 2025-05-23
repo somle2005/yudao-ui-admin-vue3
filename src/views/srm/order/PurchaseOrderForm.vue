@@ -671,7 +671,8 @@ const submitForm = async () => {
           'remark',
           // 'itemIds',
           'currencyName',
-          'currencyId'
+          'currencyId',
+          'warehouseId'
         ]
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
