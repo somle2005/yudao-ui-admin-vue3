@@ -126,7 +126,11 @@
         <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
         <el-table-column label="仓库" width="150" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
+            <el-form-item
+              :prop="`${$index}.warehouseId`"
+              :rules="formRules.warehouseId"
+              class="mb-0px!"
+            >
               <el-select
                 :disabled="warehouseDisabled"
                 v-model="row.warehouseId"
@@ -465,7 +469,8 @@ const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
   actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
-  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
+  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+  warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }]
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
   // declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
   // declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
