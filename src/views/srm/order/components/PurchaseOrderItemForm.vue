@@ -382,6 +382,7 @@
             </el-form-item>
           </template>
         </el-table-column>
+        <el-table-column v-if="showMerge" prop="currencyName" label="币种" width="120" align="center" />
 
         <!-- purchaseApplyItemId 采购申请单，申请项编号 -->
 
@@ -450,6 +451,8 @@ const props = defineProps({
     default: ''
   }
 })
+
+const showMerge = computed(() => ['merge'].includes(props.formType))
 
 const warehouseDisabled = computed(() =>
   ['audit', 'detail', 'generateContract'].includes(props.formType)

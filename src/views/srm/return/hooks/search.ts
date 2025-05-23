@@ -111,7 +111,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: WMSWarehouseList
-    },
+    }
 
     // {
     //   type: 'date-picker',
@@ -202,6 +202,13 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
   searchFormOptions.value.forEach((item) => {
     item.events = events
+    if (item.attrs) {
+      item.attrs.class = '!w-240px'
+    } else {
+      item.attrs = {
+        class: '!w-240px'
+      }
+    }
   })
   const getSearchFormData = () => {
     return queryParams

@@ -93,7 +93,7 @@ import { useSupplierChange } from '@/utils/operate/srm'
 import { cloneDeep } from 'lodash-es'
 import { InfoKeyOpenFormData } from './hooks/injectKeys'
 import { getPortInfoList } from '@/commonData/tms'
-import { useMergeOrderOptions } from '../common/hooks'
+import { useInOptions, useMergeOrderOptions } from '../common/hooks'
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -255,32 +255,34 @@ const createDetailFormOptions = (formOptions) => {
   return formOptions
 }
 
-const createMergeFormOptions = (formOptions) => {
-  // 优惠后金额-totalPrice-追加其他金额 otherPrice
-  const obj: any = {
-    type: 'input-number',
-    placeholder: '请输入其他金额',
-    prop: 'otherPrice',
-    label: '其他金额',
-    attrs: {
-      'controls-position': 'right',
-      min: 0,
-      precision: 2,
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  const options = formOptions.filter((item) => item.prop !== 'purchaseCompanyId')
-  const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
-  options.splice(index, 0, obj)
-  options.forEach((item) => {
-    if (item.prop === 'depositPrice') {
-      item.attrs!.disabled = true
-    }
-  })
-  return options
-}
+// const createMergeFormOptions = (formOptions) => {
+//   // 优惠后金额-totalPrice-追加其他金额 otherPrice
+//   const obj: any = {
+//     type: 'input-number',
+//     placeholder: '请输入其他金额',
+//     prop: 'otherPrice',
+//     label: '其他金额',
+//     attrs: {
+//       'controls-position': 'right',
+//       min: 0,
+//       precision: 2,
+//       style: {
+//         width: '100%'
+//       }
+//     }
+//   }
+//   const options = formOptions.filter((item) => item.prop !== 'purchaseCompanyId')
+//   const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
+//   options.splice(index, 0, obj)
+//   options.forEach((item) => {
+//     if (item.prop === 'depositPrice') {
+//       item.attrs!.disabled = true
+//     }
+//   })
+//   return options
+// }
+
+const { createRequestFormOptions: mergeFormOptions } = useInOptions(supplierList, accountList)
 
 const createGenerateContractFormOptions = (formOptions) => {
   // 优惠后金额-totalPrice-追加其他金额 otherPrice
@@ -463,7 +465,11 @@ const operateAudit = (type) => {
       requestFormOptions.value = updateFormOptions(createRequestFormOptions())
     },
     merge: () => {
-      requestFormOptions.value = createMergeFormOptions(createRequestFormOptions())
+      // requestFormOptions.value = createMergeFormOptions(createRequestFormOptions())
+      const options = mergeFormOptions() as any[]
+      const supplierIdItem = options.find((item) => item.prop === 'supplierId')
+      supplierIdItem.attrs.disabled = true
+      requestFormOptions.value = options
     },
     generateContract: () => {
       dialogTitle.value = '生成采购合同'
