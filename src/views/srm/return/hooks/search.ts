@@ -88,9 +88,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
     {
       type: 'input',
-      label: '上游单据编码却后端字段',
-      prop: 'code',
-      placeholder: '请输入上游单单据编码却后端字段',
+      label: '上游单据编码',
+      prop: 'inCode',
+      placeholder: '请输入上游单单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
@@ -121,7 +121,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   attrs: {
     //     clearable: true,
     //     type: 'daterange',
-    //     'value-format': 'YYYY-MM-DD HH:mm:ss',
+    //     'value-format': 'x',
     //     'start-placeholder': '开始日期',
     //     'end-placeholder': '结束日期',
     //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],

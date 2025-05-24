@@ -23,7 +23,8 @@ export const useSearchForm = (handleQuery, queryParams) => {
       attrs: {
         clearable: true,
         type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        // 'value-format': 'x',
+        'value-format': 'x',
         'start-placeholder': '开始日期',
         'end-placeholder': '结束日期',
         defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
@@ -111,7 +112,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   attrs: {
     //     clearable: true,
     //     type: 'daterange',
-    //     'value-format': 'YYYY-MM-DD HH:mm:ss',
+    //     'value-format': 'x',
     //     'start-placeholder': '开始日期',
     //     'end-placeholder': '结束日期',
     //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],

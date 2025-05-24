@@ -1,7 +1,9 @@
-import { getAccountList } from '@/commonData'
+import { getAccountList, getSupplierList } from '@/commonData'
+import { addDisabled } from '@/components/SmForm/src/utils'
 
 export const useForm = (formType) => {
   const accountList = ref<any[]>([]) // 账户列表
+  const supplierList = ref([])
 
   const auditType = computed(() => formType.value === 'audit')
   const itemsFormdisabled = computed(
@@ -24,6 +26,21 @@ export const useForm = (formType) => {
           clearable: true,
           disabled: true
         }
+      },
+
+      {
+        type: 'select',
+        placeholder: '请选择供应商',
+        prop: 'supplierId',
+        label: '供应商',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: supplierList
       },
 
       {
@@ -198,10 +215,15 @@ export const useForm = (formType) => {
     return formOptions
   }
 
+  const detailFormOptions = (formOptions) => {
+    addDisabled(formOptions)
+    return formOptions
+  }
+
   const operateAudit = (type) => {
     const map = {
       detail: () => {
-        // requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
+        requestFormOptions.value = detailFormOptions(createRequestFormOptions())
       },
       create: () => {
         requestFormOptions.value = createRequestFormOptions()
@@ -221,6 +243,7 @@ export const useForm = (formType) => {
   }
 
   const initDialogData = () => {
+    getSupplierList(supplierList)
     getAccountList(accountList)
   }
 

@@ -616,7 +616,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await PurchaseOrderApi.exportPurchaseOrder(queryParams)
-    download.excel(data, '销售订单.xls')
+    download.excel(data, '采购订单.xls')
   } catch {
   } finally {
     exportLoading.value = false

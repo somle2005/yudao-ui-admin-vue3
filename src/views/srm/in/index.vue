@@ -126,13 +126,13 @@
         </ElTag>
       </template>
       <template #operate="{ scope }">
-        <!-- <el-button
-            link
-            @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['srm:purchase-in:query']"
-          >
-            详情
-          </el-button> -->
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['srm:purchase-in:query']"
+        >
+          详情
+        </el-button>
         <el-button
           link
           type="primary"
@@ -330,7 +330,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await PurchaseInApi.exportPurchaseIn(queryParams)
-    download.excel(data, '销售入库.xls')
+    download.excel(data, '采购到货.xls')
   } catch {
   } finally {
     exportLoading.value = false

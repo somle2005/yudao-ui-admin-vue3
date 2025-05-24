@@ -69,12 +69,18 @@
         <el-table-column label="数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 :max="row.originCount"
                 class="!w-100%"
+                @change="(val) => changeValLimit(row, 'qty', 1, val)"
+              /> -->
+              <SmNumber
+                v-model="row.qty"
+                :min="1"
+                :max="row.originCount"
                 @change="(val) => changeValLimit(row, 'qty', 1, val)"
               />
             </el-form-item>
@@ -87,11 +93,11 @@
             <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
           </template> -->
 
-        <el-table-column prop="taxPercent" label="税率%" width="115" />
-        <el-table-column label="税额" prop="taxPrice" width="120" />
-        <el-table-column prop="containerRate" label="箱率" width="120" />
+        <el-table-column prop="taxPercent" label="税率%" width="115" align="center" />
+        <el-table-column label="税额" prop="taxPrice" width="120" align="center" />
+        <el-table-column prop="containerRate" label="箱率" width="120" align="center" />
 
-        <el-table-column label="备注" min-width="150">
+        <el-table-column label="备注" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />

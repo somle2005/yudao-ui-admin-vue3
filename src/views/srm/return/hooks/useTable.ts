@@ -57,7 +57,7 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
-    price1: '采购总价-缺后端字段',
+    totalPrice: '采购总价', // 汇总该退货单的总金额
 
     totalItemsQty: '总数',
 
@@ -114,8 +114,8 @@ export const useTable = () => {
     //   label: '申请人',
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
-    itemsOrderCode: {
-      label: '上游单据编码-缺少后端字段',
+    itemsInCode: {
+      label: '上游单据编码',
       width: '200px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },

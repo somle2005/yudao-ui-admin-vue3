@@ -10,16 +10,6 @@
       :options="requestFormOptions"
       :getModelValue="getFormData"
     >
-      <!-- <template #orderNo="{ model }">
-        <el-input v-model="model.orderNo" readonly>
-          <template #append>
-            <el-button @click="openPurchaseOrderInEnableList">
-              <Icon icon="ep:search" /> 选择
-            </el-button>
-          </template>
-        </el-input>
-      </template> -->
-
       <template #fileUrl="{ model, scope }">
         <UploadFile
           :disabled="scope?.attrs?.disabled"
@@ -75,17 +65,21 @@
   <EnableList ref="addItemRef" @success="addItem" />
 </template>
 <script setup lang="ts">
-import { PurchaseInApi, PurchaseInVO } from '@/api/srm/in'
 import ItemForm from './components/ItemForm.vue'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import EnableList from './components/EnableList.vue'
 import { AUDIT_TYPE, TAX_PERCENT } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import { useForm } from './hooks/useForm'
-import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
+import {
+  computeDiscountPriceAndTotalPrice,
+  distinctList,
+  filterListObjKey,
+  filterObjKey
+} from '@/utils/transformData'
 import { useOutData } from './components/hooks/outdata'
-import { PurchaseReturnApi } from '@/api/srm/return'
-import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/srm/order'
+import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
+import { cloneDeep } from 'lodash-es'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -195,7 +189,28 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as PurchaseOrderVO
+    let data = cloneDeep(formData.value) as unknown as PurchaseReturnVO as any
+    data = filterObjKey(data, [
+      'id',
+      'code',
+      'accountId',
+      'returnTime',
+      'discountPercent',
+      'otherPrice',
+      'supplierId',
+      'fileUrl',
+      'remark',
+      'items'
+    ])
+
+    data.items = filterListObjKey(data.items, [
+      'id',
+      'inItemId',
+      'qty',
+      'remark',
+      'applicantId',
+      'applicationDeptId'
+    ])
     if (formType.value === 'create') {
       await PurchaseReturnApi.createPurchaseReturn(data)
       message.success(t('common.createSuccess'))

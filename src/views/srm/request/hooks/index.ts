@@ -151,7 +151,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
         attrs: {
           clearable: true,
           type: 'date',
-          // 'value-format': 'YYYY-MM-DD HH:mm:ss',
+          // 'value-format': 'x',
           'value-format': 'x',
           class: '!w-1/1',
           style: {

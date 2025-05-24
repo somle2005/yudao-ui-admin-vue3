@@ -68,7 +68,7 @@ export const useForm = (formType) => {
     return formOptions
   }
 
-  const detailFormOptions = () => {
+  const payRevokeFormOptions = () => {
     // addDisabled(formOptions)
     const formOptions = [
       {
@@ -82,10 +82,15 @@ export const useForm = (formType) => {
     return formOptions
   }
 
+  const detailFormOptions = (formOptions) => {
+    addDisabled(formOptions)
+    return formOptions
+  }
+
   const operateAudit = (type, dialogTitle) => {
     const map = {
       detail: () => {
-        // requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
+        requestFormOptions.value = detailFormOptions(createRequestFormOptions())
       },
       create: () => {
         requestFormOptions.value = createRequestFormOptions()
@@ -99,11 +104,11 @@ export const useForm = (formType) => {
       [SRM_OPERATE_MAP.pay]: () => {
         dialogTitle.value = SRM_OPERATE_MAP.pay
         // requestFormOptions.value = detailFormOptions(createRequestFormOptions())
-        requestFormOptions.value = detailFormOptions()
+        requestFormOptions.value = payRevokeFormOptions()
       },
       [SRM_OPERATE_MAP.revokePay]: () => {
         dialogTitle.value = SRM_OPERATE_MAP.revokePay
-        requestFormOptions.value = detailFormOptions()
+        requestFormOptions.value = payRevokeFormOptions()
       }
     }
     const fn = map[type]

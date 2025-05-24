@@ -10,16 +10,6 @@
       :options="requestFormOptions"
       :getModelValue="getFormData"
     >
-      <!-- <template #orderNo="{ model }">
-        <el-input v-model="model.orderNo" readonly>
-          <template #append>
-            <el-button @click="openPurchaseOrderInEnableList">
-              <Icon icon="ep:search" /> 选择
-            </el-button>
-          </template>
-        </el-input>
-      </template> -->
-
       <template #fileUrl="{ model, scope }">
         <UploadFile
           :disabled="scope?.attrs?.disabled"

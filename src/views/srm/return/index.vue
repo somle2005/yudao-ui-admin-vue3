@@ -7,7 +7,7 @@
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
       v-model="queryParams"
       :options="searchFormOptions"
       :getModelValue="getSearchFormData"
@@ -118,13 +118,13 @@
         </ElTag>
       </template>
       <template #operate="{ scope }">
-        <!-- <el-button
-            link
-            @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['srm:purchase-in:query']"
-          >
-            详情
-          </el-button> -->
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['srm:purchase-return:query']"
+        >
+          详情
+        </el-button>
         <el-button
           link
           type="primary"
@@ -170,13 +170,12 @@
 
 <script setup lang="ts">
 import download from '@/utils/download'
-import { PurchaseInApi, PurchaseInVO } from '@/api/srm/in'
 import OpenForm from './OpenForm.vue'
 import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
-import { PurchaseReturnApi } from '@/api/srm/return'
+import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseReturn' })
@@ -185,7 +184,7 @@ const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<PurchaseInVO[]>([]) // 列表的数据
+const list = ref<PurchaseReturnVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
@@ -264,7 +263,7 @@ const handleDelete = async (ids: number[]) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await PurchaseInApi.deletePurchaseIn(ids)
+    await PurchaseReturnApi.deletePurchaseReturn(ids)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -279,8 +278,8 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await PurchaseInApi.exportPurchaseIn(queryParams)
-    download.excel(data, '销售入库.xls')
+    const data = await PurchaseReturnApi.exportPurchaseReturn(queryParams)
+    download.excel(data, '采购退货.xls')
   } catch {
   } finally {
     exportLoading.value = false
@@ -288,8 +287,8 @@ const handleExport = async () => {
 }
 
 /** 选中操作 */
-const selectionList = ref<PurchaseInVO[]>([])
-const handleSelectionChange = (rows: PurchaseInVO[]) => {
+const selectionList = ref<PurchaseReturnVO[]>([])
+const handleSelectionChange = (rows: PurchaseReturnVO[]) => {
   selectionList.value = rows
 }
 

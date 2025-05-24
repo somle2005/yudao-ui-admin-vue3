@@ -220,6 +220,15 @@ export const filterObjKey = (queryParams: { [key: string]: any }, saveObjkeyList
   }
 }
 
+export const filterListObjKey = (list: any[], saveObjkeyList: string[]) => {
+  try {
+    if (!list?.length) return []
+    return list.map((item) => filterObjKey(item, saveObjkeyList))
+  } catch (e) {
+    console.log(e, '报错了')
+  }
+}
+
 export const listToJson = (list: any[], jsonList: string[]) => {
   list.forEach((item) => {
     jsonList.forEach((key) => {

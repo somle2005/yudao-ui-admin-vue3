@@ -240,13 +240,13 @@ const getList = async () => {
     // const data = await StockWarehouseApi.getStockWarehousePage(queryParams)
     // const data = await StockBinApi.getStockBinGroupedPage(queryParams)
     const data = await StockWarehouseApi.getStockWarehousePageGrouped(queryParams)
-    list.value = data.list.map((item) => {
+    list.value = data?.list?.map((item) => {
       item.stockWarehouseList = getItemPropList(item.stockWarehouseList, [
         { prop: 'warehouse', keyList: ['mode', 'name', 'code'] }
       ])
       item.productPrimaryImageUrl = item?.product?.primaryImageUrl
       return item
-    })
+    }) || []
     total.value = data.total
 
     // setTimeout(() => {
