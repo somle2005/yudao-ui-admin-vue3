@@ -236,8 +236,8 @@ const queryParams = reactive({
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,
-  arrivalPlanTime: [],
-  arrivalActualTime: [],
+  // arrivalPlanTime: [],
+  // arrivalActualTime: [],
   remark: undefined,
   initAge: undefined,
   createTime: []
