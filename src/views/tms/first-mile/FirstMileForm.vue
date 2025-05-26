@@ -55,9 +55,14 @@
               :getModelValue="getVesselTrackingFormData"
             />
           </el-tab-pane>
-          <!-- <el-tab-pane label="出运订单费用明细" name="fee">
-            <FeeForm ref="feeFormRef" :source-id="formData.id" />
-          </el-tab-pane> -->
+          <el-tab-pane label="出运订单费用明细" :name="mergeItemsTabsName.feesTabsName">
+            <FeesForm
+              ref="feesFormRef"
+              :items="formData.fees"
+              :formType="formType"
+              :disabled="itemsFormdisabled"
+            />
+          </el-tab-pane>
         </el-tabs>
       </template>
     </SmForm>
@@ -89,6 +94,7 @@ import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { addComment } from '@/views/wms/utils'
 import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
+import FeesForm from '@/views/tms/common/components/FeesForm.vue'
 import { mergeItemsTabsName } from '@/views/tms/common/constant/index'
 
 /** 头程单 表单 */
@@ -126,8 +132,8 @@ const initFormData = () => {
     inboundStatus: undefined,
     inboundTime: undefined,
     firstMileItems: [],
-    vesselTracking: {}
-    // fees:[],
+    vesselTracking: {},
+    fees: []
   }
 }
 const formData = ref(initFormData())
@@ -141,7 +147,7 @@ const warehouse = ref({})
 const financeSubjectList = ref([])
 
 /** 子表的表单 */
-const feeFormRef = ref()
+const feesFormRef = ref()
 const firstMileItemFormRef = ref()
 const mergeTabsName = ref('firstMileItem')
 
@@ -237,6 +243,8 @@ const submitForm = async (type?: string) => {
     await vesselTrackingFormRef.value.validate()
   } else if (mergeTabsName.value === mergeItemsTabsName.firstMileItem) {
     await firstMileItemFormRef.value.validate()
+  } else if (mergeTabsName.value === mergeItemsTabsName.feesTabsName) {
+    await feesFormRef.value.validate()
   }
 
   // 提交请求

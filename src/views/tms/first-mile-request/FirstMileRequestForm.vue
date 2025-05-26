@@ -71,6 +71,14 @@
               :getModelValue="getVesselTrackingFormData"
             />
           </el-tab-pane>
+          <el-tab-pane label="出运订单费用明细" :name="mergeItemsTabsName.feesTabsName">
+            <FeesForm
+              ref="feesFormRef"
+              :items="formData.fees"
+              :formType="formType"
+              :disabled="itemsFormdisabled"
+            />
+          </el-tab-pane>
         </el-tabs>
       </template>
     </SmForm>
@@ -128,8 +136,8 @@ const initFormData = () => {
     totalVolume: undefined,
     items: [],
     firstMileItems: [], // 合并时存在
-    vesselTracking: {}
-    // fees:[],
+    vesselTracking: {},
+    fees: []
   }
 }
 
@@ -152,6 +160,7 @@ const itemFormRef = ref()
 
 const mergeTabsName = ref('firstMileItem')
 const firstMileItemFormRef = ref()
+const feesFormRef = ref()
 
 const vesselTrackingTabsName = ref('vesselTrackingTabsName')
 const vesselTrackingFormRef = ref()
@@ -353,6 +362,8 @@ const submitForm = async (type?: string) => {
       await vesselTrackingFormRef.value.validate()
     } else if (mergeTabsName.value === mergeItemsTabsName.firstMileItem) {
       await firstMileItemFormRef.value.validate()
+    } else if (mergeTabsName.value === mergeItemsTabsName.feesTabsName) {
+      await feesFormRef.value.validate()
     }
   } else {
     // 校验子表单

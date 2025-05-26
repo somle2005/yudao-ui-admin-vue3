@@ -288,5 +288,5 @@ export enum DICT_TYPE {
 
   // ========== TMS - 运输管理系统  ==========
   TMS_CABINET_TYPE = 'tms_cabinet_type', // TMS 柜型
-  FEE_TYPE = 'fee_type' // 费用类型
+  TMS_FEE_TYPE = 'tms_fee_type', // TMS 费用类型
 }

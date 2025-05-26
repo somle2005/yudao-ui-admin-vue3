@@ -4,5 +4,6 @@ export const PRODUCT_WEIGHT = 'productWeight'
 
 export const mergeItemsTabsName = {
   firstMileItem: 'firstMileItem',
-  vesselTrackingTabsName: 'vesselTrackingTabsName'
+  vesselTrackingTabsName: 'vesselTrackingTabsName',
+  feesTabsName: 'feesTabsName'
 }

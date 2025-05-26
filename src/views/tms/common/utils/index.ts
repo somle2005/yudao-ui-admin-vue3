@@ -244,6 +244,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         children: financeSubjectList
       },
       {
+        requiredFlag: true,
         type: 'select',
         label: '装运港',
         prop: 'fromPort',
@@ -268,6 +269,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         children: portInfoList
       },
       {
+        requiredFlag: true,
         type: 'select',
         label: '目的港',
         prop: 'toPort',
@@ -280,6 +282,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         children: portInfoList
       },
       {
+        requiredFlag: true,
         type: 'select',
         label: '出口公司',
         prop: 'exportCompanyId',
@@ -292,6 +295,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         children: financeSubjectList
       },
       {
+        requiredFlag: true,
         type: 'select',
         label: '中转公司',
         prop: 'transitCompanyId',
@@ -330,6 +334,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
     list.forEach((item: any) => {
       item.colConfig = { span: 8 }
     })
+    addProperty(list)
     return list
   }
 
