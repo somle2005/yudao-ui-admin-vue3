@@ -55,9 +55,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
 
     {
       type: 'select',
-      placeholder: '请选择出库状态-缺后端字段',
-      prop: 'auditStatus1',
-      label: '出库状态-缺后端字段',
+      placeholder: '请选择出库状态',
+      prop: 'outboundStatus',
+      label: '出库状态',
       attrs: {
         class: '!w-240px',
         filterable: true,
@@ -66,7 +66,23 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+      children: getIntDictOptions(DICT_TYPE.SRM_OUTBOUND_STATUS)
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择行出库状态',
+      prop: 'itemsOutboundStatus',
+      label: '行出库状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_OUTBOUND_STATUS)
     },
 
     // 产品用产品编码

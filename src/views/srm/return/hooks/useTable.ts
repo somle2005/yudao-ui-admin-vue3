@@ -51,10 +51,17 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
-    auditStatus1: {
-      label: '出库状态-缺后端字段',
-      slot: 'auditStatus1',
-      dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
+    outboundStatus: {
+      label: '出库状态',
+      slot: 'outboundStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_OUTBOUND_STATUS }
+    },
+
+    
+    itemsOutboundStatus: {
+      label: '行出库状态',
+      slot: 'itemsOutboundStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_OUTBOUND_STATUS }
     },
 
     totalPrice: '采购总价', // 汇总该退货单的总金额

@@ -176,6 +176,7 @@ import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
+import { getMainItemBodyData } from '@/utils/transform'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseReturn' })
@@ -199,7 +200,8 @@ const queryParams = reactive({
   accountId: undefined,
   status: undefined,
   remark: undefined,
-  creator: undefined
+  creator: undefined,
+  itemsOutboundStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -222,7 +224,13 @@ let {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await PurchaseReturnApi.getPurchaseReturnPage(queryParams)
+    const bodyData = getMainItemBodyData({
+      queryParams,
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'outboundStatus'],
+      itemQueryList: ['inCode', 'productId']
+    })
+    bodyData.itemQuery.outboundStatus = queryParams.itemsOutboundStatus
+    const data = await PurchaseReturnApi.getPurchaseReturnPage(bodyData)
     switchList(list, total, data)
 
     // itemsList.value = mergeItemsToList(data.list, {
