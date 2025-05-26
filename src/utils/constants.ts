@@ -18,7 +18,6 @@ export const UserTypeEnum = {
 }
 
 // ========== SYSTEM 模块 ==========
-
 /**
  * 菜单的类型枚举
  */
@@ -34,14 +33,6 @@ export const SystemMenuTypeEnum = {
 export const SystemRoleTypeEnum = {
   SYSTEM: 1, // 内置角色
   CUSTOM: 2 // 自定义角色
-}
-
-/**
- * 数据字段枚举
- */
-export const SystemFieldEnum = {
-  NO: false, // 否
-  YES: true // 是
 }
 
 /**
@@ -80,7 +71,7 @@ export const SystemUserSocialTypeEnum = {
 export const InfraCodegenTemplateTypeEnum = {
   CRUD: 1, // 基础 CRUD
   TREE: 2, // 树形 CRUD
-  SUB: 3 // 主子表 CRUD
+  SUB: 15 // 主子表 CRUD
 }
 
 /**
@@ -470,5 +461,5 @@ export const BpmProcessInstanceStatus = {
 export const BpmAutoApproveType = {
   NONE: 0, // 不自动通过
   APPROVE_ALL: 1, // 仅审批一次，后续重复的审批节点均自动通过
-  APPROVE_SEQUENT: 2, // 仅针对连续审批的节点自动通过
+  APPROVE_SEQUENT: 2 // 仅针对连续审批的节点自动通过
 }

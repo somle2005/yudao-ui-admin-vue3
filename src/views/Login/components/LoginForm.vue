@@ -161,8 +161,6 @@ import * as authUtil from '@/utils/auth'
 import { usePermissionStore } from '@/store/modules/permission'
 import * as LoginApi from '@/api/login'
 import { LoginStateEnum, useFormValid, useLoginState } from './useLogin'
-import { resetDictCache } from '@/utils/permission'
-import { saveUser } from '@/utils/cache'
 
 defineOptions({ name: 'LoginForm' })
 
@@ -264,7 +262,6 @@ const handleLogin = async (params: any) => {
     if (!res) {
       return
     }
-    saveUser(res)
     loading.value = ElLoading.service({
       lock: true,
       text: '正在加载系统中...',
@@ -285,7 +282,6 @@ const handleLogin = async (params: any) => {
     } else {
       await push({ path: redirect.value || permissionStore.addRouters[0].path })
     }
-    resetDictCache()
   } finally {
     loginLoading.value = false
     loading.value.close()
@@ -316,8 +312,8 @@ const doSocialLogin = async (type: number) => {
       }
     }
     // 计算 redirectUri
-    // tricky: type、redirect需要先encode一次，否则钉钉回调会丢失。
-    // 配合 Login/SocialLogin.vue#getUrlValue() 使用
+    // 注意: type、redirect 需要先 encode 一次，否则钉钉回调会丢失。
+    // 配合 social-login.vue#getUrlValue() 使用
     const redirectUri =
       location.origin +
       '/social-login?' +

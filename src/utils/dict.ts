@@ -112,8 +112,6 @@ export enum DICT_TYPE {
   COMMON_STATUS = 'common_status',
   TERMINAL = 'terminal', // 终端
   DATE_INTERVAL = 'date_interval', // 数据间隔
-  COMMON_BOOLEAN_STATUS = 'common_boolean_status',
-  COMMON_ENABLE_STATUS = 'common_enable_status', // 通用开启状态
 
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_SEX = 'system_user_sex',
@@ -131,7 +129,6 @@ export enum DICT_TYPE {
   SYSTEM_MAIL_SEND_STATUS = 'system_mail_send_status',
   SYSTEM_NOTIFY_TEMPLATE_TYPE = 'system_notify_template_type',
   SYSTEM_SOCIAL_TYPE = 'system_social_type',
-  SYSTEM_WHETHER = 'system_whether',
 
   // ========== INFRA 模块 ==========
   INFRA_BOOLEAN_STRING = 'infra_boolean_string',
@@ -162,7 +159,6 @@ export enum DICT_TYPE {
   PAY_NOTIFY_STATUS = 'pay_notify_status', // 商户支付回调状态
   PAY_NOTIFY_TYPE = 'pay_notify_type', // 商户支付回调状态
   PAY_TRANSFER_STATUS = 'pay_transfer_status', // 转账订单状态
-  PAY_TRANSFER_TYPE = 'pay_transfer_type', // 转账订单状态
 
   // ========== MP 模块 ==========
   MP_AUTO_REPLY_REQUEST_MATCH = 'mp_auto_reply_request_match', // 自动回复请求匹配类型
@@ -215,29 +211,14 @@ export enum DICT_TYPE {
   CRM_PERMISSION_LEVEL = 'crm_permission_level', // CRM 数据权限的级别
   CRM_PRODUCT_UNIT = 'crm_product_unit', // CRM 产品单位
   CRM_FOLLOW_UP_TYPE = 'crm_follow_up_type', // CRM 跟进方式
-  CRM_CLIENT_TAG = 'crm_client_tag', // CRM 客户标签
 
   // ========== ERP - 企业资源计划模块  ==========
+  ERP_AUDIT_STATUS = 'erp_audit_status', // ERP 审批状态
   ERP_STOCK_RECORD_BIZ_TYPE = 'erp_stock_record_biz_type', // 库存明细的业务类型
-  SYSTEM_FILED = 'system_field',
-  COUNTRY_CODE = 'country_code', //国别代码
-  ERP_PATENT_TYPE = 'erp_patent_type', //专利类型
-  ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
-  CURRENCY_CODE = 'currency_code',
-  ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
-  ERP_SHOP_TYPE = 'erp_shop_type', // EPR店铺状态
-  ERP_PRODUCT_LISTING_STATUS = 'erp_product_listing_status', // 商品上下架状态
-  REPORT_MAP = 'report_map', // 报表地图
-  ERP_SALES_PLATFORM = 'erp_sales_platform', // 销售平台
-  
-  ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
-  ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
-  ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
-  ERP_PORT_OF_LOADING = 'erp_port_of_loading', // 装运港
-  ERP_PORT_OF_DISCHARGE = 'erp_port_of_discharge', // 目的港
 
   // ========== AI - 人工智能模块  ==========
   AI_PLATFORM = 'ai_platform', // AI 平台
+  AI_MODEL_TYPE = 'ai_model_type', // AI 模型类型
   AI_IMAGE_STATUS = 'ai_image_status', // AI 图片状态
   AI_MUSIC_STATUS = 'ai_music_status', // AI 音乐状态
   AI_GENERATE_MODE = 'ai_generate_mode', // AI 生成模式
@@ -254,34 +235,14 @@ export enum DICT_TYPE {
   IOT_PRODUCT_DEVICE_TYPE = 'iot_product_device_type', // IOT 产品设备类型
   IOT_DATA_FORMAT = 'iot_data_format', // IOT 数据格式
   IOT_PROTOCOL_TYPE = 'iot_protocol_type', // IOT 接入网关协议
-  IOT_DEVICE_STATUS = 'iot_device_status', // IOT 设备状态
-  IOT_PRODUCT_FUNCTION_TYPE = 'iot_product_function_type', // IOT 产品功能类型
+  IOT_DEVICE_STATE = 'iot_device_state', // IOT 设备状态
+  IOT_THING_MODEL_TYPE = 'iot_thing_model_type', // IOT 产品功能类型
   IOT_DATA_TYPE = 'iot_data_type', // IOT 数据类型
-  IOT_UNIT_TYPE = 'iot_unit_type', // IOT 单位类型
+  IOT_THING_MODEL_UNIT = 'iot_thing_model_unit', // IOT 物模型单位
   IOT_RW_TYPE = 'iot_rw_type', // IOT 读写类型
-
-  // ========== WMS  ==========
-  WMS_VALID_STATUS = 'wms_valid_status', // WMS通用的对象有效状态
-  WMS_WAREHOUSE_MODE = 'wms_warehouse_mode', // 仓库经营方式-仓库属性
-  WMS_INBOUND_TYPE = 'wms_inbound_type', // 入库单类型
-  WMS_INBOUND_STATUS = 'wms_inbound_status', // 入库单状态
-  WMS_SHIPPING_METHOD = 'wms_shipping_method', // 运输方式
-  WMS_INBOUND_AUDIT_STATUS = 'wms_inbound_audit_status', // 入库单审批状态
-  WMS_WAREHOUSE_ZONE_STOCK_TYPE = 'wms_warehouse_zone_stock_type', // WMS存货类型-库存类型
-  WMS_WAREHOUSE_ZONE_PARTITION_TYPE = 'wms_warehouse_zone_partition_type', // WMS分区类型
-  WMS_OUTBOUND_TYPE = 'wms_outbound_type', // WMS出库单类型
-  WMS_OUTBOUND_STATUS = 'wms_outbound_status', // WMS出库状态
-  WMS_OUTBOUND_AUDIT_STATUS = 'wms_outbound_audit_status', // WMS出库单审批状态
-  WMS_STOCK_FLOW_DIRECTION = 'wms_stock_flow_direction', // WMS库存流水方向
-  WMS_STOCK_TYPE = 'wms_stock_type', // WMS库存类型
-
-
-  // ========== SRM - 采购模块  ==========
-  SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态
-  SRM_EXECUTE_STATUS = 'srm_execute_status', // SRM 执行状态
-  SRM_STORAGE_STATUS = 'srm_storage_status', // SRM 采购入库状态
-  SRM_ORDER_STATUS = 'srm_order_status', // SRM 采购订购状态
-  SRM_PAYMENT_STATUS = 'srm_payment_status', // SRM 采购付款状态
-  SRM_OFF_STATUS = 'srm_off_status', // SRM 开关状态
-  SRM_AUDIT_STATUS = 'srm_audit_status' // SRM 审批状态
+  IOT_PLUGIN_DEPLOY_TYPE = 'iot_plugin_deploy_type', // IOT 插件部署类型
+  IOT_PLUGIN_STATUS = 'iot_plugin_status', // IOT 插件状态
+  IOT_PLUGIN_TYPE = 'iot_plugin_type', // IOT 插件类型
+  IOT_DATA_BRIDGE_DIRECTION_ENUM = 'iot_data_bridge_direction_enum', // 桥梁方向
+  IOT_DATA_BRIDGE_TYPE_ENUM = 'iot_data_bridge_type_enum' // 桥梁类型
 }

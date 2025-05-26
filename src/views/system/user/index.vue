@@ -5,12 +5,12 @@
 
   <el-row :gutter="20">
     <!-- 左侧部门树 -->
-    <el-col :span="5" :xs="24">
+    <el-col :span="4" :xs="24">
       <ContentWrap class="h-1/1">
         <DeptTree @node-click="handleDeptNodeClick" />
       </ContentWrap>
     </el-col>
-    <el-col :span="19" :xs="24">
+    <el-col :span="20" :xs="24">
       <!-- 搜索 -->
       <ContentWrap>
         <el-form
@@ -20,10 +20,10 @@
           :inline="true"
           label-width="68px"
         >
-          <el-form-item label="用户昵称" prop="username">
+          <el-form-item label="用户名称" prop="username">
             <el-input
-              v-model="queryParams.nickname"
-              placeholder="请输入用户昵称"
+              v-model="queryParams.username"
+              placeholder="请输入用户名称"
               clearable
               @keyup.enter="handleQuery"
               class="!w-240px"
@@ -41,7 +41,7 @@
           <el-form-item label="状态" prop="status">
             <el-select
               v-model="queryParams.status"
-              placeholder="用户状态"
+              placeholder="请选择用户状态"
               clearable
               class="!w-240px"
             >
@@ -98,7 +98,7 @@
         <el-table v-loading="loading" :data="list">
           <el-table-column label="用户编号" align="center" key="id" prop="id" />
           <el-table-column
-            label="用户名"
+            label="用户名称"
             align="center"
             prop="username"
             :show-overflow-tooltip="true"
@@ -223,7 +223,6 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   username: undefined,
-  nickname: undefined,
   mobile: undefined,
   status: undefined,
   deptId: undefined,
@@ -346,7 +345,7 @@ const handleResetPwd = async (row: UserApi.UserVO) => {
     )
     const password = result.value
     // 发起重置
-    await UserApi.resetUserPwd(row.id, password)
+    await UserApi.resetUserPassword(row.id, password)
     message.success('修改成功，新密码是：' + password)
   } catch {}
 }

@@ -7,6 +7,7 @@ import { getSlot } from '@/utils/tsxHelper'
 import type { TableProps } from './types'
 import { set } from 'lodash-es'
 import { Pagination, TableColumn, TableSetPropsType, TableSlotDefault } from '@/types/table'
+
 export default defineComponent({
   // eslint-disable-next-line vue/no-reserved-component-names
   name: 'Table',
@@ -55,7 +56,7 @@ export default defineComponent({
     // 注册
     onMounted(() => {
       const tableRef = unref(elTableRef)
-      emit('register', tableRef?.$parent, elTableRef)
+      emit('register', tableRef?.$parent, elTableRef.value)
     })
 
     const pageSizeRef = ref(props.pageSize)

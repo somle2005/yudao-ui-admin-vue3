@@ -131,19 +131,7 @@
       <el-table-column align="center" label="电话" prop="telephone" width="130" />
       <el-table-column align="center" label="邮箱" prop="email" width="180" />
       <el-table-column align="center" label="职位" prop="post" width="120" />
-      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
-        <template #default="scope">
-          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.countryCodes"
-              :key="item"
-              :type="DICT_TYPE.COUNTRY_CODE"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column>
+      <el-table-column align="center" label="地址" prop="detailAddress" width="120" />
       <el-table-column align="center" label="关键决策人" prop="master" width="100">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.INFRA_BOOLEAN_STRING" :value="scope.row.master" />

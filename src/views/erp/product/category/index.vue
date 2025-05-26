@@ -80,11 +80,6 @@
           <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />
         </template>
       </el-table-column>
-
-      <!-- <el-table-column label="默认hs编码" align="center" prop="defaultHsCode" />
-      <el-table-column label="默认申报品名(英文)" align="center" prop="defaultDeclaredTypeEn" />
-      <el-table-column label="默认申报品名" align="center" prop="defaultDeclaredType" /> -->
-
       <el-table-column
         label="创建时间"
         align="center"
@@ -92,7 +87,6 @@
         :formatter="dateFormatter"
         width="180px"
       />
-
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
@@ -115,12 +109,12 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <!-- <Pagination
+    <Pagination
       :total="total"
       v-model:page="queryParams.pageNo"
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
-    /> -->
+    />
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -140,11 +134,12 @@ defineOptions({ name: 'ErpProductCategory' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
+
 const loading = ref(true) // 列表的加载中
 const list = ref<ProductCategoryVO[]>([]) // 列表的数据
 const queryParams = reactive({
   name: undefined,
-  status: undefined,
+  status: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -153,10 +148,8 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    // const data = await ProductCategoryApi.getProductCategoryList(queryParams)
-    const data = await ProductCategoryApi.getProductCategoryList()
+    const data = await ProductCategoryApi.getProductCategoryList(queryParams)
     list.value = handleTree(data, 'id', 'parentId')
-    console.log('list', list.value)
   } finally {
     loading.value = false
   }
@@ -164,7 +157,7 @@ const getList = async () => {
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
-  // queryParams.pageNo = 1
+  queryParams.pageNo = 1
   getList()
 }
 

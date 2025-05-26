@@ -55,8 +55,4 @@ declare global {
     list: T // 数据
     total: number // 总量
   }
-
-  interface Window {
-    getRouteQuery: () => Record<string, any> 
-  }
 }

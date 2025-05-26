@@ -2,7 +2,7 @@ import { resolve } from 'path'
 import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import progress from 'vite-plugin-progress'
-// import EslintPlugin from 'vite-plugin-eslint'
+import EslintPlugin from 'vite-plugin-eslint'
 import PurgeIcons from 'vite-plugin-purge-icons'
 import { ViteEjsPlugin } from 'vite-plugin-ejs'
 // @ts-ignore
@@ -13,9 +13,8 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import viteCompression from 'vite-plugin-compression'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
 import UnoCSS from 'unocss/vite'
-import mkcert from 'vite-plugin-mkcert'
 
 export function createVitePlugins() {
   const root = process.cwd()
@@ -25,9 +24,7 @@ export function createVitePlugins() {
     return resolve(root, '.', dir)
   }
 
-  const addSSh = process.env.NODE_ENV === 'development' && ['test','prod'].includes(process.env.npm_lifecycle_event!)
-
-  const list = [
+  return [
     Vue(),
     VueJsx(),
     UnoCSS(),
@@ -69,10 +66,10 @@ export function createVitePlugins() {
       resolvers: [ElementPlusResolver()],
       globs: ["src/components/**/**.{vue, md}", '!src/components/DiyEditor/components/mobile/**']
     }),
-    // EslintPlugin({
-    //   cache: false,
-    //   include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
-    // }),
+    EslintPlugin({
+      cache: false,
+      include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
+    }),
     VueI18nPlugin({
       runtimeOnly: true,
       compositionOnly: true,
@@ -81,7 +78,6 @@ export function createVitePlugins() {
     createSvgIconsPlugin({
       iconDirs: [pathResolve('src/assets/svgs')],
       symbolId: 'icon-[dir]-[name]',
-      svgoOptions: true
     }),
     viteCompression({
       verbose: true, // 是否在控制台输出压缩结果
@@ -100,10 +96,4 @@ export function createVitePlugins() {
       promiseImportName: (i) => `__tla_${i}`
     })
   ]
-
-  if(addSSh) {
-    list.unshift(mkcert())
-  }
- 
-  return list
 }

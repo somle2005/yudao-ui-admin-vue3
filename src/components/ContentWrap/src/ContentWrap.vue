@@ -8,12 +8,10 @@ const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('content-wrap')
 
-
 defineProps({
   title: propTypes.string.def(''),
   message: propTypes.string.def(''),
-  bodyStyle: propTypes.object.def({ padding: '20px' }),
-  // bodyStyle: propTypes.object.def({ padding: '10px' }) // 传入的
+  bodyStyle: propTypes.object.def({ padding: '10px' })
 })
 </script>
 

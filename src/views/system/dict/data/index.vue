@@ -113,7 +113,7 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <DictDataForm ref="formRef" @success="refresh" />
+  <DictDataForm ref="formRef" @success="getList" />
 </template>
 <script lang="ts" setup>
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
@@ -122,7 +122,6 @@ import download from '@/utils/download'
 import * as DictDataApi from '@/api/system/dict/dict.data'
 import * as DictTypeApi from '@/api/system/dict/dict.type'
 import DictDataForm from './DictDataForm.vue'
-import { resetDictCache } from '@/utils/permission'
 
 defineOptions({ name: 'SystemDictData' })
 
@@ -154,11 +153,6 @@ const getList = async () => {
   } finally {
     loading.value = false
   }
-}
-
-const refresh = () => {
-  getList()
-  resetDictCache()
 }
 
 /** 搜索按钮操作 */

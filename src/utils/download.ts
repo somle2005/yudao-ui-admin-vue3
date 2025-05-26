@@ -13,10 +13,6 @@ const download0 = (data: Blob, fileName: string, mineType: string) => {
 }
 
 const download = {
-  // 下载 pdf 方法
-  pdf: (data: Blob, fileName: string) => {
-    download0(data, fileName, 'application/pdf')
-  },
   // 下载 Excel 方法
   excel: (data: Blob, fileName: string) => {
     download0(data, fileName, 'application/vnd.ms-excel')

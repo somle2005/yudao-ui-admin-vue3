@@ -1,5 +1,4 @@
 import request from '@/config/axios'
-import { getRefreshToken } from '@/utils/auth'
 import type { RegisterVO, UserLoginVO } from './types'
 
 export interface SmsCodeVO {

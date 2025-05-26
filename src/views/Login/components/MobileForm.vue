@@ -103,7 +103,6 @@ import { getTenantIdByName, sendSmsCode, smsLogin } from '@/api/login'
 import LoginFormTitle from './LoginFormTitle.vue'
 import { LoginStateEnum, useFormValid, useLoginState } from './useLogin'
 import { ElLoading } from 'element-plus'
-import { resetDictCache } from '@/utils/permission'
 
 defineOptions({ name: 'MobileForm' })
 
@@ -202,7 +201,6 @@ const signIn = async () => {
         redirect.value = '/'
       }
       push({ path: redirect.value || permissionStore.addRouters[0].path })
-      resetDictCache()
     })
     .catch(() => {})
     .finally(() => {

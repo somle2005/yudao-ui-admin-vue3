@@ -79,13 +79,6 @@ router.beforeEach(async (to, from, next) => {
         await permissionStore.generateRoutes()
         permissionStore.getAddRouters.forEach((route) => {
           router.addRoute(route as unknown as RouteRecordRaw) // 动态添加可访问路由表
-          // if (router.hasRoute(route.name)) {
-          //   console.log("!", router.getRoutes().filter(r => r.name === route.name));
-          //   console.log("@", route)
-          //   throw new Error(`Route with name '${route.name}' already exists!`);
-          // } else {
-          //   router.addRoute(route as unknown as RouteRecordRaw);
-          // }
         })
         const redirectPath = from.query.redirect || to.path
         // 修复跳转时不带参数的问题

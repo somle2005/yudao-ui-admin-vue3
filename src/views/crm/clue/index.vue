@@ -1,9 +1,9 @@
 <template>
-  <!-- <doc-alert title="【线索】线索管理" url="https://doc.iocoder.cn/crm/clue/" />
-  <doc-alert title="【通用】数据权限" url="https://doc.iocoder.cn/crm/permission/" /> -->
+  <doc-alert title="【线索】线索管理" url="https://doc.iocoder.cn/crm/clue/" />
+  <doc-alert title="【通用】数据权限" url="https://doc.iocoder.cn/crm/permission/" />
 
-  <!--<ContentWrap>
-    <!~~ 搜索工作栏 ~~>
+  <ContentWrap>
+    <!-- 搜索工作栏 -->
     <el-form
       class="-mb-15px"
       :model="queryParams"
@@ -61,36 +61,6 @@
         </el-button>
       </el-form-item>
     </el-form>
-  </ContentWrap>-->
-
-  <ContentWrap>
-    <!-- 搜索工作栏 -->
-    <SmForm
-      class="-mb-15px"
-      ref="queryFormRef"
-      :inline="true"
-      label-width="68px"
-      v-model="queryParams"
-      :options="searchFormOptions"
-      :getModelValue="getSearchFormData"
-    >
-      <template #action>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
-        <el-button type="primary" @click="openForm('create')" v-hasPermi="['crm:clue:create']">
-          <Icon icon="ep:plus" class="mr-5px" /> 新增
-        </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['crm:clue:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
-      </template>
-    </SmForm>
   </ContentWrap>
 
   <!-- 列表 -->
@@ -100,7 +70,7 @@
       <el-tab-pane label="我参与的" name="2" />
       <el-tab-pane label="下属负责的" name="3" />
     </el-tabs>
-    <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
       <el-table-column label="线索名称" align="center" prop="name" fixed="left" width="160">
         <template #default="scope">
           <el-link :underline="false" type="primary" @click="openDetail(scope.row.id)">
@@ -113,41 +83,10 @@
           <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_SOURCE" :value="scope.row.source" />
         </template>
       </el-table-column>
-
-      <!-- <el-table-column align="center" label="公司名称" prop="companyName" width="200px" /> -->
-      <el-table-column align="center" label="公司介绍" prop="companyIntroduction" width="200px" />
-      <el-table-column align="center" label="官网" prop="companyWebsite" width="200px" />
-      <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
-        <template #default="scope">
-          <div v-if="scope.row?.labelCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.labelCodes"
-              :key="item"
-              :type="DICT_TYPE.CRM_CLIENT_TAG"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
-        <template #default="scope">
-          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.countryCodes"
-              :key="item"
-              :type="DICT_TYPE.COUNTRY_CODE"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column>
-
       <el-table-column label="手机" align="center" prop="mobile" width="120" />
       <el-table-column label="电话" align="center" prop="telephone" width="130" />
       <el-table-column label="邮箱" align="center" prop="email" width="180" />
-      <!-- <el-table-column label="地址" align="center" prop="detailAddress" width="180" /> -->
+      <el-table-column label="地址" align="center" prop="detailAddress" width="180" />
       <el-table-column align="center" label="客户行业" prop="industryId" width="100">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_INDUSTRY" :value="scope.row.industryId" />
@@ -191,7 +130,6 @@
         width="180px"
       />
       <el-table-column align="center" label="创建人" prop="creatorName" width="100px" />
-
       <el-table-column label="操作" align="center" min-width="110" fixed="right">
         <template #default="scope">
           <el-button
@@ -233,7 +171,6 @@ import download from '@/utils/download'
 import * as ClueApi from '@/api/crm/clue'
 import ClueForm from './ClueForm.vue'
 import { TabsPaneContext } from 'element-plus'
-import { useSearchForm } from './hooks/useSearchForm'
 
 defineOptions({ name: 'CrmClue' })
 
@@ -326,14 +263,8 @@ const handleExport = async () => {
   }
 }
 
-const { searchFormOptions, getSearchFormData } = useSearchForm(handleQuery, queryParams)
-
 /** 初始化 **/
 onMounted(() => {
   getList()
 })
 </script>
-<style lang="scss" scoped>
-// @import '@/styles/common.scss'
-@use '../../../styles/comon.scss' as *;
-</style>

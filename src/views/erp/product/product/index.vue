@@ -1,4 +1,7 @@
+<!-- ERP 产品列表 -->
 <template>
+  <doc-alert title="【产品】产品信息、分类、单位" url="https://doc.iocoder.cn/erp/product/" />
+
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <el-form
@@ -6,42 +9,16 @@
       :model="queryParams"
       ref="queryFormRef"
       :inline="true"
-      label-width="100px"
+      label-width="68px"
     >
-      <el-form-item label="产品名称" prop="name">
-        <el-select
+      <el-form-item label="名称" prop="name">
+        <el-input
           v-model="queryParams.name"
+          placeholder="请输入名称"
           clearable
-          filterable
-          placeholder="请选择产品"
           @keyup.enter="handleQuery"
           class="!w-240px"
-        >
-          <el-option
-            v-for="item in productNameList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="SKU" prop="code">
-        <el-select
-          v-model="queryParams.barCode"
-          clearable
-          filterable
-          placeholder="请选择SKU"
-          @keyup.enter="handleQuery"
-          @input="insertBarcode"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productSkuList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+        />
       </el-form-item>
       <el-form-item label="分类" prop="categoryId">
         <el-tree-select
@@ -51,67 +28,9 @@
           check-strictly
           default-expand-all
           placeholder="请输入分类"
-          clearable
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="品牌" prop="brand">
-        <el-select
-          v-model="queryParams.brand"
-          clearable
-          filterable
-          placeholder="请选择品牌"
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productBrandList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="系列" prop="series">
-        <el-select
-          v-model="queryParams.series"
-          clearable
-          filterable
-          placeholder="请选择系列"
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productSeriesList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select class="!w-240px" v-model="queryParams.status" clearable placeholder="请选择状态">
-          <el-option
-            v-for="dict in getBoolDictOptions(DICT_TYPE.COMMON_BOOLEAN_STATUS)"
-            :key="String(dict.value)"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="部门" prop="deptId">
-        <el-tree-select
-          class="!w-240px"
-          v-model="queryParams.deptId"
-          :data="deptList"
-          :props="defaultProps"
-          check-strictly
-          node-key="id"
-          placeholder="请选择部门"
-          clearable
-        />
-      </el-form-item>
-
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -132,88 +51,76 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-        <el-button @click="moreDialog = true"
-          ><Icon icon="ep:search" class="mr-5px" /> 更多</el-button
-        >
       </el-form-item>
     </el-form>
   </ContentWrap>
 
-  <!-- 更多 -->
-
-  <Dialog title="更多" v-model="moreDialog" width="1080px">
-    <SmForm
-      class="-mb-15px"
-      ref="form"
-      label-width="150px"
-      isCol
-      v-model="queryParams"
-      :options="moreFormOptions"
-      :getModelValue="getModelValue"
-    >
-      <!-- <template #primaryImageUrl="{ scope, model }">
-        <UploadImg v-model="model[scope.prop]" />
-      </template> -->
-      <!-- <template #action>
-        <div class="moreBtnList">
-          <el-button type="primary" @click="handleQuery"> 确定</el-button>
-        </div>
-      </template> -->
-    </SmForm>
-    <div class="moreBtnList">
-      <el-button type="primary" @click="moreConfirm"> 确定</el-button>
-    </div>
-  </Dialog>
-
-
-  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
-    <SmTable
-      border
-      :loading="loading"
-      :options="tableOptions"
-      :data="list"
+  <!-- 列表 -->
+  <ContentWrap>
+    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
+      <el-table-column label="条码" align="center" prop="barCode" />
+      <el-table-column label="名称" align="center" prop="name" />
+      <el-table-column label="规格" align="center" prop="standard" />
+      <el-table-column label="分类" align="center" prop="categoryName" />
+      <el-table-column label="单位" align="center" prop="unitName" />
+      <el-table-column
+        label="采购价格"
+        align="center"
+        prop="purchasePrice"
+        :formatter="erpPriceTableColumnFormatter"
+      />
+      <el-table-column
+        label="销售价格"
+        align="center"
+        prop="salePrice"
+        :formatter="erpPriceTableColumnFormatter"
+      />
+      <el-table-column
+        label="最低价格"
+        align="center"
+        prop="minPrice"
+        :formatter="erpPriceTableColumnFormatter"
+      />
+      <el-table-column label="状态" align="center" prop="status">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status" />
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        :formatter="dateFormatter"
+        width="180px"
+      />
+      <el-table-column label="操作" align="center" width="110">
+        <template #default="scope">
+          <el-button
+            link
+            type="primary"
+            @click="openForm('update', scope.row.id)"
+            v-hasPermi="['erp:product:update']"
+          >
+            编辑
+          </el-button>
+          <el-button
+            link
+            type="danger"
+            @click="handleDelete(scope.row.id)"
+            v-hasPermi="['erp:product:delete']"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 分页 -->
+    <Pagination
       :total="total"
-      v-model:currentPage="queryParams.pageNo"
-      v-model:pageSize="queryParams.pageSize"
+      v-model:page="queryParams.pageNo"
+      v-model:limit="queryParams.pageSize"
       @pagination="getList"
-    >
-      <template #primaryImageUrl="{ scope }">
-        <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
-      </template>
-
-      <template #status="{ scope }">
-        <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
-      </template>
-
-
-
-      <template #operate="{ scope }">
-        <el-button
-          link
-          type="primary"
-          @click="openForm('detail', scope.row.id)"
-          v-hasPermi="['erp:product:query']"
-        >
-          详情
-        </el-button>
-        <el-button
-          link
-          type="primary"
-          @click="openForm('update', scope.row.id)"
-          v-hasPermi="['erp:product:update']"
-        >
-          编辑
-        </el-button>
-        <el-button
-          link
-          type="danger"
-          @click="handleDelete(scope.row.id)"
-          v-hasPermi="['erp:product:delete']"
-        >
-          删除
-        </el-button>
-      </template>
-    </SmTable>
+    />
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -224,61 +131,30 @@
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { ProductApi, ProductVO } from '@/api/erp/product/product'
-import ProductForm from './ProductForm.vue'
 import { ProductCategoryApi, ProductCategoryVO } from '@/api/erp/product/category'
+import ProductForm from './ProductForm.vue'
+import { DICT_TYPE } from '@/utils/dict'
 import { defaultProps, handleTree } from '@/utils/tree'
-import { DICT_TYPE, getBoolDictOptions } from '@/utils/dict'
-import { DictTag } from '../../../../components/DictTag'
-import { ContentWrap } from '../../../../components/ContentWrap'
-import { getDeptTree } from './data/index'
-import { computeColumnWidthFor } from '@/utils/computeGeometry'
-import { getProductNameList, getUserList } from '@/commonData'
-import { useTableData } from '@/components/SmTable/src/utils'
-import { useFormData } from '@/components/SmForm/src/utils'
-import { insertSearchVal } from '@/utils/high'
+import { erpPriceTableColumnFormatter } from '@/utils'
 
-
-const { productNameList, productSkuList, productSeriesList, productBrandList } =
-  getProductNameList()
-
-/** ERP 产品 列表 */
+/** ERP 产品列表 */
 defineOptions({ name: 'ErpProduct' })
 
-const deptList = ref<Tree[]>([]) // 树形结构
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
 const list = ref<ProductVO[]>([]) // 列表的数据
-const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 const total = ref(0) // 列表的总页数
-let queryParams = reactive({
+const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
   name: undefined,
-  categoryId: undefined,
-  remark: undefined,
-  createTime: [],
-  deptId: undefined,
-  barCode: undefined,
-  unitId: undefined,
-  material: undefined,
-  status: undefined,
-  weight: undefined,
-  series: undefined,
-  model: undefined,
-  serial: undefined,
-  productionNo: undefined,
-  width: undefined,
-  length: undefined,
-  height: undefined,
-  primaryImageUrl: undefined,
-  guidePriceList: [],
-  color: undefined,
-  brand: undefined
+  categoryId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
+const categoryList = ref<ProductCategoryVO[]>([]) // 产品分类列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -331,215 +207,12 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await ProductApi.exportProduct(queryParams)
-    download.excel(data, 'ERP 产品.xls')
+    download.excel(data, '产品.xls')
   } catch {
   } finally {
     exportLoading.value = false
   }
 }
-
-const { deptNameColumnWidth, brandColumnWidth } = computeColumnWidthFor(list, [
-  'deptName',
-  'brand'
-]) as any
-
-const { tableOptions, transformTableOptions } = useTableData()
-
-const fieldMap = {
-  primaryImageUrl: {
-    label: '主图',
-    fixed: 'left',
-    slot: 'primaryImageUrl'
-  },
-  barCode: {
-    label: 'SKU',
-    fixed: 'left',
-    width: '180px',
-    slot: 'barCode',
-    wrap: true
-  },
-  name: {
-    label: '产品名称',
-    width: '180px',
-    slot: 'name',
-    wrap: true
-  },
-  status: {
-    label: '状态',
-    slot: 'status'
-  },
-  deptName: {
-    label: '部门',
-    width: deptNameColumnWidth
-  },
-  brand: {
-    label: '品牌',
-    width: brandColumnWidth
-  },
-  categoryName: {
-    label: '分类',
-    slot: 'categoryName',
-    width: '180px',
-    wrap: true
-  },
-  series: {
-    label: '系列',
-    slot: 'series',
-    width: '180px',
-    wrap: true
-  },
-  model: {
-    label: '型号',
-    slot: 'model',
-    width: '180px',
-    wrap: true
-  },
-
-  packageLength: '包装长度（mm）',
-  packageWidth: '包装宽度（mm）',
-  packageHeight: '包装高度（mm）',
-  packageWeight: '包装重量（kg）',
-
-  length: '基础长度（mm）',
-  width: '基础宽度（mm）',
-  height: '基础高度（mm）',
-  weight: '基础重量（kg）',
-
-  updateTime: {
-    label: '更新时间',
-    formatter: dateFormatter,
-    width: '180px'
-  },
-  updater: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '180px'
-  },
-  creator: '创建人',
-  operate: {
-    label: '操作',
-    slot: 'operate',
-    fixed: 'right',
-    width: '180px'
-  }
-}
-tableOptions.value = transformTableOptions(fieldMap)
-
-const { formOptions: moreFormOptions } = useFormData()
-
-const moreDialog = ref(false)
-const excludeFields = [
-  'name',
-  'code',
-  'barCode',
-  'categoryName',
-  'brand',
-  'series',
-  'status',
-  'deptName',
-  'model',
-  'operate',
-  'primaryImageUrl'
-]
-
-const userList = getUserList()
-const moreFormOptionsInit = () => {
-  const list: any = []
-  tableOptions.value.forEach((item: any) => {
-    if (!excludeFields.includes(item.prop)) {
-      queryParams[item.prop] = ''
-
-      let obj = {}
-
-      if (item.prop === 'createTime') {
-        obj = {
-          type: 'date-picker',
-          placeholder: '请选择创建时间',
-          prop: 'createTime',
-          label: '创建时间',
-          attrs: {
-            'start-placeholder': '开始日期',
-            'end-placeholder': '结束日期',
-            clearable: true,
-            type: 'daterange',
-            'value-format': 'YYYY-MM-DD HH:mm:ss'
-          }
-        }
-      } else if (item.prop === 'updateTime') {
-        obj = {
-          type: 'date-picker',
-          placeholder: '请选择更新时间',
-          prop: 'updateTime',
-          label: '更新时间',
-          attrs: {
-            'start-placeholder': '开始日期',
-            'end-placeholder': '结束日期',
-            clearable: true,
-            type: 'daterange',
-            'value-format': 'YYYY-MM-DD HH:mm:ss'
-          }
-        }
-      } else if (item.prop === 'creator') {
-        obj = {
-          type: 'select',
-          placeholder: '请选择创建人',
-          prop: 'creator',
-          label: '创建人',
-          attrs: {
-            filterable: true,
-            clearable: true,
-            style: {
-              width: '100%'
-            }
-          },
-          children: userList
-        }
-      } else if (item.prop === 'updater') {
-        obj = {
-          type: 'select',
-          placeholder: '请选择更新人',
-          prop: 'updater',
-          label: '更新人',
-          attrs: {
-            filterable: true,
-            clearable: true,
-            style: {
-              width: '100%'
-            }
-          },
-          children: userList
-        }
-      } else {
-        obj = {
-          type: 'input',
-          prop: item.prop,
-          label: item.label,
-          placeholder: `请输入${item.label}`,
-          attrs: { clearable: true }
-        }
-      }
-      list.push(obj)
-    }
-  })
-  list.forEach((item) => {
-    item.colConfig = { span: 12 }
-  })
-  moreFormOptions.value = list
-}
-
-moreFormOptionsInit()
-
-const moreConfirm = () => {
-  moreDialog.value = false
-  handleQuery()
-}
-
-const getModelValue = () => {
-  return queryParams
-}
-
-const insertBarcode = insertSearchVal(productSkuList)
 
 /** 初始化 **/
 onMounted(async () => {
@@ -547,13 +220,5 @@ onMounted(async () => {
   // 产品分类
   const categoryData = await ProductCategoryApi.getProductCategorySimpleList()
   categoryList.value = handleTree(categoryData, 'id', 'parentId')
-  deptList.value = (await getDeptTree()).value
 })
 </script>
-<style lang="scss" scoped>
-.moreBtnList {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
-</style>

@@ -36,7 +36,6 @@
       <el-table-column align="center" fixed="right" label="操作" width="130px">
         <template #default="scope">
           <el-button
-            v-if="scope.row.auditStatus === 0"
             v-hasPermi="['crm:receivable:update']"
             link
             type="primary"
@@ -45,8 +44,7 @@
             编辑
           </el-button>
           <el-button
-            v-if="scope.row.auditStatus === 0"
-            v-hasPermi="['crm:receivable:approve']"
+            v-hasPermi="['crm:receivable:delete']"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"

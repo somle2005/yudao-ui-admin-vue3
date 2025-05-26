@@ -9,7 +9,7 @@ const props = defineProps({
   modelValue: propTypes.bool.def(false),
   title: propTypes.string.def('Dialog'),
   fullscreen: propTypes.bool.def(true),
-  width: propTypes.oneOfType([String, Number]).def('70%'),
+  width: propTypes.oneOfType([String, Number]).def('40%'),
   scroll: propTypes.bool.def(false), // 是否开启滚动条。如果是的话，按照 maxHeight 设置最大高度
   maxHeight: propTypes.oneOfType([String, Number]).def('400px')
 })
@@ -55,18 +55,12 @@ const dialogStyle = computed(() => {
     height: unref(dialogHeight)
   }
 })
-
-const emits = defineEmits(['closeDialog'])
-
-const closeDialog = () => {
-  emits('closeDialog')
-}
 </script>
 
 <template>
   <ElDialog
     v-bind="getBindValue"
-    :close-on-click-modal="false"
+    :close-on-click-modal="true"
     :fullscreen="isFullscreen"
     :width="width"
     destroy-on-close
@@ -74,7 +68,7 @@ const closeDialog = () => {
     draggable
     class="com-dialog"
     :show-close="false"
-    @close="closeDialog"
+    @close="$emit('update:modelValue', false)"
   >
     <template #header="{ close }">
       <div class="relative h-54px flex items-center justify-between pl-15px pr-15px">
@@ -97,7 +91,7 @@ const closeDialog = () => {
             icon="ep:close"
             hover-color="var(--el-color-primary)"
             color="var(--el-color-info)"
-            @click="close"
+            @click.stop="close"
           />
         </div>
       </div>

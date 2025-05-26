@@ -1,6 +1,6 @@
 <template>
-  <!-- <doc-alert title="【客户】客户管理、公海客户" url="https://doc.iocoder.cn/crm/customer/" />
-  <doc-alert title="【通用】数据权限" url="https://doc.iocoder.cn/crm/permission/" /> -->
+  <doc-alert title="【客户】客户管理、公海客户" url="https://doc.iocoder.cn/crm/customer/" />
+  <doc-alert title="【通用】数据权限" url="https://doc.iocoder.cn/crm/permission/" />
 
   <ContentWrap>
     <!-- 搜索工作栏 -->
@@ -35,7 +35,6 @@
           class="!w-240px"
           clearable
           placeholder="请选择所属行业"
-          filterable
         >
           <el-option
             v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_INDUSTRY)"
@@ -51,7 +50,6 @@
           class="!w-240px"
           clearable
           placeholder="请选择客户级别"
-          filterable
         >
           <el-option
             v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_LEVEL)"
@@ -67,7 +65,6 @@
           class="!w-240px"
           clearable
           placeholder="请选择客户来源"
-          filterable
         >
           <el-option
             v-for="dict in getIntDictOptions(DICT_TYPE.CRM_CUSTOMER_SOURCE)"
@@ -115,37 +112,6 @@
           <dict-tag :type="DICT_TYPE.CRM_CUSTOMER_SOURCE" :value="scope.row.source" />
         </template>
       </el-table-column>
-
-      <!-- <el-table-column align="center" label="公司名称" prop="companyName" width="200px" /> -->
-      <el-table-column align="center" label="公司介绍" prop="companyIntroduction" width="200px" />
-      <el-table-column align="center" label="官网" prop="companyWebsite" width="200px" />
-      <el-table-column align="center" label="客户标签" prop="labelCodes" width="150px">
-        <template #default="scope">
-          <div v-if="scope.row?.labelCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.labelCodes"
-              :key="item"
-              :type="DICT_TYPE.CRM_CLIENT_TAG"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="国家" prop="countryCodes" width="100px">
-        <template #default="scope">
-          <div v-if="scope.row?.countryCodes?.length" class="common-wrap">
-            <dict-tag
-              v-for="item in scope.row.countryCodes"
-              :key="item"
-              :type="DICT_TYPE.COUNTRY_CODE"
-              :value="item"
-              style="margin-bottom: 5px"
-            />
-          </div>
-        </template>
-      </el-table-column>
-
       <el-table-column label="手机" align="center" prop="mobile" width="120" />
       <el-table-column label="电话" align="center" prop="telephone" width="130" />
       <el-table-column label="邮箱" align="center" prop="email" width="180" />
@@ -302,6 +268,3 @@ onMounted(() => {
   getList()
 })
 </script>
-<style lang="scss" scoped>
-@use '../../../../styles/comon.scss' as *;
-</style>
