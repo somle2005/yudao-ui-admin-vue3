@@ -24,8 +24,8 @@ export interface InboundVO {
 // 入库单 API
 export const InboundApi = {
   // 查询入库单分页
-  getInboundPage: async (params: any) => {
-    return await request.get({ url: `/wms/inbound/page`, params })
+  getInboundPage: async (data: any) => {
+    return await request.post({ url: `/wms/inbound/page`, data })
   },
 
   // 查询入库单详情

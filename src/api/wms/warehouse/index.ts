@@ -23,8 +23,8 @@ export interface WarehouseVO {
 // 仓库 API
 export const WarehouseApi = {
   // 查询仓库分页
-  getWarehousePage: async (params: any) => {
-    return await request.get({ url: `/wms/warehouse/page`, params })
+  getWarehousePage: async (data: any) => {
+    return await request.post({ url: `/wms/warehouse/page`, data })
   },
 
   // 查询仓库详情

@@ -11,8 +11,8 @@ export interface PickupVO {
 // 拣货单 API
 export const PickupApi = {
   // 查询拣货单分页
-  getPickupPage: async (params: any) => {
-    return await request.get({ url: `/wms/pickup/page`, params })
+  getPickupPage: async (data: any) => {
+    return await request.post({ url: `/wms/pickup/page`, data })
   },
 
   // 查询拣货单详情

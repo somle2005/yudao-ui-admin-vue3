@@ -14,8 +14,8 @@ export interface InventoryVO {
 // 盘点 API
 export const InventoryApi = {
   // 查询盘点分页
-  getInventoryPage: async (params: any) => {
-    return await request.get({ url: `/wms/inventory/page`, params })
+  getInventoryPage: async (data: any) => {
+    return await request.post({ url: `/wms/inventory/page`, data })
   },
 
   // 查询盘点详情
