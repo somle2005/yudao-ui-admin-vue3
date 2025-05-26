@@ -7,6 +7,7 @@ import { getFinanceSubjectList } from '@/commonData'
 import { getPortInfoList } from '@/commonData/tms'
 import { FirstMileRequestApi } from '@/api/tms/first-mile-request'
 import { debounce } from 'lodash-es'
+import { TableColumnCtx } from 'element-plus'
 
 // 合并头程申请单 头程申请合并和头程订单复用
 export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSubjectList) => {
@@ -355,6 +356,15 @@ export const computeVolume = (item) => {
       )
     )
   }
+}
+
+// 体积立方厘米转化成立方米
+export const transformVolume = (volume) => {
+  return volume / 1000000
+}
+
+export function transformVolumeColumn(_row: any, _column: TableColumnCtx<any>, cellValue: any) {
+  return cellValue ? transformVolume(cellValue) : null
 }
 
 export const computeList = (

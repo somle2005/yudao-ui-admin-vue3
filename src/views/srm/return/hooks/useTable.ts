@@ -7,6 +7,7 @@ import {
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
+import { transformVolumeColumn } from '@/views/tms/common/utils'
 import { cloneDeep } from 'lodash-es'
 
 /**
@@ -57,7 +58,6 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_OUTBOUND_STATUS }
     },
 
-    
     itemsOutboundStatus: {
       label: '行出库状态',
       slot: 'itemsOutboundStatus',
@@ -69,7 +69,11 @@ export const useTable = () => {
     totalItemsQty: '总数',
 
     totalWeight: '总毛重',
-    totalVolume: '总体积',
+    totalVolume: {
+      label: '总体积',
+      hideSort: true,
+      formatter: transformVolumeColumn
+    },
 
     // 下面是分行内容
     // 产品编码	产品名称	仓库	数量	箱率	单价	含税单价	税额	价税合计	上游单据编码	申请部门
@@ -193,7 +197,7 @@ export const useTable = () => {
     }
   }
 
-  const allOptions = transformTableOptions(fieldMap,{
+  const allOptions = transformTableOptions(fieldMap, {
     noComputePropList: ['code', 'itemsBarCode', 'supplierName', 'warehouseName']
   })
   const wrapList = [

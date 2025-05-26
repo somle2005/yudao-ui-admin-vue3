@@ -7,6 +7,7 @@ import {
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
+import { transformVolumeColumn } from '@/views/tms/common/utils'
 import { cloneDeep } from 'lodash-es'
 
 /**
@@ -91,7 +92,7 @@ export const useTable = () => {
       // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
 
-    totalItemsQty:'总数量',
+    totalItemsQty: '总数量',
 
     // 分行才展示
     // itemsTotalPrice: {
@@ -101,8 +102,11 @@ export const useTable = () => {
     // },
 
     totalWeight: '总毛重',
-    totalVolume: '总体积',
-
+    totalVolume: {
+      label: '总体积',
+      hideSort: true,
+      formatter: transformVolumeColumn
+    },
     // 状态字段好像缺失了
     auditStatus: {
       label: '审核状态',

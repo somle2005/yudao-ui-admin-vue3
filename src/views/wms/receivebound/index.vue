@@ -87,6 +87,7 @@ const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 
 const fieldMap = {
   code: '入库单号',
+  upstreamBillCode: '上游单据编号',
   warehouseName: '仓库',
 
   type: {

@@ -10,8 +10,9 @@ import { getSimpleUserList, UserVO } from '@/api/system/user'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/company'
-import {CustomRuleCategoryApi} from '@/api/tms/custom-category'
+import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
 import { CustomProductApi } from '@/api/tms/custom-product'
+import { notEmpty } from '@/utils/judge'
 
 interface SelectProp {
   value: number
@@ -242,7 +243,6 @@ export const getCustomProductList = (data?: any) => {
   return customProduct
 }
 
-
 // 获取币种列表
 export const getCurrencyList = (data?) => {
   const list = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
@@ -254,4 +254,16 @@ export const getCurrencyList = (data?) => {
     data.value = list
   }
   return ref(list)
+}
+
+const currencyList = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
+  item.id = item.value
+  item.value = item.label
+  return item
+})
+
+export const getCurrencyName = (currencyId) => {
+  if (!notEmpty(currencyId)) return
+  const item = currencyList.find((item) => item.id === currencyId)
+  if (item) return item.label
 }

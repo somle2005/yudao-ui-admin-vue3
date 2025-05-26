@@ -160,9 +160,13 @@ const { mergeOptions: createRequestFormOptions, vesselTrackingOptions } = useMer
   WMSWarehouseList,
   financeSubjectList
 )
-const vesselTrackingItemsOptions: any = ref(vesselTrackingOptions())
+const vesselTrackingItemsOptions: any = ref([])
 
 const detailFormOptions = (formOptions) => {
+  addDisabled(formOptions)
+  return formOptions
+}
+const detailVesselTrackingOptions = (formOptions) => {
   addDisabled(formOptions)
   return formOptions
 }
@@ -183,9 +187,11 @@ const open = async (type: string, id?: number) => {
   const formTypeOperate = {
     detail: () => {
       requestFormOptions.value = detailFormOptions(createRequestFormOptions())
+      vesselTrackingItemsOptions.value  = detailVesselTrackingOptions(vesselTrackingOptions())
     },
     create: () => {
       requestFormOptions.value = createRequestFormOptions()
+      vesselTrackingItemsOptions.value  = vesselTrackingOptions()
       FirstMileApi.getFirstMileLatestNo().then((res) => {
         const modelValue = formRef.value.getFormData()
         modelValue.code = res
@@ -193,14 +199,17 @@ const open = async (type: string, id?: number) => {
     },
     update: () => {
       requestFormOptions.value = createRequestFormOptions()
+      vesselTrackingItemsOptions.value  = vesselTrackingOptions()
     },
     audit: () => {
       requestFormOptions.value = auditFormOptions(createRequestFormOptions())
+      vesselTrackingItemsOptions.value  = detailVesselTrackingOptions(vesselTrackingOptions())
     }
   }
   const fn = formTypeOperate[type]
   fn && fn()
 
+  mergeTabsName.value = mergeItemsTabsName.firstMileItem
   warehouse.value = {}
   getFinanceSubjectList(financeSubjectList)
   getWMSWarehouseList(WMSWarehouseList)

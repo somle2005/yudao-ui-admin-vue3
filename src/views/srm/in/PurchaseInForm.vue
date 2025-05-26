@@ -71,6 +71,7 @@ import { useForm } from './hooks/useForm'
 import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
 import { useOutData } from './components/hooks/outdata'
 import { SRM_OPERATE_MAP } from '../common/constant'
+import { getCurrencyName } from '@/commonData'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -156,19 +157,11 @@ const open = async (type: string, id?: number, data?: any) => {
     formLoading.value = true
     try {
       formData.value = await PurchaseInApi.getPurchaseIn(id)
-
-      // if (formData.value?.items?.length) {
-      //   formData.value.items.forEach((a) => {
-      //     if (a.product) {
-      //       a.productId = a.product.id // 防止后端不放外面
-      //       a.productName = a.product.name
-      //       a.barCode = a.product.barCode
-      //       a.productUnitName = a.product.unitName
-      //       a.productUnitId = a.product.unitId
-      //     }
-      //   })
-      // }
-
+      if (formData.value?.items?.length) {
+        formData.value.items.forEach((a) => {
+          a.currencyName = getCurrencyName(formData.value.currencyId)
+        })
+      }
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {

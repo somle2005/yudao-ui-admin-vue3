@@ -658,6 +658,7 @@ const submitForm = async () => {
           ...data,
           items: items.map((item) => {
             return {
+              warehouseId: item.warehouseId,
               itemId: item.id,
               qty: item.qty
             }
@@ -677,8 +678,7 @@ const submitForm = async () => {
           'remark',
           // 'itemIds',
           'currencyName',
-          'currencyId',
-          'warehouseId'
+          'currencyId'
         ]
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)

@@ -120,7 +120,7 @@ export const transformTableOptions = (
         obj.noWidth = true
       }
       // 只能对时间字段-时间戳进行排序
-      if (fieldMap[key].formatter) {
+      if (fieldMap[key].formatter && !fieldMap[key].hideSort) {
         obj.sortable = true
       }
       Object.assign(obj, fieldMap[key])

@@ -18,6 +18,16 @@ export const useSearchForm = (handleQuery, queryParams) => {
       }
     },
     {
+      type: 'input',
+      label: '上游单据编号',
+      prop: 'upstreamBillCode',
+      placeholder: '请输入上游单据编号',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
       type: 'select',
       placeholder: '请选择产品编码',
       prop: 'productId',

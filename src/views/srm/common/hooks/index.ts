@@ -335,9 +335,9 @@ export const useInOptions = (supplierList, accountList) => {
       // },
       {
         type: 'date-picker',
-        placeholder: '请选择入库时间',
+        placeholder: '请选择到货时间',
         prop: 'inTime',
-        label: '入库时间',
+        label: '到货时间',
         attrs: {
           clearable: true,
           type: 'date',

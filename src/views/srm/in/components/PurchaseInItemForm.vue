@@ -187,7 +187,6 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
               <el-select
-                :disabled="disabled || !showPay"
                 v-model="row.warehouseId"
                 clearable
                 filterable
@@ -214,7 +213,7 @@
                 :min="1"
                 class="!w-100%"
               /> -->
-              <SmNumber :disabled="!showPay" v-model="row.qty" />
+              <SmNumber  v-model="row.qty" />
             </el-form-item>
           </template>
         </el-table-column>

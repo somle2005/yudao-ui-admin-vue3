@@ -315,7 +315,6 @@ const open = async (type: string, id?: number, data?: any) => {
       })
 
       formData.value.toWarehouseId = data[0].toWarehouseId
-      console.log(formData.value.toWarehouseId, 'formData.value.toWarehouseId', data)
       nextTick(() => {
         formRef.value.initForm()
       })
@@ -323,7 +322,8 @@ const open = async (type: string, id?: number, data?: any) => {
   }
   const fn = formTypeOperate[type]
   fn && fn()
-
+ 
+  mergeTabsName.value = mergeItemsTabsName.firstMileItem
   warehouse.value = {}
   const deptObj = getDeptTree(deptList)
   defaultProps.value = deptObj.defaultProps
