@@ -186,7 +186,7 @@ const fieldMap = {
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, {
-  noWidth: true,
+  // noWidth: true,
   wrapList: ['code', 'warehouseName'],
   noComputePropListWidth: ['code', 'warehouseName']
 })

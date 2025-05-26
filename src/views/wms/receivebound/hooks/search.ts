@@ -109,21 +109,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       }
     },
-    {
-      type: 'date-picker',
-      placeholder: '请选择预计到货时间',
-      prop: 'arrivalPlanTime',
-      label: '预计到货时间',
-      attrs: {
-        clearable: true,
-        type: 'date',
-        'value-format': 'x',
-        class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
-      }
-    },
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择预计到货时间',
+    //   prop: 'arrivalPlanTime',
+    //   label: '预计到货时间',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'date',
+    //     'value-format': 'x',
+    //     class: '!w-1/1',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
     {
       type: 'input',
       label: '特别说明',
