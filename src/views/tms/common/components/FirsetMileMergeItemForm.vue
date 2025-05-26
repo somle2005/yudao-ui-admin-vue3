@@ -132,8 +132,8 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="逻辑库存" prop="availableQty" width="100" align="center" />
-        <el-table-column label="采购在途数" prop="purchaseTransitQty" width="100" align="center" />
+        <!-- <el-table-column label="逻辑库存" prop="availableQty" width="100" align="center" />
+        <el-table-column label="采购在途数" prop="purchaseTransitQty" width="100" align="center" /> -->
 
         <el-table-column label="包装长(cm)" prop="packageLength" width="100" align="center" />
         <el-table-column label="包装宽(cm)" prop="packageWidth" width="100" align="center" />

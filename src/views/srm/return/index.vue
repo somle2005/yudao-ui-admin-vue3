@@ -38,7 +38,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['srm:purchase-return:submit-audit']"
+          v-hasPermi="['srm:purchase-return:submit']"
         >
           提交审核
         </el-button>

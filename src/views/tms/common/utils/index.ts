@@ -243,7 +243,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         },
         children: financeSubjectList
       },
-
       {
         type: 'select',
         label: '装运港',
@@ -280,9 +279,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         },
         children: portInfoList
       },
-
-      // 缺少 出口公司-中转公司-等后端提供字段
-
       {
         type: 'select',
         label: '出口公司',
