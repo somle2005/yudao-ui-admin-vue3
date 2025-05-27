@@ -83,7 +83,7 @@ const total = ref(0)
 const list = ref<any[]>([]) // 列表的数据
 const { tableOptions, transformTableOptions } = useTableData()
 
-const { WHOLE_ORDER_TYPE,wholeOrderMergeCompute } = useWholeOrderMergeComputeUp()
+const { WHOLE_ORDER_TYPE, wholeOrderMergeCompute } = useWholeOrderMergeComputeUp()
 // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
@@ -174,7 +174,7 @@ const fieldMap = {
   itemsDeliveryDate: {
     label: '交货日期',
     formatter: dateFormatter2, // 年月日-金蝶
-    width: '200px'
+    width: '180px'
   },
   // 总验货通过数-只有整单的时候才进行展示
   itemsTotalInspectionPassCount: {
@@ -183,15 +183,15 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   itemsWaitInCount: {
-    label: '待收数量',
+    label: '待收数量'
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   itemsQty: {
-    label: '下单数量',
+    label: '下单数量'
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   itemsInCount: {
-    label: '已收数量',
+    label: '已收数量'
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   currencyName: '币种',
@@ -202,15 +202,15 @@ const fieldMap = {
   // },
 
   itemsActTaxPrice: {
-    label: '含税单价',
+    label: '含税单价'
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   itemsTaxPrice: {
-    label: '税额',
+    label: '税额'
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
   itemsAmount: {
-    label: '价税合计',
+    label: '价税合计'
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
 
@@ -223,7 +223,6 @@ const fieldMap = {
   //   label: '价税合计',
   //   wholeOrderEnable: 'items',
   // }, // items
-
 
   itemsApplicantName: {
     label: '申请人',
@@ -249,7 +248,7 @@ const fieldMap = {
     width: '200px'
   },
 
-  reviewComment: '审核意见',
+  reviewComment: '审核意见'
 
   // operate: {
   //   label: '操作',
@@ -259,7 +258,20 @@ const fieldMap = {
   // }
 }
 
-const branchOptions = transformTableOptions(fieldMap)
+// 最终展示这几个 单据编码，供应商，产品编码，待收数量，下单数量，已收数量 ，交货日期
+const showList = [
+  'code',
+  'supplierName',
+  'itemsBarCode',
+  'itemsWaitInCount',
+  'itemsQty',
+  'itemsInCount',
+  'itemsDeliveryDate'
+]
+
+const branchOptions = transformTableOptions(fieldMap).filter((item: any) =>
+  showList.includes(item.prop)
+)
 const wrapList = ['code', 'supplierName', 'barCode', 'reviewComment', 'productName', 'remark']
 branchOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
@@ -274,13 +286,41 @@ tableOptions.value = cloneDeep(branchOptions)
 // 注意外面都要用let
 // eslint-disable-next-line prefer-const
 let queryParams: any = reactive({})
+let supplierIdSave
 
 const getList = async () => {
-  queryParams.auditStatus = 5
+  queryParams.auditStatus = 5 // 已审核
+  queryParams.supplierId = supplierIdSave
+  queryParams.inStatus = 3 // 整单全部入库
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
-    list.value = mergeItemsUpToList(data.list)
+    list.value = mergeItemsUpToList(data.list, 'items', {
+      barCode: 'barCode',
+      productName: 'productName',
+      containerRate: 'containerRate',
+      deliveryDate: 'deliveryDate',
+      qty: 'qty',
+      inCount: 'inCount',
+      actTaxPrice: 'actTaxPrice',
+      amount: 'amount',
+      declaredType: 'declaredType',
+      declaredTypeEn: 'declaredTypeEn',
+      warehouseId: 'warehouseId',
+      warehouseName: 'warehouseName',
+      expectArrivalDate: 'expectArrivalDate',
+      payPrice: 'payPrice',
+      xcode: 'xcode',
+
+      productUnitId: 'productUnitId',
+      productUnitName: 'productUnitName',
+
+      applicantName: 'applicantName',
+      departmentName: 'departmentName',
+      applicantId: 'applicantId',
+      applicationDeptId: 'applicationDeptId',
+      source: 'source' //接口无返回
+    })
     // list.value = wholeOrderMergeCompute(arr, tableOptions.value)
 
     // data.list.forEach((item) => {
@@ -304,7 +344,6 @@ const getList = async () => {
     //   })
     // })
 
- 
     // list.value = mergeItemsToList(data.list, {
     //   id: 'itemsId',
     //   status: 'itemsStatus',
@@ -332,8 +371,6 @@ const handleSelectionChange = (rows: any[]) => {
   selectionList.value = rows
 }
 
-
-
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 const resetQuery = () => {
@@ -355,8 +392,9 @@ const submitForm = () => {
 }
 
 /** 打开弹窗 */
-const open = async () => {
+const open = async (supplierId) => {
   dialogVisible.value = true
+  supplierIdSave = supplierId
   resetQuery()
   // await nextTick() // 等待，避免 queryFormRef 为空
 }

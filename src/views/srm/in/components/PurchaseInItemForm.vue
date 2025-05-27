@@ -80,12 +80,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="采购订单编号" width="200" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.orderNo }}</el-text>
-          </template>
-        </el-table-column>
-
+        <el-table-column prop="orderCode" label="采购订单编号" width="200" align="center"/>
         <el-table-column prop="applicantName" label="申请人" width="100" align="center" />
         <el-table-column prop="applicationDeptName" label="部门" width="200" align="center" />
         <el-table-column prop="currencyName" label="币种" width="120" align="center" />
@@ -186,12 +181,7 @@
         <el-table-column label="仓库" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <el-select
-                v-model="row.warehouseId"
-                clearable
-                filterable
-                placeholder="请选择仓库"
-              >
+              <el-select v-model="row.warehouseId" clearable filterable placeholder="请选择仓库">
                 <el-option
                   v-for="item in WMSWarehouseList"
                   :key="item.id"
@@ -213,7 +203,7 @@
                 :min="1"
                 class="!w-100%"
               /> -->
-              <SmNumber  v-model="row.qty" />
+              <SmNumber v-model="row.qty" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -276,7 +266,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="source" label="源单类型" min-width="150" align="center"/>
+        <el-table-column prop="source" label="源单类型" min-width="150" align="center" />
 
         <el-table-column label="备注" min-width="150" align="center">
           <template #default="{ row, $index }">

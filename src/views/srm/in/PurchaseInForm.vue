@@ -20,7 +20,12 @@
       </template>
 
       <template #items>
-        <el-button v-if="showAddBtn" type="primary" @click="openAddItem" style="margin-bottom: 10px"
+        <el-button
+          v-if="showAddBtn"
+          :disabled="addBtnDisabled"
+          type="primary"
+          @click="openAddItem(formData.supplierId)"
+          style="margin-bottom: 10px"
           >选择订单项</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
@@ -104,6 +109,8 @@ const initFormData = () => {
 }
 const formData: any = ref(initFormData())
 
+// 供应商必填
+const addBtnDisabled = computed(() => !formData.value.supplierId)
 const showAddBtn = computed(
   () =>
     !['audit', 'detail', SRM_OPERATE_MAP.pay, SRM_OPERATE_MAP.revokePay].includes(formType.value)
@@ -293,7 +300,7 @@ const addItem = (selectionList: any[]) => {
        * 无法带出的内容有 exchangeRate-source
        */
       const obj = {
-        orderNo: code,
+        orderCode: code,
         [itemIdKey]: itemsId, //list记得转化
 
         productId,
