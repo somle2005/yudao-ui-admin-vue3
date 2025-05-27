@@ -53,6 +53,18 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="实际数量" width="100" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item
+              :prop="`${$index}.actualQty`"
+              :rules="formRules.actualQty"
+              class="mb-0px!"
+            >
+              <SmNumber v-model="row.actualQty" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
         <el-table-column label="备注" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
@@ -135,7 +147,8 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
+  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+  actualQty: [{ required: true, message: '实际数量不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
