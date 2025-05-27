@@ -187,7 +187,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '上游单据编码',
-      prop: 'upstreamCode',
+      prop: 'upstreamBillCode',
       attrs: {
         disabled: true,
         style: { width: '100%' },
@@ -248,8 +248,9 @@ const createRequestFormOptions = () => {
     { 
       type: 'date-picker',
       prop: 'outboundTime',
-      label: '计划出库时间',
+      label: '出库时间',
       attrs: {
+        disabled: true,
         clearable: true,
         'value-format': 'x',
         style: {

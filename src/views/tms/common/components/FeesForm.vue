@@ -28,12 +28,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="费用类型" width="100" align="center">
+        <el-table-column label="费用类型" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.costType`" :rules="formRules.costType" class="mb-0px!">
               <SmSelect
                 v-model="row.costType"
-                placeholder="请选择库存公司"
+                placeholder="请选择费用类型"
                 :data="getIntDictOptions(DICT_TYPE.TMS_FEE_TYPE)"
               />
             </el-form-item>
