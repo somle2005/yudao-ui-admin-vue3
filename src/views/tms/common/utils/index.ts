@@ -41,16 +41,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         children: WMSWarehouseList
       },
 
-      {
-        type: 'input',
-        label: '提单号',
-        prop: 'ladingNo',
-        placeholder: '请输入提单号',
-        attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
+  
 
       {
         type: 'select',
@@ -85,36 +76,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         placeholder: '请选择预计到货日期',
         prop: 'arrivePlanTime',
         label: '预计到货日期',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'date-picker',
-        placeholder: '请选择预计送仓时间',
-        prop: 'deliveryEstimateTime',
-        label: '预计送仓时间',
-        attrs: {
-          clearable: true,
-          type: 'date',
-          'value-format': 'x',
-          class: '!w-1/1',
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'date-picker',
-        placeholder: '请选择实际送仓时间',
-        prop: 'deliveryActualTime',
-        label: '实际送仓时间',
         attrs: {
           clearable: true,
           type: 'date',
@@ -330,7 +291,49 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
           clearable: true
         },
         children: financeSubjectList
-      }
+      },
+      {
+        type: 'input',
+        label: '提单号',
+        prop: 'ladingNo',
+        placeholder: '请输入提单号',
+        attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+
+      {
+        type: 'date-picker',
+        placeholder: '请选择预计送仓时间',
+        prop: 'deliveryEstimateTime',
+        label: '预计送仓时间',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'date-picker',
+        placeholder: '请选择实际送仓时间',
+        prop: 'deliveryActualTime',
+        label: '实际送仓时间',
+        attrs: {
+          clearable: true,
+          type: 'date',
+          'value-format': 'x',
+          class: '!w-1/1',
+          style: {
+            width: '100%'
+          }
+        }
+      },
+
     ]
     list.forEach((item: any) => {
       item.colConfig = { span: 8 }

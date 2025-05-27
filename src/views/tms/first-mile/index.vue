@@ -196,9 +196,9 @@ const getList = async () => {
     const bodyData = getMainItemBodyDataField({
       queryParams,
       configList: [
-        { name: 'mainQueryVO', fieldList: ['code', 'toWarehouseId', 'ladingNo', 'auditStatus'] },
+        { name: 'mainQueryVO', fieldList: ['code', 'toWarehouseId', 'auditStatus'] },
         { name: 'itemPageReqVO', fieldList: ['productId', 'outboundStatus', 'inboundStatus'] },
-        { name: 'trackingQueryVO', fieldList: [] }
+        { name: 'trackingQueryVO', fieldList: ['ladingNo'] }
       ]
     })
 

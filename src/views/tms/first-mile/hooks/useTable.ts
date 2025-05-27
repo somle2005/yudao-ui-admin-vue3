@@ -20,35 +20,6 @@ export const useTable = () => {
       slot: 'auditStatus',
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
-    cabinetType: {
-      label: '柜型',
-      slot: 'cabinetType',
-      dictAttrs: { type: DICT_TYPE.TMS_CABINET_TYPE }
-    },
-
-    geometry: {
-      label: '总箱数/数量/重量/体积',
-      slot: 'geometry'
-    },
-    loadOutbound: {
-      label: '装柜日期 出库时间',
-      slot: 'loadOutboundTime'
-    },
-    company: {
-      label: '出口公司 中转公司',
-      slot: 'company'
-    },
-
-    voyageNo: {
-      label: '提单号 箱号 航次',
-      slot: 'company'
-    },
-
-    create: {
-      label: '创建人 创建时间',
-      width: '250px',
-      slot: 'create'
-    },
 
     outboundStatus: {
       label: '发货状态',
@@ -59,6 +30,37 @@ export const useTable = () => {
       label: '入库状态',
       slot: 'inboundStatus',
       dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+    },
+
+    cabinetType: {
+      label: '柜型',
+      slot: 'cabinetType',
+      dictAttrs: { type: DICT_TYPE.TMS_CABINET_TYPE }
+    },
+
+    geometry: {
+      label: '总箱数/数量/重量/体积',
+      slot: 'geometry'
+    },
+
+    company: {
+      label: '出口公司 中转公司',
+      slot: 'company'
+    },
+
+    voyageNo: {
+      label: '提单号 箱号 航次',
+      slot: 'voyageNo'
+    },
+
+    loadOutbound: {
+      label: '装柜日期 出库时间',
+      slot: 'loadOutbound'
+    },
+    create: {
+      label: '创建人 创建时间',
+      width: '250px',
+      slot: 'create'
     },
 
     // comment: '审批意见',
