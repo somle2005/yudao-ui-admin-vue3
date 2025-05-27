@@ -5,8 +5,12 @@ export const isAbandon = (status: any) => {
   return [0, 2].includes(status) //草稿0 驳回2
 }
 
-export const addComment = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.slot === 'items')
+export const addComment = (formOptions, slotKey = 'items') => {
+  const index = formOptions.findIndex((item) => item.slot === slotKey)
+  if (index === -1) {
+    console.log('items.slot没有找到')
+    return
+  }
   const obj: any = {
     type: 'input',
     placeholder: '请输入审核意见',

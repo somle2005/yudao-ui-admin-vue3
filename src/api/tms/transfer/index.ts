@@ -7,13 +7,14 @@ export interface TransferVO {
   toWarehouseId: number // 目的仓库ID
   remark: string // 备注
   traceNo: string // 跟踪号
+  items: any[]
 }
 
 // 调拨单 API
 export const TransferApi = {
   // 查询调拨单分页
-  getTransferPage: async (params: any) => {
-    return await request.get({ url: `/tms/transfer/page`, params })
+  getTransferPage: async (data: any) => {
+    return await request.post({ url: `/tms/transfer/page`, data })
   },
 
   // 查询调拨单详情
@@ -47,4 +48,4 @@ export const TransferApi = {
   getTransferItemListByTransferId: async (transferId) => {
     return await request.get({ url: `/tms/transfer/transfer-item/list-by-transfer-id?transferId=` + transferId })
   },
-}
+}

@@ -34,7 +34,10 @@
           >选择上架产品</el-button
         > -->
         <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane :label="mergeItemsTabsName.firstMileItem" :name="mergeItemsTabsName.firstMileItem">
+          <el-tab-pane
+            :label="mergeItemsTabsName.firstMileItem"
+            :name="mergeItemsTabsName.firstMileItem"
+          >
             <FirsetMileMergeItemForm
               v-if="formData.toWarehouseId"
               ref="firstMileItemFormRef"
@@ -44,7 +47,10 @@
               :disabled="itemsFormdisabled"
             />
           </el-tab-pane>
-          <el-tab-pane :label="mergeItemsTabsName.vesselTrackingTabsName" :name="mergeItemsTabsName.vesselTrackingTabsName">
+          <el-tab-pane
+            :label="mergeItemsTabsName.vesselTrackingTabsName"
+            :name="mergeItemsTabsName.vesselTrackingTabsName"
+          >
             <SmForm
               class="-mb-15px common-form-tabs-items"
               ref="vesselTrackingFormRef"
@@ -54,7 +60,10 @@
               :getModelValue="getVesselTrackingFormData"
             />
           </el-tab-pane>
-          <el-tab-pane :label="mergeItemsTabsName.feesTabsName" :name="mergeItemsTabsName.feesTabsName">
+          <el-tab-pane
+            :label="mergeItemsTabsName.feesTabsName"
+            :name="mergeItemsTabsName.feesTabsName"
+          >
             <FeesForm
               ref="feesFormRef"
               :items="formData.fees"
@@ -72,7 +81,7 @@
       >
       <el-button @click="dialogVisible = false">取 消</el-button>
       <template v-if="auditType">
-        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
           不同意</el-button
         >
         <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
@@ -172,7 +181,7 @@ const detailVesselTrackingOptions = (formOptions) => {
 
 const auditFormOptions = (formOptions) => {
   addDisabled(formOptions)
-  addComment(formOptions)
+  addComment(formOptions, 'mergeItems')
   return formOptions
 }
 
@@ -186,11 +195,11 @@ const open = async (type: string, id?: number) => {
   const formTypeOperate = {
     detail: () => {
       requestFormOptions.value = detailFormOptions(createRequestFormOptions())
-      vesselTrackingItemsOptions.value  = detailVesselTrackingOptions(vesselTrackingOptions())
+      vesselTrackingItemsOptions.value = detailVesselTrackingOptions(vesselTrackingOptions())
     },
     create: () => {
       requestFormOptions.value = createRequestFormOptions()
-      vesselTrackingItemsOptions.value  = vesselTrackingOptions()
+      vesselTrackingItemsOptions.value = vesselTrackingOptions()
       FirstMileApi.getFirstMileLatestNo().then((res) => {
         const modelValue = formRef.value.getFormData()
         modelValue.code = res
@@ -198,11 +207,11 @@ const open = async (type: string, id?: number) => {
     },
     update: () => {
       requestFormOptions.value = createRequestFormOptions()
-      vesselTrackingItemsOptions.value  = vesselTrackingOptions()
+      vesselTrackingItemsOptions.value = vesselTrackingOptions()
     },
     audit: () => {
       requestFormOptions.value = auditFormOptions(createRequestFormOptions())
-      vesselTrackingItemsOptions.value  = detailVesselTrackingOptions(vesselTrackingOptions())
+      vesselTrackingItemsOptions.value = detailVesselTrackingOptions(vesselTrackingOptions())
     }
   }
   const fn = formTypeOperate[type]

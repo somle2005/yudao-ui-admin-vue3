@@ -1,270 +1,16 @@
 <template>
   <ContentWrap>
     <!-- 搜索工作栏 -->
-    <el-form
+    <SmForm
       class="-mb-15px"
-      :model="queryParams"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
+      v-model="queryParams"
+      :options="searchFormOptions"
+      :getModelValue="getSearchFormData"
     >
-      <el-form-item label="乐观锁" prop="revision">
-        <el-input
-          v-model="queryParams.revision"
-          placeholder="请输入乐观锁"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="创建人ID" prop="creator">
-        <el-input
-          v-model="queryParams.creator"
-          placeholder="请输入创建人ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker
-          v-model="queryParams.createTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
-      </el-form-item>
-      <el-form-item label="更新人ID" prop="updater">
-        <el-input
-          v-model="queryParams.updater"
-          placeholder="请输入更新人ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="更新时间" prop="updateTime">
-        <el-date-picker
-          v-model="queryParams.updateTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
-      </el-form-item>
-      <el-form-item label="调拨单编码" prop="code">
-        <el-input
-          v-model="queryParams.code"
-          placeholder="请输入调拨单编码"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="发出仓库ID" prop="fromWarehouseId">
-        <el-input
-          v-model="queryParams.fromWarehouseId"
-          placeholder="请输入发出仓库ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="目的仓库ID" prop="toWarehouseId">
-        <el-input
-          v-model="queryParams.toWarehouseId"
-          placeholder="请输入目的仓库ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="审核人ID" prop="auditorId">
-        <el-input
-          v-model="queryParams.auditorId"
-          placeholder="请输入审核人ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="审核状态" prop="auditStatus">
-        <el-select
-          v-model="queryParams.auditStatus"
-          placeholder="请选择审核状态"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="审核时间" prop="auditTime">
-        <el-date-picker
-          v-model="queryParams.auditTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
-      </el-form-item>
-      <el-form-item label="审核意见" prop="auditAdvice">
-        <el-input
-          v-model="queryParams.auditAdvice"
-          placeholder="请输入审核意见"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="出库状态" prop="outboundStatus">
-        <el-select
-          v-model="queryParams.outboundStatus"
-          placeholder="请选择出库状态"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="出库时间" prop="outboundTime">
-        <el-date-picker
-          v-model="queryParams.outboundTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
-      </el-form-item>
-      <el-form-item label="入库状态" prop="inboundStatus">
-        <el-select
-          v-model="queryParams.inboundStatus"
-          placeholder="请选择入库状态"
-          clearable
-          class="!w-240px"
-        >
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="入库时间" prop="inboundTime">
-        <el-date-picker
-          v-model="queryParams.inboundTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="跟踪号" prop="traceNo">
-        <el-input
-          v-model="queryParams.traceNo"
-          placeholder="请输入跟踪号"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="总货值" prop="totalValue">
-        <el-input
-          v-model="queryParams.totalValue"
-          placeholder="请输入总货值"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="总净重" prop="netWeight">
-        <el-input
-          v-model="queryParams.netWeight"
-          placeholder="请输入总净重"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="总毛重" prop="totalWeight">
-        <el-input
-          v-model="queryParams.totalWeight"
-          placeholder="请输入总毛重"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="总体积" prop="totalVolume">
-        <el-input
-          v-model="queryParams.totalVolume"
-          placeholder="请输入总体积"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="总件数" prop="totalQty">
-        <el-input
-          v-model="queryParams.totalQty"
-          placeholder="请输入总件数"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="出库单ID" prop="outboundId">
-        <el-input
-          v-model="queryParams.outboundId"
-          placeholder="请输入出库单ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="出库单编码" prop="outboundCode">
-        <el-input
-          v-model="queryParams.outboundCode"
-          placeholder="请输入出库单编码"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="入库单ID" prop="inboundId">
-        <el-input
-          v-model="queryParams.inboundId"
-          placeholder="请输入入库单ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="入库单编码" prop="inboundCode">
-        <el-input
-          v-model="queryParams.inboundCode"
-          placeholder="请输入入库单编码"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item>
+      <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
         <el-button
@@ -284,108 +30,102 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-      </el-form-item>
-    </el-form>
-  </ContentWrap>
 
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleSubmitAuditBatch"
+          v-hasPermi="['transfer:submit-audit']"
+        >
+          提交审核
+        </el-button>
+
+        <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['transfer:audit-status']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleUpdateStatusEnableBatch(true)"
+          v-hasPermi="['tms:transfer:item-off']"
+        >
+          开启
+        </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          plain
+          @click="handleUpdateStatusEnableBatch(false)"
+          v-hasPermi="['tms:transfer:item-off']"
+        >
+          关闭
+        </el-button>
+      </template>
+    </SmForm>
+  </ContentWrap>
   <!-- 列表 -->
-  <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <!-- 子表的列表 -->
-      <el-table-column type="expand">
-        <template #default="scope">
-          <el-tabs model-value="transferItem">
-            <el-tab-pane label="调拨单明细" name="transferItem">
-              <TransferItemList :transfer-id="scope.row.id" />
-            </el-tab-pane>
-          </el-tabs>
-        </template>
-      </el-table-column>
-      <el-table-column label="乐观锁" align="center" prop="revision" />
-      <el-table-column label="创建人ID" align="center" prop="creator" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="更新人ID" align="center" prop="updater" />
-      <el-table-column
-        label="更新时间"
-        align="center"
-        prop="updateTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="调拨单编码" align="center" prop="code" />
-      <el-table-column label="发出仓库ID" align="center" prop="fromWarehouseId" />
-      <el-table-column label="目的仓库ID" align="center" prop="toWarehouseId" />
-      <el-table-column label="审核人ID" align="center" prop="auditorId" />
-      <el-table-column label="审核状态" align="center" prop="auditStatus" />
-      <el-table-column
-        label="审核时间"
-        align="center"
-        prop="auditTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="审核意见" align="center" prop="auditAdvice" />
-      <el-table-column label="出库状态" align="center" prop="outboundStatus" />
-      <el-table-column
-        label="出库时间"
-        align="center"
-        prop="outboundTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="入库状态" align="center" prop="inboundStatus" />
-      <el-table-column
-        label="入库时间"
-        align="center"
-        prop="inboundTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="跟踪号" align="center" prop="traceNo" />
-      <el-table-column label="总货值" align="center" prop="totalValue" />
-      <el-table-column label="总净重" align="center" prop="netWeight" />
-      <el-table-column label="总毛重" align="center" prop="totalWeight" />
-      <el-table-column label="总体积" align="center" prop="totalVolume" />
-      <el-table-column label="总件数" align="center" prop="totalQty" />
-      <el-table-column label="出库单ID" align="center" prop="outboundId" />
-      <el-table-column label="出库单编码" align="center" prop="outboundCode" />
-      <el-table-column label="入库单ID" align="center" prop="inboundId" />
-      <el-table-column label="入库单编码" align="center" prop="inboundCode" />
-      <el-table-column label="操作" align="center" min-width="120px">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['tms:transfer:update']"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['tms:transfer:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页 -->
-    <Pagination
+  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+    <SmTable
+      border
+      isSelection
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
       :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
-    />
+      @selection-change="handleSelectionChange"
+    >
+      <template #geometry="{ scope }">
+        <div class="common-text">总箱数:{{ scope.row.totalBoxQty }}</div>
+        <div class="common-text">数量:{{ scope.row.totalQty }}</div>
+        <div class="common-text">重量:{{ scope.row.totalWeight }}</div>
+        <div class="common-text">体积:{{ scope.row.totalVolume }}</div>
+      </template>
+
+      <template #operate="{ scope }">
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['tms:transfer:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['tms:transfer:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['tms:transfer:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -393,11 +133,15 @@
 </template>
 
 <script setup lang="ts">
-import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { TransferApi, TransferVO } from '@/api/tms/transfer'
 import TransferForm from './TransferForm.vue'
-import TransferItemList from './components/TransferItemList.vue'
+import { useSearchForm } from './hooks/search'
+import { useTable } from './hooks/useTable'
+import { getMainItemBodyDataField } from '@/utils/transform'
+import { useBatch } from './hooks/useBatch'
+
+let { tableOptions } = useTable()
 
 /** 调拨单 列表 */
 defineOptions({ name: 'TmsTransfer' })
@@ -437,7 +181,7 @@ const queryParams = reactive({
   outboundId: undefined,
   outboundCode: undefined,
   inboundId: undefined,
-  inboundCode: undefined,
+  inboundCode: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -446,7 +190,19 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await TransferApi.getTransferPage(queryParams)
+    const bodyData = getMainItemBodyDataField({
+      queryParams,
+      configList: [
+        {
+          name: 'mainQueryVO',
+          fieldList: ['code', 'fromWarehouseId', 'toWarehouseId', 'traceNo', 'productId', 'remark']
+        },
+        { name: 'itemQueryVo', fieldList: [] }
+      ]
+    })
+
+    const data = await TransferApi.getTransferPage(bodyData)
+    // const data = await TransferApi.getTransferPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -499,6 +255,22 @@ const handleExport = async () => {
     exportLoading.value = false
   }
 }
+
+/** 选中操作 */
+const selectionList = ref<any[]>([])
+const handleSelectionChange = (rows: any[]) => {
+  selectionList.value = rows
+}
+
+const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const {
+  disabledBtn,
+  oneSelectDisabledBtn,
+  handleUpdateStatus,
+  handleSubmitAuditBatch,
+  handleUpdateStatusEnableBatch
+} = useBatch(selectionList, getList, openForm)
 
 /** 初始化 **/
 onMounted(() => {
