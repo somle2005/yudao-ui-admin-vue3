@@ -346,6 +346,8 @@ const submitForm = async (type?: string) => {
   formLoading.value = true
   try {
     const data = formData.value as unknown as InboundVO as any
+    //  创建手工入库单时，需要把参数写死为0 -编辑的时候也带上吧
+    data.upstreamBillType = 0
     if (itemFormRef?.value?.formData) {
       data.itemList = cloneDeep(itemFormRef.value.formData)
     }

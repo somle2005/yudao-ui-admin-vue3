@@ -149,6 +149,7 @@ const fieldMap = {
   upstreamBillCode: '上游单据编号',
   warehouseName: '仓库',
 
+
   type: {
     label: '入库单类型',
     slot: 'type',
@@ -233,7 +234,7 @@ const queryParams = reactive({
   status: undefined,
   upstreamBillId: undefined,
   upstreamBillCode: undefined,
-  upstreamBillType: undefined,
+  upstreamBillType: 0,
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,
@@ -249,6 +250,7 @@ const exportLoading = ref(false) // 导出的加载中
 /** 查询列表 */
 const getList = async () => {
   loading.value = true
+  queryParams.upstreamBillType = 0 //手工入库 防止和收货管理冲突
   try {
     const data = await InboundApi.getInboundPage(queryParams)
     list.value = getItemProp(data.list, ['warehouse']).map((item: any) => {

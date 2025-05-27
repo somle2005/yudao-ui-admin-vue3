@@ -90,6 +90,7 @@ const fieldMap = {
   upstreamBillCode: '上游单据编号',
   warehouseName: '仓库',
 
+  
   type: {
     label: '入库单类型',
     slot: 'type',
