@@ -47,19 +47,19 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       }
     },
-    {
-      type: 'input',
-      placeholder: '请输入箱号',
-      prop: 'containerNo',
-      label: '箱号',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      }
-    },
+    // {
+    //   type: 'input',
+    //   placeholder: '请输入箱号',
+    //   prop: 'containerNo',
+    //   label: '箱号',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
 
     {
       type: 'select',
@@ -77,19 +77,19 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: productList
     },
 
-    {
-      type: 'input',
-      placeholder: '请输入备注',
-      prop: 'remark',
-      label: '备注',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      }
-    },
+    // {
+    //   type: 'input',
+    //   placeholder: '请输入备注',
+    //   prop: 'remark',
+    //   label: '备注',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
 
     {
       type: 'select',

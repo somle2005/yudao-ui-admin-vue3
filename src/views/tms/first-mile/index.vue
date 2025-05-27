@@ -143,6 +143,7 @@ import { useSearchForm } from './hooks/search'
 import { useTable } from './hooks/useTable'
 import { formatDate } from '@/utils/formatTime'
 import { useBatch } from './hooks/useBatch'
+import { getMainItemBodyDataField } from '@/utils/transform'
 
 let { tableOptions } = useTable()
 
@@ -192,7 +193,17 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await FirstMileApi.getFirstMilePage(queryParams)
+    const bodyData = getMainItemBodyDataField({
+      queryParams,
+      configList: [
+        { name: 'mainQueryVO', fieldList: ['toWarehouseId', 'ladingNo', 'auditStatus'] },
+        { name: 'itemPageReqVO', fieldList: ['outboundStatus', 'inboundStatus'] },
+        { name: 'trackingQueryVO', fieldList: [] }
+      ]
+    })
+
+    const data = await FirstMileApi.getFirstMilePage(bodyData)
+    // const data = await FirstMileApi.getFirstMilePage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
