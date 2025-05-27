@@ -5,6 +5,6 @@ export const AUDIT_STATUS = {
 export const OPERATE_MAP = {
   'update-actual-quantity':'收货',
   abandon: '作废',
-  'force-finish': 'force-finish',
-  'update-actual-quantityAndPickup': '强制完成'
+  'force-finish': '强制完成',
+  'update-actual-quantityAndPickup': '收货并上架'
 }

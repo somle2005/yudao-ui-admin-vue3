@@ -33,6 +33,14 @@
         <el-button
           link
           type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['wms:inbound:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="primary"
           @click="openForm(OPERATE_MAP['update-actual-quantity'], scope.row.id)"
           v-if="hasAllPermission(['wms:inbound-item:update', 'wms:inbound:agree'])"
         >
@@ -96,7 +104,7 @@ const fieldMap = {
     slot: 'upstreamBillType',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
-  
+
   type: {
     label: '入库单类型',
     slot: 'type',
@@ -128,7 +136,7 @@ const fieldMap = {
     formatter: dateFormatter2,
     width: '200px'
   },
-  remark: '特别说明',
+  remark: '备注',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,

@@ -176,9 +176,9 @@ const updateActualQuantityFormOptions = () => {
     },
     {
       type: 'input',
-      label: '特别说明',
+      label: '备注',
       prop: 'remark',
-      placeholder: '请输入特别说明',
+      placeholder: '请输入备注',
       attrs: {
         style: { width: '100%' },
         clearable: true
@@ -217,6 +217,23 @@ const forceFinishFormOptions = (formOptions) => {
   return formOptions
 }
 
+const updateFormOptions = (formOptions) => {
+  // 跟踪号-运输方式-预计到货时间-备注
+  const updateList = ['traceNo', 'shippingMethod', 'arrivalPlanTime', 'remark']
+
+  formOptions.forEach((item) => {
+    if (!updateList.includes(item.prop)) return
+    if (item.attrs) {
+      item.attrs.disabled = false
+    } else {
+      item.attrs = {
+        disabled: false
+      }
+    }
+  })
+  return formOptions
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -224,28 +241,28 @@ const open = async (type: string, id?: number) => {
   formType.value = type
   resetForm()
 
-  const titleMap = {
-    [OPERATE_MAP['update-actual-quantity']]: '收货',
-    [OPERATE_MAP.abandon]: '作废',
-    [OPERATE_MAP['force-finish']]: '强制完成'
-  }
-  dialogTitle.value = titleMap[type]
-
   getFinanceSubjectList(financeSubjectList)
   getWMSWarehouseList(WMSWarehouseList)
 
   const formTypeOperate = {
     [OPERATE_MAP['update-actual-quantity']]: () => {
+      dialogTitle.value = OPERATE_MAP['update-actual-quantity']
       requestFormOptions.value = addComment(updateActualQuantityFormOptions())
     },
     [OPERATE_MAP.abandon]: () => {
+      dialogTitle.value = OPERATE_MAP.abandon
       requestFormOptions.value = abandonFormOptions(updateActualQuantityFormOptions())
     },
     [OPERATE_MAP['force-finish']]: () => {
+      dialogTitle.value = OPERATE_MAP['force-finish']
       requestFormOptions.value = forceFinishFormOptions(updateActualQuantityFormOptions())
     },
     [OPERATE_MAP['update-actual-quantityAndPickup']]: () => {
+      dialogTitle.value = OPERATE_MAP['update-actual-quantityAndPickup']
       requestFormOptions.value = updateActualQuantityFormOptions()
+    },
+    update: () => {
+      requestFormOptions.value = updateFormOptions(updateActualQuantityFormOptions())
     }
   }
   formTypeOperate[type]()
@@ -321,6 +338,9 @@ const submitForm = async () => {
         })
       }
       setTimeout(() => toPickup(), 500)
+    } else if (formType.value === 'update') {
+      await InboundApi.updateInbound(data)
+      message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件
