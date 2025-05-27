@@ -209,7 +209,7 @@ const createRequestFormOptions = () => {
     },
     {
       type: 'select',
-      prop: 'outbountStatus',
+      prop: 'outboundStatus',
       label: '出库状态',
       attrs: {
         disabled: true,
@@ -224,7 +224,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '操作人',
-      prop: 'operator',
+      prop: 'updaterName',
       attrs: {
         disabled: true,
         style: { width: '100%' },
@@ -233,12 +233,13 @@ const createRequestFormOptions = () => {
     },
     { 
       type: 'date-picker',
-      prop: 'operatorTime',
+      prop: 'updateTime',
       label: '操作时间',
       attrs: {
         disabled: true,
         clearable: true,
         'value-format': 'x',
+        format: 'YYYY-MM-DD HH:mm:ss',
         style: {
           width: '100%'
         }
