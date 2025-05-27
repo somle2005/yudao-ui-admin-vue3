@@ -90,6 +90,12 @@ const fieldMap = {
   upstreamBillCode: '上游单据编号',
   warehouseName: '仓库',
 
+  upstreamBillType: {
+    label: '上游单据类型',
+    width: '160px',
+    slot: 'upstreamBillType',
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
+  },
   
   type: {
     label: '入库单类型',
@@ -162,7 +168,7 @@ const queryParams = reactive({
   auditStatus: 1, // 待审批
   upstreamBillId: undefined,
   upstreamBillCode: undefined,
-  upstreamBillType: undefined,
+  upstreamBillType: 0,
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,
