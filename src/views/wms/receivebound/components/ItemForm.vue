@@ -60,7 +60,7 @@
               :rules="formRules.actualQty"
               class="mb-0px!"
             >
-              <SmNumber v-model="row.actualQty" />
+              <SmNumber :max="row.planQty" v-model="row.actualQty" />
             </el-form-item>
           </template>
         </el-table-column>
