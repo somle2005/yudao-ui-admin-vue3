@@ -319,7 +319,8 @@ const getList = async () => {
       departmentName: 'departmentName',
       applicantId: 'applicantId',
       applicationDeptId: 'applicationDeptId',
-      source: 'source' //接口无返回
+      source: 'source', //接口无返回
+      remark: 'remark',
     })
     // list.value = wholeOrderMergeCompute(arr, tableOptions.value)
 

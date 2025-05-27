@@ -52,6 +52,7 @@ import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseInApi } from '@/api/srm/in'
 import { useTable } from './hooks/useTable'
 import { getMainItemBodyData } from '@/utils/transform'
+import { getCurrencyName } from '@/commonData'
 
 // 暂时都是分行展示逻辑
 
@@ -83,9 +84,10 @@ let {
   switchList
 } = useTable()
 
+let supplierIdSave
+
 // 这里只有整单展示了-退货单是整单退货-带出子项所有id
 const getList = async () => {
-  queryParams.auditStatus = 5 // 已审核
   loading.value = true
   try {
     const bodyData = getMainItemBodyData({
@@ -93,7 +95,12 @@ const getList = async () => {
       mainQueryList: ['code', 'supplierId', 'auditStatus', 'inStatus'],
       itemQueryList: ['productId', 'orderCode']
     })
-    bodyData.itemQuery.inStatus = queryParams.itemsInStatus
+    // bodyData.itemQuery.inStatus = queryParams.itemsInStatus
+
+    bodyData.mainQuery.inStatus = 3 // 整单全部入库
+    bodyData.mainQuery.supplierId = supplierIdSave
+    bodyData.mainQuery.auditStatus = 5 // 已审核
+
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
@@ -141,7 +148,7 @@ const handleCurrentChange = (row: any) => {
     // productBarCode,
     barCode: 'barCode',
     productUnitId: 'productUnitId',
-    productUnitName:'productUnitName',
+    productUnitName: 'productUnitName',
     productPrice: 'productPrice',
     qty: 'qty',
 
@@ -155,13 +162,19 @@ const handleCurrentChange = (row: any) => {
     warehouseId: 'warehouseId',
     warehouseName: 'warehouseName',
     source: 'source',
-    currencyId: 'currencyId',
-    currencyName: 'currencyName',
+    // 整单带出来
+    // currencyId: 'currencyId',
+    // currencyName: 'currencyName',
     applicantId: 'applicantId',
     applicantName: 'applicantName',
     applicationDeptId: 'applicationDeptId',
     applicationDeptName: 'applicationDeptName',
-    declaredType: 'declaredType'
+    declaredType: 'declaredType',
+    remark: 'remark' // remark: itemsRemark防止和主单冲突
+  })
+
+  selectionList.value.forEach((item) => {
+    item.currencyName = getCurrencyName(item.currencyId)
   })
   // selectionList.value = mergeItemsToList([row], {
   //   id: 'itemsId',
@@ -198,7 +211,8 @@ const submitForm = () => {
 }
 
 /** 打开弹窗 */
-const open = async () => {
+const open = async (supplierId) => {
+  supplierIdSave = supplierId
   dialogVisible.value = true
   resetQuery()
   // await nextTick() // 等待，避免 queryFormRef 为空

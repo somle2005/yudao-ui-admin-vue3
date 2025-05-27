@@ -154,7 +154,7 @@ export const useForm = (formType) => {
       }
     ]
 
-    const requireList = ['returnTime']
+    const requireList = ['returnTime','supplierId']
     requireList.forEach((prop) => {
       const target = list.find((item) => item.prop === prop) as any
       if (!target) return

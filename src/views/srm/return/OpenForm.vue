@@ -21,9 +21,10 @@
 
       <template #items>
         <el-button
-          :disabled="itemsFormdisabled"
+          v-if="showAddBtn"
+          :disabled="addBtnDisabled"
           type="primary"
-          @click="openAddItem"
+          @click="openAddItem(formData.supplierId)"
           style="margin-bottom: 10px"
           >选择入库项</el-button
         >
@@ -111,6 +112,10 @@ const initFormData = () => {
   }
 }
 const formData: any = ref(initFormData())
+
+// 供应商必填
+const addBtnDisabled = computed(() => !formData.value.supplierId)
+const showAddBtn = computed(() => !['audit', 'detail'].includes(formType.value))
 
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -291,7 +296,7 @@ const addItem = (selectionList: any[]) => {
         applicantName,
         applicationDeptId,
         applicationDeptName,
-        declaredType
+        declaredType,
       } = item
 
       /**
@@ -330,11 +335,13 @@ const addItem = (selectionList: any[]) => {
         applicantName,
         applicationDeptId,
         applicationDeptName,
-        declaredType
+        declaredType,
       }
       return obj
     })
-    const itemsList = distinctList(items, selectList, itemIdKey)
+    // const itemsList = distinctList(items, selectList, itemIdKey)
+    // 采购退货因为是整单单选 -所以直接进行覆盖就可以了
+    const itemsList: any = selectList
     const model = formRef.value.getFormData()
     if (itemsList?.length) {
       model.discountPercent = itemsList[0].discountPercent

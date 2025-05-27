@@ -11,7 +11,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const productList = getProductList(null, { label: 'barCode', value: 'id' })
-  const supplierList = getSupplierList()
+  // const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
     // 入库单号
     {
@@ -42,21 +42,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: productList
     },
 
-    {
-      type: 'select',
-      placeholder: '请选择供应商',
-      prop: 'auditorId',
-      label: '供应商',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: supplierList
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择供应商',
+    //   prop: 'auditorId',
+    //   label: '供应商',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: supplierList
+    // },
 
     // {
     //   type: 'input',
@@ -69,37 +69,37 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //     clearable: true
     //   }
     // },
-    {
-      type: 'select',
-      placeholder: '请选择审核状态',
-      prop: 'auditStatus',
-      label: '审核状态',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择审核状态',
+    //   prop: 'auditStatus',
+    //   label: '审核状态',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
+    // },
 
-    {
-      type: 'select',
-      placeholder: '请选择入库状态',
-      prop: 'inStatus',
-      label: '入库状态',
-      attrs: {
-        class: '!w-240px',
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
-    },
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择入库状态',
+    //   prop: 'inStatus',
+    //   label: '入库状态',
+    //   attrs: {
+    //     class: '!w-240px',
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
+    // },
 
     // {
     //   type: 'select',
