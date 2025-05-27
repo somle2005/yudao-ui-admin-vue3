@@ -127,6 +127,33 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
       },
 
       {
+        requiredFlag: true,
+        type: 'select',
+        label: '出口公司',
+        prop: 'exportCompanyId',
+        placeholder: '请选择出口公司',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: financeSubjectList
+      },
+      {
+        requiredFlag: true,
+        type: 'select',
+        label: '中转公司',
+        prop: 'transitCompanyId',
+        placeholder: '请选择中转公司',
+        attrs: {
+          style: { width: '100%' },
+          filterable: true,
+          clearable: true
+        },
+        children: financeSubjectList
+      },
+
+      {
         type: 'input-number',
         label: '货柜体积(m³)',
         prop: 'totalVolume',
@@ -282,33 +309,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         },
         children: portInfoList
       },
-      {
-        requiredFlag: true,
-        type: 'select',
-        label: '出口公司',
-        prop: 'exportCompanyId',
-        placeholder: '请选择出口公司',
-        attrs: {
-          style: { width: '100%' },
-          filterable: true,
-          clearable: true
-        },
-        children: financeSubjectList
-      },
-      {
-        requiredFlag: true,
-        type: 'select',
-        label: '中转公司',
-        prop: 'transitCompanyId',
-        placeholder: '请选择中转公司',
-        attrs: {
-          style: { width: '100%' },
-          filterable: true,
-          clearable: true
-        },
-        children: financeSubjectList
-      },
-
       {
         type: 'input',
         label: '箱号',

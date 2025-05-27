@@ -50,7 +50,7 @@
 
       <template #mergeItems>
         <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane label="头程单清单" :name="mergeItemsTabsName.firstMileItem">
+          <el-tab-pane :label="mergeItemsTabsName.firstMileItem" :name="mergeItemsTabsName.firstMileItem">
             <FirsetMileMergeItemForm
               v-if="formData.toWarehouseId"
               ref="firstMileItemFormRef"
@@ -60,7 +60,7 @@
               :disabled="itemsFormdisabled"
             />
           </el-tab-pane>
-          <el-tab-pane label="船期信息" :name="mergeItemsTabsName.vesselTrackingTabsName">
+          <el-tab-pane :label="mergeItemsTabsName.vesselTrackingTabsName" :name="mergeItemsTabsName.vesselTrackingTabsName">
             <SmForm
               class="-mb-15px common-form-tabs-items"
               ref="vesselTrackingFormRef"
@@ -71,7 +71,7 @@
               :getModelValue="getVesselTrackingFormData"
             />
           </el-tab-pane>
-          <el-tab-pane label="出运订单费用明细" :name="mergeItemsTabsName.feesTabsName">
+          <el-tab-pane :label="mergeItemsTabsName.feesTabsName" :name="mergeItemsTabsName.feesTabsName">
             <FeesForm
               ref="feesFormRef"
               :items="formData.fees"
