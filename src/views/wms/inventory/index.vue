@@ -154,7 +154,7 @@ import { OPERATE_MAP } from './constant'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { getLastListProp } from '@/utils/transformData'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
-import { isAbandon } from '@/utils/btnManager/index'
+import { isAbandon } from '@/utils/btnManager/wms'
 
 const hideInventoryList = [3, 5] // 3已通过 5已作废
 

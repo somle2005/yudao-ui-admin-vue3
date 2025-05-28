@@ -52,25 +52,12 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: WMSWarehouseList
     },
-     {
-      type: 'select',
-      placeholder: '请选择上游单据类型',
-      prop: 'upstreamBillType',
-      label: '上游单据类型',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
-    },
-    
     {
       type: 'select',
+      // placeholder: '请选择上游单据类型',
       placeholder: '请选择入库单类型',
-      prop: 'type',
+      prop: 'upstreamBillType',
+      // label: '上游单据类型',
       label: '入库单类型',
       attrs: {
         filterable: true,
@@ -81,6 +68,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
     },
+
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择入库单类型',
+    //   prop: 'type',
+    //   label: '入库单类型',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
+    // },
     // {
     //   type: 'input',
     //   label: '参考号',

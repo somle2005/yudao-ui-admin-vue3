@@ -99,17 +99,18 @@ const fieldMap = {
   warehouseName: '仓库',
 
   upstreamBillType: {
-    label: '上游单据类型',
+    // label: '上游单据类型',
+    label: '入库单类型',
     width: '160px',
     slot: 'upstreamBillType',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
 
-  type: {
-    label: '入库单类型',
-    slot: 'type',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
-  },
+  // type: {
+  //   label: '入库单类型',
+  //   slot: 'type',
+  //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
+  // },
   auditStatus: {
     label: '状态',
     slot: 'auditStatus',

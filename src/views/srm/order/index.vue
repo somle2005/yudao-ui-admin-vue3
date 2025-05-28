@@ -145,12 +145,13 @@
         >
           详情
         </el-button>
+        <!-- 编辑	草稿，驳回  0-2-->
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-order:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
@@ -205,6 +206,7 @@ import {
 } from '@/hooks/common/wholeOrder'
 import { useSearchForm } from './hooks/search'
 import { generateContract, mergeItems } from '@/utils/operate/srm'
+import { isUpdate } from '@/utils/btnManager/wms'
 
 const { tableOptions, transformTableOptions } = useTableData()
 

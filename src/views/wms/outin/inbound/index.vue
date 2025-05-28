@@ -116,7 +116,7 @@
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inbound:update']"
-          :isUpdate="!isUpdate(scope.row.auditStatus)"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
@@ -149,7 +149,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { getLastListProp } from '@/utils/transformData'
 import { AUDIT_STATUS } from '@/views/wms/constants/index'
-import { isAbandon, isUpdate, isDelete, isSubmitAudit, isAudit } from '@/utils/btnManager/index'
+import { isAbandon, isUpdate, isDelete, isSubmitAudit, isAudit } from '@/utils/btnManager/wms'
 import { OPERATE_MAP } from '@/views/wms/constants/index'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()

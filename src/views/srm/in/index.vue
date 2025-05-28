@@ -138,7 +138,7 @@
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-in:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
@@ -185,6 +185,7 @@ import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { getMainItemBodyData } from '@/utils/transform'
+import { isUpdate } from '@/utils/btnManager/wms'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseIn' })
