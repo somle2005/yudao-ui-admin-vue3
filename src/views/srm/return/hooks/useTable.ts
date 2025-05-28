@@ -70,7 +70,7 @@ export const useTable = () => {
 
     totalWeight: '总毛重',
     totalVolume: {
-      label: '总体积',
+      label: '总体积(m³)',
       hideSort: true,
       formatter: transformVolumeColumn
     },
@@ -81,14 +81,17 @@ export const useTable = () => {
     // items-product带出barCode 产品编码 name
     itemsBarCode: {
       label: '产品编码',
+      width: '160px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
     itemsProductName: {
       label: '产品名称',
+      width: '200px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
     itemsWarehouseName: {
       label: '仓库',
+      width: '100px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
@@ -198,7 +201,15 @@ export const useTable = () => {
   }
 
   const allOptions = transformTableOptions(fieldMap, {
-    noComputePropList: ['code', 'itemsBarCode', 'supplierName', 'warehouseName']
+    noComputePropList: [
+      'code',
+      'itemsBarCode',
+      'supplierName',
+      'warehouseName',
+      'itemsBarCode',
+      'itemsProductName',
+      'itemsWarehouseName'
+    ]
   })
   const wrapList = [
     'code',

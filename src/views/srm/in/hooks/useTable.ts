@@ -95,7 +95,8 @@ export const useTable = () => {
     // 最终合计价格（= 产品价格合计 + 税额合计 - 折扣金额 + 其他金额）  totalPrice-和行合并的值不一致
     // 目前是前端计算出给后端的totalPrice 没有扣除其他金额-折扣=== 所以如果要扣除也无法扣除目前做的这个折扣是总的-后端也无法进行计算-分行似乎无法展示准确扣除的
     totalPrice: {
-      label: '金额'
+      label: '金额',
+      width: '100px'
       // label: '成交金额',
       // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
@@ -111,7 +112,7 @@ export const useTable = () => {
 
     totalWeight: '总毛重',
     totalVolume: {
-      label: '总体积',
+      label: '总体积(m³)',
       hideSort: true,
       formatter: transformVolumeColumn
     },
@@ -132,17 +133,19 @@ export const useTable = () => {
 
     itemsBarCode: {
       label: '产品编码',
-      width: '200px',
+      width: '160px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     itemsProductName: {
       label: '产品名称',
+      width: '200px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     itemsWarehouseName: {
       label: '仓库',
+      width: '100px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
@@ -279,7 +282,15 @@ export const useTable = () => {
 
   const allOptions = transformTableOptions(fieldMap, {
     allWrap: true,
-    noComputePropList: ['code', 'itemsBarCode', 'supplierName', 'warehouseName']
+    noComputePropList: [
+      'code',
+      'itemsBarCode',
+      'supplierName',
+      'warehouseName',
+      'totalPrice',
+      'itemsProductName',
+      'itemsWarehouseName'
+    ]
   })
 
   // const wrapList = [

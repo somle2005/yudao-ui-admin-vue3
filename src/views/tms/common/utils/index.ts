@@ -348,13 +348,16 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
   }
 }
 
+// 立方毫米转换立方米-产品信息为毫米-长宽高
+const mmToMScale = 1000000000
+
 // 体积= 长*宽*高*数量
 export const computeVolume = (item) => {
   const { packageHeight, packageLength, packageWidth, qty } = item
   if ([packageHeight, packageLength, packageWidth, qty].every((item) => item)) {
     item.volume = Number(
       formatDecimal(
-        (packageHeight * packageLength * packageWidth * qty) / 1000000,
+        (packageHeight * packageLength * packageWidth * qty) / mmToMScale,
         VOLUMN_PRECISION
       )
     )
@@ -363,11 +366,12 @@ export const computeVolume = (item) => {
 
 // 体积立方厘米转化成立方米
 export const transformVolume = (volume) => {
-  return volume / 1000000
+  return volume / mmToMScale
 }
 
 export function transformVolumeColumn(_row: any, _column: TableColumnCtx<any>, cellValue: any) {
-  return cellValue ? transformVolume(cellValue) : null
+  const val = cellValue ? transformVolume(cellValue) : null
+  return Number(formatDecimal(val, VOLUMN_PRECISION))
 }
 
 export const computeList = (
