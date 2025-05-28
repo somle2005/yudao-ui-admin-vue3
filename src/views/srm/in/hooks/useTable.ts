@@ -72,6 +72,13 @@ export const useTable = () => {
     },
     supplierName: '供应商',
 
+    // 状态字段好像缺失了
+    auditStatus: {
+      label: '审核状态',
+      slot: 'auditStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
+    },
+
     inStatus: {
       label: '入库状态',
       slot: 'inStatus',
@@ -84,6 +91,7 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
+
     // 最终合计价格（= 产品价格合计 + 税额合计 - 折扣金额 + 其他金额）  totalPrice-和行合并的值不一致
     // 目前是前端计算出给后端的totalPrice 没有扣除其他金额-折扣=== 所以如果要扣除也无法扣除目前做的这个折扣是总的-后端也无法进行计算-分行似乎无法展示准确扣除的
     totalPrice: {
@@ -107,12 +115,7 @@ export const useTable = () => {
       hideSort: true,
       formatter: transformVolumeColumn
     },
-    // 状态字段好像缺失了
-    auditStatus: {
-      label: '审核状态',
-      slot: 'auditStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
-    },
+
     // payStatus: {
     //   label: '付款状态',
     //   slot: 'payStatus',
