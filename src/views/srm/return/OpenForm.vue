@@ -26,7 +26,7 @@
           type="primary"
           @click="openAddItem(formData.supplierId)"
           style="margin-bottom: 10px"
-          >选择入库项</el-button
+          >选择到货项</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="退货产品清单" name="item">

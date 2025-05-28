@@ -170,7 +170,7 @@ const warehouseList = getWarehouseList()
 // const { deptList, defaultProps } = getDeptTree()
 // const userList = getUserList()
 
-/** 初始化设置入库项 */
+/** 初始化设置到货项 */
 watch(
   () => props.items,
   async (val) => {
