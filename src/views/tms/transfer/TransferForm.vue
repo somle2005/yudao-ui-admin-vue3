@@ -18,8 +18,18 @@
       </el-tab-pane>
     </el-tabs>
     <template #footer>
-      <el-button @click="submitFormDB" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button v-if="!auditType" @click="submitFormDB" type="primary" :disabled="formLoading"
+        >确 定</el-button
+      >
       <el-button @click="dialogVisible = false">取 消</el-button>
+      <template v-if="auditType">
+        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+          不同意</el-button
+        >
+        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
+          同意</el-button
+        >
+      </template>
     </template>
   </Dialog>
 </template>
@@ -28,8 +38,9 @@ import { TransferApi, TransferVO } from '@/api/tms/transfer'
 import TransferItemForm from './components/TransferItemForm.vue'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
-import { addComment } from '@/views/wms/utils'
+import { addAuditAdvice } from '@/views/wms/utils'
 import { createDBFn } from '@/utils/decorate'
+import { AUDIT_TYPE } from '@/utils/constant'
 
 /** 调拨单 表单 */
 defineOptions({ name: 'TransferForm' })
@@ -51,6 +62,8 @@ const initFormData = () => {
     items: []
   }
 }
+
+const auditType = computed(() => formType.value === 'audit')
 const formData = ref(initFormData())
 
 const formRef = ref() // 表单 Ref
@@ -140,7 +153,7 @@ const detailFormOptions = (formOptions) => {
 }
 
 const auditFormOptions = (formOptions) => {
-  return addComment(formOptions)
+  return addAuditAdvice(formOptions)
 }
 
 const getFormData = () => {
@@ -187,7 +200,7 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
-const submitForm = async () => {
+const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
   // 校验子表单
@@ -196,12 +209,20 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as TransferVO
+    const data = formData.value as unknown as TransferVO as any
     if (formType.value === 'create') {
       await TransferApi.createTransfer(data)
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
       await TransferApi.updateTransfer(data)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'audit') {
+      await TransferApi.auditTransferStatus({
+        reviewed: true,
+        pass: type === AUDIT_TYPE.agree,
+        id: data.id,
+        auditAdvice: data.auditAdvice
+      })
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false

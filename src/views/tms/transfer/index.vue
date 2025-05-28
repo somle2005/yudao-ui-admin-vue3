@@ -93,13 +93,6 @@
       @pagination="getList"
       @selection-change="handleSelectionChange"
     >
-      <template #geometry="{ scope }">
-        <div class="common-text">总箱数:{{ scope.row.totalBoxQty }}</div>
-        <div class="common-text">数量:{{ scope.row.totalQty }}</div>
-        <div class="common-text">重量:{{ scope.row.totalWeight }}</div>
-        <div class="common-text">体积:{{ scope.row.totalVolume }}</div>
-      </template>
-
       <template #operate="{ scope }">
         <el-button
           link

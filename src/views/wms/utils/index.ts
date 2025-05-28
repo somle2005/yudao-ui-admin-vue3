@@ -28,6 +28,29 @@ export const addComment = (formOptions, slotKey = 'items') => {
   return formOptions
 }
 
+export const addAuditAdvice = (formOptions, slotKey = 'items', propKey = 'auditAdvice') => {
+  const index = formOptions.findIndex((item) => item.slot === slotKey)
+  if (index === -1) {
+    console.log('items.slot没有找到')
+    return
+  }
+  const obj: any = {
+    type: 'input',
+    placeholder: '请输入审核意见',
+    prop: propKey,
+    label: '审核意见',
+    attrs: {
+      clearable: true,
+      class: '!w-1/1',
+      style: {
+        width: '100%'
+      }
+    }
+  }
+  formOptions.splice(index, 0, obj)
+  return formOptions
+}
+
 export const getBinIdRules = (formData) => {
   const binIdRuleList = [
     { required: true, message: '库位不能为空', trigger: 'blur' },

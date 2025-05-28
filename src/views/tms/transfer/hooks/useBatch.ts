@@ -1,7 +1,19 @@
-import { FirstMileApi } from '@/api/tms/first-mile'
+import { TransferApi } from '@/api/tms/transfer'
 
 export const useBatch = (selectionList, getList, openForm) => {
   const message = useMessage() // 消息弹窗
+
+  const getBatchId = (selectionList) => {
+    const ids: any = []
+    selectionList.value.forEach((item: any) => {
+      if (item?.items?.length) {
+        item.items.forEach((a: any) => {
+          ids.push(a.id)
+        })
+      }
+    })
+    return ids
+  }
 
   const handleSubmitAuditBatch = async () => {
     try {
@@ -9,7 +21,7 @@ export const useBatch = (selectionList, getList, openForm) => {
 
       const ids: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
 
-      await FirstMileApi.submitFirstMileAudit(ids)
+      await TransferApi.submitTransferAudit(ids)
       message.success('提交审核成功')
       // 刷新列表
       await getList()
@@ -35,11 +47,11 @@ export const useBatch = (selectionList, getList, openForm) => {
       // 审核的二次确认
       await message.confirm(`确定反审核该申请吗？`)
       // 发起审核
-      await FirstMileApi.auditFirstMileStatus({
+      await TransferApi.auditTransferStatus({
         reviewed, // 反审核false
         pass: true, // 反审核无意义
-        requestId: id
-        // reviewComment: data.reviewComment 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
+        id
+        // auditAdvice: data.auditAdvice 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
       })
       message.success('反审核成功')
       // 刷新列表
@@ -53,8 +65,8 @@ export const useBatch = (selectionList, getList, openForm) => {
       const text = enable ? '开启' : '关闭'
       await message.exportConfirm('是否确认' + text)
       // const itemIds = getBatchId(wholeOrderEnable, selectionList)
-
-      // await FirstMileRequestApi.updateFirstMileRequestItemStatus({ itemIds, enable })
+      const itemIds = getBatchId(selectionList.value)
+      await TransferApi.updateTransferoffStatus({ itemIds, enable })
       message.success(text + '成功')
       // 刷新列表
       await getList()
