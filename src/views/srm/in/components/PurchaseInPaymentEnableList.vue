@@ -291,7 +291,7 @@ let supplierIdSave
 const getList = async () => {
   queryParams.auditStatus = 5 // 已审核
   queryParams.supplierId = supplierIdSave
-  queryParams.inStatus = 3 // 整单全部入库
+  queryParams.inStatus = 1 // 整单未入库
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)

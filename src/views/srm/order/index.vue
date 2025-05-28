@@ -251,11 +251,11 @@ const fieldMap = {
     slot: 'inStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
   },
-  payStatus: {
-    label: '付款状态',
-    slot: 'payStatus',
-    dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
-  },
+  // payStatus: {
+  //   label: '付款状态',
+  //   slot: 'payStatus',
+  //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
+  // },
   offStatus: {
     label: '关闭状态',
     slot: 'offStatus',
