@@ -331,12 +331,15 @@ const resolveDetailData = (data, type) => {
   //   item.actualQty = item.expectedQty
   // })
 
+  // 点击盘点初始化的时候 系统数量和实盘数量对其
   if (type === OPERATE_MAP.inventory) {
     data.binItemList.forEach((item) => {
       item.originBin = true
+      item.actualQty = item.expectedQty
     })
   }
 
+      
   formData.value = data
   formRef.value.initForm()
   // if (type === OPERATE_MAP.inventory) {
