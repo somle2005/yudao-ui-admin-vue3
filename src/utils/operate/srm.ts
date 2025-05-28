@@ -12,22 +12,24 @@ export const mergeItems = async (
   auditStatusKey = 'auditStatus'
 ) => {
   // 5已审核
-  const auditType = 5
-  const hasAudit = selectionList.value.some((item: any) => item[auditStatusKey] === auditType)
-  if (!hasAudit) {
-    message.error('选中行未包含审核单据，请检查')
-    return
-  }
+  // const auditType = 5
+  // const hasAudit = selectionList.value.some((item: any) => item[auditStatusKey] === auditType)
+  // if (!hasAudit) {
+  //   message.error('选中行未包含审核单据，请检查')
+  //   return
+  // }
 
   if (isDifferentProp(selectionList.value, 'supplierId')) {
     message.error('不同供应商不能合并到货')
     return
   }
+
   const items: any = []
   // 如果不是审核状态的要进行剔除
-  const selectList: any = selectionList.value.filter(
-    (item: any) => item[auditStatusKey] === auditType
-  )
+  // const selectList: any = selectionList.value.filter(
+  //   (item: any) => item[auditStatusKey] === auditType
+  // )
+  const selectList: any = selectionList.value
   // 整单数据
   if (wholeOrderEnable.value) {
     selectList.forEach((item) => {

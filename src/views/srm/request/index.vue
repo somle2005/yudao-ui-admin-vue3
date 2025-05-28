@@ -32,7 +32,7 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isMerge(selectionList)"
           type="primary"
           plain
           @click="mergePurchase"
@@ -46,7 +46,7 @@
           :disabled="disabledBtn"
           type="primary"
           plain
-          @click="handleSubmitAuditBatch"
+          @click="handleSubmitAuditBatch || !isSubmitAuditBatch(selectionList)"
           v-hasPermi="['srm:purchase-request:submit-audit']"
         >
           提交审核
@@ -140,12 +140,13 @@
           详情
         </el-button>
 
+        <!-- v-if="scope.row.auditStatus !== 5" -->
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-request:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
@@ -155,6 +156,7 @@
           type="danger"
           @click="handleDelete([scope.row.id])"
           v-hasPermi="['srm:purchase-request:delete']"
+          :disabled="!isDelete(scope.row.auditStatus)"
         >
           删除
         </el-button>
@@ -200,6 +202,7 @@ import {
   useWholeOrderMergeCompute,
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
+import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
 
 const { tableOptions, transformTableOptions } = useTableData()
 

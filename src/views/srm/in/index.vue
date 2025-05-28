@@ -34,7 +34,7 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -165,6 +165,7 @@
           type="danger"
           @click="handleDelete([scope.row.id])"
           v-hasPermi="['srm:purchase-in:delete']"
+          :disabled="!isDelete(scope.row.auditStatus)"
         >
           删除
         </el-button>
@@ -185,7 +186,7 @@ import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { getMainItemBodyData } from '@/utils/transform'
-import { isUpdate } from '@/utils/btnManager/wms'
+import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseIn' })

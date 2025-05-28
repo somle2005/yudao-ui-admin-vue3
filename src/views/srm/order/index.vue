@@ -1,5 +1,5 @@
 <template>
-  <!-- <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" /> -->
+  <!-- <'7-审核撤销,6-审核不通过,5-已审核,4-审核中,3-未审核,2-已提交,1-草稿, btnManage-createStr1创建' -->
 
   <ContentWrap>
     <!-- 搜索工作栏 -->
@@ -53,7 +53,7 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -79,7 +79,7 @@
         </el-dropdown>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isMerge(selectionList)"
           class="ml-10px"
           type="primary"
           plain
@@ -173,11 +173,13 @@
         >
           反审核
         </el-button> -->
+        <!-- 删除-草稿 1 -->
         <el-button
           link
           type="danger"
           @click="handleDelete([scope.row.id])"
           v-hasPermi="['srm:purchase-order:delete']"
+          :disabled="!isDelete(scope.row.auditStatus)"
         >
           删除
         </el-button>
@@ -206,7 +208,7 @@ import {
 } from '@/hooks/common/wholeOrder'
 import { useSearchForm } from './hooks/search'
 import { generateContract, mergeItems } from '@/utils/operate/srm'
-import { isUpdate } from '@/utils/btnManager/wms'
+import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
 
 const { tableOptions, transformTableOptions } = useTableData()
 

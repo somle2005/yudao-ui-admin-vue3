@@ -34,7 +34,7 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -130,7 +130,7 @@
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-return:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
@@ -157,6 +157,7 @@
           type="danger"
           @click="handleDelete([scope.row.id])"
           v-hasPermi="['srm:purchase-return:delete']"
+          :disabled="!isDelete(scope.row.auditStatus)"
         >
           删除
         </el-button>
@@ -177,6 +178,7 @@ import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
 import { getMainItemBodyData } from '@/utils/transform'
+import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseReturn' })
@@ -227,7 +229,7 @@ const getList = async () => {
     const bodyData = getMainItemBodyData({
       queryParams,
       mainQueryList: ['code', 'supplierId', 'auditStatus', 'outboundStatus'],
-      itemQueryList: ['inCode', 'productId','warehouseId']
+      itemQueryList: ['inCode', 'productId', 'warehouseId']
     })
     bodyData.itemQuery.outboundStatus = queryParams.itemsOutboundStatus
     const data = await PurchaseReturnApi.getPurchaseReturnPage(bodyData)
