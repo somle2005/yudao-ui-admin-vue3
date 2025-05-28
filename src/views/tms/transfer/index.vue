@@ -36,17 +36,17 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['transfer:submit-audit']"
+          v-hasPermi="['tms:transfer:submit-audit']"
         >
           提交审核
         </el-button>
 
         <el-dropdown
           :disabled="oneSelectDisabledBtn"
-          class="ml-10px"
+          class="ml-10px mr-10px"
           split-button
           type="primary"
-          v-hasPermi="['transfer:audit-status']"
+          v-hasPermi="['tms:transfer:audit-status']"
         >
           <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
           <template #dropdown>
