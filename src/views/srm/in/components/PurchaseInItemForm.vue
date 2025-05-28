@@ -12,11 +12,104 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="!showCreate" label="编号" min-width="60" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.id }}</el-text>
+        <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="60" align="center" />
+
+        <el-table-column prop="barCode" label="产品编码" width="180" align="center" />
+
+        <el-table-column prop="productName" label="产品名称" width="180" align="center" />
+        <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
+        <el-table-column prop="declaredType" label="海关品名" width="180" align="center" />
+        <el-table-column prop="declaredTypeEn" label="海关品名(英文)" width="180" align="center" />
+
+        <el-table-column label="仓库" width="150" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
+              <el-select v-model="row.warehouseId" clearable filterable placeholder="请选择仓库">
+                <el-option
+                  v-for="item in WMSWarehouseList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+              <!-- <el-text>{{ row.warehouseName }}</el-text> -->
+            </el-form-item>
           </template>
         </el-table-column>
+
+        <el-table-column label="数量" width="120" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
+              <!-- <el-input-number
+                v-model="row.qty"
+                controls-position="right"
+                :min="1"
+                class="!w-100%"
+              /> -->
+              <SmNumber v-model="row.qty" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="箱率" width="120" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
+              <el-input disabled v-model.trim="row.containerRate" class="!w-100%" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="currencyName" label="币种" width="120" align="center" />
+
+        <el-table-column label="含税单价" width="120" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
+              <!-- <el-input-number
+                disabled
+                v-model="row.actTaxPrice"
+                controls-position="right"
+                :min="0.01"
+                :precision="2"
+                class="!w-100%"
+              /> -->
+              <SmNumber disabled :min="0.01" :precision="2" v-model="row.actTaxPrice" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="单价" width="200" align="center">
+          <template #default="{ row }">
+            <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
+            <SmNumber disabled :precision="2" v-model="row.productPrice" />
+          </template>
+        </el-table-column>
+
+        <el-table-column label="税率%" width="115" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
+              <!-- <el-input-number
+                disabled
+                v-model="row.taxPercent"
+                controls-position="right"
+                :min="0"
+                :precision="2"
+                class="!w-100%"
+              /> -->
+              <SmNumber disabled :precision="2" v-model="row.taxPercent" />
+            </el-form-item>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="税额" prop="taxPrice" width="120" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
+              <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
+                <!-- <el-input disabled v-model="row.taxPrice" :formatter="erpPriceInputFormatter" /> -->
+                <SmNumber disabled :precision="2" v-model="row.taxPrice" />
+              </el-form-item>
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column prop="allAmount" label="价税合计" min-width="150" align="center" />
 
         <el-table-column v-if="showPay" label="付款金额" width="120" align="center">
           <template #default="{ row, $index }">
@@ -26,7 +119,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="barCode" label="产品编码" width="180" align="center" />
         <!--<el-table-column label="产品编码" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item
@@ -53,26 +145,6 @@
             </el-form-item>
           </template>
         </el-table-column>-->
-        <el-table-column label="产品名称" width="180" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.productName }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column label="单位" min-width="60" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.productUnitName }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column label="海关品名" width="180" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.declaredType }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column label="海关品名(英文)" width="180" align="center">
-          <template #default="{ row }">
-            <el-text>{{ row.declaredTypeEn }}</el-text>
-          </template>
-        </el-table-column>
 
         <!-- <el-table-column label="型号规格" width="180">
           <template #default="{ row }">
@@ -80,10 +152,9 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column prop="orderCode" label="采购订单编号" width="200" align="center"/>
         <el-table-column prop="applicantName" label="申请人" width="100" align="center" />
         <el-table-column prop="applicationDeptName" label="部门" width="200" align="center" />
-        <el-table-column prop="currencyName" label="币种" width="120" align="center" />
+        <el-table-column prop="orderCode" label="采购订单编号" width="200" align="center" />
 
         <!--<el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">
@@ -178,95 +249,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="仓库" width="150" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <el-select v-model="row.warehouseId" clearable filterable placeholder="请选择仓库">
-                <el-option
-                  v-for="item in WMSWarehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-              <!-- <el-text>{{ row.warehouseName }}</el-text> -->
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="数量" width="120" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <!-- <el-input-number
-                v-model="row.qty"
-                controls-position="right"
-                :min="1"
-                class="!w-100%"
-              /> -->
-              <SmNumber v-model="row.qty" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="含税单价" width="120" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
-              <!-- <el-input-number
-                disabled
-                v-model="row.actTaxPrice"
-                controls-position="right"
-                :min="0.01"
-                :precision="2"
-                class="!w-100%"
-              /> -->
-              <SmNumber disabled :min="0.01" :precision="2" v-model="row.actTaxPrice" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column label="单价" width="200" align="center">
-          <template #default="{ row }">
-            <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
-            <SmNumber disabled :precision="2" v-model="row.productPrice" />
-          </template>
-        </el-table-column>
-
-        <el-table-column label="税率%" width="115" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-              <!-- <el-input-number
-                disabled
-                v-model="row.taxPercent"
-                controls-position="right"
-                :min="0"
-                :precision="2"
-                class="!w-100%"
-              /> -->
-              <SmNumber disabled :precision="2" v-model="row.taxPercent" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="税额" prop="taxPrice" width="120" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-              <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-                <!-- <el-input disabled v-model="row.taxPrice" :formatter="erpPriceInputFormatter" /> -->
-                <SmNumber disabled :precision="2" v-model="row.taxPrice" />
-              </el-form-item>
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column prop="allAmount" label="价税合计" min-width="150" align="center" />
-
-        <el-table-column label="箱率" width="120" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-              <el-input disabled v-model.trim="row.containerRate" class="!w-100%" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="source" label="源单类型" min-width="150" align="center" />
+        <!-- <el-table-column prop="source" label="源单类型" min-width="150" align="center" /> -->
 
         <el-table-column label="备注" min-width="150" align="center">
           <template #default="{ row, $index }">
