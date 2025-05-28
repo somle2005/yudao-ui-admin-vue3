@@ -1,4 +1,5 @@
 <template>
+  <!-- 5-作废,4-强制入库,3-已入库,2-驳回,1-待入库,0-草稿 btnManage-createStr1创建  驳回对应不同意 -->
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
@@ -32,6 +33,8 @@
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
 
+        <!-- 提交审批	草稿，审批驳回	置灰 0-2 批量提交暂不做限制-->
+
         <el-button
           :disabled="oneSelectDisabledBtn"
           type="primary"
@@ -42,9 +45,10 @@
           提交审核
         </el-button>
 
-        <!-- 待入库状态 -->
+        <!-- 审核	提交审核	置灰 -->
+        <!-- 待入库状态 selectionList[0]?.auditStatus !== AUDIT_STATUS.pendStorage-->
         <el-button
-          :disabled="selectionList[0]?.auditStatus !== AUDIT_STATUS.pendStorage"
+          :disabled="!isAudit(selectionList[0]?.auditStatus)"
           type="primary"
           @click="openForm('audit', selectionList[0]?.id)"
           v-hasPermi="['wms:inbound:agree', 'wms:inbound:reject']"
@@ -94,29 +98,36 @@
         >
           审核
         </el-button> -->
+
+        <!-- 作废-草稿，审批驳回	隐藏 0,2 -->
         <el-button
           link
           type="warning"
           @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
           v-hasPermi="['wms:inbound:abandon']"
-          v-if="isAbandon(scope.row.auditStatus)"
+          v-if="!isAbandon(scope.row.auditStatus)"
         >
           作废
         </el-button>
+        <!-- 编辑	草稿，审批驳回	置灰 0,2 -->
 
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inbound:update']"
+          :isUpdate="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
+
+        <!-- 删除	草稿	置灰 0-->
         <el-button
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
           v-hasPermi="['wms:inbound:delete']"
+          :disabled="!isDelete(scope.row.auditStatus)"
         >
           删除
         </el-button>
@@ -138,7 +149,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { getLastListProp } from '@/utils/transformData'
 import { AUDIT_STATUS } from '@/views/wms/constants/index'
-import { isAbandon } from '@/views/wms/utils/index'
+import { isAbandon, isUpdate, isDelete, isSubmitAudit, isAudit } from '@/utils/btnManager/index'
 import { OPERATE_MAP } from '@/views/wms/constants/index'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
@@ -148,7 +159,6 @@ const fieldMap = {
   code: '入库单号',
   upstreamBillCode: '上游单据编号',
   warehouseName: '仓库',
-
 
   type: {
     label: '入库单类型',

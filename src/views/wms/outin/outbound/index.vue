@@ -84,6 +84,18 @@
         >
           编辑
         </el-button>
+
+        <!-- 作废-草稿，审批驳回	隐藏 0,2 -->
+        <el-button
+          link
+          type="warning"
+          @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
+          v-hasPermi="['wms:outbound:abandon']"
+          v-if="!isAbandon(scope.row.auditStatus)"
+        >
+          作废
+        </el-button>
+
         <!-- <el-button
           link
           type="primary"
@@ -94,14 +106,14 @@
           审核
         </el-button> -->
 
-        <el-button
+        <!-- <el-button
           link
           type="success"
           @click="openForm(OPERATE_MAP.finish, scope.row.id)"
           v-hasPermi="['wms:outbound:finish']"
         >
           完成
-        </el-button>
+        </el-button> -->
 
         <el-button
           link
@@ -127,8 +139,10 @@ import OutboundForm from './OutboundForm.vue'
 import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
-import { OPERATE_MAP } from './constant'
+// import { OPERATE_MAP } from './constant'
+import { OPERATE_MAP } from '@/views/wms/constants/index'
 import { AUDIT_STATUS } from '@/views/wms/constants/index'
+import { isAbandon } from '@/utils/btnManager/index'
 
 const { tableOptions, transformTableOptions } = useTableData()
 

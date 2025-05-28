@@ -90,17 +90,22 @@
           type="primary"
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
           v-if="
-            hasAllPermission(['wms:inventory:update', 'wms:outbound:agree', 'wms:inventory-bin:append']) &&
-            !hideInventoryList.includes(scope.row.auditStatus)
+            hasAllPermission([
+              'wms:inventory:update',
+              'wms:outbound:agree',
+              'wms:inventory-bin:append'
+            ]) && !hideInventoryList.includes(scope.row.auditStatus)
           "
         >
           盘点
         </el-button>
+        <!-- 作废	草稿,待审批 隐藏 0,2 -->
         <el-button
           link
           type="danger"
           @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
           v-hasPermi="['wms:inventory:abandon']"
+          v-if="!isAbandon(scope.row.auditStatus)"
         >
           作废
         </el-button>
@@ -149,6 +154,7 @@ import { OPERATE_MAP } from './constant'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { getLastListProp } from '@/utils/transformData'
 import { InventoryBinApi } from '@/api/wms/inventory-bin'
+import { isAbandon } from '@/utils/btnManager/index'
 
 const hideInventoryList = [3, 5] // 3已通过 5已作废
 

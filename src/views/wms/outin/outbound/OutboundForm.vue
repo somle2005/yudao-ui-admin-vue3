@@ -95,8 +95,10 @@ import { distinctList } from '@/utils/transformData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
-import { OPERATE_MAP } from './constant'
+// import { OPERATE_MAP } from './constant'
+import { OPERATE_MAP } from '@/views/wms/constants/index'
 import { OutboundItemApi } from '@/api/wms/outbound-item'
+import { addComment } from '../../utils'
 
 const { addProductItemRef, openAddProductItem } = useOutProductdata()
 
@@ -295,6 +297,12 @@ const detailOptions = (formOptions) => {
   return formOptions
 }
 
+const abandonFormOptions = (formOptions) => {
+  addDisabled(formOptions)
+  addComment(formOptions)
+  return formOptions
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -320,7 +328,11 @@ const open = async (type: string, id?: number) => {
     [OPERATE_MAP.finish]: () => {
       dialogTitle.value = '完成'
       requestFormOptions.value = auditFormOptions(createRequestFormOptions())
-    }
+    },
+    [OPERATE_MAP.abandon]: () => {
+      dialogTitle.value = OPERATE_MAP.abandon
+      requestFormOptions.value = abandonFormOptions(createRequestFormOptions())
+    },
   }
   formTypeOperate[type]()
 
@@ -374,7 +386,11 @@ const submitForm = async (type?: string) => {
     } else if (formType.value === OPERATE_MAP.finish) {
       await OutboundApi.finishOutbound({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
+    }else if (formType.value === OPERATE_MAP.abandon) {
+      await OutboundApi.abandonOutbound({ billId: data.id, comment: data.comment })
+      message.success(t('common.updateSuccess'))
     }
+
 
     dialogVisible.value = false
     // 发送操作成功的事件
