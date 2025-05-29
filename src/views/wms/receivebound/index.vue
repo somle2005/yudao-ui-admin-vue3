@@ -112,14 +112,14 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   // },
   auditStatus: {
-    label: '状态',
+    label: '审核状态',
     slot: 'auditStatus',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },
   inboundStatus: {
     label: '入库状态',
     slot: 'inboundStatus',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   },
   shippingMethod: {
     label: '运输方式',

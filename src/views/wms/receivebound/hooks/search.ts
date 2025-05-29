@@ -27,9 +27,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      placeholder: '请选择状态',
+      placeholder: '请选择审核状态',
       prop: 'auditStatus',
-      label: '状态',
+      label: '审核状态',
       attrs: {
         filterable: true,
         clearable: true,
