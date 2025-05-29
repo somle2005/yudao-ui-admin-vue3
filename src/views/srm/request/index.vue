@@ -43,10 +43,10 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
-          @click="handleSubmitAuditBatch || !isSubmitAuditBatch(selectionList)"
+          @click="handleSubmitAuditBatch"
           v-hasPermi="['srm:purchase-request:submit-audit']"
         >
           提交审核

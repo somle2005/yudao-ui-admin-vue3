@@ -177,7 +177,11 @@ watch(
     if (!val || val.length === 0) {
       return
     }
-    computeTargetQty(val)
+    computeTargetQty(val, {
+      targetQtyKey: 'pickQty',
+      computeQtyKey: 'planQty',
+      computeKey: 'productId'
+    })
     // const map = {}
     // val.forEach((item) => {
     //   if (!map[item.productId]) {
