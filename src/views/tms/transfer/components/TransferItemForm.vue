@@ -6,6 +6,7 @@
     v-loading="formLoading"
     label-width="0px"
     :inline-message="true"
+    :disabled="disabled"
   >
     <el-table :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" width="100" />
@@ -58,16 +59,16 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" width="60">
+      <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
         <template #default="{ $index }">
           <el-button @click="handleDelete($index)" link>—</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-row justify="center" class="mt-3">
+      <el-button @click="handleAdd" round>+ 添加调拨单明细</el-button>
+    </el-row>
   </el-form>
-  <el-row justify="center" class="mt-3">
-    <el-button @click="handleAdd" round>+ 添加调拨单明细</el-button>
-  </el-row>
 </template>
 <script setup lang="ts">
 import { getFinanceSubjectList, getProductList } from '@/commonData'
@@ -135,6 +136,14 @@ const validate = () => {
 const getData = () => {
   return formData.value
 }
+
+/** 初始化 */
+onMounted(() => {
+  // 默认添加一个
+  if (formData.value.length === 0) {
+    handleAdd()
+  }
+})
 
 defineExpose({ validate, getData })
 </script>

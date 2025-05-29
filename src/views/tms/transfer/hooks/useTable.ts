@@ -22,6 +22,16 @@ export const useTable = () => {
       slot: 'auditStatus',
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
+    inboundStatus: {
+      label: '入库状态',
+      slot: 'inboundStatus',
+      dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+    },
+    outboundStatus: {
+      label: '出库状态',
+      slot: 'outboundStatus',
+      dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_STATUS }
+    },
 
     remark: '备注',
     // comment: '审批意见',

@@ -14,7 +14,11 @@
     <!-- 子表的表单 -->
     <el-tabs v-model="subTabsName">
       <el-tab-pane label="调拨单明细" name="transferItem">
-        <TransferItemForm :items="formData.items" ref="transferItemFormRef" />
+        <TransferItemForm
+          :items="formData.items"
+          :disabled="itemsFormdisabled"
+          ref="transferItemFormRef"
+        />
       </el-tab-pane>
     </el-tabs>
     <template #footer>
@@ -63,9 +67,9 @@ const initFormData = () => {
   }
 }
 
+const itemsFormdisabled = computed(() => ['detail', 'audit'].includes(formType.value))
 const auditType = computed(() => formType.value === 'audit')
 const formData = ref(initFormData())
-
 const formRef = ref() // 表单 Ref
 
 const WMSWarehouseList = ref([])
@@ -82,9 +86,8 @@ const createRequestFormOptions = () => {
       type: 'input',
       label: '调拨单编码',
       prop: 'code',
-      placeholder: '调拨单编码自动生成',
+      placeholder: '请输入调拨单编码',
       attrs: {
-        disabled: true,
         style: { width: '100%' },
         clearable: true
       }
@@ -92,9 +95,9 @@ const createRequestFormOptions = () => {
     {
       requiredFlag: true,
       type: 'select',
-      label: '发出仓',
+      label: '调拨仓',
       prop: 'fromWarehouseId',
-      placeholder: '请选择发出仓',
+      placeholder: '请选择调拨仓',
       attrs: {
         style: { width: '100%' },
         filterable: true,
@@ -191,6 +194,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await TransferApi.getTransfer(id)
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }

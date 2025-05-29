@@ -36,7 +36,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['tms:transfer:submit-audit']"
+          v-hasPermi="['tms:transfer:audit']"
         >
           提交审核
         </el-button>
