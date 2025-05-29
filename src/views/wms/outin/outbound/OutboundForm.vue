@@ -155,8 +155,7 @@ const createRequestFormOptions = () => {
         style: {
           width: '100%'
         },
-        onChange: (val: any) => {
-        }
+        onChange: (val: any) => {}
       },
       children: WMSWarehouseList
     },
@@ -233,7 +232,7 @@ const createRequestFormOptions = () => {
         clearable: true
       }
     },
-    { 
+    {
       type: 'date-picker',
       prop: 'updateTime',
       label: '操作时间',
@@ -247,7 +246,7 @@ const createRequestFormOptions = () => {
         }
       }
     },
-    { 
+    {
       type: 'date-picker',
       prop: 'outboundTime',
       label: '出库时间',
@@ -332,7 +331,7 @@ const open = async (type: string, id?: number) => {
     [OPERATE_MAP.abandon]: () => {
       dialogTitle.value = OPERATE_MAP.abandon
       requestFormOptions.value = abandonFormOptions(createRequestFormOptions())
-    },
+    }
   }
   formTypeOperate[type]()
 
@@ -379,18 +378,19 @@ const submitForm = async (type?: string) => {
         await OutboundApi.rejectOutboundAuditStatus({ billId: data.id, comment: data.comment })
       } else if (type === AUDIT_TYPE.agreeOutbound) {
         //  ['actualQty', 'id', 'outboundId'])
-        await OutboundItemApi.updateOutboundItemActualQty(data)
         await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
+        await OutboundItemApi.updateOutboundItemActualQty(data)
       }
       message.success(t('common.updateSuccess'))
-    } else if (formType.value === OPERATE_MAP.finish) {
-      await OutboundApi.finishOutbound({ billId: data.id, comment: data.comment })
-      message.success(t('common.updateSuccess'))
-    }else if (formType.value === OPERATE_MAP.abandon) {
+    }
+    // else if (formType.value === OPERATE_MAP.finish) {
+    //   await OutboundApi.finishOutbound({ billId: data.id, comment: data.comment })
+    //   message.success(t('common.updateSuccess'))
+    // }
+    else if (formType.value === OPERATE_MAP.abandon) {
       await OutboundApi.abandonOutbound({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     }
-
 
     dialogVisible.value = false
     // 发送操作成功的事件
@@ -452,7 +452,7 @@ const addProductItem = (selectionList: any[]) => {
         // defectiveQty,
         outboundPlanQty,
         suggestedOwnership,
-        bin,
+        bin
       } = item
 
       let deptId = undefined
