@@ -157,7 +157,6 @@
           type="danger"
           @click="handleDelete([scope.row.id])"
           v-hasPermi="['srm:purchase-return:delete']"
-          :disabled="!isDelete(scope.row.auditStatus)"
         >
           删除
         </el-button>
