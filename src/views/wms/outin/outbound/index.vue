@@ -160,11 +160,20 @@ const fieldMap = {
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_AUDIT_STATUS }
   },
-  type: {
+
+  upstreamBillType: {
     label: '类型',
-    slot: 'status',
+    width: '210px',
+    slot: 'upstreamBillType',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_TYPE }
   },
+
+  // type: {
+  //   label: '类型',
+  //   slot: 'type',
+  //   dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_TYPE }
+  // },
+
   outboundStatus: {
     label: '出库状态',
     slot: 'outboundStatus',
