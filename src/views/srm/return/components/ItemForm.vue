@@ -24,17 +24,12 @@
         <el-table-column prop="declaredType" label="海关品名" width="180" align="center" />
         <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
 
-        <el-table-column prop="inItemId" label="到货项id" width="80" align="center" />
         <!-- 
         <el-table-column label="采购订单编号" width="200">
           <template #default="{ row }">
             <el-text>{{ row.orderNo }}</el-text>
           </template>
         </el-table-column> -->
-
-        <el-table-column prop="applicantName" label="申请人" width="120" align="center" />
-        <el-table-column prop="applicationDeptName" label="部门" width="120" align="center" />
-        <el-table-column prop="currencyName" label="币种" width="100" align="center" />
 
         <!-- <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
@@ -96,6 +91,12 @@
         <el-table-column prop="taxPercent" label="税率%" width="115" align="center" />
         <el-table-column label="税额" prop="taxPrice" width="120" align="center" />
         <el-table-column prop="containerRate" label="箱率" width="120" align="center" />
+
+        
+        <el-table-column prop="inItemId" label="到货项id" width="80" align="center" />
+        <el-table-column prop="applicantName" label="申请人" width="120" align="center" />
+        <el-table-column prop="applicationDeptName" label="部门" width="120" align="center" />
+        <el-table-column prop="currencyName" label="币种" width="100" align="center" />
 
         <el-table-column label="备注" width="150" align="center">
           <template #default="{ row, $index }">
