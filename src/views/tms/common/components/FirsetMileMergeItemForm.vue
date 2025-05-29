@@ -201,7 +201,6 @@ import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
 import { hasRepeat } from '@/utils/judge'
 import { getDeptTree, getFinanceSubjectList, getProductList, getWarehouseList } from '@/commonData'
-import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
@@ -279,6 +278,8 @@ watch(
 watch(
   () => props.warehouse,
   async (val) => {
+    // 防止详情回显的时候触发这个
+    // 这里可以单独调用不用在props.items调用-编辑详情回显-必定有items数据-changeProduct改值由进行单独调用
     if (judgeNum()) return
     addFbaBarCode(val, formData)
     // addCompanyList(val, formData)
@@ -296,7 +297,7 @@ watch(
       formData.value.forEach((item) => {
         computeVolume(item)
       })
-      addShowQtyDB(formData)
+      // addShowQtyDB(formData)
       addInitNum()
     }
   },

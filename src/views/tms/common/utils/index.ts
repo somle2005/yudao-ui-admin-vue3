@@ -8,6 +8,7 @@ import { getPortInfoList } from '@/commonData/tms'
 import { FirstMileRequestApi } from '@/api/tms/first-mile-request'
 import { debounce } from 'lodash-es'
 import { TableColumnCtx } from 'element-plus'
+import { TransferApi } from '@/api/tms/transfer'
 
 // 合并头程申请单 头程申请合并和头程订单复用
 export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSubjectList) => {
@@ -40,8 +41,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         },
         children: WMSWarehouseList
       },
-
-  
 
       {
         type: 'select',
@@ -332,8 +331,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
             width: '100%'
           }
         }
-      },
-
+      }
     ]
     list.forEach((item: any) => {
       item.colConfig = { span: 8 }
@@ -601,9 +599,11 @@ export const addCompany = (warehouse, row) => {
  * 优化处理 点击详情的回显的时候才去触发接口相关数据处理-处理完后进去。 然后触发对应的下拉框的change事件才去触发接口相关数据处理
  */
 export const addShowQty = async (formData) => {
+  // template方法内部传入是formData.value
+  const formDataCopy = unref(formData)
   try {
     const changeUnde = () => {
-      formData.value.forEach((item) => {
+      formDataCopy.forEach((item) => {
         item.availableQty = undefined // 逻辑库存
         item.purchaseTransitQty = undefined // 采购在途数
       })
@@ -611,7 +611,7 @@ export const addShowQty = async (formData) => {
 
     const relations: any = []
 
-    formData.value.forEach((item) => {
+    formDataCopy.forEach((item) => {
       const { deptId, productId, fromWarehouseId } = item
 
       if (deptId && productId && fromWarehouseId) {
@@ -668,3 +668,60 @@ export const addShowQty = async (formData) => {
 }
 
 export const addShowQtyDB = debounce(addShowQty, 100)
+
+// 编辑回显也给它最新带过来
+export const addSellableQty = async (warehouseId, formData) => {
+  // template方法内部传入是formData.value
+  const formDataCopy = unref(formData)
+  const changeUnde = () => {
+    formDataCopy.forEach((item) => {
+      item.sellableQty = undefined
+    })
+  }
+  if (!warehouseId) {
+    changeUnde()
+    return
+  }
+  // 合并的时候props.items后进来所以需要延迟调用-但是变化核心是这里
+  setTimeout(async () => {
+    try {
+      const warehouses: any = []
+      formDataCopy.forEach((item) => {
+        const productId = item.productId
+        // 如果没有就需要置空
+        if (productId) {
+          const obj = {
+            productIds: [productId],
+            warehouseId
+          }
+          warehouses.push(obj)
+        } else {
+          item.sellableQty = undefined
+        }
+      })
+      if (!warehouses.length) return
+
+      const data = await TransferApi.getTransferSellableQty({ warehouses })
+      const warehouseProductMap = data.warehouseProductMap
+      if (warehouseProductMap && Object.keys(warehouseProductMap).length) {
+        const warehouseProduct = warehouseProductMap[warehouseId]
+        formDataCopy.forEach((item) => {
+          const productId = item.productId
+          const warehouseProductItem = warehouseProduct.find((a) => a.productId === productId)
+          if (warehouseProductItem) {
+            item.sellableQty = warehouseProductItem.sellableQty
+          } else {
+            item.sellableQty = undefined
+          }
+        })
+      } else {
+        changeUnde()
+      }
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  }, 100)
+}
+
+// 避免同时并发调用
+export const addSellableQtyDB = debounce(addSellableQty,100)

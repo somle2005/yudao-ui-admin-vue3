@@ -15,6 +15,7 @@
     <el-tabs v-model="subTabsName">
       <el-tab-pane label="调拨单明细" name="transferItem">
         <TransferItemForm
+          :warehouseId="formData.fromWarehouseId"
           :items="formData.items"
           :disabled="itemsFormdisabled"
           ref="transferItemFormRef"

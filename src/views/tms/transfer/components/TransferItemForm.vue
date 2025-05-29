@@ -8,10 +8,10 @@
     :inline-message="true"
     :disabled="disabled"
   >
-    <el-table :data="formData" class="-mt-10px">
+    <el-table border :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" width="100" />
 
-      <el-table-column label="产品编码" width="150" align="center">
+      <el-table-column label="产品编码" width="180" align="center">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <SmSelect
@@ -19,6 +19,7 @@
               placeholder="请选择产品编码"
               :data="productList"
               :keyMap="{ label: 'barCode', value: 'id' }"
+              @change="() => addSellableQty(props.warehouseId, formData)"
             />
           </el-form-item>
         </template>
@@ -32,15 +33,35 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="箱数" width="80" align="center">
+      <el-table-column prop="sellableQty" label="可售数量" width="80" align="center" />
+
+      <el-table-column label="归属部门" width="200" align="center">
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
+            <el-tree-select
+              filterable
+              clearable
+              :disabled="disabled"
+              v-model="row.applicationDeptId"
+              :data="deptList"
+              :props="defaultProps"
+              check-strictly
+              node-key="id"
+              placeholder="请选择申请部门"
+            />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <!-- <el-table-column label="箱数" width="80" align="center">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.boxQty`" class="mb-0px!">
             <SmNumber v-model="row.boxQty" />
           </el-form-item>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column label="库存公司" width="200" align="center">
+      <!-- <el-table-column label="库存公司" width="200" align="center">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.stockCompanyId`" class="mb-0px!">
             <SmSelect
@@ -50,7 +71,7 @@
             />
           </el-form-item>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column label="备注" width="150" align="center">
         <template #default="{ row, $index }">
@@ -71,10 +92,12 @@
   </el-form>
 </template>
 <script setup lang="ts">
-import { getFinanceSubjectList, getProductList } from '@/commonData'
+import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData'
+import { addSellableQty } from '../../common/utils'
 
 const productList = getProductList()
-const financeSubjectList = getFinanceSubjectList()
+// const financeSubjectList = getFinanceSubjectList()
+const { defaultProps, deptList } = getDeptTree()
 
 const props = defineProps({
   items: {
@@ -91,6 +114,10 @@ const props = defineProps({
   formType: {
     type: String,
     default: ''
+  },
+  warehouseId: {
+    type: Number,
+    default: null
   }
 })
 const formLoading = ref(false) // 表单的加载中
@@ -106,6 +133,15 @@ watch(
   () => props.items,
   async (val) => {
     formData.value = val
+    // addSellableQtyDB(props.warehouseId, formData)
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => props.warehouseId,
+  async (val) => {
+    addSellableQty(props.warehouseId, formData)
   },
   { immediate: true, deep: true }
 )

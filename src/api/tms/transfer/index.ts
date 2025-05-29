@@ -85,5 +85,10 @@ export const TransferApi = {
   // 调拨单开关
   updateTransferoffStatus: async (data: { itemIds: number[]; enable: boolean }) => {
     return await request.put({ url: `/tms/transfer/off-status`, data })
+  },
+
+  // 调拨单获取可售库存数量
+  getTransferSellableQty: async (data: { warehouses: { warehouseId: number; productIds: [] } }) => {
+    return await request.post({ url: `/tms/transfer/get-sellable-qty`, data })
   }
 }

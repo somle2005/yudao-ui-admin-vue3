@@ -92,7 +92,10 @@ const selectList: any = ref([])
 const bindMap = ref({})
 
 const emitModelValue = (val) => {
-  if (bindVal.value && props?.data?.length) {
+  // if (bindVal.value && props?.data?.length) {
+  //   emits('update:modelValue', val)
+  // }
+  if (props?.data?.length) {
     emits('update:modelValue', val)
   }
 }
