@@ -83,75 +83,75 @@ export const useForm = (formType) => {
         }
       },
 
-      {
-        type: 'input-number',
-        placeholder: '请输入优惠率',
-        prop: 'discountPercent',
-        label: '优惠率%',
-        attrs: {
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input-number',
-        prop: 'discountPrice',
-        label: '付款优惠',
-        attrs: {
-          disabled: true,
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input-number',
-        prop: 'totalPrice',
-        label: '优惠后金额',
-        attrs: {
-          disabled: true,
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input-number',
-        prop: 'otherPrice',
-        label: '其他金额',
-        attrs: {
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'select',
-        placeholder: '请选择结算账户',
-        prop: 'accountId',
-        label: '结算账户',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: accountList
-      }
+      // {
+      //   type: 'input-number',
+      //   placeholder: '请输入优惠率',
+      //   prop: 'discountPercent',
+      //   label: '优惠率%',
+      //   attrs: {
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'input-number',
+      //   prop: 'discountPrice',
+      //   label: '付款优惠',
+      //   attrs: {
+      //     disabled: true,
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'input-number',
+      //   prop: 'totalPrice',
+      //   label: '优惠后金额',
+      //   attrs: {
+      //     disabled: true,
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'input-number',
+      //   prop: 'otherPrice',
+      //   label: '其他金额',
+      //   attrs: {
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'select',
+      //   placeholder: '请选择结算账户',
+      //   prop: 'accountId',
+      //   label: '结算账户',
+      //   attrs: {
+      //     filterable: true,
+      //     clearable: true,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   },
+      //   children: accountList
+      // }
     ]
 
     const requireList = ['returnTime','supplierId']
