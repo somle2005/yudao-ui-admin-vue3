@@ -15,7 +15,7 @@ export const isDelete = (status: any) => {
 
 // 提交审批
 export const isSubmitAudit = (status: any) => {
-  return [1, 6].includes(status) //1草稿，6审批驳回-审核不通过
+  return [1, 6, 7].includes(status) //1草稿，6审批驳回-审核不通过 7-审核撤销
 }
 
 // 审核
