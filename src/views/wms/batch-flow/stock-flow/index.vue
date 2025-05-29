@@ -11,8 +11,8 @@
       :getModelValue="getSearchFormData"
     >
       <template #action>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" /> 搜索 </el-button>
+        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" /> 重置 </el-button>
         <el-button
           type="success"
           plain
@@ -45,7 +45,7 @@
       </template>
 
       <template #operateNo="{ scope }">
-        <div> 操作单号:{{ scope.row.inboundCode }} {{ scope.row.outboundCode }} {{ scope.row.pickupCode }} </div>
+        <div> 操作单号:{{ getOperateNo(scope.row) }} </div>
         <div> 入库单号:{{ scope.row.inboundCode }} </div>
         <!-- <div> 出库单号:{{ scope.row.outboundCode }} </div>
         <div> 上架单号:{{ scope.row.pickupCode }} </div> -->
@@ -92,6 +92,11 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { getCodeType, getCodeValue } from '@/views/wms/utils/index'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
+
+// 入库单号会一直存在-其他只会存在一种
+const getOperateNo = (row: any) => {
+  return row.outboundCode || row.pickupCode || row.inboundCode
+}
 
 const fieldMap = {
   productBarCode: '产品编码',
@@ -289,6 +294,7 @@ onMounted(() => {
 .red {
   color: red;
 }
+
 .green {
   color: green;
 }
