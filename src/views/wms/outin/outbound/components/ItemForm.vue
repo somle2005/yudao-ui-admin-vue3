@@ -41,7 +41,7 @@
             </el-form-item>
           </template>
         </el-table-column> -->
-        <el-table-column prop="outboundPlanQty" label="计划出库数" width="80" align="center" />
+        <!-- <el-table-column prop="outboundPlanQty" label="计划出库数" width="80" align="center" /> -->
 
         <el-table-column prop="pickQty" label="已选择数" width="80" align="center" />
 
