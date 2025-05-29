@@ -46,8 +46,8 @@ interface PurchaseRequestMergeVO {
 // ERP采购申请单 API
 export const PurchaseRequestApi = {
   // 查询ERP采购申请单分页
-  getPurchaseRequestPage: async (params: any) => {
-    return await request.get({ url: `/srm/purchase-request/page`, params })
+  getPurchaseRequestPage: async (data: any) => {
+    return await request.post({ url: `/srm/purchase-request/page`, data })
   },
 
   // 查询ERP采购申请单详情

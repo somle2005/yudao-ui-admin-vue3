@@ -57,14 +57,14 @@
           不同意</el-button
         >
 
-        <el-button
+        <!-- <el-button
           v-hasPermi="['wms:outbound:agree']"
           type="primary"
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.agree)"
         >
           同意</el-button
-        >
+        > -->
 
         <el-button
           v-hasPermi="['wms:outbound:agree']"

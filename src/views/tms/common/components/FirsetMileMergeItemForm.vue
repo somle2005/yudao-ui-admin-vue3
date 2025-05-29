@@ -12,8 +12,6 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" width="60" align="center" />
 
-        <el-table-column label="上游单据编号" width="150" prop="requestCode" align="center" />
-
         <el-table-column label="产品编码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
@@ -176,6 +174,8 @@
             </el-form-item>
           </template>
         </el-table-column>
+
+        <el-table-column label="上游单据编号" width="150" prop="requestCode" align="center" />
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
