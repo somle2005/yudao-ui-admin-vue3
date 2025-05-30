@@ -144,7 +144,7 @@ function getSelectItemList(list: Array<any>, key: string) {
 }
 // 搜索产品名称的数据
 export const getProductNameList = (data?: { dataList: any[]; sortList: string[] }) => {
-  const { dataList = [], sortList = [] } = data
+  const { dataList = [], sortList = [] } = data || {}
   const productMap = {
     productNameList: ref<ProductVOSelectItem[]>([]), // 产品列表
     productSkuList: ref<ProductVOSelectItem[]>([]), // 产品sku列表
