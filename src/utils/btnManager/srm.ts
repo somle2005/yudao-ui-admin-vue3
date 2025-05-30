@@ -1,12 +1,13 @@
 // 7-审核撤销,6-审核不通过,5-已审核,4-审核中,3-未审核,2-已提交,1-草稿, btnManage-createStr1创建 srm_audit_status
+// 驳回(审核不通过) 反审核(审核撤销)
 const message = useMessage() // 消息弹窗
 
 export const isAbandon = (status: any) => {
-  return [1, 6].includes(status) //草稿1 驳回6-审核不通过
+  return [1, 7].includes(status) //草稿1 驳回6-审核不通过
 }
 
 export const isUpdate = (status: any) => {
-  return [1, 6].includes(status) //草稿1 驳回6-审核不通过
+  return [1, 6, 7].includes(status) //草稿1 驳回6-审核不通过 反审核-7审核撤销
 }
 
 export const isDelete = (status: any) => {
@@ -15,7 +16,7 @@ export const isDelete = (status: any) => {
 
 // 提交审批
 export const isSubmitAudit = (status: any) => {
-  return [1, 6, 7].includes(status) //1草稿，6审批驳回-审核不通过 7-审核撤销
+  return [1, 6, 7].includes(status) //1草稿，驳回6-审核不通过 反审核-7审核撤销
 }
 
 // 审核
