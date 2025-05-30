@@ -265,23 +265,24 @@
       :data="list"
       :stripe="true"
       :show-overflow-tooltip="true"
-      @selection-change="handleSelectionChange"
+      @selection-change="handleSelectionChange"Id
     >
       <el-table-column width="30" label="选择" type="selection" />
       <el-table-column min-width="180" label="订单单号" align="center" prop="code" />
-      <el-table-column min-width="200" label="外部单据编码" align="center" prop="externalCode" />
+      <el-table-column min-width="200" label="外部单据编码" align="center" prop="externalId" />
       <el-table-column min-width="180" label="所属店铺" align="center" prop="shopName" />
+      <el-table-column label="订单明细" align="center" prop="orderItemNames" min-width="200" />
       <el-table-column label="产品信息" align="center" prop="productNames" min-width="200" />
       <el-table-column label="买家姓名" min-width="180" align="center" prop="buyerName" />
       <el-table-column label="公司名" align="center" prop="companyName" />
-
+      <el-table-column label="收件人姓名" min-width="180" align="center" prop="recipientName" />
       <el-table-column label="收件人国家" align="center" prop="recipientCountryCode" width="100" />
-      <el-table-column label="收件人省或州】" align="center" prop="state" width="150"/>
+      <el-table-column label="收件人省或州" align="center" prop="state" width="150"/>
       <el-table-column label="城市" align="center" prop="city" />
       <el-table-column label="区/县" align="center" prop="district" />
       <el-table-column label="地址1" align="center" prop="address1" width="300"/>
-      <el-table-column label="地址2" align="center" prop="address1" width="300"/>
-      <el-table-column label="地址3" align="center" prop="address1" width="300"/>
+      <el-table-column label="地址2" align="center" prop="address2" width="300"/>
+      <el-table-column label="地址3" align="center" prop="address3" width="300"/>
       <el-table-column label="门牌号" align="center" prop="houseNo" />
       <el-table-column label="邮编" align="center" prop="postalCode" />
       <el-table-column label="运费" align="center" prop="shippingFee" />
