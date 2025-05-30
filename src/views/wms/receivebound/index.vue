@@ -32,6 +32,13 @@
       <template #operate="{ scope }">
         <el-button
           link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['wms:inbound:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inbound:update']"
@@ -159,7 +166,7 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '300px'
+    width: '320px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })

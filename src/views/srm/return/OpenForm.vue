@@ -32,6 +32,7 @@
           <el-tab-pane label="退货产品清单" name="item">
             <ItemForm
               ref="itemFormRef"
+              :warehouseId="formData.fromWarehouseId"
               :items="formData.items"
               :disabled="itemsFormdisabled"
               :formType="formType"
@@ -214,7 +215,8 @@ const submitForm = async () => {
       'qty',
       'remark',
       'applicantId',
-      'applicationDeptId'
+      'applicationDeptId',
+      'actualQty'
     ])
     if (formType.value === 'create') {
       await PurchaseReturnApi.createPurchaseReturn(data)
@@ -266,6 +268,7 @@ const addItem = (selectionList: any[]) => {
       // 采购订单分页需带出数据
       const {
         code,
+        inCode,
         itemsId, //list记得转化
         productId,
         productName,
@@ -306,6 +309,7 @@ const addItem = (selectionList: any[]) => {
        */
       const obj = {
         // orderNo: code,
+        inCode,
         [itemIdKey]: itemsId, //list记得转化
         productId,
         productName,
@@ -318,6 +322,8 @@ const addItem = (selectionList: any[]) => {
         productPrice,
         qty:actualQty || 0,
         originCount: actualQty || 0,
+        actualQty,
+
         taxPercent,
         taxPrice,
         actTaxPrice,

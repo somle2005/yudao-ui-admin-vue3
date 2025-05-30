@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import { getWMSWarehouseList } from '@/commonData/wms'
-import { addProperty } from '@/components/SmForm/src/utils'
+import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
@@ -85,7 +85,7 @@ const financeSubjectList = ref<FinanceSubjectVO[]>([])
 const subTabsName = ref('item')
 const itemFormRef = ref()
 const itemsFormdisabled = computed(() =>
-  [OPERATE_MAP.abandon, OPERATE_MAP['force-finish']].includes(formType.value)
+  [OPERATE_MAP.abandon, OPERATE_MAP['force-finish'], 'detail'].includes(formType.value)
 )
 
 const requestFormOptions: any = ref([])
@@ -234,6 +234,10 @@ const updateFormOptions = (formOptions) => {
   return formOptions
 }
 
+const detailFormOptions = (formOptions) => {
+  return addDisabled(formOptions)
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -263,6 +267,9 @@ const open = async (type: string, id?: number) => {
     },
     update: () => {
       requestFormOptions.value = updateFormOptions(updateActualQuantityFormOptions())
+    },
+    detail: () => {
+      requestFormOptions.value = detailFormOptions(updateActualQuantityFormOptions())
     }
   }
   formTypeOperate[type]()

@@ -14,27 +14,17 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="180">
-          <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.productId`"
-              :rules="formRules.productId"
-              class="mb-0px!"
-            >
-              <el-text>{{ row.productBarCode }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="productBarCode" label="产品编码" width="180" align="center" />
+        <!-- 
+        <template #default="{ row, $index }">
+          <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
+            <el-text>{{ row.productBarCode }}</el-text>
+          </el-form-item>
+        </template> -->
 
-        <el-table-column label="数量" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.planQty`" :rules="formRules.planQty" class="mb-0px!">
-              <el-text>{{ row.planQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="planQty" label="数量" width="80" align="center" />
 
-        <el-table-column label="库存归属" width="250">
+        <el-table-column label="库存归属" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
@@ -53,19 +43,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="实际数量" width="100" align="center">
+        <el-table-column label="实际数量" width="80" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.actualQty`"
               :rules="formRules.actualQty"
               class="mb-0px!"
             >
-              <SmNumber :max="row.planQty" v-model="row.actualQty" />
+              <SmNumber v-model="row.actualQty" :max="row.planQty" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" width="120">
+        <el-table-column label="备注" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input

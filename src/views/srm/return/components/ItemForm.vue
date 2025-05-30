@@ -82,6 +82,9 @@
           </template>
         </el-table-column>
 
+        <el-table-column prop="actualQty" label="入库数量" width="120" align="center" />
+        <el-table-column prop="sellableQty" label="可售数量" width="120" align="center" />
+
         <el-table-column prop="actTaxPrice" label="含税单价" width="120" align="center" />
         <el-table-column prop="productPrice" label="单价" width="200" align="center" />
         <!-- <template #default="{ row }">
@@ -92,11 +95,12 @@
         <el-table-column label="税额" prop="taxPrice" width="120" align="center" />
         <el-table-column prop="containerRate" label="箱率" width="120" align="center" />
 
-        
         <el-table-column prop="inItemId" label="到货项id" width="80" align="center" />
         <el-table-column prop="applicantName" label="申请人" width="120" align="center" />
         <el-table-column prop="applicationDeptName" label="部门" width="120" align="center" />
         <el-table-column prop="currencyName" label="币种" width="100" align="center" />
+
+        <el-table-column prop="inCode" label="上游单据编号" width="160" align="center" />
 
         <el-table-column label="备注" width="150" align="center">
           <template #default="{ row, $index }">
@@ -136,6 +140,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
+import { useAddSellableQtyBatch } from '@/views/tms/common/utils'
 
 const props = defineProps({
   items: {
@@ -152,6 +157,10 @@ const props = defineProps({
   formType: {
     type: String,
     default: ''
+  },
+  warehouseId: {
+    type: Number,
+    default: null
   }
 })
 
@@ -171,6 +180,8 @@ const warehouseList = getWarehouseList()
 // const { deptList, defaultProps } = getDeptTree()
 // const userList = getUserList()
 
+let { canAddSellableQtyBatch } = useAddSellableQtyBatch()
+
 /** 初始化设置到货项 */
 watch(
   () => props.items,
@@ -184,6 +195,14 @@ watch(
     //   }
     // })
     formData.value = val
+    canAddSellableQtyBatch(formData)
+    // const str = getCacheStr(formData.value)
+    // if (cacheStr === str) {
+    //   return
+    // } else {
+    //   cacheStr = str
+    //   addSellableQtyBatch(formData)
+    // }
   },
   { immediate: true, deep: true }
 )

@@ -51,5 +51,10 @@ export const StockWarehouseApi = {
   // 获得分组的仓库库存分页
   getStockWarehousePageGrouped: async (data) => {
     return await request.post({ url: `/wms/stock-warehouse/page-grouped`, data })
+  },
+
+    // 获得分组的仓库库存分页
+  getStockWarehouseSellableQty: async (data) => {
+    return await request.post({ url: `/wms/stock-warehouse/select-sellable-qty`, data })
   }
 }
