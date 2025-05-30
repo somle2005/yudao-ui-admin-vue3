@@ -36,7 +36,7 @@
         <!-- 提交审批	草稿，审批驳回	置灰 0-2 批量提交暂不做限制-->
 
         <el-button
-          :disabled="oneSelectDisabledBtn"
+          :disabled="oneSelectDisabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -149,7 +149,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { getLastListProp } from '@/utils/transformData'
 import { AUDIT_STATUS } from '@/views/wms/constants/index'
-import { isAbandon, isUpdate, isDelete, isSubmitAudit, isAudit } from '@/utils/btnManager/wms'
+import { isAbandon, isUpdate, isDelete, isSubmitAuditBatch, isAudit } from '@/utils/btnManager/wms'
 import { OPERATE_MAP } from '@/views/wms/constants/index'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()

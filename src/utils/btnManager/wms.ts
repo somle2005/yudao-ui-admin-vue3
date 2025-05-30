@@ -107,6 +107,7 @@ const createStr1 = (list) => {
   return str + ' btnManage-createStr1创建'
 }
 
+// 5-作废,4-强制入库,3-已入库,2-驳回,1-待入库,0-草稿 btnManage-createStr1创建
 export const isAbandon = (status: any) => {
   return [0, 2].includes(status) //草稿0 驳回2
 }
@@ -127,4 +128,9 @@ export const isSubmitAudit = (status: any) => {
 // 审核
 export const isAudit = (status: any) => {
   return [1].includes(status) //1提交审核-待入库
+}
+
+// 提交审核-批量
+export const isSubmitAuditBatch = (list: any[]) => {
+  return list.every((item) => isSubmitAudit(item.auditStatus))
 }

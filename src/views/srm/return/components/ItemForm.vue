@@ -74,7 +74,7 @@
               /> -->
               <SmNumber
                 v-model="row.qty"
-                :min="1"
+                :min="0"
                 :max="row.originCount"
                 @change="(val) => changeValLimit(row, 'qty', 1, val)"
               />

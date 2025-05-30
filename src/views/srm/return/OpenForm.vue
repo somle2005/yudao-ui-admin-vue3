@@ -277,6 +277,7 @@ const addItem = (selectionList: any[]) => {
 
         productPrice,
         qty,
+        actualQty,
 
         taxPercent = TAX_PERCENT,
         taxPrice,
@@ -315,8 +316,8 @@ const addItem = (selectionList: any[]) => {
         // model, // //列表要转化取item-product里面数据
 
         productPrice,
-        qty,
-        originCount: qty,
+        qty:actualQty || 0,
+        originCount: actualQty || 0,
         taxPercent,
         taxPrice,
         actTaxPrice,

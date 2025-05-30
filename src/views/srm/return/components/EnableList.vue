@@ -150,7 +150,8 @@ const handleCurrentChange = (row: any) => {
     productUnitId: 'productUnitId',
     productUnitName: 'productUnitName',
     productPrice: 'productPrice',
-    qty: 'qty',
+    qty: 'qty', // 计划的数量
+    actualQty: 'actualQty', //实际入库的数量
 
     taxPercent: 'taxPercent',
     taxPrice: 'taxPrice',
