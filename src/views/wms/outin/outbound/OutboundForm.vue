@@ -361,6 +361,12 @@ const submitForm = async (type?: string) => {
   formLoading.value = true
   try {
     const data = formData.value as unknown as OutboundVO as any
+
+    // 新增编辑-同意出库的时候 入库数量设置成和计划入库量一致
+    data.itemList.forEach((item) => {
+      item.actualQty = item.planQty
+    })
+
     if (formType.value === 'create') {
       await OutboundApi.createOutbound(data)
       message.success(t('common.createSuccess'))
@@ -369,10 +375,6 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
       if (type === AUDIT_TYPE.agree) {
-        // 同意审核的时候 入库数量设置成和计划入库量一致
-        data.itemList.forEach((item) => {
-          item.actualQty = item.planQty
-        })
         await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
       } else if (type === AUDIT_TYPE.reject) {
         await OutboundApi.rejectOutboundAuditStatus({ billId: data.id, comment: data.comment })

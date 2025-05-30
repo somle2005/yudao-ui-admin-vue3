@@ -61,7 +61,7 @@
         </template>
       </el-table-column> -->
 
-      <!-- <el-table-column label="库存公司" width="200" align="center">
+      <el-table-column label="库存公司" width="200" align="center">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.stockCompanyId`" class="mb-0px!">
             <SmSelect
@@ -71,7 +71,7 @@
             />
           </el-form-item>
         </template>
-      </el-table-column> -->
+      </el-table-column>
 
       <el-table-column label="备注" width="150" align="center">
         <template #default="{ row, $index }">
@@ -96,7 +96,7 @@ import { getDeptTree, getFinanceSubjectList, getProductList } from '@/commonData
 import { addSellableQty } from '../../common/utils'
 
 const productList = getProductList()
-// const financeSubjectList = getFinanceSubjectList()
+const financeSubjectList = getFinanceSubjectList()
 const { defaultProps, deptList } = getDeptTree()
 
 const props = defineProps({
