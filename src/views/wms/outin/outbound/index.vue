@@ -161,10 +161,10 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_AUDIT_STATUS }
   },
 
-  upstreamBillType: {
+  upstreamType: {
     label: '类型',
     width: '210px',
-    slot: 'upstreamBillType',
+    slot: 'upstreamType',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_TYPE }
   },
 
@@ -223,9 +223,9 @@ const queryParams = reactive({
   type: undefined,
   status: undefined,
   auditStatus: undefined,
-  upstreamBillId: undefined,
-  upstreamBillCode: undefined,
-  upstreamBillType: undefined,
+  upstreamId: undefined,
+  upstreamCode: undefined,
+  upstreamType: undefined,
   remark: undefined,
   createTime: []
 })

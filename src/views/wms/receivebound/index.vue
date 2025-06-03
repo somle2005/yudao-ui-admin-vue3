@@ -102,14 +102,14 @@ const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 
 const fieldMap = {
   code: '入库单号',
-  upstreamBillCode: '上游单据编号',
+  upstreamCode: '上游单据编号',
   warehouseName: '仓库',
 
-  upstreamBillType: {
+  upstreamType: {
     // label: '上游单据类型',
     label: '入库单类型',
     width: '160px',
-    slot: 'upstreamBillType',
+    slot: 'upstreamType',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
 
@@ -187,9 +187,9 @@ const queryParams = reactive({
   type: undefined,
   warehouseId: undefined,
   auditStatus: 1, // 待审批
-  upstreamBillId: undefined,
-  upstreamBillCode: undefined,
-  upstreamBillType: undefined,
+  upstreamId: undefined,
+  upstreamCode: undefined,
+  upstreamType: undefined,
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,

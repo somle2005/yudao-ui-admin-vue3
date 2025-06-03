@@ -50,7 +50,7 @@ const initFormData = () => {
     name: undefined,
     externalStorageId: undefined,
     externalStorageCode: undefined,
-    companyName: undefined,
+    addressLine3: undefined,
     country: undefined,
     province: undefined,
     city: undefined,
@@ -130,7 +130,7 @@ const createRequestFormOptions = () => {
 
 5、external_storage-三方海外仓-选择-暂时无
 6、三方仓代码 external_storage_code-暂时无
-7、公司名称 companyName-1
+7、详细地址3 addressLine3-1
 8、国家编码 country-1
 9、省/州 province-1
 10、城市 city-1
@@ -225,9 +225,9 @@ const createRequestFormOptions = () => {
     },
     {
       type: 'input',
-      label: '公司名称',
-      prop: 'companyName',
-      placeholder: '请输入公司名称',
+      label: '详细地址3',
+      prop: 'addressLine3',
+      placeholder: '请输入详细地址3',
       attrs: {
         style: { width: '100%' },
         clearable: true

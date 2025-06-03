@@ -18,7 +18,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '上游单据编号',
-      prop: 'upstreamBillCode',
+      prop: 'upstreamCode',
       placeholder: '请输入上游单据编号',
       attrs: {
         style: { width: '100%' },
@@ -56,7 +56,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
       type: 'select',
       // placeholder: '请选择上游单据类型',
       placeholder: '请选择入库单类型',
-      prop: 'upstreamBillType',
+      prop: 'upstreamType',
       // label: '上游单据类型',
       label: '入库单类型',
       attrs: {

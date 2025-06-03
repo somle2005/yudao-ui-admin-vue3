@@ -120,9 +120,9 @@ const initFormData = () => {
     type: undefined,
     status: undefined,
     auditStatus: undefined,
-    upstreamBillId: undefined,
-    upstreamBillCode: undefined,
-    upstreamBillType: undefined,
+    upstreamId: undefined,
+    upstreamCode: undefined,
+    upstreamType: undefined,
     remark: undefined,
     itemList: [] as any[]
   }
@@ -188,7 +188,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '上游单据编码',
-      prop: 'upstreamBillCode',
+      prop: 'upstreamCode',
       attrs: {
         disabled: true,
         style: { width: '100%' },
@@ -423,9 +423,9 @@ const addProductItem = (selectionList: any[]) => {
         "warehouseId":32,
         "companyId":50001,
         "deptId":50012,
-        "upstreamBillId":1,
-        "upstreamBillCode":"1",
-        "upstreamBillType":1,
+        "upstreamId":1,
+        "upstreamCode":"1",
+        "upstreamType":1,
         "remark":"1",
         "itemList":[
           {

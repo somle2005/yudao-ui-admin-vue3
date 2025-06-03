@@ -20,7 +20,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '上游单据编号',
-      prop: 'upstreamBillCode',
+      prop: 'upstreamCode',
       placeholder: '请输入上游单据编号',
       attrs: {
         style: { width: '100%' },
