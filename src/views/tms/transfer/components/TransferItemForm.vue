@@ -37,12 +37,12 @@
 
       <el-table-column label="归属部门" width="200" align="center">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
+          <el-form-item :prop="`${$index}.deptId`" class="mb-0px!">
             <el-tree-select
               filterable
               clearable
               :disabled="disabled"
-              v-model="row.applicationDeptId"
+              v-model="row.deptId"
               :data="deptList"
               :props="defaultProps"
               check-strictly
