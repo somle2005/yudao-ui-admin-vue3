@@ -6,7 +6,7 @@
       seamless
       frameBorder="0"
       scrolling="no"
-      :src="toUrl('http://192.168.10.199:8088/superset/dashboard/p/nOoQl7xBlja/?hiddenDashboards=1')"
+      :src="toUrl('https://superset.somle.com:55015/superset/dashboard/p/nOoQl7xBlja/?hiddenDashboards=1')"
     >
     </iframe>
   </div>
