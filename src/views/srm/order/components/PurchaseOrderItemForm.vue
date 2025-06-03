@@ -171,7 +171,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="showOringinCount" label="入库数量" width="120" align="center">
+        <el-table-column v-if="showOringinCount" label="到货数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
               <!-- <el-input-number
