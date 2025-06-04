@@ -45,65 +45,65 @@ export interface InventoryBinActualQtyVO {
 export const InventoryBinApi = {
   // 查询库位盘点分页
   getInventoryBinPage: async (params: any) => {
-    return await request.get({ url: `/wms/inventory-bin/page`, params })
+    return await request.get({ url: `/wms/stock-check-bin/page`, params })
   },
 
   // 查询库位盘点详情
   getInventoryBin: async (id: number) => {
-    return await request.get({ url: `/wms/inventory-bin/get?id=` + id })
+    return await request.get({ url: `/wms/stock-check-bin/get?id=` + id })
   },
 
   // 新增库位盘点
   createInventoryBin: async (data: InventoryBinVO) => {
-    return await request.post({ url: `/wms/inventory-bin/create`, data })
+    return await request.post({ url: `/wms/stock-check-bin/create`, data })
   },
 
   // 修改库位盘点
   updateInventoryBin: async (data: InventoryBinVO) => {
-    return await request.put({ url: `/wms/inventory-bin/update`, data })
+    return await request.put({ url: `/wms/stock-check-bin/update`, data })
   },
 
   // 删除库位盘点
   deleteInventoryBin: async (id: number) => {
-    return await request.delete({ url: `/wms/inventory-bin/delete?id=` + id })
+    return await request.delete({ url: `/wms/stock-check-bin/delete?id=` + id })
   },
 
   // 导出库位盘点 Excel
   exportInventoryBin: async (params) => {
-    return await request.download({ url: `/wms/inventory-bin/export-excel`, params })
+    return await request.download({ url: `/wms/stock-check-bin/export-excel`, params })
   },
   // 设置实际库存量
   updateInventoryBinActualQuantity: async (data: Array<InventoryBinActualQtyVO>) => {
-    return await request.put({ url: `/wms/inventory-bin/update-actual-quantity`, data })
+    return await request.put({ url: `/wms/stock-check-bin/update-actual-quantity`, data })
   },
 
   //  追加盘点库位
   appendInventoryBin: async (data: Array<InventoryBinActualQtyVO>) => {
-    return await request.post({ url: `/wms/inventory-bin/append`, data })
+    return await request.post({ url: `/wms/stock-check-bin/append`, data })
   },
 
   //  导入盘点结果
   importInventoryBinExcel: async (data: any) => {
-    return await request.upload({ url: `/wms/inventory-bin/import-excel`, data })
+    return await request.upload({ url: `/wms/stock-check-bin/import-excel`, data })
   },
 
   //  导入盘点产品
   importInventoryProductExcel: async (data: any) => {
-    return await request.upload({ url: `/wms/inventory-product/import-excel`, data })
+    return await request.upload({ url: `/wms/stock-check/import-excel`, data })
   },
 
   //  产品库位转换
   parseInventoryProductBin: async (data: any) => {
-    return await request.upload({ url: `/wms/inventory-bin/parse-product-bin`, data })
+    return await request.upload({ url: `/wms/stock-check-bin/parse-product-bin`, data })
   },
 
   // 下载模板 盘点导入产品转换
   downloadInventoryBinProductTemplate: async (params) => {
-    return await request.download({ url: `/wms/inventory-bin/download-product-template`, params })
+    return await request.download({ url: `/wms/stock-check-bin/download-product-template`, params })
   },
 
   // 下载模板 盘点结果
   downloadInventoryBinTemplate: async (params) => {
-    return await request.download({ url: `/wms/inventory-bin/download-template`, params })
+    return await request.download({ url: `/wms/stock-check-bin/download-template`, params })
   }
 }

@@ -78,7 +78,7 @@
           link
           type="success"
           @click="handleExport(scope.row.id)"
-          v-hasPermi="['wms:inventory-bin:export']"
+          v-hasPermi="['wms:stock-check-bin:export']"
           :loading="exportLoading"
         >
           导出
@@ -91,9 +91,8 @@
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
           v-if="
             hasAllPermission([
-              'wms:stock-check:update',
               'wms:outbound:agree',
-              'wms:inventory-bin:append'
+              'wms:stock-check-bin:append'
             ]) && !hideInventoryList.includes(scope.row.auditStatus)
           "
         >
@@ -114,7 +113,7 @@
           link
           type="primary"
           @click="openForm(OPERATE_MAP.append, scope.row.id)"
-          v-if="hasAllPermission(['wms:inventory-bin:append'])"
+          v-if="hasAllPermission(['wms:stock-check-bin:append'])"
         >
           追加盘点库位
         </el-button> -->
