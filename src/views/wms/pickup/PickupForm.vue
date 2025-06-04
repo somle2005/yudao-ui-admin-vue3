@@ -220,7 +220,7 @@ const addItem = (selectionList: any[]) => {
         actualQty,
         outboundAvailableQty,
         planQty,
-        shelvedQty,
+        shelveClosedQty,
         shelveAvailableQty, // 待上架量
         inbound,
         warehouseId
@@ -234,7 +234,7 @@ const addItem = (selectionList: any[]) => {
         actualQty,
         outboundAvailableQty,
         planQty,
-        shelvedQty,
+        shelveClosedQty,
         shelveAvailableQty,
         inboundCode: inbound?.code,
         warehouseId

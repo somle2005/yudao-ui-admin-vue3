@@ -206,9 +206,9 @@ const createRequestFormOptions = () => {
     },
     {
       type: 'date-picker',
-      placeholder: '请选择预计到货时间',
+      placeholder: '请选择计划到货时间',
       prop: 'arrivalPlanTime',
-      label: '预计到货时间',
+      label: '计划到货时间',
       attrs: {
         clearable: true,
         type: 'date',

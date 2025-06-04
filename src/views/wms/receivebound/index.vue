@@ -140,7 +140,7 @@ const fieldMap = {
   // },
 
   arrivalPlanTime: {
-    label: '预计到货时间',
+    label: '计划到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },

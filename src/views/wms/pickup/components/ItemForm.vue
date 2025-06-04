@@ -70,7 +70,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column prop="shelvedQty" label="已上架数" width="100" align="center" />
+        <el-table-column prop="shelveClosedQty" label="已上架数" width="100" align="center" />
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">

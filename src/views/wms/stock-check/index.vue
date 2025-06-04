@@ -17,7 +17,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['wms:inventory:create']"
+          v-hasPermi="['wms:stock-check:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -26,7 +26,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['wms:inventory:export']"
+          v-hasPermi="['wms:stock-check:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button> -->
@@ -69,7 +69,7 @@
         <el-button
           link
           @click="openForm('detail', scope.row.id)"
-          v-hasPermi="['wms:inventory:query']"
+          v-hasPermi="['wms:stock-check:query']"
         >
           详情
         </el-button>
@@ -84,14 +84,14 @@
           导出
         </el-button>
 
-        <!-- 'wms:inventory:submit' -->
+        <!-- 'wms:stock-check:submit' -->
         <el-button
           link
           type="primary"
           @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
           v-if="
             hasAllPermission([
-              'wms:inventory:update',
+              'wms:stock-check:update',
               'wms:outbound:agree',
               'wms:inventory-bin:append'
             ]) && !hideInventoryList.includes(scope.row.auditStatus)
@@ -104,7 +104,7 @@
           link
           type="danger"
           @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
-          v-hasPermi="['wms:inventory:abandon']"
+          v-hasPermi="['wms:stock-check:abandon']"
           v-if="!isAbandon(scope.row.auditStatus)"
         >
           作废
@@ -123,7 +123,7 @@
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
-          v-hasPermi="['wms:inventory:update']"
+          v-hasPermi="['wms:stock-check:update']"
         >
           编辑
         </el-button> -->
@@ -131,7 +131,7 @@
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
-          v-hasPermi="['wms:inventory:delete']"
+          v-hasPermi="['wms:stock-check:delete']"
         >
           删除
         </el-button> -->
@@ -146,7 +146,7 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { InventoryApi, InventoryVO } from '@/api/wms/inventory'
+import { StockCheckApi, StockCheckVO } from '@/api/wms/stock-check'
 import InventoryForm from './InventoryForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
@@ -198,13 +198,13 @@ tableOptions.value = transformTableOptions(fieldMap, {
 })
 
 /** 盘点 列表 */
-defineOptions({ name: 'WmsInventory' })
+defineOptions({ name: 'WmsStockCheck' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<InventoryVO[]>([]) // 列表的数据
+const list = ref<StockCheckVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
@@ -222,7 +222,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await InventoryApi.getInventoryPage(queryParams)
+    const data = await StockCheckApi.getInventoryPage(queryParams)
     list.value = data.list.map((item) => {
       item.warehouseName = item?.warehouse?.name
       item.comment = getLastListProp(item.approvalHistoryList, 'comment')
@@ -258,7 +258,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await InventoryApi.deleteInventory(id)
+    await StockCheckApi.deleteInventory(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -272,7 +272,7 @@ const handleExport = async (inventoryId: number) => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    // const data = await InventoryApi.exportInventory(queryParams)
+    // const data = await StockCheckApi.exportInventory(queryParams)
     const data = await InventoryBinApi.exportInventoryBin({ inventoryId })
     download.excel(data, '盘点.xls')
   } catch {

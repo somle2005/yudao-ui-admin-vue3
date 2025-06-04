@@ -175,9 +175,9 @@ const fieldMap = {
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },
-  shelvingStatus: {
+  shelveStatus: {
     label: '上架状态',
-    slot: 'shelvingStatus',
+    slot: 'shelveStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_SHELVING_STATUS }
   },
   shippingMethod: {
@@ -192,7 +192,7 @@ const fieldMap = {
   // },
 
   arrivalPlanTime: {
-    label: '预计到货时间',
+    label: '计划到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },

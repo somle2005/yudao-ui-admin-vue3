@@ -63,7 +63,7 @@
           type="danger"
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.reject)"
-          v-hasPermi="['wms:inventory:reject']"
+          v-hasPermi="['wms:stock-check:reject']"
         >
           不同意</el-button
         > -->
@@ -88,7 +88,7 @@
 <script setup lang="ts">
 import ItemForm from './components/ItemForm.vue'
 import EnableList from './components/EnableList.vue'
-import { InventoryApi, InventoryVO } from '@/api/wms/inventory'
+import { StockCheckApi, StockCheckVO } from '@/api/wms/stock-check'
 import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { useOutData } from './components/hooks/outdata'
 import { createDBFn } from '@/utils/decorate'
@@ -399,7 +399,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      let data = await InventoryApi.getInventory(id)
+      let data = await StockCheckApi.getInventory(id)
       resolveDetailData(data, type)
     } finally {
       formLoading.value = false
@@ -426,21 +426,21 @@ const submitForm = async (type?: string) => {
   // 提交请求
   formLoading.value = true
   try {
-    let data = formData.value as unknown as InventoryVO as any
+    let data = formData.value as unknown as StockCheckVO as any
     if (formType.value === 'create') {
-      const billId = await InventoryApi.createInventory(data)
-      await InventoryApi.submitInventoryAudit({ billId, comment: data.comment })
+      const billId = await StockCheckApi.createInventory(data)
+      await StockCheckApi.submitInventoryAudit({ billId, comment: data.comment })
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
-      await InventoryApi.updateInventory(data)
+      await StockCheckApi.updateInventory(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.abandon) {
-      await InventoryApi.abandonInventory({ billId: data.id, comment: data.comment })
+      await StockCheckApi.abandonInventory({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     }
     // 追加盘点保存优先级高于-确认盘点
     else if (formType.value === OPERATE_MAP.append) {
-      // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+      // await StockCheckApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
       const queryData = getAppendList(data)
       if (!queryData.length) return // 如果没有新加的就不进行追加
       await InventoryBinApi.appendInventoryBin(queryData)
@@ -448,7 +448,7 @@ const submitForm = async (type?: string) => {
     } else if (formType.value === OPERATE_MAP.inventory) {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
-        // await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+        // await StockCheckApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
         // 追加库位inventoryId为undefined的追加过去-只能追加新的
         
         // 先设置数量
@@ -459,15 +459,15 @@ const submitForm = async (type?: string) => {
         const queryData = getAppendList(data)
         await InventoryBinApi.appendInventoryBin(queryData)
         // 再刷新详情
-        data = await InventoryApi.getInventory(inventoryId.value)
+        data = await StockCheckApi.getInventory(inventoryId.value)
         resolveDetailData(data, type)
         // 再同意
-        await InventoryApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
+        await StockCheckApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 
       if (type === AUDIT_TYPE.reject) {
-        await InventoryApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-        await InventoryApi.rejectInventoryAuditStatus({ billId: data.id, comment: data.comment })
+        await StockCheckApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+        await StockCheckApi.rejectInventoryAuditStatus({ billId: data.id, comment: data.comment })
       }
 
       message.success(t('common.updateSuccess'))
@@ -525,7 +525,7 @@ const buttonExist = computed(
 
 const refreshDetail = async () => {
   // open(formType.value, inventoryId.value)
-  let data = await InventoryApi.getInventory(inventoryId.value)
+  let data = await StockCheckApi.getInventory(inventoryId.value)
   resolveDetailData(data, formType.value)
 }
 const operateImportFormData = (data) => {

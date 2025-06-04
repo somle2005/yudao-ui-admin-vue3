@@ -130,7 +130,7 @@ const fieldMap = {
   // actualQty: '入库数',
   // outboundAvailableQty: '批次剩余库存数',
   // planQty: '计划入库数',
-  // shelvedQty: '已上架数',
+  // shelveClosedQty: '已上架数',
 
   // updateTime: {
   //   label: '更新时间',

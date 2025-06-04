@@ -146,7 +146,7 @@ const fieldMap = {
 
   // outboundAvailableQty: '批次剩余库存',
   // planQty: '计划入库量',
-  // shelvedQty: '已上架数',
+  // shelveClosedQty: '已上架数',
 
   // actualQty: '数量',
   // stockWarehouseAvailableQty: '总库存',
