@@ -197,7 +197,7 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 
 const resetQuery = () => {
   resetQueryParams(queryParams, queryFormRef)
-  queryParams.inStatus = 2 // 默认主单部分入库-可选全部入库
+  queryParams.inStatus = 3 // 默认主单部分入库-可选全部入库
   handleQuery()
 }
 
