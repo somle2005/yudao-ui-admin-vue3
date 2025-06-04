@@ -99,7 +99,7 @@ import {
 import { getWarehouseBinList } from '@/commonData/wms'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
-import { getBinIdRules } from '../../utils'
+import { getBinIdRules } from '../../common/utils'
 
 const props = defineProps({
   items: {

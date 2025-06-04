@@ -43,7 +43,7 @@ import { TransferApi, TransferVO } from '@/api/tms/transfer'
 import TransferItemForm from './components/TransferItemForm.vue'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
-import { addAuditAdvice } from '@/views/wms/utils'
+import { addAuditAdvice } from '@/views/wms/common/utils'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 

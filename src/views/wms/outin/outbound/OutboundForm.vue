@@ -96,9 +96,9 @@ import { getWMSWarehouseList } from '@/commonData/wms'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
 // import { OPERATE_MAP } from './constant'
-import { OPERATE_MAP } from '@/views/wms/constants/index'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 import { OutboundItemApi } from '@/api/wms/outbound-item'
-import { addComment } from '../../utils'
+import { addComment } from '../../common/utils'
 
 const { addProductItemRef, openAddProductItem } = useOutProductdata()
 

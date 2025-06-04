@@ -40,11 +40,11 @@ import ItemForm from './components/ItemForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { getFinanceSubjectList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/fms/company'
-import { OPERATE_MAP } from '@/views/wms/constants/index'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { InboundItemApi } from '@/api/wms/inbound-item'
 import { filterObjKey } from '@/utils/transformData'
-import { addComment } from '../utils'
+import { addComment } from '../common/utils'
 
 /** 收货单 表单 */
 defineOptions({ name: 'OpenForm' })

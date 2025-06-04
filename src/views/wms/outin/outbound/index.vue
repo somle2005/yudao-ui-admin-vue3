@@ -140,8 +140,8 @@ import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 // import { OPERATE_MAP } from './constant'
-import { OPERATE_MAP } from '@/views/wms/constants/index'
-import { AUDIT_STATUS } from '@/views/wms/constants/index'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
+import { AUDIT_STATUS } from '@/views/wms/common/constants/index'
 import { isAbandon } from '@/utils/btnManager/wms'
 
 const { tableOptions, transformTableOptions } = useTableData()

@@ -91,11 +91,11 @@ import download from '@/utils/download'
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { OPERATE_MAP } from '@/views/wms/constants/index'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 import OpenForm from './OpenForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
-import { isAbandon } from '../utils'
+import { isAbandon } from '../common/utils'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示

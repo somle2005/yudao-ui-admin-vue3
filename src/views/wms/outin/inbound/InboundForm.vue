@@ -71,7 +71,7 @@ import { FinanceSubjectVO } from '@/api/fms/company'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { filterObjKey, getLastListProp } from '@/utils/transformData'
 import { InboundItemApi } from '@/api/wms/inbound-item'
-import { OPERATE_MAP } from '@/views/wms/constants/index'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 
 // import { useOutData } from './components/hooks/outdata'
 

@@ -148,9 +148,9 @@ import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { getLastListProp } from '@/utils/transformData'
-import { AUDIT_STATUS } from '@/views/wms/constants/index'
+import { AUDIT_STATUS } from '@/views/wms/common/constants/index'
 import { isAbandon, isUpdate, isDelete, isSubmitAuditBatch, isAudit } from '@/utils/btnManager/wms'
-import { OPERATE_MAP } from '@/views/wms/constants/index'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
