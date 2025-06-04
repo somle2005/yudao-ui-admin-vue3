@@ -95,7 +95,7 @@ const initFormData = () => {
     id: undefined,
     supplierId: undefined,
     accountId: undefined,
-    inTime: undefined,
+    arriveTime: undefined,
     remark: undefined,
     fileUrl: '',
     discountPercent: 0,
@@ -212,8 +212,8 @@ const submitForm = async () => {
       await PurchaseInApi.updatePurchaseInAuditStatus({
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
-        inId: data.id,
-        reviewComment: data.reviewComment
+        arriveId: data.id,
+        auditAdvice: data.auditAdvice
       })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === SRM_OPERATE_MAP.pay) {

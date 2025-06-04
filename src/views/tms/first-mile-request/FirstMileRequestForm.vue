@@ -108,7 +108,7 @@ import { getWMSWarehouseList } from '@/commonData/wms'
 import { getIntDictOptions } from '@/utils/dict'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
-import { addComment } from '@/views/wms/utils'
+import { addAuditAdvice } from '@/views/wms/utils'
 import { FirstMileApi } from '@/api/tms/first-mile'
 import { useMergeFirstMileOptions, computeFirstMileList } from '../common/utils'
 import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
@@ -257,7 +257,7 @@ const createRequestFormOptions = () => {
 
 const auditFormOptions = (formOptions) => {
   addDisabled(formOptions)
-  addComment(formOptions)
+  addAuditAdvice(formOptions)
   return formOptions
 }
 

@@ -28,7 +28,7 @@ export const useForm = (formType) => {
     const obj: any = {
       type: 'input',
       label: '审核意见',
-      prop: 'reviewComment',
+      prop: 'auditAdvice',
       placeholder: '请输入审核意见',
       colConfig: { span: 24 },
       attrs: {
@@ -38,7 +38,7 @@ export const useForm = (formType) => {
     }
     formOptions.splice(index, 0, obj)
     formOptions.forEach((item) => {
-      if (item.prop && item.prop !== 'reviewComment') {
+      if (item.prop && item.prop !== 'auditAdvice') {
         if (item.attrs) {
           item.attrs!.disabled = auditType
         } else {
@@ -56,7 +56,7 @@ export const useForm = (formType) => {
     const obj: any = {
       type: 'input',
       label: '审核意见',
-      prop: 'reviewComment',
+      prop: 'auditAdvice',
       colConfig: { span: 24 },
       attrs: {
         style: { width: '100%' },

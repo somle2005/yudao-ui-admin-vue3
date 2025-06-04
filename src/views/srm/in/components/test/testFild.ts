@@ -17,7 +17,7 @@ TotalCount  TotalProductPrice TotalTaxPrice TotalPrice DiscountPrice TotalPrice 
  */
 
 const paramsList = [
-  { prop: 'inId', name: '采购入库编号' },
+  { prop: 'arriveId', name: '采购入库编号' },
   { prop: 'warehouseId', name: '仓库Id' },
   { prop: 'productId', name: '产品ID' },
   { prop: 'productUnitId', name: '产品单位ID' },
@@ -95,7 +95,7 @@ console.log(list, 'list-list')
 
 const differentList = [
   {
-    prop: 'inId',
+    prop: 'arriveId',
     name: '采购入库编号'
   },
   {
@@ -129,7 +129,7 @@ const differentList = [
 ]
 
 /**
-inId-需要带吗
+arriveId-需要带吗
 
 创建采购到货
 /admin-api/srm/purchase-in/create
@@ -186,7 +186,7 @@ const mergeOrderParmas = {
 const createData = {
   supplierId: 4,
   accountId: 2,
-  inTime: 1747843200000,
+  arriveTime: 1747843200000,
   remark: '备注-1',
   fileUrl:
     'https://somle-erp.oss-cn-hangzhou.aliyuncs.com/247bb868f543773848545f237aa895bc271c7f514cea758b187ffc6f3290d3e1.txt',

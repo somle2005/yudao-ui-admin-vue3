@@ -82,7 +82,7 @@ export const PurchaseRequestApi = {
     reviewed: boolean
     pass: boolean
     items?: any
-    reviewComment?: string
+    auditAdvice?: string
   }) => {
     return await request.post({
       url: `/srm/purchase-request/auditStatus`,

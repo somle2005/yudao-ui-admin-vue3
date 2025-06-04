@@ -25,7 +25,7 @@ export const useTable = () => {
       formatter: dateFormatter2, // 年月日-金蝶
       width: '200px'
     },
-    inTime: {
+    arriveTime: {
       label: '入库时间',
       formatter: dateFormatter, // 年月日-金蝶
       width: '200px'
@@ -129,7 +129,7 @@ export const useTable = () => {
       formatter: dateFormatter,
       width: '200px'
     },
-    reviewComment: '审核意见'
+    auditAdvice: '审核意见'
 
     // operate: {
     //   label: '操作',
@@ -144,7 +144,7 @@ export const useTable = () => {
     'code',
     'supplierName',
     'productBarCode',
-    'reviewComment',
+    'auditAdvice',
     'productName',
     'remark',
     'orderNo',

@@ -39,8 +39,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="开启状态" prop="status">
-            <el-radio-group v-model="formData.status">
+          <el-form-item label="开启状态" prop="openStatus">
+            <el-radio-group v-model="formData.openStatus">
               <el-radio
                 v-for="dict in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
                 :key="dict.value"
@@ -209,7 +209,7 @@ const initFormData = () => {
     email: undefined,
     fax: undefined,
     remark: undefined,
-    status: undefined,
+    openStatus: undefined,
     sort: undefined,
     taxNo: undefined,
     taxPercent: undefined,
@@ -225,7 +225,7 @@ formData.value = initFormData()
 
 const formRules = reactive({
   name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-  status: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
+  openStatus: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
   paymentTerms: [{ required: true, message: '付款条款不能为空', trigger: 'blur' }],
   deliveryAddress: [{ required: true, message: '送达地址不能为空', trigger: 'blur' }],
   companyAddress: [{ required: true, message: '公司地址不能为空', trigger: 'blur' }]
@@ -286,7 +286,7 @@ const resetForm = () => {
   //   email: undefined,
   //   fax: undefined,
   //   remark: undefined,
-  //   status: CommonStatusEnum.ENABLE,
+  //   openStatus: CommonStatusEnum.ENABLE,
   //   sort: undefined,
   //   taxNo: undefined,
   //   taxPercent: undefined,

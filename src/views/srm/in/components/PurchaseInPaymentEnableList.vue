@@ -248,7 +248,7 @@ const fieldMap = {
     width: '200px'
   },
 
-  reviewComment: '审核意见'
+  auditAdvice: '审核意见'
 
   // operate: {
   //   label: '操作',
@@ -272,7 +272,7 @@ const showList = [
 const branchOptions = transformTableOptions(fieldMap).filter((item: any) =>
   showList.includes(item.prop)
 )
-const wrapList = ['code', 'supplierName', 'barCode', 'reviewComment', 'productName', 'remark']
+const wrapList = ['code', 'supplierName', 'barCode', 'auditAdvice', 'productName', 'remark']
 branchOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
     item.slot = item.prop

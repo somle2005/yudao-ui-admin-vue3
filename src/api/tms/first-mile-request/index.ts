@@ -25,7 +25,7 @@ export interface FirstMileRequestAuditVO {
   /**
    * 审核意见
    */
-  reviewComment?: string
+  auditAdvice?: string
   /**
    * 审核/反审核
    * 审核通过/审核撤销

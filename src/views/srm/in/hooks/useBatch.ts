@@ -10,9 +10,9 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
       await message.exportConfirm('是否确认提交审核？')
 
       // 整单和分行都统一做去重处理 都是取id
-      const inIds: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
+      const arriveIds: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
 
-      await PurchaseInApi.submitPurchaseInAudit({ inIds })
+      await PurchaseInApi.submitPurchaseInAudit({ arriveIds })
       message.success('提交审核成功')
       // 刷新列表
       await getList()
@@ -42,7 +42,7 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
       await PurchaseInApi.updatePurchaseInAuditStatus({
         reviewed,
         pass: true,
-        inId: id
+        arriveId: id
       })
       message.success('反审核成功')
       // 刷新列表

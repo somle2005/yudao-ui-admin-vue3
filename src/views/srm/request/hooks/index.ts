@@ -278,7 +278,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     const obj: any = {
       type: 'input',
       label: '审核意见',
-      prop: 'reviewComment',
+      prop: 'auditAdvice',
       placeholder: '请输入审核意见',
       attrs: {
         style: { width: '100%' },
@@ -287,7 +287,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     }
     formOptions.splice(index, 0, obj)
     formOptions.forEach((item) => {
-      if (item.prop && item.prop !== 'reviewComment') {
+      if (item.prop && item.prop !== 'auditAdvice') {
         item.attrs!.disabled = auditType
       }
     })
@@ -317,7 +317,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
     const obj: any = {
       type: 'input',
       label: '审核意见',
-      prop: 'reviewComment',
+      prop: 'auditAdvice',
       attrs: {
         style: { width: '100%' },
         clearable: true,
@@ -455,7 +455,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
               approvedQty: item.approvedQty
             }
           }),
-          reviewComment: data.reviewComment
+          auditAdvice: data.auditAdvice
         })
         message.success(t('common.updateSuccess'))
       } else if (formType.value === 'merge') {

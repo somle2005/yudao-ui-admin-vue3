@@ -89,7 +89,7 @@ export interface PurchaseOrderVO {
   outCount: number // 采购出库数量
   returnCount: number // 采购退货数量,
   items: PurchaseOrderItemVO[] // 采购订单明细
-  reviewComment?: string // 审核意见
+  auditAdvice?: string // 审核意见
   inspectionJson?: string // 检验单
   completionJson?: string // 完工单
   totalInspectionPassCount?: number // 总检验通过数量
@@ -237,7 +237,7 @@ export const PurchaseOrderApi = {
     reviewed: boolean
     pass: boolean
     orderIds: number[]
-    reviewComment?: string
+    auditAdvice?: string
   }) => {
     return await request.post({
       url: `/srm/purchase-order/auditStatus`,

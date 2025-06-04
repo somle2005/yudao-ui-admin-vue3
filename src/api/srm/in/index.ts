@@ -12,7 +12,7 @@ export interface PurchaseInVO {
   remark: string // 备注
   outCount: number // 采购出库数量
   returnCount: number // 采购退货数量
-  reviewComment?: string // 审核意见
+  auditAdvice?: string // 审核意见
   items: any[]
 }
 
@@ -68,8 +68,8 @@ export const PurchaseInApi = {
   updatePurchaseInAuditStatus: async (data: {
     reviewed: boolean
     pass: boolean
-    inId: number
-    reviewComment?: string
+    arriveId: number
+    auditAdvice?: string
   }) => {
     return await request.post({
       url: `/srm/purchase-in/auditStatus`,

@@ -209,7 +209,7 @@ export const useTable = () => {
 
     // source: '源单类型',
     // orderNo: '上游单据编码',
-    // reviewComment: '审核意见',
+    // auditAdvice: '审核意见',
 
     creatorName: '制单人',
     createTime: {
@@ -225,7 +225,7 @@ export const useTable = () => {
       width: '200px'
     },
 
-    // inTime: {
+    // arriveTime: {
     //   label: '入库时间',
     //   formatter: dateFormatter, // 年月日-金蝶
     //   width: '200px'
@@ -297,7 +297,7 @@ export const useTable = () => {
   //   'code',
   //   'supplierName',
   //   'productBarCode',
-  //   'reviewComment',
+  //   'auditAdvice',
   //   'productName',
   //   'remark',
   //   'orderNo',

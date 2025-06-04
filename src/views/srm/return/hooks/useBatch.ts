@@ -41,7 +41,7 @@ export const useBatch = (selectionList, getList, wholeOrderEnable, openForm) => 
         reviewed,
         pass: true,
         ids: [id],
-        // reviewComment
+        // auditAdvice
       })
       message.success('反审核成功')
       // 刷新列表

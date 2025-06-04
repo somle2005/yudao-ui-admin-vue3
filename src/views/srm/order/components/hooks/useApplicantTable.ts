@@ -89,10 +89,10 @@ export const useApplicantTable = () => {
       formatter: dateFormatter,
       width: '180px'
     },
-    reviewComment: {
+    auditAdvice: {
       label: '审核意见',
       width: '200px',
-      slot: 'reviewComment',
+      slot: 'auditAdvice',
       wrap: true
     },
     auditor: '审核人',

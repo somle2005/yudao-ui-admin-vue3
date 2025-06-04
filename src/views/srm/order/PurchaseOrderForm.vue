@@ -202,7 +202,7 @@ const createAuditFormOptions = (formOptions, auditType) => {
   const obj: any = {
     type: 'input',
     label: '审核意见',
-    prop: 'reviewComment',
+    prop: 'auditAdvice',
     placeholder: '请输入审核意见',
     colConfig: { span: 24 },
     attrs: {
@@ -212,7 +212,7 @@ const createAuditFormOptions = (formOptions, auditType) => {
   }
   formOptions.splice(index, 0, obj)
   formOptions.forEach((item) => {
-    if (item.prop && item.prop !== 'reviewComment') {
+    if (item.prop && item.prop !== 'auditAdvice') {
       if (item.attrs) {
         item.attrs!.disabled = auditType
       } else {
@@ -230,7 +230,7 @@ const updateFormOptions = (formOptions) => {
   const obj: any = {
     type: 'input',
     label: '审核意见',
-    prop: 'reviewComment',
+    prop: 'auditAdvice',
     colConfig: { span: 24 },
     attrs: {
       style: { width: '100%' },
@@ -642,7 +642,7 @@ const submitForm = async () => {
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
         orderIds: [data.id],
-        reviewComment: data.reviewComment
+        auditAdvice: data.auditAdvice
       })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'update') {

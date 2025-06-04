@@ -229,7 +229,7 @@ const submitForm = async () => {
         ids: [data.id],
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
-        reviewComment: data.reviewComment
+        auditAdvice: data.auditAdvice
       })
       message.success(t('common.updateSuccess'))
     }

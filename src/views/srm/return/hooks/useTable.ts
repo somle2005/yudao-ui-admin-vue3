@@ -190,7 +190,7 @@ export const useTable = () => {
       width: '200px'
     },
 
-    reviewComment: '审核意见',
+    auditAdvice: '审核意见',
 
     operate: {
       label: '操作',
@@ -215,7 +215,7 @@ export const useTable = () => {
     'code',
     'supplierName',
     'productBarCode',
-    'reviewComment',
+    'auditAdvice',
     'productName',
     'remark',
     // 'orderNo',

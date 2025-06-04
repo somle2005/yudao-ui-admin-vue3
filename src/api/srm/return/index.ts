@@ -200,7 +200,7 @@ export interface PurchaseReturnAuditVO {
     /**
      * 审核意见
      */
-    reviewComment?: string;
+    auditAdvice?: string;
     /**
      * 审核/反审核
      */

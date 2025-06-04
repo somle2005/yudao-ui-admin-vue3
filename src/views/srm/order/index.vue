@@ -436,7 +436,7 @@ const fieldMap = {
     width: '200px'
   },
 
-  reviewComment: '审核意见',
+  auditAdvice: '审核意见',
 
   operate: {
     label: '操作',
@@ -451,7 +451,7 @@ const wrapList = [
   'code',
   'supplierName',
   'barCode',
-  'reviewComment',
+  'auditAdvice',
   'productName',
   'remark',
   'declaredType',

@@ -123,7 +123,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // {
     //   type: 'date-picker',
     //   placeholder: '请选择入库时间',
-    //   prop: 'inTime',
+    //   prop: 'arriveTime',
     //   label: '入库时间',
     //   attrs: {
     //     clearable: true,

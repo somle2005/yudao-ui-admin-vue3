@@ -37,9 +37,9 @@
         />
       </el-form-item>
 
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="状态" prop="openStatus">
         <el-select
-          v-model="queryParams.status"
+          v-model="queryParams.openStatus"
           clearable
           filterable
           placeholder="请选择产品"
@@ -90,8 +90,8 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-      <template #status="{ scope }">
-        <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status || ''" />
+      <template #openStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.openStatus || ''" />
       </template>
 
       <template #operate="{ scope }">
@@ -134,9 +134,9 @@ const fieldMap = {
   mobile: '手机号码',
   telephone: '联系电话',
   email: '电子邮箱',
-  status: {
+  openStatus: {
     label: '状态',
-    slot: 'status',
+    slot: 'openStatus',
     width: '200px',
     dictAttrs: { type: DICT_TYPE.COMMON_ENABLE_STATUS }
   },
@@ -182,7 +182,7 @@ const loading = ref(true) // 列表的加载中
 const list = ref<SupplierVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
-  status: undefined,
+  openStatus: undefined,
   pageNo: 1,
   pageSize: 10,
   name: undefined,
