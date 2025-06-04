@@ -1,5 +1,5 @@
 import * as CustomerApi from '@/api/crm/customer'
-import { InventoryBinApi } from '@/api/wms/inventory-bin'
+import { StockCheckBinApi } from '@/api/wms/stock-check-bin'
 
 export const useImport = (refreshDetail, operateImportFormData,operateImportFormDataResult, formData, inventoryId) => {
   const message = useMessage() // 消息弹窗
@@ -24,14 +24,14 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
         [importMap.create]: () => {
           // wms:inbound-item:download-product-template
           templateObj.value = {
-            url: InventoryBinApi.downloadInventoryBinProductTemplate,
+            url: StockCheckBinApi.downloadInventoryBinProductTemplate,
             name: '导入盘点产品模板.xls'
           }
         },
         [importMap.inventory]: () => {
           // wms:inbound-item:download-template
           templateObj.value = {
-            url: InventoryBinApi.downloadInventoryBinTemplate,
+            url: StockCheckBinApi.downloadInventoryBinTemplate,
             name: '导入盘点结果模板.xls'
           }
         }
@@ -48,13 +48,13 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
     const fnMap = {
       [importMap.create]: () => {
         importData.append('warehouseId', formData.value.warehouseId)
-        return InventoryBinApi.parseInventoryProductBin(importData).then((res) => {
+        return StockCheckBinApi.parseInventoryProductBin(importData).then((res) => {
           operateImportFormData(res.data)
         })
       },
       [importMap.inventory]: () => {
         importData.append('inventoryId', inventoryId.value)
-        return InventoryBinApi.importInventoryBinExcel(importData).then((res) => {
+        return StockCheckBinApi.importInventoryBinExcel(importData).then((res) => {
           operateImportFormDataResult(res.data)
           // refreshDetail()
         })

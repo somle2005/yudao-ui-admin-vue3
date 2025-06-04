@@ -152,7 +152,7 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { OPERATE_MAP } from './constant'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { getLastListProp } from '@/utils/transformData'
-import { InventoryBinApi } from '@/api/wms/inventory-bin'
+import { StockCheckBinApi } from '@/api/wms/stock-check-bin'
 import { isAbandon } from '@/utils/btnManager/wms'
 
 const hideInventoryList = [3, 5] // 3已通过 5已作废
@@ -272,7 +272,7 @@ const handleExport = async (inventoryId: number) => {
     // 发起导出
     exportLoading.value = true
     // const data = await StockCheckApi.exportStockCheck(queryParams)
-    const data = await InventoryBinApi.exportInventoryBin({ inventoryId })
+    const data = await StockCheckBinApi.exportInventoryBin({ inventoryId })
     download.excel(data, '盘点.xls')
   } catch {
   } finally {
@@ -283,7 +283,7 @@ const handleExport = async (inventoryId: number) => {
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 const handleImportBinExcel = () => {
-  // InventoryBinApi.importInventoryBinExcel
+  // StockCheckBinApi.importInventoryBinExcel
 }
 const handleImportProductExcel = () => {
   // handleImportProductExcel

@@ -13,34 +13,34 @@ export interface StockOwnershipVO {
 }
 
 // 所有者库存 API
-export const StockOwnershipApi = {
+export const StockLogicApi = {
   // 查询所有者库存分页
   getStockOwnershipPage: async (data: any) => {
-    return await request.post({ url: `/wms/stock-ownership/page`, data })
+    return await request.post({ url: `/wms/stock-logic/page`, data })
   },
 
   // 查询所有者库存详情
   getStockOwnership: async (id: number) => {
-    return await request.get({ url: `/wms/stock-ownership/get?id=` + id })
+    return await request.get({ url: `/wms/stock-logic/get?id=` + id })
   },
 
   // 新增所有者库存
   createStockOwnership: async (data: StockOwnershipVO) => {
-    return await request.post({ url: `/wms/stock-ownership/create`, data })
+    return await request.post({ url: `/wms/stock-logic/create`, data })
   },
 
   // 修改所有者库存
   updateStockOwnership: async (data: StockOwnershipVO) => {
-    return await request.put({ url: `/wms/stock-ownership/update`, data })
+    return await request.put({ url: `/wms/stock-logic/update`, data })
   },
 
   // 删除所有者库存
   deleteStockOwnership: async (id: number) => {
-    return await request.delete({ url: `/wms/stock-ownership/delete?id=` + id })
+    return await request.delete({ url: `/wms/stock-logic/delete?id=` + id })
   },
 
   // 导出所有者库存 Excel
   exportStockOwnership: async (data) => {
-    return await request.download({ url: `/wms/stock-ownership/export-excel`, data, method: 'POST' })
+    return await request.download({ url: `/wms/stock-logic/export-excel`, data, method: 'POST' })
   },
 }

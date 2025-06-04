@@ -109,7 +109,7 @@ tableOptions.value = transformTableOptions(fieldMap, {
 })
 
 /** 仓位库存 列表 */
-defineOptions({ name: 'WmsStockBin' })
+defineOptions({ name: 'WmsLogicStockFlow' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化

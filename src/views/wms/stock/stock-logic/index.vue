@@ -18,7 +18,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['wms:stock-ownership:export']"
+          v-hasPermi="['wms:stock-logic:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -28,7 +28,7 @@
           plain
           @click="handleImport"
           :loading="exportLoading"
-          v-hasPermi="['wms:stock-ownership-move:import']"
+          v-hasPermi="['wms:stock-logic-move:import']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 批量调归属
         </el-button>
@@ -53,7 +53,7 @@
           type="primary"
           :loading="exportLoading"
           @click="openForm(OPERATE_MAP.moveOwnership, undefined, scope.row)"
-          v-hasPermi="['wms:stock-ownership-move:create']"
+          v-hasPermi="['wms:stock-logic-move:create']"
         >
           调归属
         </el-button>
@@ -62,7 +62,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['wms:stock-ownership:update']"
+            v-hasPermi="['wms:stock-logic:update']"
           >
             编辑
           </el-button>
@@ -70,7 +70,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['wms:stock-ownership:delete']"
+            v-hasPermi="['wms:stock-logic:delete']"
           >
             删除
           </el-button> -->
@@ -83,7 +83,7 @@
 
   <SmImportFile
     ref="smImportFileRef"
-    :importUrlFn="StockOwnershipMoveApi.importStockOwnershipMove"
+    :importUrlFn="StockLogicMoveApi.importStockOwnershipMove"
     :templateObj="templateObj"
   />
 </template>
@@ -91,11 +91,11 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { StockOwnershipApi, StockOwnershipVO } from '@/api/wms/stock-ownership'
+import { StockLogicApi, StockOwnershipVO } from '@/api/wms/stock-logic'
 import StockOwnershipForm from './StockOwnershipForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { StockOwnershipMoveApi } from '@/api/wms/stock-ownership-move'
+import { StockLogicMoveApi } from '@/api/wms/stock-logic-move'
 import { OPERATE_MAP } from './constant/index'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
@@ -135,7 +135,7 @@ tableOptions.value = transformTableOptions(fieldMap, {
 })
 
 /** 所有者库存 列表 */
-defineOptions({ name: 'WmsStockOwnership' })
+defineOptions({ name: 'WmsStockLogic' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -162,7 +162,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await StockOwnershipApi.getStockOwnershipPage(queryParams)
+    const data = await StockLogicApi.getStockOwnershipPage(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['mode', 'name', 'code'] },
       { prop: 'dept', keyList: ['name'] },
@@ -200,7 +200,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await StockOwnershipApi.deleteStockOwnership(id)
+    await StockLogicApi.deleteStockOwnership(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -214,7 +214,7 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await StockOwnershipApi.exportStockOwnership(queryParams)
+    const data = await StockLogicApi.exportStockOwnership(queryParams)
     download.excel(data, '库存归属.xls')
   } catch {
   } finally {
@@ -224,9 +224,9 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-// wms:stock-ownership-move:download-template
+// wms:stock-logic-move:download-template
 const templateObj = ref({
-  url: StockOwnershipMoveApi.downloadStockOwnershipMoveTemplate,
+  url: StockLogicMoveApi.downloadStockOwnershipMoveTemplate,
   name: '调归属模版.xls'
 })
 const smImportFileRef = ref()

@@ -97,7 +97,7 @@ import { distinctList, filterObjKey } from '@/utils/transformData'
 import { getItemPropList } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { OPERATE_MAP } from './constant'
-import { InventoryBinApi } from '@/api/wms/inventory-bin'
+import { StockCheckBinApi } from '@/api/wms/stock-check-bin'
 import { addComment } from '../utils'
 import { getIntDictOptions } from '@/utils/dict'
 import { useImport } from './hooks/import'
@@ -443,7 +443,7 @@ const submitForm = async (type?: string) => {
       // await StockCheckApi.submitStockCheckAudit({ billId: data.id, comment: data.comment })
       const queryData = getAppendList(data)
       if (!queryData.length) return // 如果没有新加的就不进行追加
-      await InventoryBinApi.appendInventoryBin(queryData)
+      await StockCheckBinApi.appendInventoryBin(queryData)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.inventory) {
       if (type === AUDIT_TYPE.agreeInventory) {
@@ -452,12 +452,12 @@ const submitForm = async (type?: string) => {
         // 追加库位inventoryId为undefined的追加过去-只能追加新的
         
         // 先设置数量
-        await InventoryBinApi.updateInventoryBinActualQuantity(data.binItemList.filter(item => !isEmpty(item.id)))
+        await StockCheckBinApi.updateInventoryBinActualQuantity(data.binItemList.filter(item => !isEmpty(item.id)))
 
         // 追加的库位必须是原先盘点单已有产品下的
         // 再追加库位
         const queryData = getAppendList(data)
-        await InventoryBinApi.appendInventoryBin(queryData)
+        await StockCheckBinApi.appendInventoryBin(queryData)
         // 再刷新详情
         data = await StockCheckApi.getStockCheck(inventoryId.value)
         resolveDetailData(data, type)

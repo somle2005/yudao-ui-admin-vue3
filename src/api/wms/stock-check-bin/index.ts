@@ -42,7 +42,7 @@ export interface InventoryBinActualQtyVO {
 }
 
 // 库位盘点 API
-export const InventoryBinApi = {
+export const StockCheckBinApi = {
   // 查询库位盘点分页
   getInventoryBinPage: async (params: any) => {
     return await request.get({ url: `/wms/stock-check-bin/page`, params })
