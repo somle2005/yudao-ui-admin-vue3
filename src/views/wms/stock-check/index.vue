@@ -272,7 +272,7 @@ const handleExport = async (inventoryId: number) => {
     // 发起导出
     exportLoading.value = true
     // const data = await StockCheckApi.exportStockCheck(queryParams)
-    const data = await StockCheckBinApi.exportInventoryBin({ inventoryId })
+    const data = await StockCheckBinApi.exportStockCheckBin({ inventoryId })
     download.excel(data, '盘点.xls')
   } catch {
   } finally {
@@ -283,7 +283,7 @@ const handleExport = async (inventoryId: number) => {
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 const handleImportBinExcel = () => {
-  // StockCheckBinApi.importInventoryBinExcel
+  // StockCheckBinApi.importStockCheckBinExcel
 }
 const handleImportProductExcel = () => {
   // handleImportProductExcel

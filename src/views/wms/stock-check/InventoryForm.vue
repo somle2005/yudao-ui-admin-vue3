@@ -443,7 +443,7 @@ const submitForm = async (type?: string) => {
       // await StockCheckApi.submitStockCheckAudit({ billId: data.id, comment: data.comment })
       const queryData = getAppendList(data)
       if (!queryData.length) return // 如果没有新加的就不进行追加
-      await StockCheckBinApi.appendInventoryBin(queryData)
+      await StockCheckBinApi.appendtStockCheckBin(queryData)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.inventory) {
       if (type === AUDIT_TYPE.agreeInventory) {
@@ -452,12 +452,12 @@ const submitForm = async (type?: string) => {
         // 追加库位inventoryId为undefined的追加过去-只能追加新的
         
         // 先设置数量
-        await StockCheckBinApi.updateInventoryBinActualQuantity(data.binItemList.filter(item => !isEmpty(item.id)))
+        await StockCheckBinApi.updateStockCheckBinActualQuantity(data.binItemList.filter(item => !isEmpty(item.id)))
 
         // 追加的库位必须是原先盘点单已有产品下的
         // 再追加库位
         const queryData = getAppendList(data)
-        await StockCheckBinApi.appendInventoryBin(queryData)
+        await StockCheckBinApi.appendtStockCheckBin(queryData)
         // 再刷新详情
         data = await StockCheckApi.getStockCheck(inventoryId.value)
         resolveDetailData(data, type)

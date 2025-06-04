@@ -24,14 +24,14 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
         [importMap.create]: () => {
           // wms:inbound-item:download-product-template
           templateObj.value = {
-            url: StockCheckBinApi.downloadInventoryBinProductTemplate,
+            url: StockCheckBinApi.downloadStockCheckBinProductTemplate,
             name: '导入盘点产品模板.xls'
           }
         },
         [importMap.inventory]: () => {
           // wms:inbound-item:download-template
           templateObj.value = {
-            url: StockCheckBinApi.downloadInventoryBinTemplate,
+            url: StockCheckBinApi.downloadStockCheckBinTemplate,
             name: '导入盘点结果模板.xls'
           }
         }
@@ -48,13 +48,13 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
     const fnMap = {
       [importMap.create]: () => {
         importData.append('warehouseId', formData.value.warehouseId)
-        return StockCheckBinApi.parseInventoryProductBin(importData).then((res) => {
+        return StockCheckBinApi.parseStockCheckProductBin(importData).then((res) => {
           operateImportFormData(res.data)
         })
       },
       [importMap.inventory]: () => {
         importData.append('inventoryId', inventoryId.value)
-        return StockCheckBinApi.importInventoryBinExcel(importData).then((res) => {
+        return StockCheckBinApi.importStockCheckBinExcel(importData).then((res) => {
           operateImportFormDataResult(res.data)
           // refreshDetail()
         })

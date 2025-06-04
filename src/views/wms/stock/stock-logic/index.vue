@@ -83,7 +83,7 @@
 
   <SmImportFile
     ref="smImportFileRef"
-    :importUrlFn="StockLogicMoveApi.importStockOwnershipMove"
+    :importUrlFn="StockLogicMoveApi.importStockLogicMove"
     :templateObj="templateObj"
   />
 </template>
@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { StockLogicApi, StockOwnershipVO } from '@/api/wms/stock-logic'
+import { StockLogicApi, StockLogicVO } from '@/api/wms/stock-logic'
 import StockOwnershipForm from './StockOwnershipForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
@@ -141,7 +141,7 @@ const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<StockOwnershipVO[]>([]) // 列表的数据
+const list = ref<StockLogicVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
@@ -162,7 +162,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await StockLogicApi.getStockOwnershipPage(queryParams)
+    const data = await StockLogicApi.getStockLogicPage(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['mode', 'name', 'code'] },
       { prop: 'dept', keyList: ['name'] },
@@ -200,7 +200,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await StockLogicApi.deleteStockOwnership(id)
+    await StockLogicApi.deleteStockLogic(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -214,7 +214,7 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await StockLogicApi.exportStockOwnership(queryParams)
+    const data = await StockLogicApi.exportStockLogic(queryParams)
     download.excel(data, '库存归属.xls')
   } catch {
   } finally {
@@ -226,7 +226,7 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 
 // wms:stock-logic-move:download-template
 const templateObj = ref({
-  url: StockLogicMoveApi.downloadStockOwnershipMoveTemplate,
+  url: StockLogicMoveApi.downloadStockLogicMoveTemplate,
   name: '调归属模版.xls'
 })
 const smImportFileRef = ref()

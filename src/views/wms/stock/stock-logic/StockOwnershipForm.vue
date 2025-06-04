@@ -18,7 +18,7 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { StockLogicApi, StockOwnershipVO } from '@/api/wms/stock-logic'
+import { StockLogicApi, StockLogicVO } from '@/api/wms/stock-logic'
 import { OPERATE_MAP } from './constant'
 import { StockLogicMoveApi } from '@/api/wms/stock-logic-move'
 import { addProperty } from '@/components/SmForm/src/utils'
@@ -221,7 +221,7 @@ const open = async (type: string, id?: number, row?: any) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await StockLogicApi.getStockOwnership(id)
+      formData.value = await StockLogicApi.getStockLogic(id)
     } finally {
       formLoading.value = false
     }
@@ -237,7 +237,7 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    let data = formData.value as unknown as StockOwnershipVO as any
+    let data = formData.value as unknown as StockLogicVO as any
 
     if (formType.value === OPERATE_MAP.moveOwnership) {
       data.itemList = [
@@ -252,15 +252,15 @@ const submitForm = async () => {
         ])
       ]
       data = filterObjKey(data, ['warehouseId', 'itemList'])
-      await StockLogicMoveApi.createStockOwnershipMove(data)
+      await StockLogicMoveApi.createStockLogicMove(data)
       message.success(t('common.updateSuccess'))
     }
 
     // if (formType.value === 'create') {
-    //   await StockLogicApi.createStockOwnership(data)
+    //   await StockLogicApi.createStockLogic(data)
     //   message.success(t('common.createSuccess'))
     // } else {
-    //   await StockLogicApi.updateStockOwnership(data)
+    //   await StockLogicApi.updateStockLogic(data)
     //   message.success(t('common.updateSuccess'))
     // }
     dialogVisible.value = false

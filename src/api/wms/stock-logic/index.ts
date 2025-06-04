@@ -1,7 +1,7 @@
 import request from '@/config/axios'
 
 // 所有者库存 VO
-export interface StockOwnershipVO {
+export interface StockLogicVO {
   id: number // 主键
   warehouseId: number // 仓库ID
   productId: number // 产品ID
@@ -15,32 +15,32 @@ export interface StockOwnershipVO {
 // 所有者库存 API
 export const StockLogicApi = {
   // 查询所有者库存分页
-  getStockOwnershipPage: async (data: any) => {
+  getStockLogicPage: async (data: any) => {
     return await request.post({ url: `/wms/stock-logic/page`, data })
   },
 
   // 查询所有者库存详情
-  getStockOwnership: async (id: number) => {
+  getStockLogic: async (id: number) => {
     return await request.get({ url: `/wms/stock-logic/get?id=` + id })
   },
 
   // 新增所有者库存
-  createStockOwnership: async (data: StockOwnershipVO) => {
+  createStockLogic: async (data: StockLogicVO) => {
     return await request.post({ url: `/wms/stock-logic/create`, data })
   },
 
   // 修改所有者库存
-  updateStockOwnership: async (data: StockOwnershipVO) => {
+  updateStockLogic: async (data: StockLogicVO) => {
     return await request.put({ url: `/wms/stock-logic/update`, data })
   },
 
   // 删除所有者库存
-  deleteStockOwnership: async (id: number) => {
+  deleteStockLogic: async (id: number) => {
     return await request.delete({ url: `/wms/stock-logic/delete?id=` + id })
   },
 
   // 导出所有者库存 Excel
-  exportStockOwnership: async (data) => {
+  exportStockLogic: async (data) => {
     return await request.download({ url: `/wms/stock-logic/export-excel`, data, method: 'POST' })
   },
 }

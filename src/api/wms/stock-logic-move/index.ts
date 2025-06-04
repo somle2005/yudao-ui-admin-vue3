@@ -1,6 +1,6 @@
 import request from '@/config/axios'
 
-export interface StockOwnershipMoveVO {
+export interface StockLogicMoveVO {
   /**
    * 执行状态
    */
@@ -65,17 +65,17 @@ export interface WmsStockOwnershipMoveItemSaveReqVO {
 // 所有者库存 API
 export const StockLogicMoveApi = {
   // 批量调归属 导入产品归属移动清单
-  importStockOwnershipMove: async (data: any) => {
+  importStockLogicMove: async (data: any) => {
     return await request.upload({ url: `/wms/stock-logic-move/import-excel`, data })
   },
 
   // 调归属 创建所有者库存移动
-  createStockOwnershipMove: async (data: StockOwnershipMoveVO) => {
+  createStockLogicMove: async (data: StockLogicMoveVO) => {
     return await request.post({ url: `/wms/stock-logic-move/create`, data })
   },
 
   // 下载模板 库存归属
-  downloadStockOwnershipMoveTemplate: async (params) => {
+  downloadStockLogicMoveTemplate: async (params) => {
     return await request.download({ url: `/wms/stock-logic-move/download-template`, params })
   }
 }
