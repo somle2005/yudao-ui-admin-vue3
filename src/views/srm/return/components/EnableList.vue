@@ -97,9 +97,10 @@ const getList = async () => {
     })
     // bodyData.itemQuery.inStatus = queryParams.itemsInStatus
 
-    bodyData.mainQuery.inStatus = 3 // 整单全部入库
+    bodyData.mainQuery.inStatus = 2 // 3整单全部入库 2 // 部分入库
     bodyData.mainQuery.supplierId = supplierIdSave
     bodyData.mainQuery.auditStatus = 5 // 已审核
+    // bodyData.itemQuery.inStatus = 2 // 部分入库
 
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
@@ -187,7 +188,7 @@ const handleCurrentChange = (row: any) => {
   //   inStatus: 'itemsInStatus',
   //   payStatus: 'itemsPayStatus',
   //   currencyId: 'currencyId'
-  // })
+  // })queryParams
   // console.log(selectionList.value, 'selectionList.value')
   // console.log('当前选中项', row)
 }
@@ -196,6 +197,7 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 
 const resetQuery = () => {
   resetQueryParams(queryParams, queryFormRef)
+  queryParams.inStatus = 2 // 默认主单部分入库-可选全部入库
   handleQuery()
 }
 

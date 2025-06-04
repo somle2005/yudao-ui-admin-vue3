@@ -42,6 +42,22 @@ export const useSearchForm = (handleQuery, queryParams) => {
       children: productList
     },
 
+    {
+      type: 'select',
+      placeholder: '请选择入库状态',
+      prop: 'inStatus',
+      label: '入库状态',
+      attrs: {
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
+    },
+
     // {
     //   type: 'select',
     //   placeholder: '请选择供应商',
@@ -85,21 +101,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
     // },
 
-    // {
-    //   type: 'select',
-    //   placeholder: '请选择入库状态',
-    //   prop: 'inStatus',
-    //   label: '入库状态',
-    //   attrs: {
-    //     class: '!w-240px',
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
-    // },
+
 
     // {
     //   type: 'select',
