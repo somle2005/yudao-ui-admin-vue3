@@ -17,16 +17,16 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
-    {
-      type: 'input',
-      label: '上游单据编号',
-      prop: 'upstreamCode',
-      placeholder: '请输入上游单据编号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
+    // {
+    //   type: 'input',
+    //   label: '上游单据编号',
+    //   prop: 'upstreamCode',
+    //   placeholder: '请输入上游单据编号',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true
+    //   }
+    // },
     {
       type: 'select',
       placeholder: '请选择产品编码',
