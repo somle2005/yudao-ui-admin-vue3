@@ -172,7 +172,7 @@ const createRequestFormOptions = () => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE)
+      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE).slice(0,3)
     },
     {
       type: 'input',
