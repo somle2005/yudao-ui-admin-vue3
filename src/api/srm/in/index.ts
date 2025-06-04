@@ -78,7 +78,7 @@ export const PurchaseInApi = {
   },
 
   // 采购入库提交审核
-  submitPurchaseInAudit: async (data: { inIds: number[] }) => {
+  submitPurchaseInAudit: async (data: { arriveIds: number[] }) => {
     return await request.put({
       url: `/srm/purchase-in/submitAudit`,
       data
