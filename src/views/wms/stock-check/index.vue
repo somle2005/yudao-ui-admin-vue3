@@ -222,7 +222,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await StockCheckApi.getInventoryPage(queryParams)
+    const data = await StockCheckApi.getStockCheckPage(queryParams)
     list.value = data.list.map((item) => {
       item.warehouseName = item?.warehouse?.name
       item.comment = getLastListProp(item.approvalHistoryList, 'comment')
@@ -258,7 +258,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await StockCheckApi.deleteInventory(id)
+    await StockCheckApi.deleteStockCheck(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -272,7 +272,7 @@ const handleExport = async (inventoryId: number) => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    // const data = await StockCheckApi.exportInventory(queryParams)
+    // const data = await StockCheckApi.exportStockCheck(queryParams)
     const data = await InventoryBinApi.exportInventoryBin({ inventoryId })
     download.excel(data, '盘点.xls')
   } catch {

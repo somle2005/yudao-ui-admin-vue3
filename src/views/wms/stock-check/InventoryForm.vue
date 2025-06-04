@@ -399,7 +399,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      let data = await StockCheckApi.getInventory(id)
+      let data = await StockCheckApi.getStockCheck(id)
       resolveDetailData(data, type)
     } finally {
       formLoading.value = false
@@ -428,19 +428,19 @@ const submitForm = async (type?: string) => {
   try {
     let data = formData.value as unknown as StockCheckVO as any
     if (formType.value === 'create') {
-      const billId = await StockCheckApi.createInventory(data)
-      await StockCheckApi.submitInventoryAudit({ billId, comment: data.comment })
+      const billId = await StockCheckApi.createStockCheck(data)
+      await StockCheckApi.submitStockCheckAudit({ billId, comment: data.comment })
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
-      await StockCheckApi.updateInventory(data)
+      await StockCheckApi.updateStockCheck(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.abandon) {
-      await StockCheckApi.abandonInventory({ billId: data.id, comment: data.comment })
+      await StockCheckApi.abandontStockCheck({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     }
     // 追加盘点保存优先级高于-确认盘点
     else if (formType.value === OPERATE_MAP.append) {
-      // await StockCheckApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+      // await StockCheckApi.submitStockCheckAudit({ billId: data.id, comment: data.comment })
       const queryData = getAppendList(data)
       if (!queryData.length) return // 如果没有新加的就不进行追加
       await InventoryBinApi.appendInventoryBin(queryData)
@@ -448,7 +448,7 @@ const submitForm = async (type?: string) => {
     } else if (formType.value === OPERATE_MAP.inventory) {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
-        // await StockCheckApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
+        // await StockCheckApi.submitStockCheckAudit({ billId: data.id, comment: data.comment })
         // 追加库位inventoryId为undefined的追加过去-只能追加新的
         
         // 先设置数量
@@ -459,15 +459,15 @@ const submitForm = async (type?: string) => {
         const queryData = getAppendList(data)
         await InventoryBinApi.appendInventoryBin(queryData)
         // 再刷新详情
-        data = await StockCheckApi.getInventory(inventoryId.value)
+        data = await StockCheckApi.getStockCheck(inventoryId.value)
         resolveDetailData(data, type)
         // 再同意
-        await StockCheckApi.agreeInventoryAuditStatus({ billId: data.id, comment: data.comment })
+        await StockCheckApi.agreeStockCheckAuditStatus({ billId: data.id, comment: data.comment })
       }
 
       if (type === AUDIT_TYPE.reject) {
-        await StockCheckApi.submitInventoryAudit({ billId: data.id, comment: data.comment })
-        await StockCheckApi.rejectInventoryAuditStatus({ billId: data.id, comment: data.comment })
+        await StockCheckApi.submitStockCheckAudit({ billId: data.id, comment: data.comment })
+        await StockCheckApi.rejectStockCheckAuditStatus({ billId: data.id, comment: data.comment })
       }
 
       message.success(t('common.updateSuccess'))
@@ -525,7 +525,7 @@ const buttonExist = computed(
 
 const refreshDetail = async () => {
   // open(formType.value, inventoryId.value)
-  let data = await StockCheckApi.getInventory(inventoryId.value)
+  let data = await StockCheckApi.getStockCheck(inventoryId.value)
   resolveDetailData(data, formType.value)
 }
 const operateImportFormData = (data) => {

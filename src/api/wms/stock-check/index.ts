@@ -14,37 +14,37 @@ export interface StockCheckVO {
 // 盘点 API
 export const StockCheckApi = {
   // 查询盘点分页
-  getInventoryPage: async (data: any) => {
+  getStockCheckPage: async (data: any) => {
     return await request.post({ url: `/wms/stock-check/page`, data })
   },
 
   // 查询盘点详情
-  getInventory: async (id: number) => {
+  getStockCheck: async (id: number) => {
     return await request.get({ url: `/wms/stock-check/get?id=` + id })
   },
 
   // 新增盘点
-  createInventory: async (data: StockCheckVO) => {
+  createStockCheck: async (data: StockCheckVO) => {
     return await request.post({ url: `/wms/stock-check/create`, data })
   },
 
   // 修改盘点
-  updateInventory: async (data: StockCheckVO) => {
+  updateStockCheck: async (data: StockCheckVO) => {
     return await request.put({ url: `/wms/stock-check/update`, data })
   },
 
   // 删除盘点
-  deleteInventory: async (id: number) => {
+  deleteStockCheck: async (id: number) => {
     return await request.delete({ url: `/wms/stock-check/delete?id=` + id })
   },
 
   // 导出盘点 Excel
-  exportInventory: async (params) => {
+  exportStockCheck: async (params) => {
     return await request.download({ url: `/wms/stock-check/export-excel`, params })
   },
 
   // 盘点提交审核
-  submitInventoryAudit: async (data: { billId: number; comment?: string }) => {
+  submitStockCheckAudit: async (data: { billId: number; comment?: string }) => {
     return await request.put({
       url: `/wms/stock-check/submit`,
       data
@@ -52,14 +52,14 @@ export const StockCheckApi = {
   },
 
   // 同意审核盘点
-  agreeInventoryAuditStatus: async (data: { billId: number; comment?: string }) => {
+  agreeStockCheckAuditStatus: async (data: { billId: number; comment?: string }) => {
     return await request.put({
       url: `/wms/stock-check/agree`,
       data
     })
   },
   // 不同意审核盘点
-  rejectInventoryAuditStatus: async (data: { billId: number; comment?: string }) => {
+  rejectStockCheckAuditStatus: async (data: { billId: number; comment?: string }) => {
     return await request.put({
       url: `/wms/stock-check/reject`,
       data
@@ -67,7 +67,7 @@ export const StockCheckApi = {
   },
 
   // 作废盘点
-  abandonInventory: async (data: { billId: number; comment?: string }) => {
+  abandontStockCheck: async (data: { billId: number; comment?: string }) => {
     return await request.put({
       url: `/wms/stock-check/abandon`,
       data
