@@ -97,7 +97,7 @@ const getList = async () => {
     })
     // bodyData.itemQuery.inStatus = queryParams.itemsInStatus
 
-    bodyData.mainQuery.inStatus = 2 // 3整单全部入库 2 // 部分入库
+    bodyData.mainQuery.inStatus = 3 // 3整单全部入库 2 // 部分入库
     bodyData.mainQuery.supplierId = supplierIdSave
     bodyData.mainQuery.auditStatus = 5 // 已审核
     // bodyData.itemQuery.inStatus = 2 // 部分入库

@@ -75,7 +75,7 @@
               <SmNumber
                 v-model="row.qty"
                 :min="0"
-                :max="row.originCount"
+                :max="row.actualQty"
                 @change="(val) => changeValLimit(row, 'qty', 1, val)"
               />
             </el-form-item>
