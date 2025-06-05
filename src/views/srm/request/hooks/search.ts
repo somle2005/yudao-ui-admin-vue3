@@ -1,15 +1,34 @@
-import { getDeptTree, getProductList, getSupplierProductList, getUserList } from '@/commonData'
+import {
+  getDeptTree,
+  getProductList,
+  getSupplierList,
+  getSupplierProductList,
+  getUserList
+} from '@/commonData'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getDictOptions } from '@/utils/dict'
 
-
 export const useSearchForm = (handleQuery) => {
-
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()
   // const supplierProductList = getSupplierProductList()
   const productList = getProductList(null, { label: 'barCode', value: 'id' })
+  const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
+    {
+      type: 'select',
+      placeholder: '请选择供应商',
+      prop: 'supplierId',
+      label: '供应商',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: supplierList
+    },
     {
       type: 'select',
       placeholder: '请选择产品编码',
@@ -85,7 +104,7 @@ export const useSearchForm = (handleQuery) => {
         // style: {
         //   width: '100%'
         // }
-      },
+      }
     },
     {
       type: 'select',
@@ -132,9 +151,7 @@ export const useSearchForm = (handleQuery) => {
         }
       },
       children: userList
-    },
-
-    
+    }
 
     // {
     //   type: 'select',
@@ -199,6 +216,13 @@ export const useSearchForm = (handleQuery) => {
 
   searchFormOptions.value.forEach((item) => {
     item.events = events
+    if (item.attrs) {
+      item.attrs.class = '!w-240px'
+    } else {
+      item.attrs = {
+        class: '!w-240px'
+      }
+    }
   })
   return searchFormOptions
 }
