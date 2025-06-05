@@ -85,7 +85,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="海关品名(英文)" width="120" align="center">
+      <!-- <el-table-column label="海关品名(英文)" width="120" align="center">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.declaredTypeEn`"
@@ -95,16 +95,16 @@
             <el-input :disabled="productDisabled" v-model="row.declaredTypeEn" />
           </el-form-item>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <template v-if="mergeDisabled">
-        <el-table-column label="条码" width="120" align="center">
+        <!-- <el-table-column label="条码" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.fbaCode`" class="mb-0px!">
               <el-input v-model.trim="row.fbaCode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="箱率" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
