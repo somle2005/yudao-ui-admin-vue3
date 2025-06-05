@@ -240,7 +240,7 @@ const getList = async () => {
     //   orderStatus: 'itemsOrderStatus',
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inboundStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInboundStatus',
     //   payStatus: 'itemsPayStatus'
     // })
   } finally {

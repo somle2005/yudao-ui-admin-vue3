@@ -107,7 +107,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择行入库状态',
-      prop: 'itemsInStatus',
+      prop: 'itemsInboundStatus',
       label: '行入库状态',
       attrs: {
         class: '!w-240px',

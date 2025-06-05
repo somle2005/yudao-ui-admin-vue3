@@ -135,9 +135,9 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  itemsInStatus: {
+  itemsInboundStatus: {
     label: '行入库状态',
-    slot: 'itemsInStatus',
+    slot: 'itemsInboundStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -351,7 +351,7 @@ const getList = async () => {
     //   orderStatus: 'itemsOrderStatus',
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inboundStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInboundStatus',
     //   payStatus: 'itemsPayStatus'
     // })
 

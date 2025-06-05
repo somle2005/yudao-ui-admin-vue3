@@ -95,7 +95,7 @@ const getList = async () => {
       mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
       itemQueryList: ['productId', 'orderCode']
     })
-    // bodyData.itemQuery.inboundStatus = queryParams.itemsInStatus
+    // bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
 
     bodyData.mainQuery.inboundStatus = 3 // 3整单全部入库 2 // 部分入库
     bodyData.mainQuery.supplierId = supplierIdSave
@@ -125,7 +125,7 @@ const getList = async () => {
     //   orderStatus: 'itemsOrderStatus',
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inboundStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInboundStatus',
     //   payStatus: 'itemsPayStatus'
     // })
 
@@ -185,7 +185,7 @@ const handleCurrentChange = (row: any) => {
   //   orderStatus: 'itemsOrderStatus',
   //   offStatus: 'itemsOffStatus',
   //   executeStatus: 'itemsExecuteStatus',
-  //   inboundStatus: 'itemsInStatus',
+  //   inboundStatus: 'itemsInboundStatus',
   //   payStatus: 'itemsPayStatus',
   //   currencyId: 'currencyId'
   // })queryParams

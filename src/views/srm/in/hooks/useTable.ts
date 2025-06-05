@@ -85,9 +85,9 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
       // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 入库状态
     },
-    itemsInStatus: {
+    itemsInboundStatus: {
       label: '行入库状态',
-      slot: 'itemsInStatus',
+      slot: 'itemsInboundStatus',
       dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -209,8 +209,7 @@ export const useTable = () => {
 
     // source: '源单类型',
     // orderNo: '上游单据编码',
-    // auditAdvice: '审核意见',
-
+    auditAdvice: '审核意见',
     creatorName: '制单人',
     createTime: {
       label: '制单时间',
@@ -253,9 +252,9 @@ export const useTable = () => {
     //   dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },
-    // itemsInStatus: {
+    // itemsInboundStatus: {
     //   label: '行入库状态',
-    //   slot: 'itemsInStatus',
+    //   slot: 'itemsInboundStatus',
     //   dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // },

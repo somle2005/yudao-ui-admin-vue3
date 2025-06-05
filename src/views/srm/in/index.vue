@@ -210,7 +210,7 @@ const queryParams = reactive({
   status: undefined,
   remark: undefined,
   creator: undefined,
-  itemsInStatus: undefined
+  itemsInboundStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -238,7 +238,7 @@ const getList = async () => {
       mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
       itemQueryList: ['productId', 'orderCode']
     })
-    bodyData.itemQuery.inboundStatus = queryParams.itemsInStatus
+    bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
@@ -266,7 +266,7 @@ const getList = async () => {
     //   orderStatus: 'itemsOrderStatus',
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inboundStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInboundStatus',
     //   payStatus: 'itemsPayStatus',
     //   totalPrice: 'itemsTotalPrice',
     //   barCode: 'itemsBarCode',
