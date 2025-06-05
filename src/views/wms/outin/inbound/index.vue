@@ -105,7 +105,7 @@
           type="warning"
           @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
           v-hasPermi="['wms:inbound:abandon']"
-          v-if="!isAbandon(scope.row.auditStatus)"
+          v-if="isAbandon(scope.row.auditStatus)"
         >
           作废
         </el-button>
