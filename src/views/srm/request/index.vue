@@ -559,8 +559,8 @@ const mergePurchase = async () => {
       a.applicationDeptId = applicationDeptId
       // 默认下单数量=未订购数量
       a.orderQuantity = a.unOrderCount
-      if (!notEmpty(item.containerRate)) {
-        item.containerRate = 1
+      if (!notEmpty(a.containerRate)) {
+        a.containerRate = 1
       }
     })
   })
