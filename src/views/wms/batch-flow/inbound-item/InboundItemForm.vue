@@ -113,7 +113,8 @@ const moveFormOptions = () => {
         }
       }
     },
-    {
+    { 
+      requiredFlag: true,
       type: 'select',
       label: '调入库位',
       prop: 'toBinId',
