@@ -105,7 +105,7 @@ import { isEmpty } from '@/utils/is'
 const { addItemRef, openAddItem } = useOutData()
 
 /** 盘点 表单 */
-defineOptions({ name: 'InventoryForm' })
+defineOptions({ name: 'OpenForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -132,7 +132,7 @@ const WMSWarehouseList = ref([])
 const subTabsName = ref('item')
 const itemFormRef = ref()
 
-const auditType = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
+const auditType = computed(() => [OPERATE_MAP.stockCheck].includes(formType.value))
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -300,7 +300,7 @@ const detailOptions = () => {
   return formOptions
 }
 
-const inventoryFormOptions = (formOptions) => {
+const openFormOptions = (formOptions) => {
   addDisabled(formOptions)
   addComment(formOptions)
   return formOptions
@@ -330,7 +330,7 @@ const resolveDetailData = (data, type) => {
   // })
 
   // 点击盘点初始化的时候 系统数量和实盘数量对其
-  if (type === OPERATE_MAP.inventory) {
+  if (type === OPERATE_MAP.stockCheck) {
     data.binItemList.forEach((item) => {
       item.originBin = true
       item.actualQty = item.expectedQty
@@ -339,7 +339,7 @@ const resolveDetailData = (data, type) => {
 
   formData.value = data
   formRef.value.initForm()
-  // if (type === OPERATE_MAP.inventory) {
+  // if (type === OPERATE_MAP.stockCheck) {
   //   data.productItemList.forEach((item) => {
   //     item.actualQty = item.expectedQty
   //   })
@@ -354,14 +354,14 @@ const resolveDetailData = (data, type) => {
   // }
 }
 
-const inventoryId = ref()
+const stockCheckId = ref()
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  inventoryId.value = id
+  stockCheckId.value = id
 
   const formTypeOperate = {
     create: () => {
@@ -376,9 +376,9 @@ const open = async (type: string, id?: number) => {
     detail: () => {
       requestFormOptions.value = detailOptions()
     },
-    [OPERATE_MAP.inventory]: () => {
-      dialogTitle.value = OPERATE_MAP.inventory
-      requestFormOptions.value = inventoryFormOptions(createRequestFormOptions())
+    [OPERATE_MAP.stockCheck]: () => {
+      dialogTitle.value = OPERATE_MAP.stockCheck
+      requestFormOptions.value = openFormOptions(createRequestFormOptions())
     },
     [OPERATE_MAP.abandon]: () => {
       dialogTitle.value = OPERATE_MAP.abandon
@@ -416,7 +416,7 @@ const submitForm = async (type?: string) => {
     return data.binItemList
       .filter((item) => !item.id)
       .map((item) =>
-        filterObjKey(item, ['productId', 'inventoryId', 'expectedQty', 'actualQty', 'binId'])
+        filterObjKey(item, ['productId', 'stockCheckId', 'expectedQty', 'actualQty', 'binId'])
       )
   }
 
@@ -442,11 +442,11 @@ const submitForm = async (type?: string) => {
       if (!queryData.length) return // 如果没有新加的就不进行追加
       await StockCheckBinApi.appendtStockCheckBin(queryData)
       message.success(t('common.updateSuccess'))
-    } else if (formType.value === OPERATE_MAP.inventory) {
+    } else if (formType.value === OPERATE_MAP.stockCheck) {
       if (type === AUDIT_TYPE.agreeInventory) {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         // await StockCheckApi.submitStockCheckAudit({ billId: data.id, comment: data.comment })
-        // 追加库位inventoryId为undefined的追加过去-只能追加新的
+        // 追加库位stockCheckId为undefined的追加过去-只能追加新的
 
         // 先设置数量
         await StockCheckBinApi.updateStockCheckBinActualQuantity(
@@ -461,7 +461,7 @@ const submitForm = async (type?: string) => {
         }
 
         // 再刷新详情
-        data = await StockCheckApi.getStockCheck(inventoryId.value)
+        data = await StockCheckApi.getStockCheck(stockCheckId.value)
         resolveDetailData(data, type)
         // 再同意
         await StockCheckApi.agreeStockCheckAuditStatus({ billId: data.id, comment: data.comment })
@@ -520,14 +520,14 @@ const addItem = (selectionList: any[]) => {
 const itemsFormdisabled = computed(() => ['detail', OPERATE_MAP.abandon].includes(formType.value))
 const buttonExist = computed(
   () =>
-    !['detail', OPERATE_MAP.abandon, OPERATE_MAP.append, OPERATE_MAP.inventory].includes(
+    !['detail', OPERATE_MAP.abandon, OPERATE_MAP.append, OPERATE_MAP.stockCheck].includes(
       formType.value
     )
 )
 
 const refreshDetail = async () => {
-  // open(formType.value, inventoryId.value)
-  let data = await StockCheckApi.getStockCheck(inventoryId.value)
+  // open(formType.value, stockCheckId.value)
+  let data = await StockCheckApi.getStockCheck(stockCheckId.value)
   resolveDetailData(data, formType.value)
 }
 const operateImportFormData = (data) => {
@@ -555,7 +555,7 @@ const operateImportFormDataResult = (data) => {
   }
   data.forEach((item) => {
     // item.expectedQty = item.availableQty
-    item.inventoryId = inventoryId.value
+    item.stockCheckId = stockCheckId.value
     item.productBarCode = item?.product?.barCode
     // 用来去重
     item[itemIdKey] = item.id + '导入盘点结果'
@@ -565,12 +565,12 @@ const operateImportFormDataResult = (data) => {
 }
 
 const createExist = computed(() => ['create'].includes(formType.value))
-const inventoryExist = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
+const inventoryExist = computed(() => [OPERATE_MAP.stockCheck].includes(formType.value))
 const { importMap, templateObj, smImportFileRef, handleImport, importUrlFn } = useImport(
   refreshDetail,
   operateImportFormData,
   operateImportFormDataResult,
   formData,
-  inventoryId
+  stockCheckId
 )
 </script>

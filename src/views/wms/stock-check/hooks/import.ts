@@ -1,7 +1,7 @@
 import * as CustomerApi from '@/api/crm/customer'
 import { StockCheckBinApi } from '@/api/wms/stock-check-bin'
 
-export const useImport = (refreshDetail, operateImportFormData,operateImportFormDataResult, formData, inventoryId) => {
+export const useImport = (refreshDetail, operateImportFormData,operateImportFormDataResult, formData, stockCheckId) => {
   const message = useMessage() // 消息弹窗
 
   const templateObj = ref({
@@ -10,7 +10,7 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
   })
 
   const importMap = {
-    inventory: 'inventory',
+    stockCheck: 'stockCheck',
     create: 'create'
   }
   let importType = ''
@@ -28,7 +28,7 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
             name: '导入盘点产品模板.xls'
           }
         },
-        [importMap.inventory]: () => {
+        [importMap.stockCheck]: () => {
           // wms:inbound-item:download-template
           templateObj.value = {
             url: StockCheckBinApi.downloadStockCheckBinTemplate,
@@ -52,8 +52,8 @@ export const useImport = (refreshDetail, operateImportFormData,operateImportForm
           operateImportFormData(res.data)
         })
       },
-      [importMap.inventory]: () => {
-        importData.append('inventoryId', inventoryId.value)
+      [importMap.stockCheck]: () => {
+        importData.append('stockCheckId', stockCheckId.value)
         return StockCheckBinApi.importStockCheckBinExcel(importData).then((res) => {
           operateImportFormDataResult(res.data)
           // refreshDetail()

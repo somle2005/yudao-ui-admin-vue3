@@ -153,7 +153,7 @@ const props = defineProps({
 })
 
 const showActualQty = computed(() =>
-  [OPERATE_MAP.inventory, 'update', 'detail'].includes(props.formType)
+  [OPERATE_MAP.stockCheck, 'update', 'detail'].includes(props.formType)
 )
 const showBin = computed(() => [OPERATE_MAP.append].includes(props.formType))
 
@@ -165,7 +165,7 @@ const binDisabled = computed(
   () => props.disabled || [OPERATE_MAP.append, 'create'].includes(props.formType)
 )
 const showDetail = computed(() => ['detail'].includes(props.formType))
-const inventoryDisabled = computed(() => [OPERATE_MAP.inventory].includes(props.formType))
+const inventoryDisabled = computed(() => [OPERATE_MAP.stockCheck].includes(props.formType))
 
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])

@@ -88,7 +88,7 @@
         <el-button
           link
           type="primary"
-          @click="openForm(OPERATE_MAP.inventory, scope.row.id)"
+          @click="openForm(OPERATE_MAP.stockCheck, scope.row.id)"
           v-if="
             hasAllPermission([
               'wms:outbound:agree',
@@ -139,14 +139,14 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <InventoryForm ref="formRef" @success="getList" />
+  <OpenForm ref="formRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { StockCheckApi, StockCheckVO } from '@/api/wms/stock-check'
-import InventoryForm from './InventoryForm.vue'
+import OpenForm from './OpenForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { OPERATE_MAP } from './constant'
@@ -265,14 +265,14 @@ const handleDelete = async (id: number) => {
 }
 
 /** 导出按钮操作 */
-const handleExport = async (inventoryId: number) => {
+const handleExport = async (stockCheckId: number) => {
   try {
     // 导出的二次确认
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
     // const data = await StockCheckApi.exportStockCheck(queryParams)
-    const data = await StockCheckBinApi.exportStockCheckBin({ inventoryId })
+    const data = await StockCheckBinApi.exportStockCheckBin({ stockCheckId })
     download.excel(data, '盘点.xls')
   } catch {
   } finally {
