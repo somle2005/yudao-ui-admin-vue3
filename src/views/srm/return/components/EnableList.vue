@@ -97,11 +97,9 @@ const getList = async () => {
     })
     // bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
 
-    bodyData.mainQuery.inboundStatus = 3 // 3整单全部入库 2 // 部分入库
+    // bodyData.mainQuery.inboundStatus = 3 // 3整单全部入库 2 // 部分入库
     bodyData.mainQuery.supplierId = supplierIdSave
     bodyData.mainQuery.auditStatus = 5 // 已审核
-    // bodyData.itemQuery.inboundStatus = 2 // 部分入库
-
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
