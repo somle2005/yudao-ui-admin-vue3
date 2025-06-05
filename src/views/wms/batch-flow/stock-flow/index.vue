@@ -212,7 +212,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    // const data = await StockFlowApi.getStockFlowPageOwnership(queryParams)
+    // const data = await StockFlowApi.getStockFlowPageLogic(queryParams)
     const data = await StockFlowApi.getStockFlowPageBin(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },

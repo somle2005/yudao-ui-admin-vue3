@@ -254,7 +254,7 @@ const getList = async () => {
   loading.value = true
   try {
     // const data = await StockFlowApi.getStockFlowPageWarehouse(queryParams)
-    const data = await StockFlowApi.getStockFlowPageOwnership(queryParams)
+    const data = await StockFlowApi.getStockFlowPageLogic(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },
       // { prop: 'bin', keyList: ['name'] },
@@ -319,7 +319,7 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await StockFlowApi.exportStockFlowOwnership(queryParams)
+    const data = await StockFlowApi.exportStockFlowLogic(queryParams)
     download.excel(data, '所有者批次日志.xls')
     // download.excel(data, '库存流水.xls')
   } catch {

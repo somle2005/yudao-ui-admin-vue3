@@ -54,8 +54,8 @@ export const StockFlowApi = {
   },
 
   // 获得所有者库存流水分页
-  getStockFlowPageOwnership: async (data: any) => {
-    return await request.post({ url: `/wms/stock-flow/page-ownership`, data })
+  getStockFlowPageLogic: async (data: any) => {
+    return await request.post({ url: `/wms/stock-flow/page-logic`, data })
   },
 
   // 获得仓库库存流水分页
@@ -87,9 +87,9 @@ export const StockFlowApi = {
   },
 
   // 导出所有者库位库存流水 Excel
-  exportStockFlowOwnership: async (data) => {
+  exportStockFlowLogic: async (data) => {
     return await request.download({
-      url: `/wms/stock-flow/export-ownership`,
+      url: `/wms/stock-flow/export-logic`,
       data,
       method: 'POST'
     })
