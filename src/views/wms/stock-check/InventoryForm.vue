@@ -67,7 +67,6 @@
         >
           不同意</el-button
         > -->
-   
 
         <el-button
           type="primary"
@@ -102,7 +101,6 @@ import { addComment } from '../common/utils'
 import { getIntDictOptions } from '@/utils/dict'
 import { useImport } from './hooks/import'
 import { isEmpty } from '@/utils/is'
-
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -339,7 +337,6 @@ const resolveDetailData = (data, type) => {
     })
   }
 
-      
   formData.value = data
   formRef.value.initForm()
   // if (type === OPERATE_MAP.inventory) {
@@ -450,14 +447,19 @@ const submitForm = async (type?: string) => {
         await message.delConfirm('同意后系统将自动调整库存盘点差异值')
         // await StockCheckApi.submitStockCheckAudit({ billId: data.id, comment: data.comment })
         // 追加库位inventoryId为undefined的追加过去-只能追加新的
-        
+
         // 先设置数量
-        await StockCheckBinApi.updateStockCheckBinActualQuantity(data.binItemList.filter(item => !isEmpty(item.id)))
+        await StockCheckBinApi.updateStockCheckBinActualQuantity(
+          data.binItemList.filter((item) => !isEmpty(item.id))
+        )
 
         // 追加的库位必须是原先盘点单已有产品下的
         // 再追加库位
         const queryData = getAppendList(data)
-        await StockCheckBinApi.appendtStockCheckBin(queryData)
+        if (queryData?.length) {
+          await StockCheckBinApi.appendtStockCheckBin(queryData)
+        }
+
         // 再刷新详情
         data = await StockCheckApi.getStockCheck(inventoryId.value)
         resolveDetailData(data, type)
@@ -542,8 +544,6 @@ const operateImportFormData = (data) => {
 
   formData.value.binItemList = data
 
-  
-
   formRef.value.initForm()
 }
 
@@ -563,7 +563,6 @@ const operateImportFormDataResult = (data) => {
   formData.value.binItemList = data
   formRef.value.initForm()
 }
-
 
 const createExist = computed(() => ['create'].includes(formType.value))
 const inventoryExist = computed(() => [OPERATE_MAP.inventory].includes(formType.value))
