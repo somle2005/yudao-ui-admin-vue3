@@ -385,7 +385,7 @@ const submitForm = async (type?: string) => {
         reviewed: true,
         pass: type === AUDIT_TYPE.agree,
         requestId: data.id,
-        reviewComment: data.reviewComment
+        auditAdvice: data.auditAdvice
       })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'merge') {
