@@ -586,7 +586,7 @@ const handleAdd = () => {
     warehouseId: undefined,
     deliveryTime: undefined,
     fbaCode: undefined,
-    containerRate: undefined,
+    containerRate: 1,
     purchaseApplyItemId: undefined,
     purchaseApplyCode: undefined,
     qty: undefined,

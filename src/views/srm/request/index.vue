@@ -202,6 +202,7 @@ import {
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
 import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
+import { notEmpty } from '@/utils/judge'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -558,6 +559,9 @@ const mergePurchase = async () => {
       a.applicationDeptId = applicationDeptId
       // 默认下单数量=未订购数量
       a.orderQuantity = a.unOrderCount
+      if (!notEmpty(item.containerRate)) {
+        item.containerRate = 1
+      }
     })
   })
 
