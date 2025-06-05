@@ -156,7 +156,7 @@ export const useTable = () => {
     },
 
     itemsActualQty: {
-      label: '实际数量',
+      label: '实际入库数量',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },

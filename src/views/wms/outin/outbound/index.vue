@@ -179,7 +179,7 @@ const fieldMap = {
     slot: 'outboundStatus',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_STATUS }
   },
-  companyName: '库存公司',
+  // companyName: '库存公司',
   // deptName: '库存归属',
   remark: '特别说明',
   updateTime: {
