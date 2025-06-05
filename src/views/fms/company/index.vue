@@ -261,6 +261,8 @@ const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   name: '主体名称',
+  nameEn: '公司名称(英文)',
+  abbr: '公司简称',
   status: {
     label: '开启状态',
     slot: 'status',
@@ -273,6 +275,7 @@ const fieldMap = {
   fax: '传真',
   deliveryAddress: '送达地址',
   companyAddress: '公司地址',
+  companyAddressEn: '公司地址(英文)',
 
   taxNo: '纳税人识别号',
   bankName: '开户行',
