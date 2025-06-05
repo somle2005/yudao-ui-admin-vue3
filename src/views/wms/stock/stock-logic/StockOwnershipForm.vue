@@ -119,6 +119,7 @@ const moveFormOptions = () => {
     },
 
     {
+      requiredFlag: true,
       type: 'select',
       placeholder: '请选择调入库存公司',
       prop: 'toCompanyId',
@@ -133,6 +134,7 @@ const moveFormOptions = () => {
       children: financeSubjectList
     },
     {
+      requiredFlag: true,
       type: 'tree-select',
       label: '调入库存归属',
       prop: 'toDeptId',
