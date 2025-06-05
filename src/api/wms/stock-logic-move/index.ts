@@ -12,7 +12,7 @@ export interface StockLogicMoveVO {
   /**
    * 详情清单
    */
-  itemList?: WmsStockOwnershipMoveItemSaveReqVO[]
+  itemList?: StockLogicMoveItemSaveReqVO[]
   /**
    * 单据号
    */
@@ -23,7 +23,7 @@ export interface StockLogicMoveVO {
   warehouseId: number
 }
 
-export interface WmsStockOwnershipMoveItemSaveReqVO {
+export interface StockLogicMoveItemSaveReqVO {
   /**
    * 调出财务公司ID
    */
@@ -39,7 +39,7 @@ export interface WmsStockOwnershipMoveItemSaveReqVO {
   /**
    * 所有者移动表ID
    */
-  ownershipMoveId: number
+  logicMoveId: number
   /**
    * 产品ID
    */
