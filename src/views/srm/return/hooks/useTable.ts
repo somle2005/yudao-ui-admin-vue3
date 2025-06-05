@@ -152,7 +152,7 @@ export const useTable = () => {
 
     // 海关品名 产品id里面有(能带出来吗)等后端
 
-    // actTaxPrice: {
+    // grossPrice: {
     //   label: '含税单价',
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     // },

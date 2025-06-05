@@ -100,8 +100,8 @@
       <template v-if="mergeDisabled">
         <el-table-column label="条码" width="120" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
-              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
+            <el-form-item :prop="`${$index}.fbaCode`" class="mb-0px!">
+              <el-input v-model.trim="row.fbaCode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -228,18 +228,18 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="含税单价" prop="actTaxPrice" width="100" align="center">
+      <el-table-column label="含税单价" prop="grossPrice" width="100" align="center">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
+          <el-form-item :prop="`${$index}.grossPrice`" class="mb-0px!">
             <!-- <el-input-number
               :disabled="disabled"
-              v-model="row.actTaxPrice"
+              v-model="row.grossPrice"
               controls-position="right"
               :min="0.01"
               :precision="2"
               class="!w-100%"
             /> -->
-            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.actTaxPrice" />
+            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.grossPrice" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -375,7 +375,7 @@ import {
 } from '@/utils'
 import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
-import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndAllAmount } from '@/utils/transformData'
 import { updateModelValue } from '@/utils/high/index'
 import { getDeclaredType } from '@/utils/operate/srm'
 import { getWMSWarehouseList } from '@/commonData/wms'
@@ -387,7 +387,7 @@ import { getWMSWarehouseList } from '@/commonData/wms'
     申请数量-qty-数字输入框(整数>0)
     仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
     批准数量-approvedQty-数字输入框(整数>0)
-    含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
+    含税单价-grossPrice-数字输入框(手动输入，价格保留小数点后两位。)
     价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
     参考单价-referenceUnitPrice-数字输入框(整数>0)
     税额，单位：元-taxPrice-(纯显示-保留小数点后两位   = 含税单价*税率   )
@@ -481,7 +481,7 @@ watch(
       // taxPrice: 'taxPrice',
       // taxPercent: 'taxPercent',
       // allAmount: 'allAmount',
-      // actTaxPrice: 'actTaxPrice',
+      // grossPrice: 'grossPrice',
       // onePrice: 'productPrice',
       applyCount: 'approvedQty'
     }
@@ -503,16 +503,16 @@ watch(
     keyMap.applyCount = applyCountMap[props.formType] || 'approvedQty' // 新增没有值就不计算或者不传递
 
     // 编辑回显
-    computeTaxPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndAllAmount(val, keyMap)
     // val.forEach((item) => {
     //   // 申请数量和税率都要有 才能计算出税额
-    //   if (item.taxPercent && item.qty && item.actTaxPrice) {
+    //   if (item.taxPercent && item.qty && item.grossPrice) {
     //     const taxPercent100 = item.taxPercent / 100.0
     //     // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
     //     const scale = (taxPercent100 / (1 + taxPercent100)) * item.qty
-    //     item.taxPrice = erpPriceMultiply(item.actTaxPrice, scale)
+    //     item.taxPrice = erpPriceMultiply(item.grossPrice, scale)
     //     // 价税合计 = 含税单价 * 申请数量。
-    //     item.allAmount = erpPriceMultiply(item.actTaxPrice, item.qty)
+    //     item.allAmount = erpPriceMultiply(item.grossPrice, item.qty)
     //   }
 
     //   // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
@@ -554,7 +554,7 @@ const handleAdd = () => {
   // 申请数量-qty-数字输入框(整数>0)
   // 仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
   // 批准数量-approvedQty-数字输入框(整数>0)
-  // 含税单价-actTaxPrice-数字输入框(手动输入，价格保留小数点后两位。)
+  // 含税单价-grossPrice-数字输入框(手动输入，价格保留小数点后两位。)
   // 价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
   // 参考单价-referenceUnitPrice-数字输入框(整数>0)
   // 税额，单位：元-taxPrice-(纯显示-保留小数点后两位   = 含税单价*税率   )
@@ -568,7 +568,7 @@ const handleAdd = () => {
     qty: undefined, // 申请数量
     approvedQty: undefined, // 批准数量
     warehouseId: undefined,
-    actTaxPrice: undefined,
+    grossPrice: undefined,
     referenceUnitPrice: undefined,
     taxPrice: undefined,
     taxPercent: TAX_PERCENT,

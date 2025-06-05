@@ -111,12 +111,12 @@ export const getSameKeyItemList = (list, sameKey = 'id') => {
  * @returns
  */
 
-export const computeTaxPriceAndAllAmount = (
+export const computeGrossPriceAndAllAmount = (
   list: any[],
   keyMap?: {
     taxPercent?: string
     applyCount?: string
-    actTaxPrice?: string
+    grossPrice?: string
     allAmount?: string
     taxPrice?: string
     onePrice?: string
@@ -127,7 +127,7 @@ export const computeTaxPriceAndAllAmount = (
   const {
     taxPercent = 'taxPercent',
     applyCount = 'qty',
-    actTaxPrice = 'actTaxPrice',
+    grossPrice = 'grossPrice',
     allAmount = 'allAmount',
     taxPrice = 'taxPrice',
     onePrice = 'productPrice',
@@ -136,20 +136,20 @@ export const computeTaxPriceAndAllAmount = (
 
   list.forEach((item) => {
     // 申请数量和税率都要有 才能计算出税额
-    if (item[taxPercent] && item[applyCount] && item[actTaxPrice]) {
+    if (item[taxPercent] && item[applyCount] && item[grossPrice]) {
       const taxPercent100 = item.taxPercent / 100.0
       // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
       const scale = (taxPercent100 / (1 + taxPercent100)) * item[applyCount]
-      item[taxPrice] = erpPriceMultiply(item[actTaxPrice], scale)
+      item[taxPrice] = erpPriceMultiply(item[grossPrice], scale)
       // 价税合计 = 含税单价 * 申请数量。
-      item[allAmount] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+      item[allAmount] = erpPriceMultiply(item[grossPrice], item[applyCount])
     }
 
     // 税率-含税单价才能计算出产品单价
-    if (item[taxPercent] && item[actTaxPrice]) {
+    if (item[taxPercent] && item[grossPrice]) {
       const taxPercent100 = item.taxPercent / 100.0
       // 单价
-      item[onePrice] = erpPriceMultiply(item[actTaxPrice], 1 / (1 + taxPercent100))
+      item[onePrice] = erpPriceMultiply(item[grossPrice], 1 / (1 + taxPercent100))
     } else {
       // 税率-含税单价 其中一个没有单价变为空
       item[onePrice] = undefined
@@ -158,7 +158,7 @@ export const computeTaxPriceAndAllAmount = (
 
   // totalPrice 总价 = 含税单价 * 数量
   list.forEach((item) => {
-    item[totalPrice] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+    item[totalPrice] = erpPriceMultiply(item[grossPrice], item[applyCount])
   })
 }
 

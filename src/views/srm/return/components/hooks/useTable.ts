@@ -47,9 +47,9 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
-    inStatus: {
+    inboundStatus: {
       label: '入库状态',
-      slot: 'inStatus',
+      slot: 'inboundStatus',
       dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
     },
     // payStatus: {

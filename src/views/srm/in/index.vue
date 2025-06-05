@@ -235,10 +235,10 @@ const getList = async () => {
   try {
     const bodyData = getMainItemBodyData({
       queryParams,
-      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inStatus'],
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
       itemQueryList: ['productId', 'orderCode']
     })
-    bodyData.itemQuery.inStatus = queryParams.itemsInStatus
+    bodyData.itemQuery.inboundStatus = queryParams.itemsInStatus
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
@@ -266,7 +266,7 @@ const getList = async () => {
     //   orderStatus: 'itemsOrderStatus',
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInStatus',
     //   payStatus: 'itemsPayStatus',
     //   totalPrice: 'itemsTotalPrice',
     //   barCode: 'itemsBarCode',
@@ -280,7 +280,7 @@ const getList = async () => {
     //   orderStatus: 'rowOrderStatus',
     //   offStatus: 'rowOffStatus',
     //   executeStatus: 'rowExecuteStatus',
-    //   inStatus: 'rowInStatus',
+    //   inboundStatus: 'rowInStatus',
     //   payStatus: 'rowPayStatus',
     //   totalPrice: 'itemTotalPrice',
     //   barCode: 'rowBarCode',

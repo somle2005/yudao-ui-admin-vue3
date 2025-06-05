@@ -126,7 +126,7 @@ export const useApplicantTable = () => {
   //   //   remark: undefined,
   //   //   applicant: undefined,
   //   //   creator: undefined,
-  //   //   inStatus: undefined,
+  //   //   inboundStatus: undefined,
   //   //   returnStatus: undefined
   //   // }
   //   // Object.assign(queryParams, initQueryParams)
@@ -170,7 +170,7 @@ export const useApplicantTable = () => {
       // list.value.forEach((item:any) => {
       //   const productId = item.purchaseApplyItemId
       //   if(item?.items?.length) {
-      //     item.itemActTaxPrice = item.items.find(item.id === productId).actTaxPrice
+      //     item.itemActTaxPrice = item.items.find(item.id === productId).grossPrice
       //   }
       // })
 

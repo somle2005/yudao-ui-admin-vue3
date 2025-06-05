@@ -92,15 +92,15 @@ const getList = async () => {
   try {
     const bodyData = getMainItemBodyData({
       queryParams,
-      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inStatus'],
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
       itemQueryList: ['productId', 'orderCode']
     })
-    // bodyData.itemQuery.inStatus = queryParams.itemsInStatus
+    // bodyData.itemQuery.inboundStatus = queryParams.itemsInStatus
 
-    bodyData.mainQuery.inStatus = 3 // 3整单全部入库 2 // 部分入库
+    bodyData.mainQuery.inboundStatus = 3 // 3整单全部入库 2 // 部分入库
     bodyData.mainQuery.supplierId = supplierIdSave
     bodyData.mainQuery.auditStatus = 5 // 已审核
-    // bodyData.itemQuery.inStatus = 2 // 部分入库
+    // bodyData.itemQuery.inboundStatus = 2 // 部分入库
 
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
@@ -125,7 +125,7 @@ const getList = async () => {
     //   orderStatus: 'itemsOrderStatus',
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInStatus',
     //   payStatus: 'itemsPayStatus'
     // })
 
@@ -157,7 +157,7 @@ const handleCurrentChange = (row: any) => {
 
     taxPercent: 'taxPercent',
     taxPrice: 'taxPrice',
-    actTaxPrice: 'actTaxPrice',
+    grossPrice: 'grossPrice',
     allAmount: 'allAmount',
     // remark:'remark',
     containerRate: 'containerRate',
@@ -185,7 +185,7 @@ const handleCurrentChange = (row: any) => {
   //   orderStatus: 'itemsOrderStatus',
   //   offStatus: 'itemsOffStatus',
   //   executeStatus: 'itemsExecuteStatus',
-  //   inStatus: 'itemsInStatus',
+  //   inboundStatus: 'itemsInStatus',
   //   payStatus: 'itemsPayStatus',
   //   currencyId: 'currencyId'
   // })queryParams
@@ -197,7 +197,7 @@ const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, quer
 
 const resetQuery = () => {
   resetQueryParams(queryParams, queryFormRef)
-  queryParams.inStatus = 3 // 默认主单部分入库-可选全部入库
+  queryParams.inboundStatus = 3 // 默认主单部分入库-可选全部入库
   handleQuery()
 }
 

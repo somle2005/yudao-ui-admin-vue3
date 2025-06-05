@@ -107,9 +107,9 @@ const fieldMap = {
     slot: 'executeStatus',
     dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS }
   },
-  inStatus: {
+  inboundStatus: {
     label: '入库状态',
-    slot: 'inStatus',
+    slot: 'inboundStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
   },
   payStatus: {
@@ -291,7 +291,7 @@ let supplierIdSave
 const getList = async () => {
   queryParams.auditStatus = 5 // 已审核
   queryParams.supplierId = supplierIdSave
-  queryParams.inStatus = 1 // 整单未入库
+  queryParams.inboundStatus = 1 // 整单未入库
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
@@ -302,7 +302,7 @@ const getList = async () => {
       deliveryDate: 'deliveryDate',
       qty: 'qty',
       inCount: 'inCount',
-      actTaxPrice: 'actTaxPrice',
+      grossPrice: 'grossPrice',
       amount: 'amount',
       declaredType: 'declaredType',
       declaredTypeEn: 'declaredTypeEn',
@@ -310,7 +310,7 @@ const getList = async () => {
       warehouseName: 'warehouseName',
       expectArrivalDate: 'expectArrivalDate',
       payPrice: 'payPrice',
-      xcode: 'xcode',
+      fbaCode: 'fbaCode',
 
       productUnitId: 'productUnitId',
       productUnitName: 'productUnitName',
@@ -351,7 +351,7 @@ const getList = async () => {
     //   orderStatus: 'itemsOrderStatus',
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInStatus',
     //   payStatus: 'itemsPayStatus'
     // })
 

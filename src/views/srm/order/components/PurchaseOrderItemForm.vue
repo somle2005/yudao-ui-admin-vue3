@@ -111,8 +111,8 @@
 
         <el-table-column label="条码" width="120" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
-              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
+            <el-form-item :prop="`${$index}.fbaCode`" class="mb-0px!">
+              <el-input v-model.trim="row.fbaCode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -240,19 +240,19 @@
         <el-table-column label="含税单价" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item
-              :prop="`${$index}.actTaxPrice`"
-              :rules="formRules.actTaxPrice"
+              :prop="`${$index}.grossPrice`"
+              :rules="formRules.grossPrice"
               class="mb-0px!"
             >
               <!-- <el-input-number
                 :disabled="disabled"
-                v-model="row.actTaxPrice"
+                v-model="row.grossPrice"
                 controls-position="right"
                 :min="0.01"
                 :precision="2"
                 class="!w-100%"
               /> -->
-              <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.actTaxPrice" />
+              <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.grossPrice" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -427,7 +427,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { defaultProps } from '@/utils/tree'
 import { updateModelValue } from '@/utils/high/index'
@@ -471,7 +471,7 @@ const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
-  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
+  grossPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
   warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }]
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
@@ -528,13 +528,13 @@ watch(
       taxPrice: 'taxPrice',
       taxPercent: 'taxPercent',
       allAmount: 'allAmount',
-      actTaxPrice: 'actTaxPrice',
+      grossPrice: 'grossPrice',
       onePrice: 'productPrice',
       applyCount: 'qty'
     }
 
     // 编辑回显
-    computeTaxPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndAllAmount(val, keyMap)
 
     // // 循环处理
     // val.forEach((item) => {
@@ -580,12 +580,12 @@ const handleAdd = () => {
     taxPercent: TAX_PERCENT,
     taxPrice: undefined,
     currencyId: undefined,
-    // actTaxPrice: undefined, 产品单价就是含税单价了
+    // grossPrice: undefined, 产品单价就是含税单价了
     remark: undefined,
     discountPercent: undefined,
     warehouseId: undefined,
     deliveryTime: undefined,
-    xcode: undefined,
+    fbaCode: undefined,
     containerRate: undefined,
     purchaseApplyItemId: undefined,
     purchaseApplyCode: undefined,

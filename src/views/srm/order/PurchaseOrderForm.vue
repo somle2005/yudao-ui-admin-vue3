@@ -728,7 +728,7 @@ const addItem = (selectionList) => {
       const {
         purchaseApplyItemId,
         approvedQty,
-        actTaxPrice,
+        grossPrice,
         taxPercent = TAX_PERCENT,
         taxPrice,
         warehouseId,
@@ -751,7 +751,7 @@ const addItem = (selectionList) => {
         purchaseApplyItemId,
         // count: approvedQty || 0,
         qty: approvedQty || 0,
-        actTaxPrice,
+        grossPrice,
         taxPercent,
         taxPrice, //税额需要动态计算
         warehouseId,
@@ -770,7 +770,7 @@ const addItem = (selectionList) => {
         productUnitName,
         barCode,
         productPrice
-        // productPrice: actTaxPrice
+        // productPrice: grossPrice
       }
       return obj
     })

@@ -85,7 +85,7 @@
         <el-table-column prop="actualQty" label="入库数量" width="120" align="center" />
         <el-table-column prop="sellableQty" label="可售数量" width="120" align="center" />
 
-        <el-table-column prop="actTaxPrice" label="含税单价" width="120" align="center" />
+        <el-table-column prop="grossPrice" label="含税单价" width="120" align="center" />
         <el-table-column prop="productPrice" label="单价" width="200" align="center" />
         <!-- <template #default="{ row }">
             <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
@@ -137,7 +137,7 @@ import {
 // import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndAllAmount } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
 import { useAddSellableQtyBatch } from '@/views/tms/common/utils'
@@ -170,7 +170,7 @@ const formRules = reactive({
   // warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
+  grossPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
@@ -218,13 +218,13 @@ watch(
       taxPrice: 'taxPrice',
       taxPercent: 'taxPercent',
       allAmount: 'allAmount',
-      actTaxPrice: 'actTaxPrice',
+      grossPrice: 'grossPrice',
       onePrice: 'productPrice',
       applyCount: 'qty'
     }
 
     // 编辑回显
-    computeTaxPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndAllAmount(val, keyMap)
     // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
@@ -276,7 +276,7 @@ const handleAdd = () => {
     qty: undefined,
     taxPercent: TAX_PERCENT,
     taxPrice: undefined,
-    actTaxPrice: undefined,
+    grossPrice: undefined,
     allAmount: undefined,
     remark: undefined,
     settlementDate: undefined,
@@ -290,7 +290,7 @@ const handleAdd = () => {
     applicantName: undefined,
     applicationDeptId: undefined,
     applicationDeptName: undefined
-    // productPrice: actTaxPrice
+    // productPrice: grossPrice
   }
   formData.value.push(row)
 }

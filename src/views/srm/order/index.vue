@@ -249,9 +249,9 @@ const fieldMap = {
     slot: 'executeStatus',
     dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS }
   },
-  inStatus: {
+  inboundStatus: {
     label: '入库状态',
-    slot: 'inStatus',
+    slot: 'inboundStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
   },
   // payStatus: {
@@ -494,7 +494,7 @@ const queryParams = reactive({
   auditStatus: undefined,
   remark: undefined,
   creator: undefined,
-  inStatus: undefined,
+  inboundStatus: undefined,
   returnStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
@@ -506,10 +506,10 @@ const getList = async () => {
   try {
     // const bodyData = getMainItemBodyData({
     //   queryParams,
-    //   mainQueryList: ['code', 'supplierId', 'auditStatus', 'inStatus'],
+    //   mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
     //   itemQueryList: ['productId', 'orderCode']
     // })
-    // bodyData.itemQuery.inStatus = queryParams.itemsInStatus
+    // bodyData.itemQuery.inboundStatus = queryParams.itemsInStatus
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
 
     // data.list.forEach((item) => {
@@ -538,7 +538,7 @@ const getList = async () => {
     //   // orderStatus: 'rowOrderStatus', 无该状态
     //   offStatus: 'rowOffStatus',
     //   executeStatus: 'rowExecuteStatus',
-    //   inStatus: 'rowInStatus',
+    //   inboundStatus: 'rowInStatus',
     //   payStatus: 'rowPayStatus'
     //   // currencyName: 'itemCurrencyName',
     // })
@@ -550,7 +550,7 @@ const getList = async () => {
     //   // orderStatus: 'rowOrderStatus', 无该状态
     //   offStatus: 'itemsOffStatus',
     //   executeStatus: 'itemsExecuteStatus',
-    //   inStatus: 'itemsInStatus',
+    //   inboundStatus: 'itemsInStatus',
     //   payStatus: 'itemsPayStatus'
     //   // currencyName: 'itemsCurrencyName',
     // })

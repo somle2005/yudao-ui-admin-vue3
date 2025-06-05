@@ -274,7 +274,7 @@ const addItem = (selectionList: any[]) => {
 
         taxPercent = TAX_PERCENT,
         taxPrice,
-        actTaxPrice,
+        grossPrice,
         allAmount,
         remark,
         settlementDate,
@@ -291,7 +291,7 @@ const addItem = (selectionList: any[]) => {
         departmentName,
 
         payPrice,
-        xcode,
+        fbaCode,
         declaredTypeEn
       } = item
 
@@ -317,7 +317,7 @@ const addItem = (selectionList: any[]) => {
 
         taxPercent,
         taxPrice,
-        actTaxPrice,
+        grossPrice,
         allAmount,
         remark,
         settlementDate,
@@ -334,7 +334,7 @@ const addItem = (selectionList: any[]) => {
         applicationDeptName: departmentName,
 
         payPrice,
-        xcode,
+        fbaCode,
         declaredTypeEn
       }
       return obj

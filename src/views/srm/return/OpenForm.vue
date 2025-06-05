@@ -284,7 +284,7 @@ const addItem = (selectionList: any[]) => {
 
         taxPercent = TAX_PERCENT,
         taxPrice,
-        actTaxPrice,
+        grossPrice,
         allAmount,
         itemsRemark,
         containerRate,
@@ -326,7 +326,7 @@ const addItem = (selectionList: any[]) => {
 
         taxPercent,
         taxPrice,
-        actTaxPrice,
+        grossPrice,
         allAmount,
         remark: itemsRemark,
         containerRate,

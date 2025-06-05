@@ -393,7 +393,7 @@ const queryParams = reactive({
   remark: undefined,
   applicant: undefined,
   creator: undefined,
-  inStatus: undefined,
+  inboundStatus: undefined,
   returnStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单

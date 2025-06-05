@@ -28,7 +28,7 @@ const paramsList = [
   { prop: 'totalPrice', name: '总价 totalPrice = productPrice * qty' },
   { prop: 'taxPercent', name: '税率' },
   { prop: 'taxPrice', name: '税价合计  taxPrice = totalPrice * taxPercent' },
-  { prop: 'actTaxPrice', name: '含税单价' },
+  { prop: 'grossPrice', name: '含税单价' },
   { prop: 'allAmount', name: '价税合计' },
 
   { prop: 'totalProductPrice', name: '合计产品价格' },
@@ -48,7 +48,7 @@ const paramsList = [
 
   { prop: 'barCode', name: '产品sku' }, //必填注意一下
   { prop: 'productName', name: '产品名称' },
-  { prop: 'xcode', name: 'x编码' },
+  { prop: 'fbaCode', name: 'x编码' },
   { prop: 'containerRate', name: '箱率' },
   { prop: 'remark', name: '备注' }
 
@@ -69,7 +69,7 @@ const itemsList = [
   'declaredType',
   'taxPercent',
   'taxPrice',
-  'actTaxPrice',
+  'grossPrice',
   'allAmount',
   'remark',
   'settlementDate',
@@ -123,7 +123,7 @@ const differentList = [
     name: '产品报关品名英文'
   },
   {
-    prop: 'xcode',
+    prop: 'fbaCode',
     name: 'x编码'
   }
 ]
@@ -134,7 +134,7 @@ arriveId-需要带吗
 创建采购到货
 /admin-api/srm/purchase-in/create
 
-x编码-xcode
+x编码-fbaCode
 产品报关品名英文-declaredTypeEn
 已付款金额-payPrice
 付款状态-payStatus
@@ -209,7 +209,7 @@ const createData = {
       declaredType: '滤芯',
       taxPercent: 13,
       taxPrice: 1150.44,
-      actTaxPrice: 100,
+      grossPrice: 100,
       allAmount: 10000,
       remark: null,
       settlementDate: null,
@@ -237,7 +237,7 @@ const createData = {
       declaredType: '滤芯',
       taxPercent: 13,
       taxPrice: 1150.44,
-      actTaxPrice: 100,
+      grossPrice: 100,
       allAmount: 10000,
       remark: null,
       settlementDate: null,
