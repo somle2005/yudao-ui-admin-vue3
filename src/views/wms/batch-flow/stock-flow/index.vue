@@ -89,14 +89,9 @@ import { StockFlowApi, StockFlowVO } from '@/api/wms/stock-flow'
 import StockFlowForm from './StockFlowForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { getCodeType, getCodeValue } from '@/views/wms/common/utils/index'
+import { getCodeType, getCodeValue, getOperateNo } from '@/views/wms/common/utils/index'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
-
-// 入库单号会一直存在-其他只会存在一种
-const getOperateNo = (row: any) => {
-  return row.outboundCode || row.pickupCode || row.inboundCode
-}
 
 const fieldMap = {
   productBarCode: '产品编码',

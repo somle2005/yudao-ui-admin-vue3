@@ -45,7 +45,7 @@
       </template>
 
       <template #operateNo="{ scope }">
-        <div> 操作单号:{{ scope.row.outboundCode }} {{ scope.row.pickupCode }} </div>
+        <div> 操作单号:{{ getOperateNo(scope.row) }}  </div>
         <div> 入库单号:{{ scope.row.inboundCode }} </div>
         <!-- <div> 出库单号:{{ scope.row.outboundCode }} </div>
         <div> 上架单号:{{ scope.row.pickupCode }} </div> -->
@@ -89,7 +89,7 @@ import { StockFlowApi, StockFlowVO } from '@/api/wms/stock-flow'
 import StockFlowForm from './StockFlowForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { getCodeType, getCodeValue } from '@/views/wms/common/utils/index'
+import { getCodeType, getCodeValue, getOperateNo } from '@/views/wms/common/utils/index'
 
 /**
 所有者批次日志

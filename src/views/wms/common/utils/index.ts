@@ -119,3 +119,8 @@ export const getCodeValue = (row: any, type: number) => {
     return row[link[0]][link[1]]
   }
 }
+
+// 入库单号会一直存在-其他只会存在一种
+export const getOperateNo = (row: any) => {
+  return row.outboundCode || row.pickupCode || row.inboundCode
+}
