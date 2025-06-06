@@ -7,12 +7,13 @@
       seamless
       frameBorder="0"
       scrolling="no"
-      :src="toUrl('https://superset.somle.com:55015/superset/dashboard/p/MznB30DQOkV?hiddenDashboards=1')"
+      :src="toUrl('https://superset.somle.com:55015/superset/dashboard/14b4cab9-fe8c-42a9-a0f5-129d5626bcba/?permalink_key=oX4B5WomkNx&hiddenDashboards=1')"
     >
     </iframe>
 
     <!-- "http://192.168.10.199:8088/superset/dashboard/p/MznB30DQOkV/" -->
     <!-- src="http://192.168.10.199:8088/superset/explore/p/vo9Rba4pAq0/?standalone=1&height=400" -->
+     <!-- https://superset.somle.com:55015/superset/dashboard/p/MznB30DQOkV?hiddenDashboards=1 -->
   </div>
 </template>
 <script setup lang="ts">
