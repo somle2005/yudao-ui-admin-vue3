@@ -223,7 +223,6 @@ const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 const fieldMap = {
   itemsId: {
     label: '行编号',
-    width: '60px',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   code: '单据编码', // 采购单编号

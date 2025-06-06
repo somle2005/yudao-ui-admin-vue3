@@ -147,7 +147,7 @@
           </el-form-item>
         </el-col> -->
         <el-col :span="24">
-          <el-form-item label="付款条款" prop="paymentTerms">
+          <el-form-item label="付款条款" prop="paymentTermsId">
             <!-- <el-input
               type="textarea"
               v-model.trim="formData.paymentTerms"
@@ -227,7 +227,8 @@ formData.value = initFormData()
 const formRules = reactive({
   name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
   openStatus: [{ required: true, message: '开启状态不能为空', trigger: 'blur' }],
-  paymentTerms: [{ required: true, message: '付款条款不能为空', trigger: 'blur' }],
+  paymentTermsId: [{ required: true, message: '付款条款不能为空', trigger: 'blur' }],
+  // paymentTerms: [{ required: true, message: '付款条款不能为空', trigger: 'blur' }],
   deliveryAddress: [{ required: true, message: '送达地址不能为空', trigger: 'blur' }],
   companyAddress: [{ required: true, message: '公司地址不能为空', trigger: 'blur' }]
 })

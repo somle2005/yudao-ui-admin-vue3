@@ -211,7 +211,6 @@ const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 const fieldMap = {
   purchaseOrderId: {
     label: '行编号',
-    width: '60px',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   billTime: {
