@@ -147,7 +147,7 @@ const createRequestFormOptions = () => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
+      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE).slice(0,3)
     },
     // {
     //   requiredFlag: true,
