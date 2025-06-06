@@ -101,21 +101,14 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="海关品名(英文)" width="180" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
-            </el-form-item>
-          </template>
-        </el-table-column>
 
-        <el-table-column label="条码" width="120" align="center">
+        <!-- <el-table-column label="条码" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.fbaCode`" class="mb-0px!">
               <el-input v-model.trim="row.fbaCode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
-        </el-table-column> -->
+        </el-table-column>  -->
         <el-table-column label="箱率" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
@@ -382,7 +375,21 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column v-if="showMerge" prop="currencyName" label="币种" width="120" align="center" />
+        <el-table-column
+          v-if="showMerge"
+          prop="currencyName"
+          label="币种"
+          width="120"
+          align="center"
+        />
+
+        <el-table-column label="海关品名(英文)" width="180" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
+              <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
+            </el-form-item>
+          </template>
+        </el-table-column>
 
         <!-- purchaseApplyItemId 采购申请单，申请项编号 -->
 

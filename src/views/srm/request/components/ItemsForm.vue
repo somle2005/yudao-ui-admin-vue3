@@ -85,17 +85,6 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="海关品名(英文)" width="120" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item
-            :prop="`${$index}.declaredTypeEn`"
-            :rules="formRules.declaredTypeEn"
-            class="mb-0px!"
-          >
-            <el-input :disabled="productDisabled" v-model="row.declaredTypeEn" />
-          </el-form-item>
-        </template>
-      </el-table-column> -->
 
       <template v-if="mergeDisabled">
         <!-- <el-table-column label="条码" width="120" align="center">
@@ -322,6 +311,18 @@
               placeholder="请选择交货日期"
               class="!w-1/1"
             />
+          </el-form-item>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="海关品名(英文)" width="120" align="center">
+        <template #default="{ row, $index }">
+          <el-form-item
+            :prop="`${$index}.declaredTypeEn`"
+            :rules="formRules.declaredTypeEn"
+            class="mb-0px!"
+          >
+            <el-input :disabled="productDisabled" v-model="row.declaredTypeEn" />
           </el-form-item>
         </template>
       </el-table-column>
