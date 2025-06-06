@@ -55,7 +55,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS)
+      children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS).slice(1)
     },
 
     // {
