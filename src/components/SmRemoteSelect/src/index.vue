@@ -30,8 +30,8 @@ defineOptions({ name: 'SmRemoteSelect' })
           v-model="formData.productId"
           placeholder="请选择SKU"
           :api="ProductApi.getProductEfficientList"
-          :keyMap="{value: 'id', label: 'barCode'}"
-          searchKey="barCode"
+          :keyMap="{value: 'id', label: 'productCode'}"
+          searchKey="productCode"
           @keyup.enter="()=>console.log('enter')"
           class="!w-240px"
         />
@@ -41,7 +41,7 @@ defineOptions({ name: 'SmRemoteSelect' })
     prop: 'productId',
     attrs: {
     api:ProductApi.getProductSimpleList,
-    keyMap:{value: 'id', label: 'barCode'},
+    keyMap:{value: 'id', label: 'productCode'},
      placeholder:"请选择SKU",
      clearable: false, // 能够生效
      class:"!w-240px",

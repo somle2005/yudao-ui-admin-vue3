@@ -68,7 +68,7 @@ export interface CustomRuleDTO {
   /**
    * SKU（编码）
    */
-  barCode?: string
+  productCode?: string
   /**
    * 品牌
    */

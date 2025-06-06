@@ -18,7 +18,7 @@
               v-model="row.productId"
               placeholder="请选择产品编码"
               :data="productList"
-              :keyMap="{ label: 'barCode', value: 'id' }"
+              :keyMap="{ label: 'productCode', value: 'id' }"
               @change="() => addSellableQty(props.warehouseId, formData)"
             />
           </el-form-item>

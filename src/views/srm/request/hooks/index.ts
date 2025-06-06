@@ -53,7 +53,7 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
 税额 = 含税单价 * (税率/(1+税率))
 
 
-产品带出 产品编码产品编码-barCode-change事件赋予值联动即可
+产品带出 产品编码产品编码-productCode-change事件赋予值联动即可
 
 必填项
 
@@ -235,9 +235,9 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       //       const productItem = productList1.value.find((item: any) => item.value === value)
       //       if (productItem) {
       //         const formData = getFormData()
-      //         formData.barCode = productItem.barCode
+      //         formData.productCode = productItem.productCode
       //         // const modelVal = smFormRef.value.getFormData()
-      //         // modelVal.barCode = productItem.barCode
+      //         // modelVal.productCode = productItem.productCode
       //       }
       //     }
       //   },

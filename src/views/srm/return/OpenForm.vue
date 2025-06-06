@@ -169,7 +169,7 @@ const open = async (type: string, id?: number) => {
       //     if (a.product) {
       //       a.productId = a.product.id // 防止后端不放外面
       //       a.productName = a.product.name
-      //       a.productBarCode = a.product.barCode
+      //       a.productCode = a.product.productCode
       //       a.productUnitName = a.product.unitName
       //       a.productUnitId = a.product.unitId
       //     }
@@ -272,8 +272,8 @@ const addItem = (selectionList: any[]) => {
         itemsId, //list记得转化
         productId,
         productName,
-        // productBarCode,
-        barCode,
+        // productCode,
+        productCode,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         // model, // //列表要转化取item-product里面数据
@@ -313,8 +313,8 @@ const addItem = (selectionList: any[]) => {
         [itemIdKey]: itemsId, //list记得转化
         productId,
         productName,
-        // productBarCode,
-        barCode,
+        // productCode,
+        productCode,
         productUnitName, //列表要转化取item-product里面数据
         productUnitId, // 列表要转化取item-product里面数据
         // model, // //列表要转化取item-product里面数据

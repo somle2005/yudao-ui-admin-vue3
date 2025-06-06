@@ -447,7 +447,7 @@ const addProductItem = (selectionList: any[]) => {
       const {
         id,
         productId,
-        productBarCode,
+        productCode,
         binId,
         binName,
         sellableQty, // 批次剩余库存
@@ -470,7 +470,7 @@ const addProductItem = (selectionList: any[]) => {
       const obj = {
         [itemIdKey]: id,
         productId,
-        productBarCode,
+        productCode,
         binId,
         binName,
         planQty: sellableQty,

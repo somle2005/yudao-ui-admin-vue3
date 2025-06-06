@@ -323,7 +323,7 @@ const getFormData = () => {
 }
 
 const resolveDetailData = (data, type) => {
-  getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+  getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'productCode'] }])
 
   // data.binItemList.forEach((item) => {
   //   item.actualQty = item.expectedQty
@@ -349,7 +349,7 @@ const resolveDetailData = (data, type) => {
   //     item.actualQty = item.expectedQty
   //     item.id = undefined
   //   })
-  //   getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'barCode'] }])
+  //   getItemPropList(data.binItemList, [{ prop: 'product', keyList: ['name', 'productCode'] }])
   //   data.productItemList = data.binItemList
   // }
 }
@@ -502,13 +502,13 @@ const addItem = (selectionList: any[]) => {
     // },
     const items = formData.value.binItemList
     const selectList = selectionList.map((item: any) => {
-      const { id, productId, binId, productBarCode, availableQty } = item
+      const { id, productId, binId, productCode, availableQty } = item
 
       const obj = {
         [itemIdKey]: id,
         binId,
         productId,
-        productBarCode,
+        productCode,
         expectedQty: availableQty
       }
       return obj
@@ -537,7 +537,7 @@ const operateImportFormData = (data) => {
   }
   data.forEach((item) => {
     item.expectedQty = item.availableQty
-    item.productBarCode = item?.product?.barCode
+    item.productCode = item?.product?.productCode
     // 用来去重
     item[itemIdKey] = item.id + '导入盘点产品'
   })
@@ -556,7 +556,7 @@ const operateImportFormDataResult = (data) => {
   data.forEach((item) => {
     // item.expectedQty = item.availableQty
     item.stockCheckId = stockCheckId.value
-    item.productBarCode = item?.product?.barCode
+    item.productCode = item?.product?.productCode
     // 用来去重
     item[itemIdKey] = item.id + '导入盘点结果'
   })

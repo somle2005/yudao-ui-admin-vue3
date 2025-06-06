@@ -27,7 +27,7 @@
           <el-option
             v-for="item in productList"
             :key="item.id"
-            :label="item.barCode"
+            :label="item.productCode"
             :value="item.id"
           />
         </el-select>
@@ -111,7 +111,7 @@
           <el-image :src="scope.row.primaryImageUrl" class="w-64px h-64px" />
         </template>
       </el-table-column>
-      <el-table-column label="产品编码" align="center" prop="barCode" width="200px" />
+      <el-table-column label="产品编码" align="center" prop="productCode" width="200px" />
       <el-table-column label="产品名称" align="center" prop="productName" width="200px" />
       <!-- <el-table-column label="海关分类id" align="center" prop="customCategoryId" /> -->
       <el-table-column label="海关分类名称" align="center" prop="combinedValue" width="200px" />
@@ -220,8 +220,8 @@ const getList = async () => {
     list.value = data.list.map((item) => {
       const product = item.product
       if (product) {
-        const { barCode, name, primaryImageUrl } = product
-        item.barCode = barCode
+        const { productCode, name, primaryImageUrl } = product
+        item.productCode = productCode
         item.productName = name
         item.primaryImageUrl = primaryImageUrl
       }

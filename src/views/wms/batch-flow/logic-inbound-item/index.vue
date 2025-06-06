@@ -86,7 +86,7 @@ actualQty-是否应该availableQty
 
 const fieldMap = {
   warehouseName: '仓库',
-  productBarCode: '产品编码',
+  productCode: '产品编码',
   productName: '产品名称',
   inboundCompanyName: '库存公司',
   inboundDeptName: '库存归属',
@@ -150,7 +150,7 @@ tableOptions.value = transformTableOptions(fieldMap, {
   noComputePropList: [
     'inboundCode',
     'productName',
-    'productBarCode',
+    'productCode',
     'warehouseName',
     'remark',
     'updateTime',
@@ -191,7 +191,7 @@ const getList = async () => {
       { prop: 'warehouse', keyList: ['name'] },
       // { prop: 'bin', keyList: ['name'] },
       // { prop: 'zone', keyList: ['name'] },
-      { prop: 'product', keyList: ['name', 'barCode'] },
+      { prop: 'product', keyList: ['name', 'productCode'] },
       { prop: 'inbound', keyList: ['code'] },
       { prop: 'dept', keyList: ['name'] },
       { prop: 'company', keyList: ['name'] },

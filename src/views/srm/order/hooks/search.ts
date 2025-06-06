@@ -11,7 +11,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const userList = getUserList()
-  const productList = getProductList(null, { label: 'barCode', value: 'id' })
+  const productList = getProductList(null, { label: 'productCode', value: 'id' })
   const supplierList = getSupplierList()
   const { deptList, defaultProps } = getDeptTree()
   const searchFormOptions = ref<Array<FormOptions>>([

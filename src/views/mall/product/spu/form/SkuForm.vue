@@ -176,7 +176,7 @@ const onChangeSpec = () => {
       price: 0,
       marketPrice: 0,
       costPrice: 0,
-      barCode: '',
+      productCode: '',
       picUrl: '',
       stock: 0,
       weight: 0,

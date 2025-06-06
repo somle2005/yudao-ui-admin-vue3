@@ -15,7 +15,7 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
+        <el-table-column prop="productCode" label="产品编码" width="120" align="center" />
 
         <!-- 计划出库量 -->
         <el-table-column label="数量" width="80" align="center">

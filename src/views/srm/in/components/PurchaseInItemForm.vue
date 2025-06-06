@@ -14,7 +14,7 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="60" align="center" />
 
-        <el-table-column prop="barCode" label="产品编码" width="180" align="center" />
+        <el-table-column prop="productCode" label="产品编码" width="180" align="center" />
 
         <el-table-column prop="productName" label="产品名称" width="180" align="center" />
         <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
@@ -137,11 +137,11 @@
                 <el-option
                   v-for="item in productList"
                   :key="item.id"
-                  :label="item.barCode"
+                  :label="item.productCode"
                   :value="item.id"
                 />
               </el-select> ~~>
-              <el-text> {{ row.barCode }}</el-text>
+              <el-text> {{ row.productCode }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>-->
@@ -413,7 +413,7 @@ const handleAdd = () => {
     orderItemId: undefined, //list记得转化
     productId: undefined,
     productName: undefined,
-    productBarCode: undefined,
+    productCode: undefined,
     productUnitName: undefined, //列表要转化取item-product里面数据
     productUnitId: undefined, // 列表要转化取item-product里面数据
     model: undefined, // //列表要转化取item-product里面数据

@@ -7,7 +7,7 @@ export interface ProductVO {
   categoryId: number // 产品分类编号
   remark: string // 产品备注
   deptId: number // 部门id
-  barCode: string // SKU（编码）
+  productCode: string // SKU（编码）
   unitId: number // 单位编号
   material: string // 材料（中文）
   status: boolean // 产品状态（1启用，0禁用）

@@ -43,7 +43,7 @@ export const useForm = (formType) => {
         children: supplierList
       },
 
-      // :label="`${item.barCode} | ${item.name}`"
+      // :label="`${item.productCode} | ${item.name}`"
       {
         requiredFlag: true,
         type: 'select',

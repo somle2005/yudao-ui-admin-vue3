@@ -23,7 +23,7 @@
           >
             <template #default>
               <div class="product-option">
-                <div class="item">{{ item.barCode }} </div>
+                <div class="item">{{ item.productCode }} </div>
                 <div class="item-span w-4em"></div>
                 <div class="item">{{ item.name }}</div>
               </div>

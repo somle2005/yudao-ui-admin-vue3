@@ -16,7 +16,7 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
 
         <el-table-column label="入库单编号" prop="inboundCode" align="center" width="150" />
-        <el-table-column prop="productBarCode" label="产品编码" width="120" align="center" />
+        <el-table-column prop="productCode" label="产品编码" width="120" align="center" />
         <!-- <el-table-column label="产品编码" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item
@@ -24,7 +24,7 @@
               :rules="formRules.productId"
               class="mb-0px!"
             >
-              <div>{{ row.productBarCode }}</div>
+              <div>{{ row.productCode }}</div>
             </el-form-item>
           </template>
         </el-table-column> -->

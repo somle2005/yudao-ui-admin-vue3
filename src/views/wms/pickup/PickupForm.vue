@@ -216,7 +216,7 @@ const addItem = (selectionList: any[]) => {
       const {
         id,
         productId,
-        productBarCode,
+        productCode,
         actualQty,
         outboundAvailableQty,
         planQty,
@@ -229,7 +229,7 @@ const addItem = (selectionList: any[]) => {
       const obj = {
         [itemIdKey]: id,
         productId,
-        productBarCode,
+        productCode,
         qty: shelveAvailableQty,
         actualQty,
         outboundAvailableQty,

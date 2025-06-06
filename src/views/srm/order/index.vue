@@ -264,11 +264,11 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
   },
 
-  // productBarCode: {
+  // productCode: {
   //   label: '产品编码',
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
-  itemsBarCode: {
+  itemsProductCode: {
     label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -449,7 +449,7 @@ const allOptions = transformTableOptions(fieldMap, { noComputePropList: [] })
 const wrapList = [
   'code',
   'supplierName',
-  'barCode',
+  'productCode',
   'auditAdvice',
   'productName',
   'remark',
@@ -516,7 +516,7 @@ const getList = async () => {
     //   item.items.forEach((a) => {
     //     if (a.product) {
     //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
+    //       a.productCode = a.product.productCode
     //     }
     //     // const purchaseRequestItem = a.purchaseRequestItem
     //     // if (purchaseRequestItem) {

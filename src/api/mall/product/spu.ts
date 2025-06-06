@@ -15,7 +15,7 @@ export interface Sku {
   price?: number | string // 商品价格
   marketPrice?: number | string // 市场价
   costPrice?: number | string // 成本价
-  barCode?: string // 商品条码
+  productCode?: string // 商品条码
   picUrl?: string // 图片地址
   stock?: number // 库存
   weight?: number // 商品重量，单位：kg 千克

@@ -73,8 +73,8 @@
 
   <!-- 展示形式：BarCode 条形码 -->
   <Dialog
-    :title="barCode.title"
-    v-model="barCode.visible"
+    :title="productCode.title"
+    v-model="productCode.visible"
     width="500px"
     append-to-body
     :close-on-press-escape="false"
@@ -83,7 +83,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="条形码" prop="name">
-            <el-input v-model="barCode.value" placeholder="请输入条形码" required />
+            <el-input v-model="productCode.value" placeholder="请输入条形码" required />
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -104,12 +104,12 @@
     <template #footer>
       <el-button
         type="primary"
-        @click="submit0(barCode.channelCode)"
-        :disabled="barCode.value.length === 0"
+        @click="submit0(productCode.channelCode)"
+        :disabled="productCode.value.length === 0"
       >
         确认支付
       </el-button>
-      <el-button @click="barCode.visible = false">取 消</el-button>
+      <el-button @click="productCode.visible = false">取 消</el-button>
     </template>
   </Dialog>
 </template>
@@ -215,7 +215,7 @@ const qrCode = ref({
   title: '',
   visible: false
 })
-const barCode = ref({
+const productCode = ref({
   // 展示形式：条形码
   channelCode: '',
   value: '',
@@ -255,7 +255,7 @@ const getDetail = async () => {
 const submit = (channelCode) => {
   // 条形码支付，需要特殊处理
   if (channelCode === PayChannelEnum.ALIPAY_BAR.code) {
-    barCode.value = {
+    productCode.value = {
       channelCode: channelCode,
       value: '',
       title: '“支付宝”条码支付',
@@ -264,7 +264,7 @@ const submit = (channelCode) => {
     return
   }
   if (channelCode === PayChannelEnum.WX_BAR.code) {
-    barCode.value = {
+    productCode.value = {
       channelCode: channelCode,
       value: '',
       title: '“微信”条码支付',
@@ -327,7 +327,7 @@ const buildSubmitParam = (channelCode) => {
   if (channelCode === PayChannelEnum.ALIPAY_BAR.code) {
     return {
       channelExtras: {
-        auth_code: barCode.value.value
+        auth_code: productCode.value.value
       }
     }
   }
@@ -335,7 +335,7 @@ const buildSubmitParam = (channelCode) => {
   if (channelCode === PayChannelEnum.WX_BAR.code) {
     return {
       channelExtras: {
-        authCode: barCode.value.value
+        authCode: productCode.value.value
       }
     }
   }

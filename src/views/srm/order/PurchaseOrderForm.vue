@@ -741,10 +741,10 @@ const addItem = (selectionList) => {
         declaredType,
         declaredTypeEn,
         productId,
-        productBarCode,
+        productCode,
         productName,
         productUnitName,
-        barCode,
+        productCode,
         productPrice
       } = item
       const obj = {
@@ -766,9 +766,9 @@ const addItem = (selectionList) => {
         declaredTypeEn,
         productId,
         productName,
-        productBarCode,
+        productCode,
         productUnitName,
-        barCode,
+        productCode,
         productPrice
         // productPrice: grossPrice
       }

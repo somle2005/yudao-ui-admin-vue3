@@ -77,7 +77,7 @@ const fieldMap = {
   warehouseName: '仓库',
   zoneName: '库区名称',
   binName: '库位',
-  productBarCode: '产品编码',
+  productCode: '产品编码',
   productName: '产品名称',
 
   availableQty: '可用数',
@@ -105,7 +105,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  noComputePropList: ['warehouseName', 'productName', 'productBarCode']
+  noComputePropList: ['warehouseName', 'productName', 'productCode']
 })
 
 /** 仓位库存 列表 */

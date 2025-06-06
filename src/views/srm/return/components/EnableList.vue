@@ -109,7 +109,7 @@ const getList = async () => {
     //   item.items.forEach((a) => {
     //     if (a.product) {
     //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
+    //       a.productCode = a.product.productCode
     //     }
 
     //     item.itemApplicantName = item.applicantName
@@ -144,8 +144,8 @@ const handleCurrentChange = (row: any) => {
   selectionList.value = mergeItemsUpToList([row], 'items', {
     productId: 'productId',
     productName: 'productName',
-    // productBarCode,
-    barCode: 'barCode',
+    // productCode,
+    productCode: 'productCode',
     productUnitId: 'productUnitId',
     productUnitName: 'productUnitName',
     productPrice: 'productPrice',

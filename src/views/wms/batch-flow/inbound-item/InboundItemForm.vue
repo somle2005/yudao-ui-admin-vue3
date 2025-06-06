@@ -88,7 +88,7 @@ const moveFormOptions = () => {
     // productId
     {
       type: 'input',
-      prop: 'productBarCode',
+      prop: 'productCode',
       label: '产品编码',
       attrs: {
         disabled: true,
@@ -160,13 +160,13 @@ const open = async (type: string, id?: number, row?: any) => {
       requestFormOptions.value = moveFormOptions()
       dialogTitle.value = '移库位'
 
-      const { binAvailableQty, binName, binId, productId, productBarCode, warehouseId,inboundId } = row
+      const { binAvailableQty, binName, binId, productId, productCode, warehouseId,inboundId } = row
       const obj: any = {
         binAvailableQty,
         fromBinId: binId,
         binName,
         productId,
-        productBarCode,
+        productCode,
         qty: binAvailableQty,
         warehouseId,
         inboundId

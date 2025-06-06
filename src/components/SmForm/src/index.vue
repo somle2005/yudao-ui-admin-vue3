@@ -360,9 +360,9 @@ watch(
     // }
 
     /**
-     * 比如有联动的值 产品 productId 带出 barCode
+     * 比如有联动的值 产品 productId 带出 productCode
      * props.options项上面肯定不存在barCode
-     * 如果统一是 内部值model.value变化 操作 就会还需要出一个额外参数 ['barCode'] 用于联动
+     * 如果统一是 内部值model.value变化 操作 就会还需要出一个额外参数 ['productCode'] 用于联动
      * 如果联动值是操作外部formData 就不需要额外参数 内部变化就会带上这个值
      *
      * 约定俗成 不在props.options里面的值 统一由外部进行修改formData 通过props.getModelValue()进行合并

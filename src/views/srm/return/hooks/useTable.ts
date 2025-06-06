@@ -79,7 +79,7 @@ export const useTable = () => {
     // 产品编码	产品名称	仓库	数量	箱率	单价	含税单价	税额	价税合计	上游单据编码	申请部门
 
     // items-product带出barCode 产品编码 name
-    itemsBarCode: {
+    itemsProductCode: {
       label: '产品编码',
       width: '160px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -203,10 +203,10 @@ export const useTable = () => {
   const allOptions = transformTableOptions(fieldMap, {
     noComputePropList: [
       'code',
-      'itemsBarCode',
+      'itemsProductCode',
       'supplierName',
       'warehouseName',
-      'itemsBarCode',
+      'itemsProductCode',
       'itemsProductName',
       'itemsWarehouseName'
     ]
@@ -214,7 +214,7 @@ export const useTable = () => {
   const wrapList = [
     'code',
     'supplierName',
-    'productBarCode',
+    'productCode',
     'auditAdvice',
     'productName',
     'remark',

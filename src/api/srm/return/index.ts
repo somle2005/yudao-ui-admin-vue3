@@ -64,7 +64,7 @@ export interface PurchaseReturnItemsVO {
     /**
      * 产品sku
      */
-    barCode?: string;
+    productCode?: string;
     /**
      * 完工单，JSON 格式
      * 完工单json

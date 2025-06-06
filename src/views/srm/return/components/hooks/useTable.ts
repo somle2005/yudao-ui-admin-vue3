@@ -32,7 +32,7 @@ export const useTable = () => {
     },
 
     // items-product带出barCode 产品编码 name
-    itemsBarCode: {
+    itemsProductCode: {
       label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -143,7 +143,7 @@ export const useTable = () => {
   const wrapList = [
     'code',
     'supplierName',
-    'productBarCode',
+    'productCode',
     'auditAdvice',
     'productName',
     'remark',

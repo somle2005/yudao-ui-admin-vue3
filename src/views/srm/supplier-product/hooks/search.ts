@@ -3,7 +3,7 @@ import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getDictOptions, getIntDictOptions } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
-  const productList = getProductList(null, { label: 'barCode', value: 'id' })
+  const productList = getProductList(null, { label: 'productCode', value: 'id' })
   const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {

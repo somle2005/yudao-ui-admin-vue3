@@ -102,7 +102,7 @@ const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
   warehouseName: '仓库',
-  productBarCode: '产品编码',
+  productCode: '产品编码',
   productName: '产品名称',
   deptName: '库存归属',
   companyName: '库存公司',
@@ -131,7 +131,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  noComputePropList: ['warehouseName', 'productName', 'productBarCode']
+  noComputePropList: ['warehouseName', 'productName', 'productCode']
 })
 
 /** 所有者库存 列表 */
@@ -167,7 +167,7 @@ const getList = async () => {
       { prop: 'warehouse', keyList: ['mode', 'name', 'code'] },
       { prop: 'dept', keyList: ['name'] },
       { prop: 'company', keyList: ['name'] },
-      { prop: 'product', keyList: ['name', 'barCode'] }
+      { prop: 'product', keyList: ['name', 'productCode'] }
     ]) as any[]
 
     total.value = data.total

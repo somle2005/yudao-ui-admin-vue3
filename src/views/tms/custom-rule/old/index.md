@@ -24,16 +24,16 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="产品编码" prop="barCode">
+      <el-form-item label="产品编码" prop="productCode">
         <!-- <el-input
-          v-model="queryParams.barCode"
+          v-model="queryParams.productCode"
           placeholder="请输入产品编码"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         /> -->
         <el-select
-          v-model.trim="queryParams.barCode"
+          v-model.trim="queryParams.productCode"
           clearable
           filterable
           placeholder="请选择产品编码"
@@ -170,7 +170,7 @@
   <!--  <ContentWrap>
     <el-table border v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
 
-      <el-table-column label="产品编码" align="center" prop="product-barCode" />
+      <el-table-column label="产品编码" align="center" prop="product-productCode" />
       <el-table-column label="国家编码" align="center" prop="countryCode">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.COUNTRY_CODE" :value="scope.row.countryCode" />
@@ -347,7 +347,7 @@ const fieldMap = {
     slot: 'primaryImageUrl',
     width: '100px'
   },
-  'product-barCode': {
+  'product-productCode': {
     label: '产品编码',
     width: '180px'
   },
@@ -409,7 +409,7 @@ const queryParams = reactive({
   declaredValueCurrencyCode: undefined,
   taxRate: undefined,
   logisticAttribute: undefined,
-  barCode: undefined,
+  productCode: undefined,
   hscode: undefined,
   createTime: [] as string[],
   fbaBarCode: undefined
@@ -426,7 +426,7 @@ const getList = async () => {
     list.value = data.list.map((item: any) => {
       // item.type = typeFind(item.type)
       item['product-name'] = item.product.name
-      item['product-barCode'] = item.product.barCode
+      item['product-productCode'] = item.product.productCode
       item.primaryImageUrl = item.product.primaryImageUrl
       item.material = item.product.material
       return item

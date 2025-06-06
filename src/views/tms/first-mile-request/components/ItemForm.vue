@@ -24,7 +24,7 @@
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
+                :keyMap="{ label: 'productCode', value: 'id' }"
                 @change="(val) => changeProduct(row, $index, val)"
               />
             </el-form-item>

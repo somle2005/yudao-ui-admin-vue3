@@ -32,7 +32,7 @@
               <el-option
                 v-for="item in productList"
                 :key="item.id"
-                :label="item.barCode"
+                :label="item.productCode"
                 :value="item.id"
               />
             </el-select>
@@ -56,14 +56,14 @@
                     'id',
                     {
                       productName: 'name',
-                      barCode: 'barCode',
+                      productCode: 'productCode',
                       productUnitName: 'unitName'
                     },
                     getDeclaredType
                   )
               "
               :data="productList"
-              :keyMap="{ label: 'barCode', value: 'id' }"
+              :keyMap="{ label: 'productCode', value: 'id' }"
             />
           </el-form-item>
         </template>
@@ -403,7 +403,7 @@ import { getWMSWarehouseList } from '@/commonData/wms'
     税额 = 单价 * 税率
     税额 = 含税单价 * (税率/(1+税率))
 
-    产品带出 产品编码产品编码-barCode-change事件赋予值联动即可
+    产品带出 产品编码产品编码-productCode-change事件赋予值联动即可
  */
 
 const props = defineProps({
@@ -593,7 +593,7 @@ const onChangeProduct = (productId, row) => {
     row.productName = product.name
     row.productUnitName = product.unitName
     // row.productUnitName = product.unitName
-    // row.productBarCode = product.barCode
+    // row.productCode = product.productCode
     // row.productPrice = product.purchasePrice
   }
   // // 加载库存

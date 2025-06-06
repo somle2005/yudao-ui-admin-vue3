@@ -5,11 +5,11 @@
       <el-table-column
         align="center"
         label="SKU (编码)"
-        prop="barCode"
+        prop="productCode"
         min-width="120"
       >
         <template #default="scope">
-          {{ scope.row.barCode }}
+          {{ scope.row.productCode }}
         </template>
       </el-table-column>
 

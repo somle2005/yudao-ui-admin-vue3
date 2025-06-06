@@ -38,7 +38,7 @@ export interface BusinessVO {
       businessPrice: number
       count: number
       totalPrice: number
-      barCode: string
+      productCode: string
     }
   ]
 }

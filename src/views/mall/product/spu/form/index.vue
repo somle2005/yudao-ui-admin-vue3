@@ -97,7 +97,7 @@ const formData = ref<ProductSpuApi.Spu>({
       price: 0, // 商品价格
       marketPrice: 0, // 市场价
       costPrice: 0, // 成本价
-      barCode: '', // 商品条码
+      productCode: '', // 商品条码
       picUrl: '', // 图片地址
       stock: 0, // 库存
       weight: 0, // 商品重量

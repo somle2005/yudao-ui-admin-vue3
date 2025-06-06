@@ -94,7 +94,7 @@ import { getCodeType, getCodeValue, getOperateNo } from '@/views/wms/common/util
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
-  productBarCode: '产品编码',
+  productCode: '产品编码',
   productName: '产品名称',
   flowTime: {
     label: '操作时间', // 流水发生时间
@@ -167,7 +167,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   allWrap: true,
-  noComputePropList: ['productBarCode', 'productName', 'warehouseName']
+  noComputePropList: ['productCode', 'productName', 'warehouseName']
 })
 
 /** 库存流水 列表 */
@@ -213,7 +213,7 @@ const getList = async () => {
       { prop: 'warehouse', keyList: ['name'] },
       { prop: 'bin', keyList: ['name'] },
       { prop: 'zone', keyList: ['name'] },
-      { prop: 'product', keyList: ['name', 'barCode'] },
+      { prop: 'product', keyList: ['name', 'productCode'] },
       { prop: 'inbound', keyList: ['code'] },
       { prop: 'outbound', keyList: ['code'] },
       { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] },
