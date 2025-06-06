@@ -124,11 +124,28 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column align="center" fixed="right" label="操作" width="60">
+        <!-- <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
             <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
               —
             </el-button>
+          </template>
+        </el-table-column> -->
+
+        <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
+          <template #default="{ $index }">
+            <div class="common-btnList">
+              <div
+                v-if="formData.length !== 1"
+                class="common-btn-item"
+                @click="handleDelete($index)"
+              >
+                <Icon icon="ep:minus" class="mr-5px" />
+              </div>
+              <div class="common-btn-item" @click="handleAddItem($index)">
+                <Icon icon="ep:plus" class="mr-5px" />
+              </div>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -148,6 +165,7 @@ import { computeTargetQty } from '@/utils/transformData'
 import { DICT_TYPE } from '@/utils/dict'
 import { InfoKeyOpenFormData } from '../hooks/injectKeys'
 import { getWarehouseBinList } from '@/commonData/wms'
+import { cloneDeep } from 'lodash-es'
 
 const props = defineProps({
   items: {
@@ -244,6 +262,14 @@ const getSummaries = (param: SummaryMethodProps) => {
 /** 删除按钮操作 */
 const handleDelete = (index: number) => {
   formData.value.splice(index, 1)
+}
+
+/** 添加按钮操作 */
+const handleAddItem = (index: number) => {
+  const row = cloneDeep(formData.value[index])
+  row.id = undefined
+  // row[props.itemIdKey] = Math.random() + formData.value.length
+  formData.value.splice(index + 1, 0, row)
 }
 
 /** 表单校验 */
