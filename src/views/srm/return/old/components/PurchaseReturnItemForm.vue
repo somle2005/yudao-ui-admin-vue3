@@ -125,9 +125,9 @@
       </el-table-column>
       <el-table-column label="税率（%）" fixed="right" min-width="115">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
+          <el-form-item :prop="`${$index}.taxRate`" class="mb-0px!">
             <el-input-number
-              v-model="row.taxPercent"
+              v-model="row.taxRate"
               controls-position="right"
               :min="0"
               :precision="2"
@@ -221,7 +221,7 @@ watch(
     // 循环处理
     val.forEach((item) => {
       item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-      item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+      item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
       if (item.totalProductPrice != null) {
         item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
       } else {
@@ -264,7 +264,7 @@ const handleAdd = () => {
     stockCount: undefined,
     qty: 1,
     totalProductPrice: undefined,
-    taxPercent: undefined,
+    taxRate: undefined,
     taxPrice: undefined,
     totalPrice: undefined,
     remark: undefined

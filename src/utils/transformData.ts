@@ -111,13 +111,13 @@ export const getSameKeyItemList = (list, sameKey = 'id') => {
  * @returns
  */
 
-export const computeGrossPriceAndAllAmount = (
+export const computeGrossPriceAndGrossTotalPrice = (
   list: any[],
   keyMap?: {
-    taxPercent?: string
+    taxRate?: string
     applyCount?: string
     grossPrice?: string
-    allAmount?: string
+    grossTotalPrice?: string
     taxPrice?: string
     onePrice?: string
     totalPrice?: string
@@ -125,10 +125,10 @@ export const computeGrossPriceAndAllAmount = (
 ) => {
   if (!list?.length) return list
   const {
-    taxPercent = 'taxPercent',
+    taxRate = 'taxRate',
     applyCount = 'qty',
     grossPrice = 'grossPrice',
-    allAmount = 'allAmount',
+    grossTotalPrice = 'grossTotalPrice',
     taxPrice = 'taxPrice',
     onePrice = 'productPrice',
     totalPrice = 'totalPrice'
@@ -136,18 +136,18 @@ export const computeGrossPriceAndAllAmount = (
 
   list.forEach((item) => {
     // 申请数量和税率都要有 才能计算出税额
-    if (item[taxPercent] && item[applyCount] && item[grossPrice]) {
-      const taxPercent100 = item.taxPercent / 100.0
+    if (item[taxRate] && item[applyCount] && item[grossPrice]) {
+      const taxPercent100 = item.taxRate / 100.0
       // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
       const scale = (taxPercent100 / (1 + taxPercent100)) * item[applyCount]
       item[taxPrice] = erpPriceMultiply(item[grossPrice], scale)
       // 价税合计 = 含税单价 * 申请数量。
-      item[allAmount] = erpPriceMultiply(item[grossPrice], item[applyCount])
+      item[grossTotalPrice] = erpPriceMultiply(item[grossPrice], item[applyCount])
     }
 
     // 税率-含税单价才能计算出产品单价
-    if (item[taxPercent] && item[grossPrice]) {
-      const taxPercent100 = item.taxPercent / 100.0
+    if (item[taxRate] && item[grossPrice]) {
+      const taxPercent100 = item.taxRate / 100.0
       // 单价
       item[onePrice] = erpPriceMultiply(item[grossPrice], 1 / (1 + taxPercent100))
     } else {

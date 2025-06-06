@@ -81,7 +81,7 @@ export const useApplicantTable = () => {
     itemsReferenceUnitPrice: '参考单价',
     itemsActTaxPrice: '含税单价',
     itemsTaxPrice: '税额',
-    itemsAllAmount: '价税合计',
+    itemsGrossTotalPrice: '价税合计',
 
     creator: '制单人',
     createTime: {

@@ -38,10 +38,10 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
 仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
 批准数量-approvedQty-数字输入框(整数>0)
 含税单价-grossPrice-数字输入框(手动输入，价格保留小数点后两位。)
-价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
+价税合计-grossTotalPrice-(显示在底部合计行-与含税单价联动，通过计算保持一致)
 参考单价-referenceUnitPrice-数字输入框(整数>0)
 税额，单位：元-taxPrice-(纯显示-保留小数点后两位   = 含税单价*税率   )
-税率，百分比-taxPercent-数字输入框(手动输入，保留小数点后两位。)
+税率，百分比-taxRate-数字输入框(手动输入，保留小数点后两位。)
 
 
 税额的计算
@@ -77,7 +77,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
     if (formType === 'audit') {
       item.approvedQty = item.qty
     }
-    // item.taxPercent = item.taxPercent * 100
+    // item.taxRate = item.taxRate * 100
   })
 
   nextTick(() => {
@@ -92,7 +92,7 @@ const mergeDetail = (formData, detail, formType, smFormRef) => {
 // 合并 合并采购时列表勾选中传递的items数据
 const mergeSelectItemsData = (formData, data, smFormRef) => {
   data.items.forEach((item) => {
-    // item.taxPercent = item.taxPercent * 100
+    // item.taxRate = item.taxRate * 100
   })
   formData.items = data.items
 
@@ -437,7 +437,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       // 税率拿到提交数据进行转换处理
       const data = cloneDeep(getFormData())
       data.items.forEach((item) => {
-        // item.taxPercent = item.taxPercent / 100
+        // item.taxRate = item.taxRate / 100
         return item
       })
 

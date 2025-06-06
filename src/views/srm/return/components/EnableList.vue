@@ -151,12 +151,12 @@ const handleCurrentChange = (row: any) => {
     productPrice: 'productPrice',
     qty: 'qty', // 计划的数量
     actualQty: 'actualQty', //实际入库的数量
-    code: 'inCode', // 适配采购退货详情接口
+    code: 'arriveCode', // 适配采购退货详情接口
 
-    taxPercent: 'taxPercent',
+    taxRate: 'taxRate',
     taxPrice: 'taxPrice',
     grossPrice: 'grossPrice',
-    allAmount: 'allAmount',
+    grossTotalPrice: 'grossTotalPrice',
     // remark:'remark',
     containerRate: 'containerRate',
 

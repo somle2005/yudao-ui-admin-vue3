@@ -286,7 +286,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
-  // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
+  // totalPrice最终合计价格  totalPrice = totalProductPrice + totalGrossPrice - discountPrice 最终合计价格
   totalPrice: {
     label: '成交金额',
     wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
@@ -397,7 +397,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  itemsAllAmount: {
+  itemsGrossTotalPrice: {
     label: '价税合计',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
@@ -408,7 +408,7 @@ const fieldMap = {
   //   label:'税额',
   //   wholeOrderEnable: 'items',
   // }, // items
-  // totalTaxPrice: {
+  // totalGrossPrice: {
   //   label: '价税合计',
   //   wholeOrderEnable: 'items',
   // }, // items
@@ -457,8 +457,8 @@ const wrapList = [
   'declaredType',
   'declaredTypeEn',
   'purchaseApplyCode',
-  'portOfLoading',
-  'portOfDischarge'
+  'fromPortName',
+  'toPortName'
 ]
 allOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {

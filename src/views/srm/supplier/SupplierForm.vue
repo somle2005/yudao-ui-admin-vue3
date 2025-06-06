@@ -67,9 +67,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="税率(%)" prop="taxPercent">
+          <el-form-item label="税率(%)" prop="taxRate">
             <el-input-number
-              v-model="formData.taxPercent"
+              v-model="formData.taxRate"
               :min="0"
               :precision="2"
               placeholder="请输入税率"
@@ -212,7 +212,7 @@ const initFormData = () => {
     openStatus: undefined,
     sort: undefined,
     taxNo: undefined,
-    taxPercent: undefined,
+    taxRate: undefined,
     bankName: undefined,
     bankAccount: undefined,
     bankAddress: undefined,
@@ -289,7 +289,7 @@ const resetForm = () => {
   //   openStatus: CommonStatusEnum.ENABLE,
   //   sort: undefined,
   //   taxNo: undefined,
-  //   taxPercent: undefined,
+  //   taxRate: undefined,
   //   bankName: undefined,
   //   bankAccount: undefined,
   //   bankAddress: undefined

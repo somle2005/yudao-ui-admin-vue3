@@ -219,7 +219,7 @@ const fieldMap = {
   //   label:'税额',
   //   wholeOrderEnable: 'items',
   // }, // items
-  // totalTaxPrice: {
+  // totalGrossPrice: {
   //   label: '价税合计',
   //   wholeOrderEnable: 'items',
   // }, // items

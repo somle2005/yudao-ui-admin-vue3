@@ -91,16 +91,16 @@
             <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
           </template> -->
 
-        <el-table-column prop="taxPercent" label="税率%" width="115" align="center" />
+        <el-table-column prop="taxRate" label="税率%" width="115" align="center" />
         <el-table-column label="税额" prop="taxPrice" width="120" align="center" />
         <el-table-column prop="containerRate" label="箱率" width="120" align="center" />
 
-        <el-table-column prop="inItemId" label="到货项id" width="80" align="center" />
+        <el-table-column prop="arriveItemId" label="到货项id" width="80" align="center" />
         <el-table-column prop="applicantName" label="申请人" width="120" align="center" />
         <el-table-column prop="applicationDeptName" label="部门" width="120" align="center" />
         <el-table-column prop="currencyName" label="币种" width="100" align="center" />
 
-        <el-table-column prop="inCode" label="上游单据编号" width="160" align="center" />
+        <el-table-column prop="arriveCode" label="上游单据编号" width="160" align="center" />
 
         <el-table-column label="备注" width="150" align="center">
           <template #default="{ row, $index }">
@@ -137,7 +137,7 @@ import {
 // import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { computeGrossPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndGrossTotalPrice } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
 import { useAddSellableQtyBatch } from '@/views/tms/common/utils'
@@ -216,19 +216,19 @@ watch(
     }
     const keyMap = {
       taxPrice: 'taxPrice',
-      taxPercent: 'taxPercent',
-      allAmount: 'allAmount',
+      taxRate: 'taxRate',
+      grossTotalPrice: 'grossTotalPrice',
       grossPrice: 'grossPrice',
       onePrice: 'productPrice',
       applyCount: 'qty'
     }
 
     // 编辑回显
-    computeGrossPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndGrossTotalPrice(val, keyMap)
     // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
     //   if (item.totalProductPrice != null) {
     //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
     //   } else {
@@ -274,10 +274,10 @@ const handleAdd = () => {
 
     productPrice: undefined,
     qty: undefined,
-    taxPercent: TAX_PERCENT,
+    taxRate: TAX_PERCENT,
     taxPrice: undefined,
     grossPrice: undefined,
-    allAmount: undefined,
+    grossTotalPrice: undefined,
     remark: undefined,
     settlementDate: undefined,
     containerRate: undefined,

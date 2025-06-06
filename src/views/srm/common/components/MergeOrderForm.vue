@@ -220,18 +220,18 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="税率%" prop="taxPercent" min-width="140">
+      <el-table-column label="税率%" prop="taxRate" min-width="140">
         <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
+          <el-form-item :prop="`${$index}.taxRate`" class="mb-0px!">
             <!-- <el-input-number
               :disabled="disabled"
-              v-model="row.taxPercent"
+              v-model="row.taxRate"
               controls-position="right"
               :min="0"
               :precision="2"
               class="!w-100%"
             /> -->
-            <SmNumber disabled :precision="2" v-model="row.taxPercent" />
+            <SmNumber disabled :precision="2" v-model="row.taxRate" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -247,7 +247,7 @@
         <el-table-column label="价税合计" min-width="150">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-              <el-text>{{ row.allAmount }}</el-text>
+              <el-text>{{ row.grossTotalPrice }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
@@ -349,7 +349,7 @@ import {
 } from '@/utils'
 import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
-import { computeGrossPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndGrossTotalPrice } from '@/utils/transformData'
 import { updateModelValue } from '@/utils/high/index'
 import { getDeclaredType } from '@/utils/operate/srm'
 import { getWMSWarehouseList } from '@/commonData/wms'
@@ -372,10 +372,10 @@ import { getWMSWarehouseList } from '@/commonData/wms'
     仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
     批准数量-approvedQty-数字输入框(整数>0)
     含税单价-grossPrice-数字输入框(手动输入，价格保留小数点后两位。)
-    价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
+    价税合计-grossTotalPrice-(显示在底部合计行-与含税单价联动，通过计算保持一致)
     参考单价-referenceUnitPrice-数字输入框(整数>0)
     税额，单位：元-taxPrice-(纯显示-保留小数点后两位   = 含税单价*税率   )
-    税率，百分比-taxPercent-数字输入框(手动输入，保留小数点后两位。)
+    税率，百分比-taxRate-数字输入框(手动输入，保留小数点后两位。)
 
 
     税额的计算
@@ -458,13 +458,13 @@ watch(
       税额 = 含税单价 * (税率/(1+税率))
 
     税额，单位：元-taxPrice-(纯显示-保留小数点后两位   = 含税单价*税率   )
-    税率，百分比-taxPercent-数字输入框(手动输入，保留小数点后两位。)
+    税率，百分比-taxRate-数字输入框(手动输入，保留小数点后两位。)
      */
 
     const keyMap = {
       // taxPrice: 'taxPrice',
-      // taxPercent: 'taxPercent',
-      // allAmount: 'allAmount',
+      // taxRate: 'taxRate',
+      // grossTotalPrice: 'grossTotalPrice',
       // grossPrice: 'grossPrice',
       // onePrice: 'productPrice',
       applyCount: 'approvedQty'
@@ -485,20 +485,20 @@ watch(
     keyMap.applyCount = applyCountMap[props.formType] || 'approvedQty' // 新增没有值就不计算或者不传递
 
     // 编辑回显
-    computeGrossPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndGrossTotalPrice(val, keyMap)
     // val.forEach((item) => {
     //   // 申请数量和税率都要有 才能计算出税额
-    //   if (item.taxPercent && item.qty && item.grossPrice) {
-    //     const taxPercent100 = item.taxPercent / 100.0
+    //   if (item.taxRate && item.qty && item.grossPrice) {
+    //     const taxPercent100 = item.taxRate / 100.0
     //     // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
     //     const scale = (taxPercent100 / (1 + taxPercent100)) * item.qty
     //     item.taxPrice = erpPriceMultiply(item.grossPrice, scale)
     //     // 价税合计 = 含税单价 * 申请数量。
-    //     item.allAmount = erpPriceMultiply(item.grossPrice, item.qty)
+    //     item.grossTotalPrice = erpPriceMultiply(item.grossPrice, item.qty)
     //   }
 
     //   // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-    //   // item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+    //   // item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
     //   // if (item.totalProductPrice != null) {
     //   //   item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
     //   // } else {
@@ -537,10 +537,10 @@ const handleAdd = () => {
   // 仓库编号-warehouseId-下拉框 (数据来源-仓库精简列表接口)
   // 批准数量-approvedQty-数字输入框(整数>0)
   // 含税单价-grossPrice-数字输入框(手动输入，价格保留小数点后两位。)
-  // 价税合计-allAmount-(显示在底部合计行-与含税单价联动，通过计算保持一致)
+  // 价税合计-grossTotalPrice-(显示在底部合计行-与含税单价联动，通过计算保持一致)
   // 参考单价-referenceUnitPrice-数字输入框(整数>0)
   // 税额，单位：元-taxPrice-(纯显示-保留小数点后两位   = 含税单价*税率   )
-  // 税率，百分比-taxPercent-数字输入框(手动输入，保留小数点后两位。)
+  // 税率，百分比-taxRate-数字输入框(手动输入，保留小数点后两位。)
 
   // 增值税税率	从供应商中带出来，也可以自行输入
 
@@ -553,8 +553,8 @@ const handleAdd = () => {
     grossPrice: undefined,
     referenceUnitPrice: undefined,
     taxPrice: undefined,
-    taxPercent: TAX_PERCENT,
-    allAmount: undefined,
+    taxRate: TAX_PERCENT,
+    grossTotalPrice: undefined,
     orderQuantity: undefined, // 下单数量
     expectArrivalDate: undefined
     // remark: '',

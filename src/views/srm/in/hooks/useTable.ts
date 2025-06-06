@@ -192,7 +192,7 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
-    itemsAllAmount: {
+    itemsGrossTotalPrice: {
       label: '价税合计',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
@@ -244,7 +244,7 @@ export const useTable = () => {
     //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
     // },
 
-    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
+    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalGrossPrice - discountPrice 最终合计价格
 
     // itemsExecuteStatus: {
     //   label: '行执行状态',

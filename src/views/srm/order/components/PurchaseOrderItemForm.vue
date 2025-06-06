@@ -259,10 +259,10 @@
 
         <el-table-column label="税率%" width="115" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.taxRate`" class="mb-0px!">
               <!-- <el-input-number
                 :disabled="disabled"
-                v-model="row.taxPercent"
+                v-model="row.taxRate"
                 controls-position="right"
                 :min="0"
                 :precision="2"
@@ -272,7 +272,7 @@
                 :disabled="disabled"
                 :precision="2"
                 :max="row.originCount"
-                v-model="row.taxPercent"
+                v-model="row.taxRate"
               />
             </el-form-item>
           </template>
@@ -288,7 +288,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="allAmount" label="价税合计" min-width="150" align="center" />
+        <el-table-column prop="grossTotalPrice" label="价税合计" min-width="150" align="center" />
 
         <el-table-column v-if="showCreate" label="期望到货日期" min-width="150" align="center">
           <template #default="{ row, $index }">
@@ -434,7 +434,7 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { computeGrossPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndGrossTotalPrice } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { defaultProps } from '@/utils/tree'
 import { updateModelValue } from '@/utils/high/index'
@@ -533,20 +533,20 @@ watch(
     }
     const keyMap = {
       taxPrice: 'taxPrice',
-      taxPercent: 'taxPercent',
-      allAmount: 'allAmount',
+      taxRate: 'taxRate',
+      grossTotalPrice: 'grossTotalPrice',
       grossPrice: 'grossPrice',
       onePrice: 'productPrice',
       applyCount: 'qty'
     }
 
     // 编辑回显
-    computeGrossPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndGrossTotalPrice(val, keyMap)
 
     // // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
     //   if (item.totalProductPrice != null) {
     //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
     //   } else {
@@ -584,7 +584,7 @@ const handleAdd = () => {
     id: undefined,
     productId: undefined,
     productPrice: undefined,
-    taxPercent: TAX_PERCENT,
+    taxRate: TAX_PERCENT,
     taxPrice: undefined,
     currencyId: undefined,
     // grossPrice: undefined, 产品单价就是含税单价了

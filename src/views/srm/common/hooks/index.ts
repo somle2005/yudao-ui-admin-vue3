@@ -107,7 +107,7 @@ export const useMergeOrderOptions = (
       {
         type: 'select',
         placeholder: '请选择装运港',
-        prop: 'portOfLoading',
+        prop: 'fromPortName',
         label: '装运港',
         attrs: {
           filterable: true,
@@ -122,7 +122,7 @@ export const useMergeOrderOptions = (
       {
         type: 'select',
         placeholder: '请选择目的港',
-        prop: 'portOfDischarge',
+        prop: 'toPortName',
         label: '目的港',
         attrs: {
           filterable: true,

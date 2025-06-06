@@ -211,7 +211,7 @@ const submitForm = async () => {
 
     data.items = filterListObjKey(data.items, [
       'id',
-      'inItemId',
+      'arriveItemId',
       'qty',
       'remark',
       'applicantId',
@@ -263,12 +263,12 @@ const addItem = (selectionList: any[]) => {
   // reconciliationStatus 对账状态(false:未对账 ，true:已对账) 看看是不是要加上
   nextTick(() => {
     const items = formData.value.items
-    const itemIdKey = 'inItemId'
+    const itemIdKey = 'arriveItemId'
     const selectList = selectionList.map((item: any) => {
       // 采购订单分页需带出数据
       const {
         code,
-        inCode,
+        arriveCode,
         itemsId, //list记得转化
         productId,
         productName,
@@ -282,10 +282,10 @@ const addItem = (selectionList: any[]) => {
         qty,
         actualQty,
 
-        taxPercent = TAX_PERCENT,
+        taxRate = TAX_PERCENT,
         taxPrice,
         grossPrice,
-        allAmount,
+        grossTotalPrice,
         itemsRemark,
         containerRate,
 
@@ -309,7 +309,7 @@ const addItem = (selectionList: any[]) => {
        */
       const obj = {
         // orderNo: code,
-        inCode,
+        arriveCode,
         [itemIdKey]: itemsId, //list记得转化
         productId,
         productName,
@@ -324,10 +324,10 @@ const addItem = (selectionList: any[]) => {
         originCount: actualQty || 0,
         actualQty,
 
-        taxPercent,
+        taxRate,
         taxPrice,
         grossPrice,
-        allAmount,
+        grossTotalPrice,
         remark: itemsRemark,
         containerRate,
 

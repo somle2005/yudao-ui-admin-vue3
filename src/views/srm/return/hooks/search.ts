@@ -105,7 +105,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'input',
       label: '上游单据编码',
-      prop: 'inCode',
+      prop: 'arriveCode',
       placeholder: '请输入上游单单据编码',
       attrs: {
         class: '!w-240px',

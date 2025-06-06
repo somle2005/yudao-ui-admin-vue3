@@ -6,14 +6,14 @@ totalProductPrice和totalPrice区别是什么
 /admin-api/srm/purchase-in/create
 
 totalProductPrice
-totalTaxPrice
+totalGrossPrice
 
-totalTaxPrice = totalPrice * taxPercent
+totalGrossPrice = totalPrice * taxRate
 最终合计价格（= 产品价格合计 + 税额合计 - 折扣金额 + 其他金额）  totalPrice
 
 totalProductPrice 合计产品价格
 
-TotalCount  TotalProductPrice TotalTaxPrice TotalPrice DiscountPrice TotalPrice 根据子单变化的(后端计算)
+TotalCount  TotalProductPrice totalGrossPrice TotalPrice DiscountPrice TotalPrice 根据子单变化的(后端计算)
  */
 
 const paramsList = [
@@ -26,13 +26,13 @@ const paramsList = [
 
   { prop: 'qty', name: '到货数量' },
   { prop: 'totalPrice', name: '总价 totalPrice = productPrice * qty' },
-  { prop: 'taxPercent', name: '税率' },
-  { prop: 'taxPrice', name: '税价合计  taxPrice = totalPrice * taxPercent' },
+  { prop: 'taxRate', name: '税率' },
+  { prop: 'taxPrice', name: '税价合计  taxPrice = totalPrice * taxRate' },
   { prop: 'grossPrice', name: '含税单价' },
-  { prop: 'allAmount', name: '价税合计' },
+  { prop: 'grossTotalPrice', name: '价税合计' },
 
   { prop: 'totalProductPrice', name: '合计产品价格' },
-  { prop: 'totalTaxPrice', name: '合计税价  totalTaxPrice = totalPrice * taxPercent' },
+  { prop: 'totalGrossPrice', name: '合计税价  totalGrossPrice = totalPrice * taxRate' },
 
   { prop: 'payPrice', name: '已付款金额' },
   { prop: 'payStatus', name: '付款状态' },
@@ -67,10 +67,10 @@ const itemsList = [
   'productPrice',
   'qty',
   'declaredType',
-  'taxPercent',
+  'taxRate',
   'taxPrice',
   'grossPrice',
-  'allAmount',
+  'grossTotalPrice',
   'remark',
   'settlementDate',
   'containerRate',
@@ -103,8 +103,8 @@ const differentList = [
     name: '合计产品价格'
   },
   {
-    prop: 'totalTaxPrice',
-    name: '合计税价  totalTaxPrice = totalPrice * taxPercent'
+    prop: 'totalGrossPrice',
+    name: '合计税价  totalGrossPrice = totalPrice * taxRate'
   },
   {
     prop: 'payPrice',
@@ -207,10 +207,10 @@ const createData = {
       productPrice: 88.5,
       qty: 100,
       declaredType: '滤芯',
-      taxPercent: 13,
+      taxRate: 13,
       taxPrice: 1150.44,
       grossPrice: 100,
-      allAmount: 10000,
+      grossTotalPrice: 10000,
       remark: null,
       settlementDate: null,
       containerRate: null,
@@ -235,10 +235,10 @@ const createData = {
       productPrice: 88.5,
       qty: 100,
       declaredType: '滤芯',
-      taxPercent: 13,
+      taxRate: 13,
       taxPrice: 1150.44,
       grossPrice: 100,
-      allAmount: 10000,
+      grossTotalPrice: 10000,
       remark: null,
       settlementDate: null,
       containerRate: null,

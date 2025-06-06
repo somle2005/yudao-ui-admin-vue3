@@ -228,7 +228,7 @@ const getList = async () => {
     const bodyData = getMainItemBodyData({
       queryParams,
       mainQueryList: ['code', 'supplierId', 'auditStatus', 'outboundStatus'],
-      itemQueryList: ['inCode', 'productId', 'warehouseId']
+      itemQueryList: ['arriveCode', 'productId', 'warehouseId']
     })
     bodyData.itemQuery.outboundStatus = queryParams.itemsOutboundStatus
     const data = await PurchaseReturnApi.getPurchaseReturnPage(bodyData)

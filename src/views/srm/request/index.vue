@@ -329,7 +329,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
-  itemsAllAmount: {
+  itemsGrossTotalPrice: {
     label: '价税合计',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
