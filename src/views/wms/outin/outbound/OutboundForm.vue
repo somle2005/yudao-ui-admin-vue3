@@ -99,6 +99,7 @@ import { AUDIT_TYPE } from '@/utils/constant'
 import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 import { OutboundItemApi } from '@/api/wms/outbound-item'
 import { addComment } from '../../common/utils'
+import { InfoKeyOpenFormData } from './hooks/injectKeys'
 
 const { addProductItemRef, openAddProductItem } = useOutProductdata()
 
@@ -130,6 +131,8 @@ const initFormData = () => {
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
+
+provide(InfoKeyOpenFormData, formData)
 
 const itemsFormdisabled = computed(() =>
   ['detail', OPERATE_MAP.finish, 'audit'].includes(formType.value)

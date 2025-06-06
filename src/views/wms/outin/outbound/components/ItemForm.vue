@@ -53,7 +53,7 @@
 
         <el-table-column prop="binName" label="库位" width="120" align="center" />
 
-        <el-table-column label="库存归属" width="200" align="center">
+        <el-table-column v-if="showDeptCompany" label="库存归属" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
@@ -72,7 +72,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="库存公司" width="200" align="center">
+        <el-table-column v-if="showDeptCompany" label="库存公司" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
               <SmSelect
@@ -131,6 +131,7 @@ import {
 import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 import { computeTargetQty } from '@/utils/transformData'
 import { DICT_TYPE } from '@/utils/dict'
+import { InfoKeyOpenFormData } from '../hooks/injectKeys'
 
 const props = defineProps({
   items: {
@@ -160,6 +161,11 @@ const formRules = reactive({
 })
 const formRef = ref([]) // 表单 Ref
 const financeSubjectList = getFinanceSubjectList()
+
+const openFormData = inject(InfoKeyOpenFormData)
+const showDeptCompany = computed(() => {
+  return openFormData.value.upstreamType !== 202
+}) // upstreamType: 202-退货单出库 库存归属-归属公司
 
 /** 初始化设置入库项 */
 watch(
