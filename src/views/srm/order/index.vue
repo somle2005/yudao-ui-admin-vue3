@@ -303,12 +303,12 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  itemsPayStatus: {
-    label: '行付款状态',
-    slot: 'itemsPayStatus',
-    dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
-  },
+  // itemsPayStatus: {
+  //   label: '行付款状态',
+  //   slot: 'itemsPayStatus',
+  //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
+  //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  // },
   itemsOffStatus: {
     label: '行关闭状态',
     slot: 'itemsOffStatus',
