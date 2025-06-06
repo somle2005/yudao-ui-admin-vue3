@@ -51,7 +51,20 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="binName" label="库位" width="120" align="center" />
+        <!-- <el-table-column prop="binName" label="库位" width="120" align="center" /> -->
+
+        <el-table-column label="库位" width="120" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.binId`" class="mb-0px!">
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.binId"
+                placeholder="请选择库位"
+                :data="warehouseBinList"
+              />
+            </el-form-item>
+          </template>
+        </el-table-column>
 
         <el-table-column v-if="showDeptCompany" label="库存归属" width="200" align="center">
           <template #default="{ row, $index }">
@@ -113,7 +126,9 @@
 
         <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
-            <el-button @click="handleDelete($index)" link> — </el-button>
+            <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
+              —
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,6 +147,7 @@ import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 import { computeTargetQty } from '@/utils/transformData'
 import { DICT_TYPE } from '@/utils/dict'
 import { InfoKeyOpenFormData } from '../hooks/injectKeys'
+import { getWarehouseBinList } from '@/commonData/wms'
 
 const props = defineProps({
   items: {
@@ -151,6 +167,11 @@ const props = defineProps({
   }
 })
 
+const openFormData = inject(InfoKeyOpenFormData)
+const showDeptCompany = computed(() => {
+  return openFormData.value.upstreamType !== 202
+}) // upstreamType: 202-退货单出库 库存归属-归属公司
+
 const auditDisabled = computed(() => props.formType === 'audit')
 const { deptList, defaultProps } = getDeptTree()
 const formLoading = ref(false) // 表单的加载中
@@ -161,11 +182,7 @@ const formRules = reactive({
 })
 const formRef = ref([]) // 表单 Ref
 const financeSubjectList = getFinanceSubjectList()
-
-const openFormData = inject(InfoKeyOpenFormData)
-const showDeptCompany = computed(() => {
-  return openFormData.value.upstreamType !== 202
-}) // upstreamType: 202-退货单出库 库存归属-归属公司
+const warehouseBinList = getWarehouseBinList()
 
 /** 初始化设置入库项 */
 watch(
