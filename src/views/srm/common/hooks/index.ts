@@ -358,16 +358,6 @@ export const useInOptions = (supplierList, accountList) => {
           clearable: true
         }
       },
-      // {
-      //   type: 'input',
-      //   label: '付款条款',
-      //   prop: 'paymentTerms',
-      //   placeholder: '请输入付款条款',
-      //   attrs: {
-      //     style: { width: '100%' },
-      //     clearable: true
-      //   }
-      // },
       {
         type: 'input',
         label: '备注',

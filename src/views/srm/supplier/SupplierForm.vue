@@ -154,9 +154,10 @@
               placeholder="请输入付款条款"
             /> -->
             <SmSelect
-              v-model="formData.paymentTerms"
+              v-model="formData.paymentTermsId"
               placeholder="请选择付款条款"
               :data="paymentTermsList"
+              :keyMap="{ label: 'label', value: 'id' }"
             />
             <!-- <el-cascader
               :options="paymentTermsList"
