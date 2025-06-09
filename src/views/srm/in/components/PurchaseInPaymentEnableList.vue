@@ -1,6 +1,6 @@
 <!-- 可付款的采购入库单列表 选择采购入库（仅展示可付款）width="1000"-->
 <template>
-  <Dialog title="选择采购申请项（仅展示已审核）" v-model="dialogVisible">
+  <Dialog title="选择采购订单项（仅展示已审核）" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
@@ -291,7 +291,8 @@ let supplierIdSave
 const getList = async () => {
   queryParams.auditStatus = 5 // 已审核
   queryParams.supplierId = supplierIdSave
-  queryParams.inboundStatus = 1 // 整单未入库
+  // queryParams.inboundStatus = 1 // 整单未入库
+  queryParams.inboundStatusList = [1,2] // 整单未入库-部分入库
   loading.value = true
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
