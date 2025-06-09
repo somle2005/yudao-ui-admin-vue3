@@ -41,4 +41,27 @@ export const ExchangeApi = {
   exportExchange: async (params) => {
     return await request.download({ url: `/wms/exchange/export-excel`, params })
   },
+
+  // 入库单提交审核
+  submitExchangeAudit: async (data: { billId: number }[]) => {
+    return await request.put({
+      url: `/wms/exchange/submit`,
+      data
+    })
+  },
+
+  // 同意审核入库单 billType-statusType不用关心
+  agreeExchangeAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/exchange/agree`,
+      data
+    })
+  },
+  // 不同意审核入库单
+  rejectExchangeAuditStatus: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/exchange/reject`,
+      data
+    })
+  }
 }

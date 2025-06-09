@@ -9,18 +9,44 @@
       v-loading="formLoading"
       :options="requestFormOptions"
       :getModelValue="getFormData"
-    />
+    >
+      <template #items>
+        <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
+          <el-tab-pane label="换货清单" name="itemForm">
+            <ItemForm
+              ref="itemFormRef"
+              :items="formData.defectiveList"
+              :formType="formType"
+              :disabled="itemsFormdisabled"
+            />
+          </el-tab-pane>
+        </el-tabs>
+      </template>
+    </SmForm>
 
     <template #footer>
-      <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
+      <el-button v-if="!auditType" @click="submitFormDB" type="primary" :disabled="formLoading"
+        >确 定</el-button
+      >
+      <template v-if="auditType">
+        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+          不同意</el-button
+        >
+
+        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
+          同意入库</el-button
+        >
+      </template>
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
 </template>
 <script setup lang="ts">
 import { ExchangeApi, ExchangeVO } from '@/api/wms/exchange'
-import { getWMSWarehouseList } from '@/commonData/wms'
-import { getIntDictOptions } from '@/utils/dict'
+import ItemForm from './components/ItemForm.vue'
+import { useForm } from './hooks/useForm'
+import { AUDIT_TYPE } from '@/utils/constant'
+import { createDBFn } from '@/utils/decorate'
 
 /** 换货单 表单 */
 defineOptions({ name: 'ExchangeForm' })
@@ -39,92 +65,23 @@ const initFormData = () => {
     type: undefined,
     warehouseId: undefined,
     auditStatus: undefined,
-    remark: undefined
+    remark: undefined,
+    defectiveList: []
   }
 }
 const formData = ref(initFormData())
-const formRules = reactive({
-  code: [{ required: true, message: '单据号不能为空', trigger: 'blur' }],
-  type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
-  warehouseId: [{ required: true, message: '调出仓库ID不能为空', trigger: 'blur' }],
-  auditStatus: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
-})
 const formRef = ref() // 表单 Ref
-const WMSWarehouseList = ref([])
 
-const createRequestFormOptions = () => {
-  const list = [
-    {
-      type: 'input',
-      label: '单据号',
-      prop: 'code',
-      placeholder: '请输入单据号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-
-    {
-      type: 'select',
-      placeholder: '请选择类型',
-      prop: 'type',
-      label: '类型',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
-    },
-    {
-      type: 'select',
-      placeholder: '请选择状态',
-      prop: 'auditStatus',
-      label: '状态',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_AUDIT_STATUS)
-    },
-
-    {
-      type: 'select',
-      label: '调出仓库',
-      prop: 'toWarehouseId',
-      placeholder: '请选择调出仓库',
-      attrs: {
-        style: { width: '100%' },
-        filterable: true,
-        clearable: true
-      },
-      children: WMSWarehouseList
-    },
-    {
-      type: 'input',
-      label: '备注',
-      prop: 'remark',
-      placeholder: '请输入备注',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    }
-  ]
-
-  return list
-}
-
-const requestFormOptions: any = ref(createRequestFormOptions())
-const getFormData = () => {
-  return formData.value
-}
+const {
+  getFormData,
+  requestFormOptions,
+  operateForm,
+  initDialogData,
+  itemFormRef,
+  subTabsName,
+  itemsFormdisabled,
+  auditType
+} = useForm(formType, formData)
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -132,7 +89,8 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  getWMSWarehouseList(WMSWarehouseList)
+  operateForm(type)
+  initDialogData()
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -147,18 +105,27 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
-const submitForm = async () => {
+const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
+  // 校验子表单
+  await itemFormRef.value.validate()
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as ExchangeVO
+    const data = formData.value as unknown as ExchangeVO as any
     if (formType.value === 'create') {
       await ExchangeApi.createExchange(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await ExchangeApi.updateExchange(data)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === 'audit') {
+      if (type === AUDIT_TYPE.agree) {
+        await ExchangeApi.agreeExchangeAuditStatus({ billId: data.id, comment: data.comment })
+      } else if (type === AUDIT_TYPE.reject) {
+        await ExchangeApi.rejectExchangeAuditStatus({ billId: data.id, comment: data.comment })
+      }
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -168,6 +135,8 @@ const submitForm = async () => {
     formLoading.value = false
   }
 }
+
+const submitFormDB = createDBFn(submitForm)
 
 /** 重置表单 */
 const resetForm = () => {

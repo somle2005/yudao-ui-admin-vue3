@@ -52,64 +52,18 @@
           v-hasPermi="['wms:exchange:audit']"
         >
           <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
-          <template #dropdown>
+          <!-- <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>
                 <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
               </el-dropdown-item>
             </el-dropdown-menu>
-          </template>
+          </template> -->
         </el-dropdown>
       </template>
     </SmForm>
   </ContentWrap>
 
-  <!-- 列表 -->
-  <!--<ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="主键" align="center" prop="id" />
-      <el-table-column label="单据号" align="center" prop="code" />
-      <el-table-column label="类型" align="center" prop="type" />
-      <el-table-column label="调出仓库ID" align="center" prop="warehouseId" />
-      <el-table-column label="状态" align="center" prop="auditStatus" />
-      <el-table-column label="特别说明" align="center" prop="remark" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="操作" align="center" min-width="120px">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['wms:exchange:update']"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['wms:exchange:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!~~ 分页 ~~>
-    <Pagination
-      :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
-  </ContentWrap>
--->
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable

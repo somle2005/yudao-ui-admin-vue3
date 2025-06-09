@@ -1,4 +1,4 @@
-import { FirstMileApi } from '@/api/tms/first-mile'
+import { ExchangeApi } from '@/api/wms/exchange'
 
 export const useBatch = (selectionList, getList, openForm) => {
   const message = useMessage() // 消息弹窗
@@ -8,8 +8,13 @@ export const useBatch = (selectionList, getList, openForm) => {
       await message.exportConfirm('是否确认提交审核？')
 
       const ids: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
+      const arr = ids.map((item: any) => {
+        return {
+          billId: item
+        }
+      })
 
-      await FirstMileApi.submitFirstMileAudit(ids)
+      await ExchangeApi.submitExchangeAudit(arr)
       message.success('提交审核成功')
       // 刷新列表
       await getList()
@@ -32,18 +37,18 @@ export const useBatch = (selectionList, getList, openForm) => {
       return
     }
     try {
-      // 审核的二次确认
-      await message.confirm(`确定反审核该申请吗？`)
-      // 发起审核
-      await FirstMileApi.auditFirstMileStatus({
-        reviewed, // 反审核false
-        pass: true, // 反审核无意义
-        requestId: id
-        // auditAdvice: data.auditAdvice 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
-      })
-      message.success('反审核成功')
+      // // 审核的二次确认
+      // await message.confirm(`确定反审核该申请吗？`)
+      // // 发起审核
+      // await FirstMileApi.auditFirstMileStatus({
+      //   reviewed, // 反审核false
+      //   pass: true, // 反审核无意义
+      //   requestId: id
+      //   // auditAdvice: data.auditAdvice 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
+      // })
+      // message.success('反审核成功')
       // 刷新列表
-      await getList()
+      // await getList()
     } catch {}
   }
 
