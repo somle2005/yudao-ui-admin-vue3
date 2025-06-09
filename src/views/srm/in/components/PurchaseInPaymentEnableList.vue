@@ -297,7 +297,6 @@ const getList = async () => {
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
     list.value = mergeItemsUpToList(data.list, 'items', {
-      code: 'code',
       productName: 'productName',
       productCode: 'productCode',
       containerRate: 'containerRate',

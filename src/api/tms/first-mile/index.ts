@@ -127,8 +127,8 @@ export const FirstMileApi = {
   },
 
   // 头程申请单 审核/反审核
-  auditFirstMileStatus: async (params: FirstMileAuditVO) => {
-    return await request.put({ url: `/tms/first-mile-request/audit-status`, params })
+  auditFirstMileStatus: async (data: FirstMileAuditVO) => {
+    return await request.put({ url: `/tms/first-mile-request/audit-status`, data })
   },
 
   // 批量查询产品库存信息 批量查询库存公司

@@ -109,8 +109,8 @@ export const FirstMileRequestApi = {
   },
 
   // 头程申请单 审核/反审核
-  auditFirstMileRequestStatus: async (params: FirstMileRequestAuditVO) => {
-    return await request.put({ url: `/tms/first-mile-request/audit-status`, params })
+  auditFirstMileRequestStatus: async (data: FirstMileRequestAuditVO) => {
+    return await request.put({ url: `/tms/first-mile-request/audit-status`, data })
   },
   // 头程申请单 合并头程申请单
   mergeFirstMileRequest: async (data: any) => {
