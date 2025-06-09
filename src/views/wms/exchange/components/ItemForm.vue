@@ -103,7 +103,7 @@ const productList = getProductList()
 const warehouseBinList = getWarehouseBinList()
 
 const props = defineProps({
-  defectiveList: {
+  items: {
     // type: Array as PropType<PurchaseInItemVO[]>,
     type: Array,
     default: () => {
@@ -133,7 +133,7 @@ const formRef = ref() // 表单 Ref
 
 /** 初始化设置入库项 */
 watch(
-  () => props.defectiveList,
+  () => props.items,
   async (val) => {
     formData.value = val
   },

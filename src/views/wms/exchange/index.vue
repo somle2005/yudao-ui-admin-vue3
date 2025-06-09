@@ -31,7 +31,6 @@
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
 
-
         <!-- wms:exchange:submit-audit  -->
 
         <el-button
@@ -78,7 +77,7 @@
       @pagination="getList"
       @selection-change="handleSelectionChange"
     >
-      <template #default="scope">
+      <template #operate="{ scope }">
         <el-button
           link
           @click="openForm('detail', scope.row.id)"
@@ -206,7 +205,6 @@ const selectionList = ref<any[]>([])
 const handleSelectionChange = (rows: any[]) => {
   selectionList.value = rows
 }
-
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 

@@ -15,7 +15,7 @@
           <el-tab-pane label="换货清单" name="itemForm">
             <ItemForm
               ref="itemFormRef"
-              :items="formData.defectiveList"
+              :items="formData.itemList"
               :formType="formType"
               :disabled="itemsFormdisabled"
             />
@@ -66,7 +66,7 @@ const initFormData = () => {
     warehouseId: undefined,
     auditStatus: undefined,
     remark: undefined,
-    defectiveList: []
+    itemList: []
   }
 }
 const formData = ref(initFormData())
@@ -96,6 +96,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await ExchangeApi.getExchange(id)
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }

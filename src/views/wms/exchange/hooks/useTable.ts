@@ -31,7 +31,8 @@ export const useTable = () => {
 
     type: {
       label: '类型',
-      slot: 'atype',
+      width: '150px',
+      slot: 'type',
       dictAttrs: { type: DICT_TYPE.WMS_EXCHANGE_TYPE }
     },
 
