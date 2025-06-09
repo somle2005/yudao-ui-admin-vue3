@@ -272,8 +272,7 @@ const addItem = (selectionList: any[]) => {
         itemsId, //list记得转化
         productId,
         productName,
-        // productCode,
-        code,
+        productCode,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         // model, // //列表要转化取item-product里面数据
@@ -313,7 +312,7 @@ const addItem = (selectionList: any[]) => {
         [itemIdKey]: itemsId, //list记得转化
         productId,
         productName,
-        // productCode,
+        productCode,
         code,
         productUnitName, //列表要转化取item-product里面数据
         productUnitId, // 列表要转化取item-product里面数据

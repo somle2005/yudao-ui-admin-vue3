@@ -19,7 +19,7 @@
           width="80"
           align="center"
         />
-        <el-table-column prop="code" label="产品编码" width="180" align="center" />
+        <el-table-column prop="productCode" label="产品编码" width="180" align="center" />
         <el-table-column prop="productName" label="产品名称" width="180" align="center" />
         <el-table-column prop="declaredType" label="海关品名" width="180" align="center" />
         <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
@@ -176,7 +176,6 @@ const formRules = reactive({
 const formRef = ref([]) // 表单 Ref
 // const defaultWarehouse = ref<WarehouseVO>(undefined) // 默认仓库
 const productList = getProductList() // 产品列表
-const warehouseList = getWarehouseList()
 // const { deptList, defaultProps } = getDeptTree()
 // const userList = getUserList()
 

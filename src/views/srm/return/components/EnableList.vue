@@ -144,14 +144,14 @@ const handleCurrentChange = (row: any) => {
   selectionList.value = mergeItemsUpToList([row], 'items', {
     productId: 'productId',
     productName: 'productName',
-    // productCode,
-    code: 'code',
+    // code: 'code',
+    productCode: 'productCode',
     productUnitId: 'productUnitId',
     productUnitName: 'productUnitName',
     productPrice: 'productPrice',
     qty: 'qty', // 计划的数量
     actualQty: 'actualQty', //实际入库的数量
-    code: 'arriveCode', // 适配采购退货详情接口
+    arriveCode: 'arriveCode', // 适配采购退货详情接口
 
     taxRate: 'taxRate',
     taxPrice: 'taxPrice',
