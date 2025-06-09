@@ -15,6 +15,7 @@ import topLevelAwait from 'vite-plugin-top-level-await'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import UnoCSS from 'unocss/vite'
+import mkcert from 'vite-plugin-mkcert'
 
 export function createVitePlugins() {
   const root = process.cwd()
@@ -24,7 +25,9 @@ export function createVitePlugins() {
     return resolve(root, '.', dir)
   }
 
-  return [
+  const addSSh = process.env.NODE_ENV === 'development' && ['test','prod'].includes(process.env.npm_lifecycle_event!)
+
+  const list = [
     Vue(),
     VueJsx(),
     UnoCSS(),
@@ -97,4 +100,10 @@ export function createVitePlugins() {
       promiseImportName: (i) => `__tla_${i}`
     })
   ]
+
+  if(addSSh) {
+    list.unshift(mkcert())
+  }
+ 
+  return list
 }

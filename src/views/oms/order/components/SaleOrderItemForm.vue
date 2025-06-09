@@ -30,13 +30,13 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="库存" min-width="100">
-        <template #default="{ row }">
-          <el-form-item class="mb-0px!">
-            <el-input disabled v-model="row.stockCount" :formatter="erpCountInputFormatter" />
-          </el-form-item>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="库存" min-width="100">-->
+<!--        <template #default="{ row }">-->
+<!--          <el-form-item class="mb-0px!">-->
+<!--            <el-input disabled v-model="row.stockCount" :formatter="erpCountInputFormatter" />-->
+<!--          </el-form-item>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="条码" min-width="150">
         <template #default="{ row }">
           <el-form-item class="mb-0px!">
@@ -51,7 +51,20 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="数量" prop="count" fixed="right" min-width="140">
+<!--      <el-table-column label="数量" prop="count" fixed="right" min-width="140">-->
+<!--        <template #default="{ row, $index }">-->
+<!--          <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">-->
+<!--            <el-input-number-->
+<!--              v-model="row.count"-->
+<!--              controls-position="right"-->
+<!--              :min="0.001"-->
+<!--              :precision="3"-->
+<!--              class="!w-100%"-->
+<!--            />-->
+<!--          </el-form-item>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="数量" prop="qty" fixed="right" min-width="140">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.count`" :rules="formRules.count" class="mb-0px!">
             <el-input-number

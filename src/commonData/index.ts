@@ -10,6 +10,7 @@ import { getSimpleUserList, UserVO } from '@/api/system/user'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/company'
+import { ShopApi } from '@/api/oms/shop'
 import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
 import { CustomProductApi } from '@/api/tms/custom-product'
 import { notEmpty } from '@/utils/judge'
@@ -143,7 +144,8 @@ function getSelectItemList(list: Array<any>, key: string) {
   return arr.filter((item) => item.label)
 }
 // 搜索产品名称的数据
-export const getProductNameList = () => {
+export const getProductNameList = (data?: { dataList: any[]; sortList: string[] }) => {
+  const { dataList = [], sortList = [] } = data || {}
   const productMap = {
     productNameList: ref<ProductVOSelectItem[]>([]), // 产品列表
     productSkuList: ref<ProductVOSelectItem[]>([]), // 产品sku列表
@@ -151,7 +153,7 @@ export const getProductNameList = () => {
     productBrandList: ref<ProductVOSelectItem[]>([]) // 产品品牌列表
   }
 
-  const tempList = [
+  let tempList = [
     {
       productMapKey: 'productNameList',
       key: 'name'
@@ -169,10 +171,29 @@ export const getProductNameList = () => {
       key: 'brand'
     }
   ]
+
+  // 如果有排序字段就删除tempList中不需要的字段
+  if (sortList?.length) {
+    const list = tempList.filter((item) => sortList.includes(item.productMapKey))
+    const arr: any = []
+    // 排序tempList
+    sortList.forEach((item) => {
+      const target = list.find((i) => i.productMapKey === item)
+      if (target) {
+        arr.push(target)
+      }
+    })
+    tempList = arr
+  }
+  console.log('tempList', tempList)
+
   ProductApi.getProductSimpleList().then((res) => {
-    tempList.forEach((item) => {
+    tempList.forEach((item, index) => {
       const arr = getSelectItemList(cloneDeep(res), item.key)
       productMap[item.productMapKey].value = arr
+      if (dataList?.length) {
+        dataList[index].value = arr
+      }
     })
   })
   return productMap
@@ -210,6 +231,32 @@ export const getCustomRuleCategoryList = (data?: any) => {
   return customRuleCategoryList
 }
 
+// 获得店铺清单列表
+export const getShopList = (data?: any) => {
+  const shopList = ref<any[]>([]) // 用户列表
+  ShopApi.getShopList().then((res: any) => {
+    const map = {}
+    const arr: any = []
+    // 去重account
+    res.map((item) => {
+      const account = item.name
+      if (account && !map[account]) {
+        map[account] = 1
+        arr.push(item)
+      }
+    })
+    // 使用acount模糊搜索
+    shopList.value = arr.map((item) => {
+      item.label = item.name
+      item.value = item.name
+      return item
+    })
+    if (data) {
+      data.value = shopList.value
+    }
+  })
+  return shopList
+}
 // 获取财务主体列表
 export const getFinanceSubjectList = (data?: any) => {
   const financeSubjectList = ref<FinanceSubjectVO[]>([]) // 账户列表

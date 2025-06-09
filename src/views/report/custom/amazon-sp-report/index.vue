@@ -6,15 +6,17 @@
       seamless
       frameBorder="0"
       scrolling="no"
-      src="http://192.168.10.199:8088/superset/dashboard/p/0wYQZPlE5Og/?hiddenDashboards=1"
+      :src="toUrl('https://superset.somle.com:55015/superset/dashboard/25a8b2aa-0761-487e-8ff6-21c3a7e66c97/?permalink_key=zjnB1gJm6po&hiddenDashboards=1')"
     >
     </iframe>
   </div>
 </template>
 <script setup lang="ts">
 import { createMapStyle } from '../utils'
+import { toUrl } from '@/views/report/custom/utils';
 
 const mapStyle = createMapStyle('亚马逊sp广告')
+// https://superset.somle.com:55015/superset/dashboard/p/0wYQZPlE5Og/?hiddenDashboards=1 
 </script>
 
 <style lang="scss" scoped></style>

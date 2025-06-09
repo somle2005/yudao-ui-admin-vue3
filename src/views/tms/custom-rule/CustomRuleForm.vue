@@ -38,6 +38,7 @@
           :multiple-limit="multipleLimit"
           placeholder="请选择国家编码"
           clearable
+          filterable
           class="!w-240px"
         >
           <el-option

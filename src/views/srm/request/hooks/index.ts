@@ -254,7 +254,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       {
         type: 'input',
         label: '收货地址',
-        prop: 'deliveryDelivery',
+        prop: 'delivery',
         placeholder: '请输入收货地址',
         attrs: {
           style: { width: '100%' },

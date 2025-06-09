@@ -225,7 +225,11 @@ export enum DICT_TYPE {
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
+  ERP_SHOP_TYPE = 'erp_shop_type', // EPR店铺状态
+  ERP_PRODUCT_LISTING_STATUS = 'erp_product_listing_status', // 商品上下架状态
   REPORT_MAP = 'report_map', // 报表地图
+  ERP_SALES_PLATFORM = 'erp_sales_platform', // 销售平台
+  
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
