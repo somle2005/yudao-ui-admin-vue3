@@ -201,9 +201,9 @@ const handleAdd = () => {
 /** 初始化 */
 onMounted(async () => {
   // 默认添加一个
-  if (formData.value.length === 0) {
-    handleAdd()
-  }
+  // if (formData.value.length === 0) {
+  //   handleAdd()
+  // }
 })
 
 /** 表单校验 */
