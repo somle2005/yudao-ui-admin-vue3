@@ -733,7 +733,7 @@ const addItem = (selectionList) => {
         taxPrice,
         warehouseId,
         expectArrivalDate,
-        code,
+        // code,
         applicantId,
         applicationDeptId,
         applicant,

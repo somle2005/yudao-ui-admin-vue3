@@ -269,7 +269,7 @@ const getList = async () => {
     //   inboundStatus: 'itemsInboundStatus',
     //   payStatus: 'itemsPayStatus',
     //   totalPrice: 'itemsTotalPrice',
-    //   code: 'itemsCode',
+    //   code: 'itemsProductCode',
     //   qty: 'itemsQty'
     // })
 

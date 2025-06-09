@@ -79,7 +79,7 @@
                       'id',
                       {
                         productName: 'name',
-                        code: 'code',
+                        productCode: 'code',
                         productUnitName: 'unitName',
                         productUnitId: 'unitId'
                       },

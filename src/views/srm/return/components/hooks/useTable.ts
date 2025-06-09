@@ -32,7 +32,7 @@ export const useTable = () => {
     },
 
     // items-product带出barCode 产品编码 name
-    itemsCode: {
+    itemsProductCode: {
       label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },

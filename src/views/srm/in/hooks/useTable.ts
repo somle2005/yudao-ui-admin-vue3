@@ -130,7 +130,7 @@ export const useTable = () => {
 
     // 产品编码	产品名称	仓库	数量	实际数量	订单数量	箱率	单价	含税单价	税额	价税合计	申请部门	创建人	创建日期	审核人	审核日期
 
-    itemsCode: {
+    itemsProductCode: {
       label: '产品编码',
       width: '160px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -282,7 +282,7 @@ export const useTable = () => {
     allWrap: true,
     noComputePropList: [
       'code',
-      'itemsCode',
+      'itemsProductCode',
       'supplierName',
       'warehouseName',
       'totalPrice',

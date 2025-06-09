@@ -156,7 +156,7 @@ const fieldMap = {
 
   // 8:  '入库核销状态',
 
-  itemsCode: {
+  itemsProductCode: {
     label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -262,7 +262,7 @@ const fieldMap = {
 const showList = [
   'code',
   'supplierName',
-  'itemsCode',
+  'itemsProductCode',
   'itemsWaitInCount',
   'itemsQty',
   'itemsInCount',
@@ -299,6 +299,7 @@ const getList = async () => {
     list.value = mergeItemsUpToList(data.list, 'items', {
       code: 'code',
       productName: 'productName',
+      productCode: 'productCode',
       containerRate: 'containerRate',
       deliveryDate: 'deliveryDate',
       qty: 'qty',

@@ -268,7 +268,7 @@ const fieldMap = {
   //   label: '产品编码',
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
-  itemsCode: {
+  itemsProductCode: {
     label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
