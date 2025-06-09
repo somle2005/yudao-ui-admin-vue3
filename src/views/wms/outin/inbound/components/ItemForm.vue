@@ -30,13 +30,13 @@
                   (val) =>
                     updateModelValue(val, row, productList, 'id', {
                       productName: 'name',
-                      barCode: 'barCode',
+                      code: 'code',
                       productUnitName: 'unitName',
                       productUnitId: 'unitId'
                     })
                 "
                 :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
+                :keyMap="{ label: 'code', value: 'id' }"
               />
             </el-form-item>
           </template>

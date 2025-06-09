@@ -108,7 +108,7 @@ import { getCodeType, getCodeValue, getOperateNo } from '@/views/wms/common/util
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
-  productBarCode: {
+  productCode: {
     label: '产品编码',
      width: '160px',
   },
@@ -207,7 +207,7 @@ tableOptions.value = transformTableOptions(fieldMap, {
   // allWrap: true,
   noComputePropList: [
     'warehouseName',
-    'productBarCode',
+    'productCode',
     'productName',
     'updateTime',
     'createTime',
@@ -259,7 +259,7 @@ const getList = async () => {
       { prop: 'warehouse', keyList: ['name'] },
       // { prop: 'bin', keyList: ['name'] },
       // { prop: 'zone', keyList: ['name'] },
-      { prop: 'product', keyList: ['name', 'barCode'] },
+      { prop: 'product', keyList: ['name', 'code'] },
       { prop: 'inbound', keyList: ['code'] },
       // { prop: 'outbound', keyList: ['code'] },
       // { prop: 'pickup', keyList: ['code'] },
