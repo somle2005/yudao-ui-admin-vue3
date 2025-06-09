@@ -292,9 +292,9 @@ defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 const receiveDeal = (data) => {
   // 入库数量设置成和计划入库量一致
-  data.itemList.forEach((item) => {
-    item.actualQty = item.planQty
-  })
+  // data.itemList.forEach((item) => {
+  //   item.actualQty = item.planQty
+  // })
   const queryData = data.itemList.map((item) =>
     filterObjKey(item, ['actualQty', 'id', 'inboundId'])
   )
