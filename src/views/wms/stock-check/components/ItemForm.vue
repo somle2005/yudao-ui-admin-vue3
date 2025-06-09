@@ -45,7 +45,7 @@
               :rules="formRules.actualQty"
               class="mb-0px!"
             >
-              <SmNumber :disabled="otherDisabled" v-model="row.expectedQty" />
+              <SmNumber :disabled="otherDisabled" v-model="row.actualQty" />
               <!-- <SmNumber :disabled="otherDisabled" :max="row.expectedQty" v-model="row.actualQty" /> -->
             </el-form-item>
           </template>
