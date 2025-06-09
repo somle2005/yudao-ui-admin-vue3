@@ -56,7 +56,7 @@ export const useTable = () => {
 
     // 已订购数	销售公司	逻辑库存	采购在途数	包装长宽高	毛重	体积
 
-    itemsBarCode: {
+    itemsCode: {
       label: '产品编码',
       width: '150px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -131,7 +131,7 @@ export const useTable = () => {
   }
   const allOptions = transformTableOptions(fieldMap, {
     wrapList: ['code'],
-    noComputePropList: ['code', 'auditStatus', 'orderStatus', 'offStatus', 'itemsBarCode']
+    noComputePropList: ['code', 'auditStatus', 'orderStatus', 'offStatus', 'itemsCode']
   })
 
   tableOptions.value = createBranchOrder(cloneDeep(allOptions))

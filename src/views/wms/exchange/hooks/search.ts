@@ -55,9 +55,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      placeholder: '请选择入库单类型',
+      placeholder: '请选择类型',
       prop: 'type',
-      label: '入库单类型',
+      label: '类型',
       attrs: {
         filterable: true,
         clearable: true,

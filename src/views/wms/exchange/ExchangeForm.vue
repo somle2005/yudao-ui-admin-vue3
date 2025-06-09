@@ -1,32 +1,16 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form
+    <SmForm
+      class="-mb-15px"
       ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
+      isCol
+      label-width="150px"
+      v-model="formData"
       v-loading="formLoading"
-    >
-      <el-form-item label="单据号" prop="code">
-        <el-input v-model="formData.code" placeholder="请输入单据号" />
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <el-select v-model="formData.type" placeholder="请选择类型">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="调出仓库ID" prop="warehouseId">
-        <el-input v-model="formData.warehouseId" placeholder="请输入调出仓库ID" />
-      </el-form-item>
-      <el-form-item label="状态" prop="auditStatus">
-        <el-radio-group v-model="formData.auditStatus">
-          <el-radio value="1">请选择字典生成</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="特别说明" prop="remark">
-        <el-input v-model="formData.remark" placeholder="请输入特别说明" />
-      </el-form-item>
-    </el-form>
+      :options="requestFormOptions"
+      :getModelValue="getFormData"
+    />
+
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -35,6 +19,8 @@
 </template>
 <script setup lang="ts">
 import { ExchangeApi, ExchangeVO } from '@/api/wms/exchange'
+import { getWMSWarehouseList } from '@/commonData/wms'
+import { getIntDictOptions } from '@/utils/dict'
 
 /** 换货单 表单 */
 defineOptions({ name: 'ExchangeForm' })
@@ -46,21 +32,99 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
-  id: undefined,
-  code: undefined,
-  type: undefined,
-  warehouseId: undefined,
-  auditStatus: undefined,
-  remark: undefined,
-})
+const initFormData = () => {
+  return {
+    id: undefined,
+    code: undefined,
+    type: undefined,
+    warehouseId: undefined,
+    auditStatus: undefined,
+    remark: undefined
+  }
+}
+const formData = ref(initFormData())
 const formRules = reactive({
   code: [{ required: true, message: '单据号不能为空', trigger: 'blur' }],
   type: [{ required: true, message: '类型不能为空', trigger: 'change' }],
   warehouseId: [{ required: true, message: '调出仓库ID不能为空', trigger: 'blur' }],
-  auditStatus: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
+  auditStatus: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
+const WMSWarehouseList = ref([])
+
+const createRequestFormOptions = () => {
+  const list = [
+    {
+      type: 'input',
+      label: '单据号',
+      prop: 'code',
+      placeholder: '请输入单据号',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+
+    {
+      type: 'select',
+      placeholder: '请选择类型',
+      prop: 'type',
+      label: '类型',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
+    },
+    {
+      type: 'select',
+      placeholder: '请选择状态',
+      prop: 'auditStatus',
+      label: '状态',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_AUDIT_STATUS)
+    },
+
+    {
+      type: 'select',
+      label: '调出仓库',
+      prop: 'toWarehouseId',
+      placeholder: '请选择调出仓库',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
+    },
+    {
+      type: 'input',
+      label: '备注',
+      prop: 'remark',
+      placeholder: '请输入备注',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    }
+  ]
+
+  return list
+}
+
+const requestFormOptions: any = ref(createRequestFormOptions())
+const getFormData = () => {
+  return formData.value
+}
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -68,6 +132,7 @@ const open = async (type: string, id?: number) => {
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
+  getWMSWarehouseList(WMSWarehouseList)
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -106,14 +171,7 @@ const submitForm = async () => {
 
 /** 重置表单 */
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    code: undefined,
-    type: undefined,
-    warehouseId: undefined,
-    auditStatus: undefined,
-    remark: undefined,
-  }
+  formData.value = initFormData()
   formRef.value?.resetFields()
 }
 </script>

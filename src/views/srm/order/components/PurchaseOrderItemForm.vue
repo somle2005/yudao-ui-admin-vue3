@@ -61,7 +61,7 @@
                 <el-option
                   v-for="item in productList"
                   :key="item.id"
-                  :label="item.barCode"
+                  :label="item.code"
                   :value="item.id"
                 />
               </el-select> -->
@@ -79,7 +79,7 @@
                       'id',
                       {
                         productName: 'name',
-                        barCode: 'barCode',
+                        code: 'code',
                         productUnitName: 'unitName',
                         productUnitId: 'unitId'
                       },
@@ -87,7 +87,7 @@
                     )
                 "
                 :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
+                :keyMap="{ label: 'code', value: 'id' }"
               />
             </el-form-item>
           </template>

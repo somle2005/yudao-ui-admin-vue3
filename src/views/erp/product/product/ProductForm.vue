@@ -56,8 +56,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="SKU" prop="barCode">
-            <el-input v-model="formData.barCode" placeholder="请输入SKU" />
+          <el-form-item label="SKU" prop="code">
+            <el-input v-model="formData.code" placeholder="请输入SKU" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -413,7 +413,7 @@ const initFormData = () => {
     categoryId: undefined,
     remark: undefined,
     deptId: undefined,
-    barCode: undefined,
+    code: undefined,
     unitId: undefined,
     material: undefined,
     status: undefined,
@@ -473,7 +473,7 @@ const formRules = reactive({
   width: [{ required: true, message: '基础宽度（mm）不能为空', trigger: 'blur' }],
   length: [{ required: true, message: '基础长度（mm）不能为空', trigger: 'blur' }],
   height: [{ required: true, message: '基础高度（mm）不能为空', trigger: 'blur' }],
-  barCode: [{ required: true, trigger: 'blur', validator: barCodeValidator }],
+  code: [{ required: true, trigger: 'blur', validator: barCodeValidator }],
   color: [{ required: true, message: '颜色不能为空', trigger: 'blur' }],
   primaryImageUrl: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
 
@@ -604,7 +604,7 @@ const resetForm = () => {
   //   categoryId: undefined,
   //   remark: undefined,
   //   deptId: undefined,
-  //   barCode: undefined,
+  //   code: undefined,
   //   unitId: undefined,
   //   material: undefined,
   //   status: undefined,

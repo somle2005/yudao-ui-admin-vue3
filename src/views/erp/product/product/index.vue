@@ -27,7 +27,7 @@
       </el-form-item>
       <el-form-item label="SKU" prop="code">
         <el-select
-          v-model="queryParams.barCode"
+          v-model="queryParams.code"
           clearable
           filterable
           placeholder="请选择SKU"
@@ -260,7 +260,7 @@ let queryParams = reactive({
   remark: undefined,
   createTime: [],
   deptId: undefined,
-  barCode: undefined,
+  code: undefined,
   unitId: undefined,
   material: undefined,
   status: undefined,
@@ -351,11 +351,11 @@ const fieldMap = {
     fixed: 'left',
     slot: 'primaryImageUrl'
   },
-  barCode: {
+  code: {
     label: 'SKU',
     fixed: 'left',
     width: '180px',
-    slot: 'barCode',
+    slot: 'code',
     wrap: true
   },
   name: {
@@ -432,7 +432,7 @@ const moreDialog = ref(false)
 const excludeFields = [
   'name',
   'code',
-  'barCode',
+  'code',
   'categoryName',
   'brand',
   'series',

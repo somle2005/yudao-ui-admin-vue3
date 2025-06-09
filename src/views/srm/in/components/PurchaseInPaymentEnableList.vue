@@ -156,7 +156,7 @@ const fieldMap = {
 
   // 8:  '入库核销状态',
 
-  itemsBarCode: {
+  itemsCode: {
     label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -262,7 +262,7 @@ const fieldMap = {
 const showList = [
   'code',
   'supplierName',
-  'itemsBarCode',
+  'itemsCode',
   'itemsWaitInCount',
   'itemsQty',
   'itemsInCount',
@@ -272,7 +272,7 @@ const showList = [
 const branchOptions = transformTableOptions(fieldMap).filter((item: any) =>
   showList.includes(item.prop)
 )
-const wrapList = ['code', 'supplierName', 'barCode', 'auditAdvice', 'productName', 'remark']
+const wrapList = ['code', 'supplierName', 'code', 'auditAdvice', 'productName', 'remark']
 branchOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
     item.slot = item.prop
@@ -297,7 +297,7 @@ const getList = async () => {
   try {
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
     list.value = mergeItemsUpToList(data.list, 'items', {
-      barCode: 'barCode',
+      code: 'code',
       productName: 'productName',
       containerRate: 'containerRate',
       deliveryDate: 'deliveryDate',
@@ -330,7 +330,7 @@ const getList = async () => {
     //   item.items.forEach((a) => {
     //     if (a.product) {
     //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
+    //       a.productCode = a.product.code
     //       a.model = a.product.model
     //       a.productUnitName = a.product.unitName
     //       a.productUnitId = a.product.unitId

@@ -46,7 +46,7 @@ const paramsList = [
   { prop: 'declaredType', name: '产品报关品名' },
   { prop: 'declaredTypeEn', name: '产品报关品名英文' },
 
-  { prop: 'barCode', name: '产品sku' }, //必填注意一下
+  { prop: 'code', name: '产品sku' }, //必填注意一下
   { prop: 'productName', name: '产品名称' },
   { prop: 'fbaCode', name: 'x编码' },
   { prop: 'containerRate', name: '箱率' },
@@ -60,7 +60,7 @@ const itemsList = [
   'orderItemId',
   'productId',
   'productName',
-  'barCode',
+  'code',
   'productUnitId',
   'productUnitName',
   'model',
@@ -200,7 +200,7 @@ const createData = {
       orderItemId: 5,
       productId: 6,
       productName: 'RS2600滤芯复合滤芯（PP+ACF）',
-      barCode: 'RS-CF-RS2600',
+      code: 'RS-CF-RS2600',
       productUnitId: 1,
       productUnitName: '个',
       model: null,
@@ -228,7 +228,7 @@ const createData = {
       orderItemId: 6,
       productId: 6,
       productName: 'RS2600滤芯复合滤芯（PP+ACF）',
-      barCode: 'RS-CF-RS2600',
+      code: 'RS-CF-RS2600',
       productUnitId: 1,
       productUnitName: '个',
       model: null,

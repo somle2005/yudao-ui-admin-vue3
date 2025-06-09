@@ -25,9 +25,9 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="产品编码" prop="barCode">
+      <el-form-item label="产品编码" prop="code">
         <!-- <el-select
-          v-model.trim="queryParams.barCode"
+          v-model.trim="queryParams.code"
           clearable
           filterable
           placeholder="请选择产品编码"
@@ -53,7 +53,7 @@
           <el-option
             v-for="item in productList"
             :key="item.id"
-            :label="item.barCode"
+            :label="item.code"
             :value="item.id"
           />
         </el-select>
@@ -235,7 +235,7 @@ const fieldMap = {
     slot: 'primaryImageUrl',
     width: '100px'
   },
-  'product-barCode': {
+  'product-code': {
     label: '产品编码',
     width: '180px'
   },
@@ -297,7 +297,7 @@ const queryParams = reactive({
   declaredValueCurrencyCode: undefined,
   taxRate: undefined,
   logisticAttribute: undefined,
-  barCode: undefined,
+  code: undefined,
   hscode: undefined,
   createTime: [] as string[],
   fbaBarCode: undefined,
@@ -314,7 +314,7 @@ const getList = async () => {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
     list.value = data.list.map((item: any) => {
       item['product-name'] = item.product.name
-      item['product-barCode'] = item.product.barCode
+      item['product-code'] = item.product.code
       item.primaryImageUrl = item.product.primaryImageUrl
       item.material = item.product.material
       return item

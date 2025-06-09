@@ -65,7 +65,7 @@ export const useApplicantTable = () => {
     },
     itemsProductBarCode: {
       label: '产品编码',
-      slot: 'productBarCode',
+      slot: 'productCode',
       width: '200px',
       wrap: true
     },

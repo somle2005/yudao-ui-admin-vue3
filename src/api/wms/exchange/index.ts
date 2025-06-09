@@ -13,8 +13,8 @@ export interface ExchangeVO {
 // 换货单 API
 export const ExchangeApi = {
   // 查询换货单分页
-  getExchangePage: async (params: any) => {
-    return await request.get({ url: `/wms/exchange/page`, params })
+  getExchangePage: async (data: any) => {
+    return await request.post({ url: `/wms/exchange/page`, data })
   },
 
   // 查询换货单详情

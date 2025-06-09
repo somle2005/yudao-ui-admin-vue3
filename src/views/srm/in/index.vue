@@ -248,7 +248,7 @@ const getList = async () => {
     //   item.items.forEach((a) => {
     //     if (a.product) {
     //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
+    //       a.productCode = a.product.code
     //     }
 
     //     // item.itemApplicantName = item.applicantName
@@ -269,7 +269,7 @@ const getList = async () => {
     //   inboundStatus: 'itemsInboundStatus',
     //   payStatus: 'itemsPayStatus',
     //   totalPrice: 'itemsTotalPrice',
-    //   barCode: 'itemsBarCode',
+    //   code: 'itemsCode',
     //   qty: 'itemsQty'
     // })
 
@@ -283,7 +283,7 @@ const getList = async () => {
     //   inboundStatus: 'rowInStatus',
     //   payStatus: 'rowPayStatus',
     //   totalPrice: 'itemTotalPrice',
-    //   barCode: 'rowBarCode',
+    //   code: 'rowBarCode',
     //   qty: 'itemQty'
     // })
   } finally {

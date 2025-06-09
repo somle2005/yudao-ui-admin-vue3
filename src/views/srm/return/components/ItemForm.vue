@@ -19,7 +19,7 @@
           width="80"
           align="center"
         />
-        <el-table-column prop="barCode" label="产品编码" width="180" align="center" />
+        <el-table-column prop="code" label="产品编码" width="180" align="center" />
         <el-table-column prop="productName" label="产品名称" width="180" align="center" />
         <el-table-column prop="declaredType" label="海关品名" width="180" align="center" />
         <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
@@ -267,7 +267,7 @@ const handleAdd = () => {
     orderItemId: undefined, //list记得转化
     productId: undefined,
     productName: undefined,
-    productBarCode: undefined,
+    productCode: undefined,
     productUnitName: undefined, //列表要转化取item-product里面数据
     productUnitId: undefined, // 列表要转化取item-product里面数据
     model: undefined, // //列表要转化取item-product里面数据

@@ -12,7 +12,7 @@ export const useSearchForm = (handleQuery) => {
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()
   // const supplierProductList = getSupplierProductList()
-  const productList = getProductList(null, { label: 'barCode', value: 'id' })
+  const productList = getProductList(null, { label: 'code', value: 'id' })
   const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
@@ -191,9 +191,9 @@ export const useSearchForm = (handleQuery) => {
     //       const productItem = productList1.value.find((item: any) => item.value === value)
     //       if (productItem) {
     //         const formData = getFormData()
-    //         formData.barCode = productItem.barCode
+    //         formData.code = productItem.code
     //         // const modelVal = smFormRef.value.getFormData()
-    //         // modelVal.barCode = productItem.barCode
+    //         // modelVal.code = productItem.code
     //       }
     //     }
     //   },

@@ -130,7 +130,7 @@ export const useTable = () => {
 
     // 产品编码	产品名称	仓库	数量	实际数量	订单数量	箱率	单价	含税单价	税额	价税合计	申请部门	创建人	创建日期	审核人	审核日期
 
-    itemsBarCode: {
+    itemsCode: {
       label: '产品编码',
       width: '160px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
@@ -230,7 +230,7 @@ export const useTable = () => {
     // },
 
     // items-product带出barCode 产品编码 name
-    // productBarCode: {
+    // productCode: {
 
     // reconciliationStatus: {
     //   label: '对账状态',
@@ -282,7 +282,7 @@ export const useTable = () => {
     allWrap: true,
     noComputePropList: [
       'code',
-      'itemsBarCode',
+      'itemsCode',
       'supplierName',
       'warehouseName',
       'totalPrice',
@@ -294,7 +294,7 @@ export const useTable = () => {
   // const wrapList = [
   //   'code',
   //   'supplierName',
-  //   'productBarCode',
+  //   'productCode',
   //   'auditAdvice',
   //   'productName',
   //   'remark',

@@ -6,7 +6,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 export const useSearchForm = (handleQuery, queryParams) => {
   // const userList = getUserList()
   // const accountList = getAccountList()
-  const productList = getProductList(null, { label: 'barCode', value: 'id' })
+  const productList = getProductList(null, { label: 'code', value: 'id' })
   const WMSWarehouseList = getWMSWarehouseList()
   const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
