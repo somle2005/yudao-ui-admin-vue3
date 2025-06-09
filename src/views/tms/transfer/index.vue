@@ -133,6 +133,7 @@ import { useSearchForm } from './hooks/search'
 import { useTable } from './hooks/useTable'
 import { getMainItemBodyDataField } from '@/utils/transform'
 import { useBatch } from './hooks/useBatch'
+import { getItemPropList } from '@/components/SmTable/src/utils'
 
 let { tableOptions } = useTable()
 
@@ -196,7 +197,11 @@ const getList = async () => {
 
     const data = await TransferApi.getTransferPage(bodyData)
     // const data = await TransferApi.getTransferPage(queryParams)
-    list.value = data.list
+    list.value = getItemPropList(data.list, [
+      { prop: 'fromWarehouse', keyList: ['name'] },
+      { prop: 'toWarehouse', keyList: ['name'] }
+    ]) as any
+
     total.value = data.total
   } finally {
     loading.value = false
