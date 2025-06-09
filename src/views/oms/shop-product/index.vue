@@ -144,6 +144,7 @@ const fieldMap = {
   },
   price: '售价',
   currencyCode: '币种',
+  externalId: '外部ID',
   createTime: {
     label: '创建时间',
     formatter: dateFormatter,
