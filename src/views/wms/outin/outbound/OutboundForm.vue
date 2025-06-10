@@ -22,10 +22,10 @@
         > -->
         <el-button
           type="primary"
-          @click="openAddProductItem(warehouseId)"
+          @click="openAddProductItem(formData.warehouseId!)"
           style="margin-bottom: 10px"
           v-hasPermi="['wms:stock-bin:query']"
-          :disabled="!warehouseId"
+          :disabled="!formData.warehouseId"
           v-if="!itemsFormdisabled"
           >选择产品</el-button
         >
@@ -57,14 +57,14 @@
           不同意</el-button
         >
 
-        <el-button
+        <!-- <el-button
           v-hasPermi="['wms:outbound:agree']"
           type="primary"
           :disabled="formLoading"
           @click="submitFormDB(AUDIT_TYPE.agree)"
         >
           同意</el-button
-        >
+        > -->
 
         <el-button
           v-hasPermi="['wms:outbound:agree']"
@@ -95,8 +95,11 @@ import { distinctList } from '@/utils/transformData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { AUDIT_TYPE } from '@/utils/constant'
-import { OPERATE_MAP } from './constant'
+// import { OPERATE_MAP } from './constant'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 import { OutboundItemApi } from '@/api/wms/outbound-item'
+import { addComment } from '../../common/utils'
+import { InfoKeyOpenFormData } from './hooks/injectKeys'
 
 const { addProductItemRef, openAddProductItem } = useOutProductdata()
 
@@ -118,16 +121,18 @@ const initFormData = () => {
     type: undefined,
     status: undefined,
     auditStatus: undefined,
-    upstreamBillId: undefined,
-    upstreamBillCode: undefined,
-    upstreamBillType: undefined,
-    creatorComment: undefined,
+    upstreamId: undefined,
+    upstreamCode: undefined,
+    upstreamType: undefined,
+    remark: undefined,
     itemList: [] as any[]
   }
 }
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 const WMSWarehouseList: any = ref([])
+
+provide(InfoKeyOpenFormData, formData)
 
 const itemsFormdisabled = computed(() =>
   ['detail', OPERATE_MAP.finish, 'audit'].includes(formType.value)
@@ -137,7 +142,6 @@ const auditType = computed(() => formType.value === 'audit')
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
-const warehouseId = ref()
 
 const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
@@ -154,31 +158,29 @@ const createRequestFormOptions = () => {
         style: {
           width: '100%'
         },
-        onChange: (val: any) => {
-          warehouseId.value = val
-        }
+        onChange: (val: any) => {}
       },
       children: WMSWarehouseList
     },
-    {
-      requiredFlag: true,
-      type: 'select',
-      placeholder: '请选择出库类型',
-      prop: 'type',
-      label: '出库类型',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE)
-    },
+    // {
+    //   requiredFlag: true,
+    //   type: 'select',
+    //   placeholder: '请选择出库类型',
+    //   prop: 'type',
+    //   label: '出库类型',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE).slice(0,3)
+    // },
     {
       type: 'input',
       label: '特别说明',
-      prop: 'creatorComment',
+      prop: 'remark',
       placeholder: '请输入特别说明',
       attrs: {
         style: { width: '100%' },
@@ -188,8 +190,8 @@ const createRequestFormOptions = () => {
 
     {
       type: 'input',
-      label: '源单编码',
-      prop: 'creatorComment',
+      label: '上游单据编码',
+      prop: 'upstreamCode',
       attrs: {
         disabled: true,
         style: { width: '100%' },
@@ -211,7 +213,7 @@ const createRequestFormOptions = () => {
     },
     {
       type: 'select',
-      prop: 'outbountStatus',
+      prop: 'outboundStatus',
       label: '出库状态',
       attrs: {
         disabled: true,
@@ -226,27 +228,28 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '操作人',
-      prop: 'operator',
+      prop: 'updaterName',
       attrs: {
         disabled: true,
         style: { width: '100%' },
         clearable: true
       }
     },
-    { 
+    {
       type: 'date-picker',
-      prop: 'operatorTime',
+      prop: 'updateTime',
       label: '操作时间',
       attrs: {
         disabled: true,
         clearable: true,
         'value-format': 'x',
+        format: 'YYYY-MM-DD HH:mm:ss',
         style: {
           width: '100%'
         }
       }
     },
-    { 
+    {
       type: 'date-picker',
       prop: 'outboundTime',
       label: '出库时间',
@@ -296,9 +299,14 @@ const detailOptions = (formOptions) => {
   return formOptions
 }
 
+const abandonFormOptions = (formOptions) => {
+  addDisabled(formOptions)
+  addComment(formOptions)
+  return formOptions
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
-  warehouseId.value = null
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
@@ -322,6 +330,10 @@ const open = async (type: string, id?: number) => {
     [OPERATE_MAP.finish]: () => {
       dialogTitle.value = '完成'
       requestFormOptions.value = auditFormOptions(createRequestFormOptions())
+    },
+    [OPERATE_MAP.abandon]: () => {
+      dialogTitle.value = OPERATE_MAP.abandon
+      requestFormOptions.value = abandonFormOptions(createRequestFormOptions())
     }
   }
   formTypeOperate[type]()
@@ -347,10 +359,17 @@ const emit = defineEmits(['success']) // 定义 success 事件，用于操作成
 const submitForm = async (type?: string) => {
   // 校验表单
   await formRef.value.validate()
+  await itemFormRef.value.validate()
   // 提交请求
   formLoading.value = true
   try {
     const data = formData.value as unknown as OutboundVO as any
+
+    // 新增编辑-同意出库的时候 入库数量设置成和计划入库量一致
+    data.itemList.forEach((item) => {
+      item.actualQty = item.planQty
+    })
+
     if (formType.value === 'create') {
       await OutboundApi.createOutbound(data)
       message.success(t('common.createSuccess'))
@@ -359,21 +378,22 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
       if (type === AUDIT_TYPE.agree) {
-        // 同意审核的时候 实际入库量设置成和计划入库量一致
-        data.itemList.forEach((item) => {
-          item.actualQty = item.planQty
-        })
         await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
       } else if (type === AUDIT_TYPE.reject) {
         await OutboundApi.rejectOutboundAuditStatus({ billId: data.id, comment: data.comment })
       } else if (type === AUDIT_TYPE.agreeOutbound) {
         //  ['actualQty', 'id', 'outboundId'])
-        await OutboundItemApi.updateOutboundItemActualQty(data)
         await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
+        await OutboundItemApi.updateOutboundItemActualQty(data)
       }
       message.success(t('common.updateSuccess'))
-    } else if (formType.value === OPERATE_MAP.finish) {
-      await OutboundApi.finishOutbound({ billId: data.id, comment: data.comment })
+    }
+    // else if (formType.value === OPERATE_MAP.finish) {
+    //   await OutboundApi.finishOutbound({ billId: data.id, comment: data.comment })
+    //   message.success(t('common.updateSuccess'))
+    // }
+    else if (formType.value === OPERATE_MAP.abandon) {
+      await OutboundApi.abandonOutbound({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     }
 
@@ -406,10 +426,10 @@ const addProductItem = (selectionList: any[]) => {
         "warehouseId":32,
         "companyId":50001,
         "deptId":50012,
-        "upstreamBillId":1,
-        "upstreamBillCode":"1",
-        "upstreamBillType":1,
-        "creatorComment":"1",
+        "upstreamId":1,
+        "upstreamCode":"1",
+        "upstreamType":1,
+        "remark":"1",
         "itemList":[
           {
           "productId":"159",
@@ -427,7 +447,7 @@ const addProductItem = (selectionList: any[]) => {
       const {
         id,
         productId,
-        productBarCode,
+        productCode,
         binId,
         binName,
         sellableQty, // 批次剩余库存
@@ -436,7 +456,8 @@ const addProductItem = (selectionList: any[]) => {
         availableQty,
         // defectiveQty,
         outboundPlanQty,
-        suggestedOwnership
+        suggestedOwnership,
+        bin
       } = item
 
       let deptId = undefined
@@ -449,7 +470,7 @@ const addProductItem = (selectionList: any[]) => {
       const obj = {
         [itemIdKey]: id,
         productId,
-        productBarCode,
+        productCode,
         binId,
         binName,
         planQty: sellableQty,
@@ -459,7 +480,8 @@ const addProductItem = (selectionList: any[]) => {
         deptId,
         availableQty,
         // defectiveQty,
-        outboundPlanQty
+        outboundPlanQty,
+        stockType: bin?.zone?.stockType
       }
       return obj
     })

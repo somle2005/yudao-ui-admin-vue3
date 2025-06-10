@@ -32,7 +32,7 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isMerge(selectionList)"
           type="primary"
           plain
           @click="mergePurchase"
@@ -43,7 +43,7 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -123,12 +123,12 @@
         <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.offStatus || ''" />
       </template>
 
-      <template #rowOrderStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.SRM_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
+      <template #itemsOrderStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.SRM_ORDER_STATUS" :value="scope.row.itemsOrderStatus || ''" />
       </template>
 
-      <template #rowOffStatus="{ scope }">
-        <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+      <template #itemsOffStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.itemsOffStatus || ''" />
       </template>
 
       <template #operate="{ scope }">
@@ -140,12 +140,13 @@
           详情
         </el-button>
 
+        <!-- v-if="scope.row.auditStatus !== 5" -->
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-request:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
@@ -192,7 +193,7 @@ import download from '@/utils/download'
 import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/srm/request'
 import PurchaseRequestForm from './PurchaseRequestForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { mergeItemsToList } from '@/utils/transformData'
+import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { cloneDeep } from 'lodash-es'
 import {
@@ -200,21 +201,27 @@ import {
   useWholeOrderMergeCompute,
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
+import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
+import { notEmpty } from '@/utils/judge'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
 const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 
 const fieldMap = {
+  purchaseOrderId: {
+    label: '行编号',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
   billTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '180px'
   },
-  no: {
-    label: '单据编号',
+  code: {
+    label: '单据编码',
     width: '200px',
-    slot: 'no',
+    slot: 'code',
     wrap: true
   },
   applicant: '申请人',
@@ -239,74 +246,92 @@ const fieldMap = {
     slot: 'offStatus',
     width: '120px'
   },
-  unOrderCount: {
+  itemsUnOrderCount: {
     label: '未订购数量',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   }, // 批准数量➖已订购数量后端计算返回
-  orderClosedQty: {
-    label:'已订购数量',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+  itemsOrderClosedQty: {
+    label: '已订购数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
   // inQty: '已入库数量',
-  inboundClosedQty: '已入库数量',
+  itemsInboundClosedQty: {
+    label: '已入库数量',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
   // 改造别名
-  rowOrderStatus: {
+  itemsOrderStatus: {
     label: '行采购状态',
-    slot: 'rowOrderStatus',
+    slot: 'itemsOrderStatus',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   // 改造别名
-  rowOffStatus: {
+  itemsOffStatus: {
     label: '行关闭状态',
-    slot: 'rowOffStatus',
+    slot: 'itemsOffStatus',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  productBarCode: {
-    label: 'SKU',
-    slot: 'productBarCode',
+  itemsProductBarCode: {
+    label: '产品编码',
+    slot: 'productCode',
     width: '200px',
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  productName: {
+  itemsProductName: {
     label: '产品名称',
     slot: 'productName',
     width: '200px',
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  declaredType: {
+  itemsDeclaredType: {
     label: '海关品名',
     slot: 'declaredType',
     width: '200px',
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  declaredTypeEn: {
+  itemsDeclaredTypeEn: {
     label: '海关品名(英文)',
     slot: 'declaredTypeEn',
     width: '200px',
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  productUnitName: '单位',
-  qty: {
+  itemsProductUnitName: {
+    label: '单位',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  itemsQty: {
     label: '申请数量',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
-  approvedQty: {
+  itemsApprovedQty: {
     label: '批准数量',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
-  referenceUnitPrice: '参考单价',
-  actTaxPrice: '含税单价',
-  taxPrice: {
+  itemsReferenceUnitPrice: {
+    label: '参考单价',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  itemsActTaxPrice: {
+    label: '含税单价',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  itemsTaxPrice: {
     label: '税额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
-  allAmount: {
+  itemsGrossTotalPrice: {
     label: '价税合计',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
   },
 
   creator: '制单人',
@@ -315,10 +340,10 @@ const fieldMap = {
     formatter: dateFormatter,
     width: '180px'
   },
-  reviewComment: {
+  auditAdvice: {
     label: '审核意见',
     width: '200px',
-    slot: 'reviewComment',
+    slot: 'auditAdvice',
     wrap: true
   },
   auditor: '审核人',
@@ -360,7 +385,7 @@ const wholeOrderTotal = ref(0) // 整单总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   // supplierId: undefined,
   productId: undefined,
   billTime: [],
@@ -368,7 +393,7 @@ const queryParams = reactive({
   remark: undefined,
   applicant: undefined,
   creator: undefined,
-  inStatus: undefined,
+  inboundStatus: undefined,
   returnStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
@@ -399,12 +424,13 @@ const getList = async () => {
   try {
     const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+    itemsList.value = mergeItemsUpToList(data.list, 'items', { id: 'purchaseOrderId' })
 
-    itemsList.value = mergeItemsToList(data.list, {
-      id: 'purchaseOrderId',
-      orderStatus: 'rowOrderStatus',
-      offStatus: 'rowOffStatus'
-    })
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'purchaseOrderId',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus'
+    // })
     // 后续需要补充itemsTotal
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
@@ -471,38 +497,12 @@ const handleUpdateStatus = async (row: any, reviewed: boolean) => {
       pass: true,
       items: items.map((item) => {
         return {
-          id: item.id,
+          id: item.id
           // pass: item.approvedQty
         }
       })
     })
     message.success('反审核成功')
-    // 刷新列表
-    await getList()
-  } catch {}
-}
-
-/** 关闭/启用申请单 */
-const handleUpdateStatusEnable = async (row: any, enable: boolean) => {
-  /**
-    手动关闭 3
-    已关闭 2
-    开启 1
-   */
-  try {
-    let itemIds: any = []
-    const { items = [], purchaseOrderId } = row
-    if (wholeOrderEnable.value) {
-      itemIds = items.map((item) => item.id)
-    } else {
-      itemIds = [purchaseOrderId]
-    }
-
-    // 开启的二次确认
-    await message.confirm(`确定${enable ? '开启' : '关闭'}该申请吗？`)
-    // 发起开启
-    await PurchaseRequestApi.updatePurchaseRequestStatusEnable({ itemIds, enable })
-    message.success(`${enable ? '开启' : '关闭'}成功`)
     // 刷新列表
     await getList()
   } catch {}
@@ -558,6 +558,9 @@ const mergePurchase = async () => {
       a.applicationDeptId = applicationDeptId
       // 默认下单数量=未订购数量
       a.orderQuantity = a.unOrderCount
+      if (!notEmpty(a.containerRate)) {
+        a.containerRate = 1
+      }
     })
   })
 
@@ -585,30 +588,7 @@ const mergePurchase = async () => {
   // mergeLoading.value = false
 }
 
-const mergePurchaseOne = async (item: any) => {
-  try {
-    await message.exportConfirm('是否确认采购申请单？')
-    await PurchaseRequestApi.mergePurchaseRequestOne({ requestId: item.id })
-    message.success('合并成功')
-    // 刷新列表
-    await getList()
-  } catch (e) {
-    console.log('单个合并报错', e)
-  }
-}
-
-const handleSubmitAudit = async (ids: number[]) => {
-  try {
-    await message.exportConfirm('是否确认提交审核？')
-    await PurchaseRequestApi.submitPurchaseAudit(ids)
-    message.success('提交审核成功')
-    // 刷新列表
-    await getList()
-  } catch (e) {
-    console.log('提交审核报错', e)
-  }
-}
-
+/** 关闭/启用申请单 */
 const handleSubmitAuditBatch = async () => {
   try {
     await message.exportConfirm('是否确认提交审核？')
@@ -625,6 +605,11 @@ const handleSubmitAuditBatch = async () => {
 }
 
 const handleUpdateStatusEnableBatch = async (enable: boolean) => {
+  /**
+    手动关闭 3
+    已关闭 2
+    开启 1
+   */
   // 前端无法穷尽所有情况，所以取后端校验作为告警信息
   try {
     const text = enable ? '开启' : '关闭'
@@ -645,7 +630,7 @@ const handleUpdateStatusEnableBatch = async (enable: boolean) => {
 //   if (wholeOrderEnable.value) {
 //     return selectionList.value.every((item: any) => item.offStatus * 1 === 1)
 //   } else {
-//     return selectionList.value.every((item: any) => item.rowOffStatus * 1 === 1)
+//     return selectionList.value.every((item: any) => item.itemsOffStatus * 1 === 1)
 //   }
 // })
 
@@ -654,7 +639,7 @@ const handleUpdateStatusEnableBatch = async (enable: boolean) => {
 //   if (wholeOrderEnable.value) {
 //     return selectionList.value.every((item: any) => item.offStatus * 1 !== 1)
 //   } else {
-//     return selectionList.value.every((item: any) => item.rowOffStatus * 1 !== 1)
+//     return selectionList.value.every((item: any) => item.itemsOffStatus * 1 !== 1)
 //   }
 // })
 

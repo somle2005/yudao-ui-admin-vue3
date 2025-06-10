@@ -1,7 +1,9 @@
-import { getAccountList } from '@/commonData'
+import { getAccountList, getSupplierList } from '@/commonData'
+import { addDisabled } from '@/components/SmForm/src/utils'
 
 export const useForm = (formType) => {
   const accountList = ref<any[]>([]) // 账户列表
+  const supplierList = ref([])
 
   const auditType = computed(() => formType.value === 'audit')
   const itemsFormdisabled = computed(
@@ -9,21 +11,36 @@ export const useForm = (formType) => {
   )
 
   /**
-   * 必填项 单据编号(后端生成)-单据日期-供应商-币别-汇率-单位-数量-含税单价
+   * 必填项 单据编码(后端生成)-单据日期-供应商-币别-汇率-单位-数量-含税单价
    * 这里只有单据日期-供应商是必填项其余都是非必填项 - 其余都在items里面作为必填项了
    */
   const createRequestFormOptions = () => {
     const list = [
       {
         type: 'input',
-        label: '单据编号',
-        prop: 'no',
+        label: '单据编码',
+        prop: 'code',
         placeholder: '保存时自动生成',
         attrs: {
           style: { width: '100%' },
           clearable: true,
           disabled: true
         }
+      },
+
+      {
+        type: 'select',
+        placeholder: '请选择供应商',
+        prop: 'supplierId',
+        label: '供应商',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: supplierList
       },
 
       {
@@ -66,78 +83,78 @@ export const useForm = (formType) => {
         }
       },
 
-      {
-        type: 'input-number',
-        placeholder: '请输入优惠率',
-        prop: 'discountPercent',
-        label: '优惠率%',
-        attrs: {
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input-number',
-        prop: 'discountPrice',
-        label: '付款优惠',
-        attrs: {
-          disabled: true,
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input-number',
-        prop: 'totalPrice',
-        label: '优惠后金额',
-        attrs: {
-          disabled: true,
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'input-number',
-        prop: 'otherPrice',
-        label: '其他金额',
-        attrs: {
-          'controls-position': 'right',
-          min: 0,
-          precision: 2,
-          style: {
-            width: '100%'
-          }
-        }
-      },
-      {
-        type: 'select',
-        placeholder: '请选择结算账户',
-        prop: 'accountId',
-        label: '结算账户',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: accountList
-      }
+      // {
+      //   type: 'input-number',
+      //   placeholder: '请输入优惠率',
+      //   prop: 'discountPercent',
+      //   label: '优惠率%',
+      //   attrs: {
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'input-number',
+      //   prop: 'discountPrice',
+      //   label: '付款优惠',
+      //   attrs: {
+      //     disabled: true,
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'input-number',
+      //   prop: 'totalPrice',
+      //   label: '优惠后金额',
+      //   attrs: {
+      //     disabled: true,
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'input-number',
+      //   prop: 'otherPrice',
+      //   label: '其他金额',
+      //   attrs: {
+      //     'controls-position': 'right',
+      //     min: 0,
+      //     precision: 2,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   }
+      // },
+      // {
+      //   type: 'select',
+      //   placeholder: '请选择结算账户',
+      //   prop: 'accountId',
+      //   label: '结算账户',
+      //   attrs: {
+      //     filterable: true,
+      //     clearable: true,
+      //     style: {
+      //       width: '100%'
+      //     }
+      //   },
+      //   children: accountList
+      // }
     ]
 
-    const requireList = ['returnTime']
+    const requireList = ['returnTime','supplierId']
     requireList.forEach((prop) => {
       const target = list.find((item) => item.prop === prop) as any
       if (!target) return
@@ -158,7 +175,7 @@ export const useForm = (formType) => {
     const obj: any = {
       type: 'input',
       label: '审核意见',
-      prop: 'reviewComment',
+      prop: 'auditAdvice',
       placeholder: '请输入审核意见',
       colConfig: { span: 24 },
       attrs: {
@@ -168,7 +185,7 @@ export const useForm = (formType) => {
     }
     formOptions.splice(index, 0, obj)
     formOptions.forEach((item) => {
-      if (item.prop && item.prop !== 'reviewComment') {
+      if (item.prop && item.prop !== 'auditAdvice') {
         if (item.attrs) {
           item.attrs!.disabled = auditType
         } else {
@@ -186,7 +203,7 @@ export const useForm = (formType) => {
     const obj: any = {
       type: 'input',
       label: '审核意见',
-      prop: 'reviewComment',
+      prop: 'auditAdvice',
       colConfig: { span: 24 },
       attrs: {
         style: { width: '100%' },
@@ -198,10 +215,15 @@ export const useForm = (formType) => {
     return formOptions
   }
 
+  const detailFormOptions = (formOptions) => {
+    addDisabled(formOptions)
+    return formOptions
+  }
+
   const operateAudit = (type) => {
     const map = {
       detail: () => {
-        // requestFormOptions.value = createDetailFormOptions(createRequestFormOptions())
+        requestFormOptions.value = detailFormOptions(createRequestFormOptions())
       },
       create: () => {
         requestFormOptions.value = createRequestFormOptions()
@@ -221,6 +243,7 @@ export const useForm = (formType) => {
   }
 
   const initDialogData = () => {
+    getSupplierList(supplierList)
     getAccountList(accountList)
   }
 

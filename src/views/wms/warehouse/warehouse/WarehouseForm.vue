@@ -50,7 +50,7 @@ const initFormData = () => {
     name: undefined,
     externalStorageId: undefined,
     externalStorageCode: undefined,
-    companyName: undefined,
+    addressLine3: undefined,
     country: undefined,
     province: undefined,
     city: undefined,
@@ -124,13 +124,13 @@ const createRequestFormOptions = () => {
   /**
    排序根据语雀文档-排列-和label显示
    * 1、仓库代码 code-1
-2、仓库名称 name-1
+2、仓库 name-1
 3、状态 status ValidStatus-1
 4、仓库属性 mode -1-注意切换逻辑
 
 5、external_storage-三方海外仓-选择-暂时无
 6、三方仓代码 external_storage_code-暂时无
-7、公司名称 companyName-1
+7、详细地址3 addressLine3-1
 8、国家编码 country-1
 9、省/州 province-1
 10、城市 city-1
@@ -201,9 +201,9 @@ const createRequestFormOptions = () => {
     {
       requiredFlag: true,
       type: 'input',
-      label: '仓库名称',
+      label: '仓库',
       prop: 'name',
-      placeholder: '请输入仓库名称',
+      placeholder: '请输入仓库',
       attrs: {
         style: { width: '100%' },
         clearable: true
@@ -225,9 +225,9 @@ const createRequestFormOptions = () => {
     },
     {
       type: 'input',
-      label: '公司名称',
-      prop: 'companyName',
-      placeholder: '请输入公司名称',
+      label: '详细地址3',
+      prop: 'addressLine3',
+      placeholder: '请输入详细地址3',
       attrs: {
         style: { width: '100%' },
         clearable: true

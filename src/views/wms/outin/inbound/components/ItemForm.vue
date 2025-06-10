@@ -15,7 +15,7 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="250">
+        <el-table-column label="产品编码" width="250" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -23,26 +23,26 @@
               class="mb-0px!"
             >
               <SmSelect
-                :disabled="auditDisabled"
+                :disabled="auditDisabled || disabled"
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 @change="
                   (val) =>
                     updateModelValue(val, row, productList, 'id', {
                       productName: 'name',
-                      barCode: 'barCode',
+                      code: 'code',
                       productUnitName: 'unitName',
                       productUnitId: 'unitId'
                     })
                 "
                 :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
+                :keyMap="{ label: 'code', value: 'id' }"
               />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="数量" width="120">
+        <el-table-column label="数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" :rules="formRules.planQty" class="mb-0px!">
               <!-- <el-input-number
@@ -57,7 +57,7 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column v-if="auditShow" label="实际入库量" width="120">
+        <!-- <el-table-column v-if="auditShow" label="入库数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number
@@ -70,7 +70,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="库存归属" width="250">
+        <el-table-column label="库存归属" width="250" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
@@ -89,7 +89,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" width="120">
+        <el-table-column label="备注" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input v-model="row.remark" placeholder="请输入备注" type="textarea" />
@@ -97,7 +97,7 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column v-if="updateShow" label="实际入库量" width="120">
+        <!-- <el-table-column v-if="updateShow" label="入库数量" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
               <el-input-number

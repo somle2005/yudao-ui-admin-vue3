@@ -32,9 +32,24 @@
       <template #operate="{ scope }">
         <el-button
           link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['wms:inbound:query']"
+        >
+          详情
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['wms:inbound:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
           type="primary"
           @click="openForm(OPERATE_MAP['update-actual-quantity'], scope.row.id)"
-          v-hasPermi="['wms:inbound-item:update']"
+          v-if="hasAllPermission(['wms:inbound-item:update', 'wms:inbound:agree'])"
         >
           收货
         </el-button>
@@ -43,6 +58,7 @@
           type="warning"
           @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
           v-hasPermi="['wms:inbound:abandon']"
+          v-if="isAbandon(scope.row.auditStatus)"
         >
           作废
         </el-button>
@@ -75,27 +91,42 @@ import download from '@/utils/download'
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
-import { OPERATE_MAP } from './constant'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 import OpenForm from './OpenForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
+import { isAbandon } from '../common/utils'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
 
 const fieldMap = {
   code: '入库单号',
-  warehouseName: '仓库名称',
+  upstreamCode: '上游单据编号',
+  warehouseName: '仓库',
 
-  type: {
+  upstreamType: {
+    // label: '上游单据类型',
     label: '入库单类型',
-    slot: 'type',
+    width: '160px',
+    slot: 'upstreamType',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
   },
+
+  // type: {
+  //   label: '入库单类型',
+  //   slot: 'type',
+  //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_TYPE }
+  // },
   auditStatus: {
-    label: '状态',
+    label: '审核状态',
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
+  },
+  inboundStatus: {
+    label: '入库状态',
+    slot: 'inboundStatus',
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
   },
   shippingMethod: {
     label: '运输方式',
@@ -109,7 +140,7 @@ const fieldMap = {
   // },
 
   arrivalPlanTime: {
-    label: '预计到货时间',
+    label: '计划到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },
@@ -118,7 +149,7 @@ const fieldMap = {
     formatter: dateFormatter2,
     width: '200px'
   },
-  creatorComment: '特别说明',
+  remark: '备注',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -135,7 +166,7 @@ const fieldMap = {
     label: '操作',
     slot: 'operate',
     fixed: 'right',
-    width: '300px'
+    width: '320px'
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
@@ -156,15 +187,15 @@ const queryParams = reactive({
   type: undefined,
   warehouseId: undefined,
   auditStatus: 1, // 待审批
-  upstreamBillId: undefined,
-  upstreamBillCode: undefined,
-  upstreamBillType: undefined,
+  upstreamId: undefined,
+  upstreamCode: undefined,
+  upstreamType: undefined,
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,
-  arrivalPlanTime: [],
-  arrivalActualTime: [],
-  creatorComment: undefined,
+  // arrivalPlanTime: [],
+  // arrivalActualTime: [],
+  remark: undefined,
   initAge: undefined,
   createTime: []
 })
@@ -218,7 +249,6 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-
 onActivated(() => {
   const routeQuery = window.getRouteQuery && window.getRouteQuery()
   if (routeQuery?.no) {
@@ -228,5 +258,4 @@ onActivated(() => {
   }
   getList()
 })
-
 </script>

@@ -35,14 +35,14 @@
       </el-form-item>
       <el-form-item label="SKU" prop="code">
         <!-- <el-input
-          v-model="queryParams.barCode"
+          v-model="queryParams.code"
           placeholder="请输入SKU"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         /> -->
         <el-select
-          v-model="queryParams.barCode"
+          v-model="queryParams.code"
           clearable
           filterable
           placeholder="请选择SKU"
@@ -198,7 +198,7 @@
         fixed="left"
         label="SKU"
         align="center"
-        prop="barCode"
+        prop="code"
         :min-width="columnMinWidth"
       />
       <el-table-column label="产品名称" align="center" prop="name" />
@@ -380,7 +380,7 @@ let queryParams = reactive({
   remark: undefined,
   createTime: [],
   deptId: undefined,
-  barCode: undefined,
+  code: undefined,
   unitId: undefined,
   material: undefined,
   status: undefined,
@@ -471,11 +471,11 @@ const fieldMap = {
     fixed: 'left',
     slot: 'primaryImageUrl'
   },
-  barCode: {
+  code: {
     label: 'SKU',
     fixed: 'left',
     width: '180px',
-    slot: 'barCode',
+    slot: 'code',
     wrap: true
   },
   name: {
@@ -562,7 +562,7 @@ const moreDialog = ref(false)
 const excludeFields = [
   'name',
   'code',
-  'barCode',
+  'code',
   'categoryName',
   'brand',
   'series',

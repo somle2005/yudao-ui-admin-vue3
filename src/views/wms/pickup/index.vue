@@ -82,11 +82,12 @@ import PickupForm from './PickupForm.vue'
 import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 
+
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   code: '单据编号',
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -107,7 +108,7 @@ const fieldMap = {
   }
 }
 tableOptions.value = transformTableOptions(fieldMap, {
-  noWidth: true,
+  // noWidth: true,
   wrapList: ['code', 'warehouseName']
 })
 

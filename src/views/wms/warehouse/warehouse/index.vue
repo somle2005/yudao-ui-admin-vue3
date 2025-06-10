@@ -85,7 +85,7 @@ const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
   code: '仓库代码',
-  name: '仓库名称',
+  name: '仓库',
   mode: {
     label: '仓库属性',
     slot: 'mode',
@@ -96,7 +96,7 @@ const fieldMap = {
     slot: 'status',
     dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
   },
-  companyName: '公司名称',
+  addressLine3: '详细地址3',
   country: '国家编码',
   province: '省/州',
   city: '城市',
@@ -151,7 +151,7 @@ const queryParams = reactive({
   name: undefined,
   externalStorageId: undefined,
   externalStorageCode: undefined,
-  companyName: undefined,
+  addressLine3: undefined,
   country: undefined,
   province: undefined,
   city: undefined,

@@ -13,6 +13,15 @@
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:stock-bin:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -65,16 +74,15 @@ import { useTableData } from '@/components/SmTable/src/utils'
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 
 const fieldMap = {
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   zoneName: '库区名称',
-  binName: '库位名称',
-  productBarCode: '产品编码',
+  binName: '库位',
+  productCode: '产品编码',
   productName: '产品名称',
 
-
-  availableQty: '可用量',
-  outboundPendingQty: '待出库量',
-  sellableQty: '可售量',
+  availableQty: '可用数',
+  outboundPendingQty: '待出库数',
+  sellableQty: '可售数',
 
   updateTime: {
     label: '更新时间',
@@ -95,10 +103,13 @@ const fieldMap = {
   //   width: '200px'
   // }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  noComputePropList: ['warehouseName', 'productName', 'productCode']
+})
 
 /** 仓位库存 列表 */
-defineOptions({ name: 'WmsStockBin' })
+defineOptions({ name: 'WmsLogicStockFlow' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
@@ -125,7 +136,10 @@ const getList = async () => {
   loading.value = true
   try {
     const data = await StockBinApi.getStockBinPage(queryParams)
-    list.value = getItemProp(data.list, ['product', 'bin', 'warehouse','zone'])
+    list.value = getItemProp(data.list, ['product', 'bin', 'warehouse']).map((item) => {
+      item.zoneName = item?.bin?.zone?.name
+      return item
+    })
     total.value = data.total
   } finally {
     loading.value = false
@@ -171,7 +185,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await StockBinApi.exportStockBin(queryParams)
-    download.excel(data, '仓位库存.xls')
+    download.excel(data, '仓位.xls')
   } catch {
   } finally {
     exportLoading.value = false

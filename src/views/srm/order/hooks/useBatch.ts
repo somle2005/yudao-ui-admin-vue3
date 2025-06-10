@@ -1,4 +1,5 @@
 import { PurchaseOrderApi } from '@/api/srm/order'
+import { isSubmitAuditBatch } from '@/utils/btnManager/srm'
 
 export const useBatch = (selectionList, getList, wholeOrderEnable) => {
   const message = useMessage() // 消息弹窗
@@ -16,7 +17,7 @@ export const useBatch = (selectionList, getList, wholeOrderEnable) => {
       })
     } else {
       ids = selectionList.value.map((item: any) => {
-        return { id: item.rowItemsId }
+        return { id: item.itemsId }
       })
     }
     return ids
@@ -44,7 +45,6 @@ export const useBatch = (selectionList, getList, wholeOrderEnable) => {
 
       // 整单和分行都统一做去重处理 都是取申请单id
       const orderIds: any = Array.from(new Set(selectionList.value.map((item) => item.id)))
-
       await PurchaseOrderApi.submitPurchaseOrderAudit({ orderIds })
       message.success('提交审核成功')
       // 刷新列表

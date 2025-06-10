@@ -1,81 +1,16 @@
 <template>
   <ContentWrap>
     <!-- 搜索工作栏 -->
-    <el-form
+    <SmForm
       class="-mb-15px"
-      :model="queryParams"
       ref="queryFormRef"
       :inline="true"
-      label-width="120px"
+      label-width="110px"
+      v-model="queryParams"
+      :options="searchFormOptions"
+      :getModelValue="getSearchFormData"
     >
-      <el-form-item label="供应商产品编码" prop="code">
-        <el-input
-          v-model="queryParams.code"
-          placeholder="请输入供应商产品编码"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="供应商" prop="supplierId">
-        <el-select
-          v-model="queryParams.supplierId"
-          clearable
-          filterable
-          placeholder="请选择供供应商"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in supplierList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="产品" prop="productId">
-        <el-select
-          v-model="queryParams.productId"
-          clearable
-          filterable
-          placeholder="请选择产品"
-          class="!w-240px"
-        >
-          <el-option
-            v-for="item in productList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="采购货币代码" prop="purchasePriceCurrencyCode">
-        <el-select
-          v-model="queryParams.purchasePriceCurrencyCode"
-          placeholder="请选择采购货币代码"
-          clearable
-          class="!w-240px"
-        >
-          <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.CURRENCY_CODE)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker
-          v-model="queryParams.createTime"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-          class="!w-220px"
-        />
-      </el-form-item>
-      <el-form-item>
+      <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
         <el-button
@@ -95,66 +30,41 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-      </el-form-item>
-    </el-form>
+      </template>
+    </SmForm>
   </ContentWrap>
 
   <!-- 列表 -->
-  <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true">
-      <el-table-column
-        label="供应商产品编码"
-        align="center"
-        prop="code"
-        :min-width="columnMinWidth"
-      />
-      <el-table-column label="供应商" align="center" prop="supplierName" />
-      <el-table-column label="产品" align="center" prop="productName" />
-      <el-table-column label="包装高度" align="center" prop="packageHeight" />
-      <el-table-column label="包装长度" align="center" prop="packageLength" />
-      <el-table-column label="包装重量" align="center" prop="packageWeight" />
-      <el-table-column label="包装宽度" align="center" prop="packageWidth" />
-      <el-table-column label="采购价格" align="center" prop="purchasePrice" />
-      <el-table-column label="采购货币代码" align="center" prop="purchasePriceCurrencyCode">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.CURRENCY_CODE" :value="scope.row.purchasePriceCurrencyCode" />
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="操作" align="center" min-width="120px">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['srm:supplier-product:update']"
-          >
-            编辑
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['srm:supplier-product:delete']"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 分页 -->
-    <Pagination
+  <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
+    <SmTable
+      border
+      :loading="loading"
+      :options="tableOptions"
+      :data="list"
       :total="total"
-      v-model:page="queryParams.pageNo"
-      v-model:limit="queryParams.pageSize"
+      v-model:currentPage="queryParams.pageNo"
+      v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
-    />
+    >
+      <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          @click="openForm('update', scope.row.id)"
+          v-hasPermi="['srm:supplier-product:update']"
+        >
+          编辑
+        </el-button>
+        <el-button
+          link
+          type="danger"
+          @click="handleDelete(scope.row.id)"
+          v-hasPermi="['srm:supplier-product:delete']"
+        >
+          删除
+        </el-button>
+      </template>
+    </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
@@ -166,11 +76,12 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
 import SupplierProductForm from './SupplierProductForm.vue'
-import { ProductApi, ProductVO } from '@/api/erp/product/product'
-import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
 import { computeColumnMinWidth } from '@/utils/computeGeometry'
+import { useSearchForm } from './hooks/search'
+import { useTable } from './hooks/useTable'
+
 
 /** Srm 供应商产品 列表 */
 defineOptions({ name: 'SrmSupplierProduct' })
@@ -197,9 +108,6 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
-const productList = ref<ProductVO[]>([]) // 产品列表
-const supplierList = ref<SupplierVO[]>([]) // 供应商列表
-// const userList = ref<UserVO[]>([]) // 用户列表
 
 /** 查询列表 */
 const getList = async () => {
@@ -260,12 +168,12 @@ const handleExport = async () => {
 }
 
 const columnMinWidth = computeColumnMinWidth(list, 'code')
+
+const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+let { tableOptions } = useTable(columnMinWidth)
+
 /** 初始化 **/
 onMounted(async () => {
   await getList()
-  // 加载产品、仓库列表、供应商
-  productList.value = await ProductApi.getProductSimpleList()
-  supplierList.value = await SupplierApi.getSupplierSimpleList()
-  // userList.value = await UserApi.getSimpleUserList()
 })
 </script>

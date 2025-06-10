@@ -1,13 +1,23 @@
 <template>
   <!-- @keyup.enter="handleQuery"    class="!w-240px" -->
-  <el-select v-model="bindVal" clearable filterable :placeholder="placeholder" v-bind="$attrs">
-    <el-option
-      v-for="item in selectList"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    />
-  </el-select>
+  <div class="contents">
+    <el-select
+      v-if="!disabled"
+      v-model="bindVal"
+      clearable
+      filterable
+      :placeholder="placeholder"
+      v-bind="$attrs"
+    >
+      <el-option
+        v-for="item in selectList"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      />
+    </el-select>
+    <div v-else class="text">{{ bindMap[bindVal] }}</div>
+  </div>
 </template>
 <script setup lang="ts">
 import { cloneDeep } from 'lodash-es'
@@ -55,6 +65,17 @@ const props = defineProps({
   idKey: {
     type: String,
     default: 'id'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  // 支持将配置参数带入-因为有部分keyMap已经存在props所以无法通过v-bind带入
+  attrs: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 
   // // 是否在加载中
@@ -68,12 +89,29 @@ const emits = defineEmits(['update:modelValue'])
 
 const bindVal = ref()
 const selectList: any = ref([])
+const bindMap = ref({})
 
 const emitModelValue = (val) => {
-  if (bindVal.value && props?.data?.length) {
+  // if (bindVal.value && props?.data?.length) {
+  //   emits('update:modelValue', val)
+  // }
+  if (props?.data?.length) {
     emits('update:modelValue', val)
   }
 }
+
+watch(
+  () => props.attrs,
+  (val) => {
+    if (Object.keys(val).length > 0) {
+      const data = val?.data
+      if (data) {
+        selectList.value = data.value
+      }
+    }
+  },
+  { deep: true, immediate: true }
+)
 
 watch(
   () => props.api,
@@ -108,9 +146,10 @@ watch(
   (val) => {
     if (val?.length) {
       selectList.value = cloneDeep(val).map((item: any) => {
-        const { label, value } = props.keyMap
+        const { label, value } = props.attrs.keyMap || props.keyMap
         item.label = item[label]
         item.value = item[value]
+        bindMap.value[item.value] = item.label
         return item
       })
     } else {
@@ -125,4 +164,12 @@ onMounted(() => {})
 onUnmounted(() => {})
 defineExpose({})
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.contents {
+  display: contents;
+}
+.text {
+  width: 100%;
+  text-align: center;
+}
+</style>

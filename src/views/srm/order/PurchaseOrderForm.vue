@@ -1,6 +1,6 @@
 <template>
   <div style="display: contents">
-    <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000">
+    <Dialog :title="dialogTitle" v-model="dialogVisible">
       <SmForm
         class="-mb-15px"
         ref="formRef"
@@ -89,9 +89,11 @@ import EnableList from './components/EnableList.vue'
 import download from '@/utils/download'
 import { addRules } from '@/components/SmForm/src/utils'
 import { DICT_TYPE, getStrDictOptions } from '@/utils/dict'
-import { useSupplierChange } from '@/utils/operate/purchase'
+import { useSupplierChange } from '@/utils/operate/srm'
 import { cloneDeep } from 'lodash-es'
 import { InfoKeyOpenFormData } from './hooks/injectKeys'
+import { getPortInfoList } from '@/commonData/tms'
+import { useInOptions, useMergeOrderOptions } from '../common/hooks'
 
 /** ERP 销售订单表单 */
 defineOptions({ name: 'PurchaseOrderForm' })
@@ -109,8 +111,8 @@ const formData: any = ref({})
 const initFormData = () => {
   return {
     id: undefined,
-    no: undefined,
-    noTime: undefined,
+    code: undefined,
+    billTime: undefined,
     supplierId: undefined,
     accountId: undefined,
     settlementDate: undefined,
@@ -176,279 +178,23 @@ const itemsFormdisabled = computed(() =>
   ['audit', 'detail', 'merge', 'generateContract'].includes(formType.value)
 )
 const supplierChange = useSupplierChange(supplierList, formRef)
-const createRequestFormOptions = () => {
-  const list = [
-    {
-      type: 'input',
-      label: '单据编号',
-      prop: 'no',
-      placeholder: '请输入单据编号',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      type: 'date-picker',
-      placeholder: '请选择单据日期',
-      prop: 'billTime',
-      label: '单据日期',
-      attrs: {
-        clearable: true,
-        type: 'date',
-        'value-format': 'x',
-        class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
-      }
-      // rules: [
-      //   {
-      //     required: true,
-      //     message: '单据日期不能为空',
-      //     trigger: 'blur'
-      //   }
-      // ]
-    },
+const portInfoList = ref([])
 
-    {
-      type: 'select',
-      placeholder: '请选择供应商',
-      prop: 'supplierId',
-      label: '供应商',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        },
-        onChange: supplierChange
-      },
-      children: supplierList
-    },
-
-    {
-      type: 'select',
-      placeholder: '请选择采购公司',
-      prop: 'purchaseCompanyId',
-      label: '采购公司',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: financeSubjectList
-    },
-
-    // {
-    //   type: 'cascader',
-    //   placeholder: '请选择付款条款',
-    //   prop: 'paymentTerms',
-    //   label: '付款条款',
-    //   attrs: {
-    //     'show-all-levels': false,
-    //     props: { emitPath: false },
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     },
-    //     options: paymentTermsList
-    //   }
-    // },
-    {
-      type: 'select',
-      placeholder: '请选择付款条款',
-      prop: 'paymentTerms',
-      label: '付款条款',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: paymentTermsList
-    },
-
-    {
-      type: 'select',
-      placeholder: '请选择币种',
-      prop: 'currencyName',
-      label: '币种',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        },
-        onChange: (val) => {
-          const item = currencyList.value.find((item) => item.label === val)
-          if (item) {
-            const formData = getFormData()
-            formData.currencyId = item.id
-          }
-        }
-      },
-      children: currencyList
-    },
-    {
-      type: 'select',
-      placeholder: '请选择装运港',
-      prop: 'portOfLoading',
-      label: '装运港',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_LOADING)
-    },
-    {
-      type: 'select',
-      placeholder: '请选择目的港',
-      prop: 'portOfDischarge',
-      label: '目的港',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: getStrDictOptions(DICT_TYPE.ERP_PORT_OF_DISCHARGE)
-    },
-    // {
-    //   type: 'date-picker',
-    //   placeholder: '请选择结算日期',
-    //   prop: 'settlementDate',
-    //   label: '结算日期',
-    //   attrs: {
-    //     clearable: true,
-    //     type: 'date',
-    //     'value-format': 'x',
-    //     class: '!w-1/1',
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   }
-    // },
-
-    {
-      type: 'input',
-      label: '收货地址',
-      prop: 'address',
-      placeholder: '请输入收货地址',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-
-    {
-      type: 'input',
-      label: '备注',
-      prop: 'remark',
-      placeholder: '请输入备注',
-      attrs: {
-        type: 'textarea',
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
-    {
-      colConfig: { span: 24 },
-      prop: 'fileUrl',
-      label: '附件',
-      slot: 'fileUrl'
-    },
-    {
-      colConfig: { span: 24 },
-      slot: 'items',
-      formItemConfig: {
-        class: 'purchase-request-items'
-      }
-    },
-
-    {
-      type: 'input-number',
-      placeholder: '请输入优惠率',
-      prop: 'discountPercent',
-      label: '优惠率%',
-      attrs: {
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'input-number',
-      prop: 'discountPrice',
-      label: '付款优惠',
-      attrs: {
-        disabled: true,
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'input-number',
-      prop: 'totalPrice',
-      label: '优惠后金额',
-      attrs: {
-        disabled: true,
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'input-number',
-      placeholder: '请输入定金金额',
-      prop: 'depositPrice',
-      label: '定金金额',
-      attrs: {
-        'controls-position': 'right',
-        min: 0,
-        precision: 2,
-        style: {
-          width: '100%'
-        }
-      }
-    },
-    {
-      type: 'select',
-      placeholder: '请选择结算账户',
-      prop: 'accountId',
-      label: '结算账户',
-      attrs: {
-        filterable: true,
-        clearable: true,
-        style: {
-          width: '100%'
-        }
-      },
-      children: accountList
-    }
-  ]
-
-  addRules(list, ['purchaseCompanyId', 'paymentTerms', 'supplierId', 'currencyName'])
-  return list
+const getFormData = () => {
+  return formData.value
 }
+
+const { mergeRequestOrderOptions: createRequestFormOptions } = useMergeOrderOptions(
+  accountList,
+  portInfoList,
+  currencyList,
+  financeSubjectList,
+  supplierChange,
+  supplierList,
+  paymentTermsList,
+  getFormData
+)
+
 const requestFormOptions = ref(createRequestFormOptions())
 
 const createAuditFormOptions = (formOptions, auditType) => {
@@ -456,7 +202,7 @@ const createAuditFormOptions = (formOptions, auditType) => {
   const obj: any = {
     type: 'input',
     label: '审核意见',
-    prop: 'reviewComment',
+    prop: 'auditAdvice',
     placeholder: '请输入审核意见',
     colConfig: { span: 24 },
     attrs: {
@@ -466,7 +212,7 @@ const createAuditFormOptions = (formOptions, auditType) => {
   }
   formOptions.splice(index, 0, obj)
   formOptions.forEach((item) => {
-    if (item.prop && item.prop !== 'reviewComment') {
+    if (item.prop && item.prop !== 'auditAdvice') {
       if (item.attrs) {
         item.attrs!.disabled = auditType
       } else {
@@ -484,7 +230,7 @@ const updateFormOptions = (formOptions) => {
   const obj: any = {
     type: 'input',
     label: '审核意见',
-    prop: 'reviewComment',
+    prop: 'auditAdvice',
     colConfig: { span: 24 },
     attrs: {
       style: { width: '100%' },
@@ -509,32 +255,34 @@ const createDetailFormOptions = (formOptions) => {
   return formOptions
 }
 
-const createMergeFormOptions = (formOptions) => {
-  // 优惠后金额-totalPrice-追加其他金额 otherPrice
-  const obj: any = {
-    type: 'input-number',
-    placeholder: '请输入其他金额',
-    prop: 'otherPrice',
-    label: '其他金额',
-    attrs: {
-      'controls-position': 'right',
-      min: 0,
-      precision: 2,
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  const options = formOptions.filter((item) => item.prop !== 'purchaseCompanyId')
-  const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
-  options.splice(index, 0, obj)
-  options.forEach((item) => {
-    if (item.prop === 'depositPrice') {
-      item.attrs!.disabled = true
-    }
-  })
-  return options
-}
+// const createMergeFormOptions = (formOptions) => {
+//   // 优惠后金额-totalPrice-追加其他金额 otherPrice
+//   const obj: any = {
+//     type: 'input-number',
+//     placeholder: '请输入其他金额',
+//     prop: 'otherPrice',
+//     label: '其他金额',
+//     attrs: {
+//       'controls-position': 'right',
+//       min: 0,
+//       precision: 2,
+//       style: {
+//         width: '100%'
+//       }
+//     }
+//   }
+//   const options = formOptions.filter((item) => item.prop !== 'purchaseCompanyId')
+//   const index = options.findIndex((item) => item.prop === 'totalPrice') + 1
+//   options.splice(index, 0, obj)
+//   options.forEach((item) => {
+//     if (item.prop === 'depositPrice') {
+//       item.attrs!.disabled = true
+//     }
+//   })
+//   return options
+// }
+
+const { createRequestFormOptions: mergeFormOptions } = useInOptions(supplierList, accountList)
 
 const createGenerateContractFormOptions = (formOptions) => {
   // 优惠后金额-totalPrice-追加其他金额 otherPrice
@@ -717,11 +465,17 @@ const operateAudit = (type) => {
       requestFormOptions.value = updateFormOptions(createRequestFormOptions())
     },
     merge: () => {
-      requestFormOptions.value = createMergeFormOptions(createRequestFormOptions())
+      // requestFormOptions.value = createMergeFormOptions(createRequestFormOptions())
+      const options = mergeFormOptions() as any[]
+      const supplierIdItem = options.find((item) => item.prop === 'supplierId')
+      supplierIdItem.attrs.disabled = true
+      requestFormOptions.value = options
     },
     generateContract: () => {
       dialogTitle.value = '生成采购合同'
-      requestFormOptions.value = createGenerateContractFormOptions(createRequestFormOptions())
+      requestFormOptions.value = createGenerateContractFormOptions(
+        createRequestFormOptions()
+      ) as any
     }
   }
   const fn = map[type]
@@ -731,11 +485,7 @@ const operateAudit = (type) => {
   }
 }
 
-const getFormData = () => {
-  return formData.value
-}
-
-// 合并 合并入库时列表勾选中传递的items数据
+// 合并 合并到货时列表勾选中传递的items数据
 const mergeSelectItemsData = (formData, data) => {
   // count-数量要能够修改不能超过原始值
   data.items.forEach((item) => {
@@ -752,6 +502,7 @@ const open = async (type: string, id?: number, data?: any) => {
   operateAudit(type)
   resetForm()
 
+  getPortInfoList(portInfoList, { label: 'name', value: 'name' })
   getPaymentTermsList(paymentTermsList)
   getCurrencyList(currencyList)
   // 加载供应商列表
@@ -771,7 +522,7 @@ const open = async (type: string, id?: number, data?: any) => {
   if (type === 'create') {
     PurchaseOrderApi.getPurchaseOrderNo().then((res) => {
       const modelValue = formRef.value.getFormData()
-      modelValue.no = res
+      modelValue.code = res
     })
   }
 
@@ -792,13 +543,14 @@ const open = async (type: string, id?: number, data?: any) => {
 
       if (type === 'generateContract') {
         formData.value.signingPlace = '浙江宁波'
-        formData.value.signingDate = formData.value.noTime
+        formData.value.signingDate = formData.value.billTime
         formData.value.partyAId = formData.value.purchaseCompanyId
         formData.value.partyBId = formData.value.supplierId
       }
 
       if (type === 'merge') {
-        dialogTitle.value = '合并入库'
+        dialogTitle.value = '合并到货'
+        formData.value.items = data.items
         // const inFormData = getFormData()
         // mergeSelectItemsData(inFormData, data)
       }
@@ -890,7 +642,7 @@ const submitForm = async () => {
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
         orderIds: [data.id],
-        reviewComment: data.reviewComment
+        auditAdvice: data.auditAdvice
       })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'update') {
@@ -904,10 +656,18 @@ const submitForm = async () => {
       const queryData: any = filterObjKey(
         {
           ...data,
-          itemIds: items.map((item) => item.id) as number[]
+          items: items.map((item) => {
+            return {
+              warehouseId: item.warehouseId,
+              itemId: item.id,
+              qty: item.qty
+            }
+          })
+          // itemIds: items.map((item) => item.id) as number[]
         },
         [
-          'noTime',
+          'items',
+          'billTime',
           'supplierId',
           'address',
           'settlementDate',
@@ -916,13 +676,13 @@ const submitForm = async () => {
           'otherPrice',
           'fileUrl',
           'remark',
-          'itemIds',
+          // 'itemIds',
           'currencyName',
           'currencyId'
         ]
       )
       await PurchaseOrderApi.mergePurchaseOrder(queryData)
-      message.success('合并入库成功')
+      message.success('合并到货成功')
     } else if (formType.value === 'generateContract') {
       data.orderId = data.id
       let queryData: any = filterObjKey(data, [
@@ -934,11 +694,11 @@ const submitForm = async () => {
         'currencyId',
         'partyAId',
         'partyBId',
-        'paymentTerms',
+        'paymentTerms'
       ])
       queryData = transformPaymentTerms(queryData)
       const downLoadData = await PurchaseOrderApi.generatePurchaseOrderContract(queryData)
-      download.pdf(downLoadData, `${data.no}.pdf`)
+      download.pdf(downLoadData, `${data.code}.pdf`)
       message.success('生成采购合同成功')
     }
     dialogVisible.value = false
@@ -968,12 +728,12 @@ const addItem = (selectionList) => {
       const {
         purchaseApplyItemId,
         approvedQty,
-        actTaxPrice,
-        taxPercent = TAX_PERCENT,
+        grossPrice,
+        taxRate = TAX_PERCENT,
         taxPrice,
         warehouseId,
         expectArrivalDate,
-        no,
+        // code,
         applicantId,
         applicationDeptId,
         applicant,
@@ -981,22 +741,23 @@ const addItem = (selectionList) => {
         declaredType,
         declaredTypeEn,
         productId,
-        productBarCode,
+        productCode,
         productName,
         productUnitName,
-        barCode,
+        code,
         productPrice
       } = item
       const obj = {
         purchaseApplyItemId,
-        count: approvedQty || 0,
-        actTaxPrice,
-        taxPercent,
+        // count: approvedQty || 0,
+        qty: approvedQty || 0,
+        grossPrice,
+        taxRate,
         taxPrice, //税额需要动态计算
         warehouseId,
         expectArrivalDate,
         deliveryTime: expectArrivalDate,
-        erpPurchaseRequestItemNo: no,
+        purchaseApplyCode: code,
         applicantId,
         applicationDeptId,
         departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName
@@ -1005,11 +766,11 @@ const addItem = (selectionList) => {
         declaredTypeEn,
         productId,
         productName,
-        productBarCode,
+        productCode,
         productUnitName,
-        barCode,
+        code,
         productPrice
-        // productPrice: actTaxPrice
+        // productPrice: grossPrice
       }
       return obj
     })

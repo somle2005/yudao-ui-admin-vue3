@@ -7,7 +7,7 @@
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
       v-model="queryParams"
       :options="searchFormOptions"
       :getModelValue="getSearchFormData"
@@ -34,21 +34,46 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['srm:purchase-in:submitAudit']"
+          v-hasPermi="['srm:purchase-in:submit-audit']"
         >
           提交审核
         </el-button>
 
-        <el-button
+        <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px mr-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['srm:purchase-in:review']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <el-switch
+          v-model="wholeOrderEnable"
+          active-text="整单"
+          class="ml-10px"
+          @change="handleWholeOrderEnable"
+        />
+
+        <!-- v-hasPermi="['srm:purchase-in:change-pay-status']" -->
+        <!-- <el-button
           :disabled="disabledBtn"
           type="primary"
           plain
           @click="changePayStatusBatch(selectionList, true)"
-          v-hasPermi="['srm:purchase-in:changePayStatus']"
+          v-hasPermi="['srm:purchase-in:change-pay-status']"
         >
           付款
         </el-button>
@@ -57,7 +82,7 @@
           type="primary"
           plain
           @click="changePayStatusBatch(selectionList, false)"
-          v-hasPermi="['srm:purchase-in:changePayStatus']"
+          v-hasPermi="['srm:purchase-in:change-pay-status']"
         >
           撤销付款
         </el-button>
@@ -67,7 +92,7 @@
           active-text="整单"
           class="ml-10px"
           @change="handleWholeOrderEnable"
-        />
+        /> -->
         <!-- <el-button
           type="danger"
           plain
@@ -101,23 +126,23 @@
         </ElTag>
       </template>
       <template #operate="{ scope }">
-        <!-- <el-button
-            link
-            @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['srm:purchase-in:query']"
-          >
-            详情
-          </el-button> -->
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['srm:purchase-in:query']"
+        >
+          详情
+        </el-button>
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-in:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
@@ -134,7 +159,7 @@
           v-if="scope.row.auditStatus === 5"
         >
           反审核
-        </el-button>
+        </el-button> -->
         <el-button
           link
           type="danger"
@@ -159,6 +184,8 @@ import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
+import { getMainItemBodyData } from '@/utils/transform'
+import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseIn' })
@@ -172,17 +199,18 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   supplierId: undefined,
   productId: undefined,
   warehouseId: undefined,
-  inTime: [],
+  arriveTime: [],
   orderNo: undefined,
   paymentStatus: undefined,
   accountId: undefined,
   status: undefined,
   remark: undefined,
-  creator: undefined
+  creator: undefined,
+  itemsInboundStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -197,8 +225,6 @@ let {
   itemsTotal,
   wholeOrderTotal,
 
-  wholeOrderMergeCompute,
-  mergeItemsToList,
   switchList,
   useWholeOrder
 } = useTable()
@@ -207,7 +233,13 @@ let {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await PurchaseInApi.getPurchaseInPage(queryParams)
+    const bodyData = getMainItemBodyData({
+      queryParams,
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
+      itemQueryList: ['productId', 'orderCode']
+    })
+    bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
+    const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
 
@@ -216,29 +248,44 @@ const getList = async () => {
     //   item.items.forEach((a) => {
     //     if (a.product) {
     //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
+    //       a.productCode = a.product.code
     //     }
 
     //     // item.itemApplicantName = item.applicantName
     //     // item.itemApplicationDeptName = item.applicationDeptName
     //   })
     // })
-    console.log(data.list,'data.list')
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
-    itemsList.value = mergeItemsToList(data.list, {
-      id: 'rowItemsId',
-      status: 'rowStatus',
-      orderStatus: 'rowOrderStatus',
-      offStatus: 'rowOffStatus',
-      executeStatus: 'rowExecuteStatus',
-      inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus',
-      totalPrice: 'itemTotalPrice'
-    })
 
     switchList(list, total, data)
-    // list.value = data.list
-    // total.value = data.total
+
+    // 替换后
+
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inboundStatus: 'itemsInboundStatus',
+    //   payStatus: 'itemsPayStatus',
+    //   totalPrice: 'itemsTotalPrice',
+    //   code: 'itemsProductCode',
+    //   qty: 'itemsQty'
+    // })
+
+    // 替换前
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'rowItemsId',
+    //   status: 'rowStatus',
+    //   orderStatus: 'rowOrderStatus',
+    //   offStatus: 'rowOffStatus',
+    //   executeStatus: 'rowExecuteStatus',
+    //   inboundStatus: 'rowInStatus',
+    //   payStatus: 'rowPayStatus',
+    //   totalPrice: 'itemTotalPrice',
+    //   code: 'rowBarCode',
+    //   qty: 'itemQty'
+    // })
   } finally {
     loading.value = false
   }
@@ -258,8 +305,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, data?: any) => {
+  formRef.value.open(type, id, data)
 }
 
 /** 删除按钮操作 */
@@ -284,7 +331,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await PurchaseInApi.exportPurchaseIn(queryParams)
-    download.excel(data, '销售入库.xls')
+    download.excel(data, '采购到货.xls')
   } catch {
   } finally {
     exportLoading.value = false
@@ -317,6 +364,8 @@ const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatus
   wholeOrderEnable,
   openForm
 )
+
+const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
 /** 初始化 **/
 onMounted(async () => {

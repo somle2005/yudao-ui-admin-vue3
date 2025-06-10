@@ -15,33 +15,35 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="120">
+        <el-table-column label="入库单编号" prop="inboundCode" align="center" width="150" />
+        <el-table-column prop="productCode" label="产品编码" width="120" align="center" />
+        <!-- <el-table-column label="产品编码" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
               :rules="formRules.productId"
               class="mb-0px!"
-              :disabled="disabled"
             >
-              <el-text>{{ row.productBarCode }}</el-text>
+              <div>{{ row.productCode }}</div>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
-        <el-table-column label="库位" width="180">
+        <el-table-column label="库位" width="180" align="center">
           <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.binId`"
-              :rules="formRules.binId"
-              class="mb-0px!"
-              :disabled="disabled"
-            >
-              <SmSelect v-model="row.binId" placeholder="请选择库位" :data="warehouseBinList" />
+            <!-- :data="warehouseBinList" -->
+            <el-form-item :prop="`${$index}.binId`" :rules="createBinIdRule(row)" class="mb-0px!">
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.binId"
+                placeholder="请选择库位"
+                :data="warehouseBinList"
+              />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="拣货数量" width="100">
+        <el-table-column label="本次上架数" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <!-- <el-input-number
@@ -54,45 +56,21 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="已选择数" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.pickQty`" class="mb-0px!">
-              <el-text>{{ row.pickQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
 
-        <el-table-column label="实际入库量" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.actualQty`" class="mb-0px!">
-              <el-text>{{ row.actualQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="pickQty" label="已选择数" width="100" align="center" />
+        <el-table-column prop="actualQty" label="入库数量" width="100" align="center" />
+        <!-- <el-table-column prop="outboundAvailableQty" label="待上架数" width="100" align="center" /> -->
+        <el-table-column prop="shelveAvailableQty" label="待上架数" width="100" align="center" />
 
-        <el-table-column label="批次剩余库存量" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.outboundAvailableQty`" class="mb-0px!">
-              <el-text>{{ row.outboundAvailableQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="计划入库量" width="100">
+        <!-- <el-table-column label="计划入库量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
               <el-text>{{ row.planQty }}</el-text>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
-        <el-table-column label="已上架量" width="100">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.shelvedQty`" class="mb-0px!">
-              <el-text>{{ row.shelvedQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="shelveClosedQty" label="已上架数" width="100" align="center" />
 
         <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
@@ -121,6 +99,7 @@ import {
 import { getWarehouseBinList } from '@/commonData/wms'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
+import { getBinIdRules } from '../../common/utils'
 
 const props = defineProps({
   items: {
@@ -143,23 +122,25 @@ const props = defineProps({
     default: null
   },
   itemIdKey: {
-    type: Number,
+    type: String,
     default: null
   }
 })
 
 const updateShow = computed(() => props.formType === 'update')
-
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
+
+const { binIdRuleList, createBinIdRule } = getBinIdRules(formData)
+
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  binId: [{ required: true, message: '库位不能为空', trigger: 'blur' }],
-  qty: [{ required: true, message: '拣货数量不能为空', trigger: 'blur' }]
+  binId: binIdRuleList,
+  qty: [{ required: true, message: '本次上架数不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref
 const warehouseBinList: any = ref([])
-getWarehouseBinList(warehouseBinList, {})
+// getWarehouseBinList(warehouseBinList, {})
 
 watch(
   () => props.itemIdKey,
@@ -176,10 +157,21 @@ watch(
 /** 初始化设置入库项 */
 watch(
   () => props.items,
-  async (val) => {
+  async (val: any) => {
     formData.value = val
-  },
-  { immediate: true, deep: true }
+    if (val?.length && !warehouseBinList.value.length) {
+      getWarehouseBinList(warehouseBinList, { warehouseId: val[0].warehouseId })
+    }
+    // formData.value = cloneDeep(val)
+    // if (formData.value?.length) {
+    //   formData.value.forEach((item: any) => {
+    //     item.warehouseBinList = warehouseBinList.value.filter(
+    //       (a) => a.warehouseId === item.warehouseId
+    //     )
+    //   })
+    //   val = formData.value
+    // }
+  }
 )
 
 /** 监听合同产品变化，计算合同产品总价 */
@@ -227,8 +219,8 @@ const handleDelete = (index: number) => {
 /** 添加按钮操作 */
 const handleAddItem = (index: number) => {
   const row = cloneDeep(formData.value[index])
-  row[props.itemIdKey] = Math.random() + formData.value.length
-  formData.value.push(row)
+  // row[props.itemIdKey] = Math.random() + formData.value.length
+  formData.value.splice(index + 1, 0, row)
 }
 
 /** 表单校验 */

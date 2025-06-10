@@ -28,10 +28,10 @@ export const getWMSWarehouseList = (data?: any) => {
 }
 
 // 获得库区精简列表
-export const getWarehouseZoneList = (data?: any) => {
+export const getWarehouseZoneList = (data?: any,params?: any) => {
   const warehouseZoneList = ref<(WarehouseZoneVO & SelectProp)[]>([])
 
-  WarehouseZoneApi.getWarehouseZoneSimpleList().then((res) => {
+  WarehouseZoneApi.getWarehouseZoneSimpleList(params).then((res) => {
     warehouseZoneList.value = res.map((item) => {
       item.label = item.name
       item.value = item.id
@@ -59,4 +59,20 @@ export const getWarehouseBinList = (data?: any, params?: any) => {
     }
   })
   return warehouseBinList
+}
+
+export const getExchangeWarehouseList = (params?:any,data?: any) => {
+  const exchangeWarehouseList = ref<(WmsWarehouseVO & SelectProp)[]>([])
+
+  WmsWarehouseApi.getWarehouseExchangeSimpleList(params).then((res) => {
+    exchangeWarehouseList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = exchangeWarehouseList.value
+    }
+  })
+  return exchangeWarehouseList
 }

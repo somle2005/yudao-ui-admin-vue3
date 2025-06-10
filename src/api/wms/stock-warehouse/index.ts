@@ -19,8 +19,8 @@ export interface StockWarehouseVO {
 // 仓库库存 API
 export const StockWarehouseApi = {
   // 查询仓库库存分页
-  getStockWarehousePage: async (params: any) => {
-    return await request.get({ url: `/wms/stock-warehouse/page`, params })
+  getStockWarehousePage: async (data: any) => {
+    return await request.post({ url: `/wms/stock-warehouse/page`, data })
   },
 
   // 查询仓库库存详情
@@ -44,7 +44,17 @@ export const StockWarehouseApi = {
   },
 
   // 导出仓库库存 Excel
-  exportStockWarehouse: async (params) => {
-    return await request.download({ url: `/wms/stock-warehouse/export-excel`, params })
+  exportStockWarehouse: async (data) => {
+    return await request.download({ url: `/wms/stock-warehouse/export-excel`, data, method: 'POST' })
   },
-}
+
+  // 获得分组的仓库库存分页
+  getStockWarehousePageGrouped: async (data) => {
+    return await request.post({ url: `/wms/stock-warehouse/page-grouped`, data })
+  },
+
+    // 获得分组的仓库库存分页
+  getStockWarehouseSellableQty: async (data) => {
+    return await request.post({ url: `/wms/stock-warehouse/select-sellable-qty`, data })
+  }
+}

@@ -11,14 +11,10 @@
       <!-- show-summary :summary-method="getSummaries" -->
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="!showCreate" label="编号" min-width="120">
-          <template #default="{ row }">
-            <el-text>{{ row.id }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="120" align="center" />
 
         <template v-if="formType === 'detail'">
-          <el-table-column label="验货单" width="200">
+          <el-table-column label="验货单" width="200" align="center">
             <template #default="{ $index }">
               <el-button
                 :disabled="jsonDisabled"
@@ -31,7 +27,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="完工单" width="200">
+          <el-table-column label="完工单" width="200" align="center">
             <template #default="{ $index }">
               <el-button
                 :disabled="jsonDisabled"
@@ -45,7 +41,7 @@
           </el-table-column>
         </template>
 
-        <el-table-column label="SKU" width="180">
+        <el-table-column label="产品编码" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -59,13 +55,13 @@
                 filterable
                 @change="onChangeProduct($event, row)"
                 @update:model-value="updateModelValue"
-                placeholder="请选择SKU"
+                placeholder="请选择产品编码"
                 :disabled="disabled"
               >
                 <el-option
                   v-for="item in productList"
                   :key="item.id"
-                  :label="item.barCode"
+                  :label="item.code"
                   :value="item.id"
                 />
               </el-select> -->
@@ -73,7 +69,7 @@
               <SmSelect
                 :disabled="disabled"
                 v-model="row.productId"
-                placeholder="请选择SKU"
+                placeholder="请选择产品编码"
                 @change="
                   (val) =>
                     updateModelValue(
@@ -83,7 +79,7 @@
                       'id',
                       {
                         productName: 'name',
-                        barCode: 'barCode',
+                        productCode: 'code',
                         productUnitName: 'unitName',
                         productUnitId: 'unitId'
                       },
@@ -91,65 +87,52 @@
                     )
                 "
                 :data="productList"
-                :keyMap="{ label: 'barCode', value: 'id' }"
+                :keyMap="{ label: 'code', value: 'id' }"
               />
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="产品名称" width="120">
-          <template #default="{ row }">
-            <el-text>{{ row.productName }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column prop="productName" label="产品名称" width="120" align="center" />
 
-        <el-table-column label="海关品名" width="180">
-          <!-- :rules="formRules.declaredType" -->
+        <el-table-column label="海关品名" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.declaredType`" class="mb-0px!">
               <el-input :disabled="disabled" v-model.trim="row.declaredType" />
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="海关品名(英文)" width="180">
-          <!-- :rules="formRules.declaredTypeEn" -->
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
-              <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
-            </el-form-item>
-          </template>
-        </el-table-column>
 
-        <el-table-column label="条码" width="120">
+        <!-- <el-table-column label="条码" width="120" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.xcode`" class="mb-0px!">
-              <el-input v-model.trim="row.xcode" :disabled="disabled" class="!w-100%" />
+            <el-form-item :prop="`${$index}.fbaCode`" class="mb-0px!">
+              <el-input v-model.trim="row.fbaCode" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
-        </el-table-column>
-        <el-table-column label="箱率" width="120">
+        </el-table-column>  -->
+        <el-table-column label="箱率" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
               <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="单位" min-width="60">
-          <template #default="{ row }">
-            <el-text>{{ row.productUnitName }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column label="仓库" width="150">
+        <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
+        <el-table-column label="仓库" width="150" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
+            <el-form-item
+              :prop="`${$index}.warehouseId`"
+              :rules="formRules.warehouseId"
+              class="mb-0px!"
+            >
               <el-select
-                :disabled="disabled"
+                :disabled="warehouseDisabled"
                 v-model="row.warehouseId"
                 clearable
                 filterable
                 placeholder="请选择仓库"
               >
                 <el-option
-                  v-for="item in warehouseList"
+                  v-for="item in WMSWarehouseList"
                   :key="item.id"
                   :label="item.name"
                   :value="item.id"
@@ -161,41 +144,53 @@
 
         <!-- 因为详情拿不到 未订购数量-统一让后端原子性判断报错。前端不做最大值限制 -->
 
-        <el-table-column v-if="!showOringinCount" label="下单数量" width="120">
+        <el-table-column v-if="!showOringinCount" label="下单数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="countDisabled"
                 v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 class="!w-100%"
+              /> -->
+              <SmNumber
+                :min="1"
+                :max="row.originCount"
+                :disabled="countDisabled"
+                v-model="row.qty"
               />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column v-if="showOringinCount" label="入库数量" width="120">
+        <el-table-column v-if="showOringinCount" label="数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="countDisabled"
                 v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 :max="row.originCount"
                 class="!w-100%"
+              /> -->
+              <SmNumber
+                :disabled="countDisabled"
+                :min="1"
+                :max="row.originCount"
+                v-model="row.qty"
               />
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column v-if="showOringinCount" label="下单数量" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.originCount`" class="mb-0px!">
-              <el-text>{{ row.originCount }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column
+          v-if="showOringinCount"
+          prop="originCount"
+          label="下单数量"
+          width="120"
+          align="center"
+        />
 
         <!-- <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
@@ -235,47 +230,55 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="含税单价" width="120">
+        <el-table-column label="含税单价" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item
-              :prop="`${$index}.actTaxPrice`"
-              :rules="formRules.actTaxPrice"
+              :prop="`${$index}.grossPrice`"
+              :rules="formRules.grossPrice"
               class="mb-0px!"
             >
-              <el-input-number
+              <!-- <el-input-number
                 :disabled="disabled"
-                v-model="row.actTaxPrice"
+                v-model="row.grossPrice"
                 controls-position="right"
                 :min="0.01"
                 :precision="2"
                 class="!w-100%"
-              />
+              /> -->
+              <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.grossPrice" />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="单价" width="200">
+        <el-table-column label="单价" width="200" align="center">
           <template #default="{ row }">
-            <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+            <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
+            <SmNumber disabled :precision="2" v-model="row.productPrice" />
           </template>
         </el-table-column>
 
-        <el-table-column label="税率%" width="115">
+        <el-table-column label="税率%" width="115" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-              <el-input-number
+            <el-form-item :prop="`${$index}.taxRate`" class="mb-0px!">
+              <!-- <el-input-number
                 :disabled="disabled"
-                v-model="row.taxPercent"
+                v-model="row.taxRate"
                 controls-position="right"
                 :min="0"
                 :precision="2"
                 class="!w-100%"
+              /> -->
+              <SmNumber
+                :disabled="disabled"
+                :precision="2"
+                :max="row.originCount"
+                v-model="row.taxRate"
               />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="税额" prop="taxPrice" width="120">
+        <el-table-column label="税额" prop="taxPrice" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
               <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
@@ -285,15 +288,9 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="价税合计" min-width="150">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.source`" class="mb-0px!">
-              <el-text>{{ row.allAmount }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="grossTotalPrice" label="价税合计" min-width="150" align="center" />
 
-        <el-table-column v-if="showCreate" label="期望到货日期" min-width="150">
+        <el-table-column v-if="showCreate" label="期望到货日期" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
               <el-date-picker
@@ -308,7 +305,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="交货日期" width="180">
+        <el-table-column label="交货日期" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deliveryTime`" class="mb-0px!">
               <el-date-picker
@@ -323,7 +320,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" min-width="150">
+        <el-table-column label="备注" min-width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input
@@ -335,17 +332,13 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="源单单号" width="200">
-          <template #default="{ row }">
-            <el-text>{{ row.erpPurchaseRequestItemNo }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column prop="purchaseApplyCode" label="上游单据编码" width="200" align="center" />
 
-        <el-table-column label="申请人" width="200">
+        <el-table-column label="申请人" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
               <el-select
-                v-if="!row.erpPurchaseRequestItemNo"
+                v-if="!row.purchaseApplyCode"
                 :disabled="disabled"
                 v-model="row.applicantId"
                 clearable
@@ -359,15 +352,15 @@
                   :value="item.id"
                 />
               </el-select>
-              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.applicantName }}</el-text>
+              <el-text v-if="row.purchaseApplyCode">{{ row.applicantName }}</el-text>
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="申请部门" width="200">
+        <el-table-column label="申请部门" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
               <el-tree-select
-                v-if="!row.erpPurchaseRequestItemNo"
+                v-if="!row.purchaseApplyCode"
                 filterable
                 clearable
                 :disabled="disabled"
@@ -378,7 +371,22 @@
                 node-key="id"
                 placeholder="请选择申请部门"
               />
-              <el-text v-if="row.erpPurchaseRequestItemNo">{{ row.departmentName }}</el-text>
+              <el-text v-if="row.purchaseApplyCode">{{ row.departmentName }}</el-text>
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="showMerge"
+          prop="currencyName"
+          label="币种"
+          width="120"
+          align="center"
+        />
+
+        <el-table-column label="海关品名(英文)" width="180" align="center">
+          <template #default="{ row, $index }">
+            <el-form-item :prop="`${$index}.declaredTypeEn`" class="mb-0px!">
+              <el-input :disabled="disabled" v-model="row.declaredTypeEn" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -426,14 +434,15 @@ import {
   erpPriceMultiply,
   getSumValue
 } from '@/utils'
-import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndGrossTotalPrice } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { defaultProps } from '@/utils/tree'
 import { updateModelValue } from '@/utils/high/index'
-import { getDeclaredType, currencyNameChange, currencyChange } from '@/utils/operate/purchase'
+import { getDeclaredType, currencyNameChange, currencyChange } from '@/utils/operate/srm'
 import InspectionJsonForm from './InspectionJsonForm.vue'
 import CompletionJsonForm from './CompletionJsonForm.vue'
 import { InfoKeyOpenFormData } from '../hooks/injectKeys'
+import { getWMSWarehouseList } from '@/commonData/wms'
 
 const props = defineProps({
   items: {
@@ -450,7 +459,13 @@ const props = defineProps({
   }
 })
 
-// 合并入库的时候有入库数量
+const showMerge = computed(() => ['merge'].includes(props.formType))
+
+const warehouseDisabled = computed(() =>
+  ['audit', 'detail', 'generateContract'].includes(props.formType)
+)
+
+// 合并到货的时候有入库数量
 const countDisabled = computed(() =>
   ['audit', 'detail', 'generateContract'].includes(props.formType)
 )
@@ -463,15 +478,16 @@ const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品不能为空', trigger: 'blur' }],
   // productPrice: [{ required: true, message: '产品单价不能为空', trigger: 'blur' }],
-  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
-  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
+  grossPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
+  qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+  warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }]
   // currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }],
   // declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
   // declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 const productList = getProductList() // 产品列表
-const warehouseList = getWarehouseList()
+const WMSWarehouseList = getWMSWarehouseList()
 const deptList: any = ref([])
 const userList: any = ref([])
 getUserList(userList)
@@ -517,20 +533,20 @@ watch(
     }
     const keyMap = {
       taxPrice: 'taxPrice',
-      taxPercent: 'taxPercent',
-      allAmount: 'allAmount',
-      actTaxPrice: 'actTaxPrice',
+      taxRate: 'taxRate',
+      grossTotalPrice: 'grossTotalPrice',
+      grossPrice: 'grossPrice',
       onePrice: 'productPrice',
       applyCount: 'qty'
     }
 
     // 编辑回显
-    computeTaxPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndGrossTotalPrice(val, keyMap)
 
     // // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
     //   if (item.totalProductPrice != null) {
     //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
     //   } else {
@@ -568,18 +584,18 @@ const handleAdd = () => {
     id: undefined,
     productId: undefined,
     productPrice: undefined,
-    taxPercent: TAX_PERCENT,
+    taxRate: TAX_PERCENT,
     taxPrice: undefined,
     currencyId: undefined,
-    // actTaxPrice: undefined, 产品单价就是含税单价了
+    // grossPrice: undefined, 产品单价就是含税单价了
     remark: undefined,
     discountPercent: undefined,
     warehouseId: undefined,
     deliveryTime: undefined,
-    xcode: undefined,
-    containerRate: undefined,
+    fbaCode: undefined,
+    containerRate: 1,
     purchaseApplyItemId: undefined,
-    erpPurchaseRequestItemNo: undefined,
+    purchaseApplyCode: undefined,
     qty: undefined,
     inspectionJson: [],
     completionJson: []

@@ -31,6 +31,38 @@ export const mergeItemsToList = (list: any[], mapKey = {}) => {
   // })
   return arr
 }
+
+/**
+ *
+ * @param list
+ * @param mapKey 用来弥补itemsQty 合并计算 映射和内容不items-qty冲突问题
+ * 提取list中的items合并当前list项 展示每一项的items 合并进行数组- 小驼峰形式拼接字段
+ */
+export const mergeItemsUpToList = (list: any[], itemKey = 'items', mapKey = {}) => {
+  if (!list?.length) return []
+  const arr: any = []
+  cloneDeep(list).forEach((item: any) => {
+    if (item[itemKey]?.length) {
+      item[itemKey].forEach((obj) => {
+        const newItem = {
+          ...item
+        }
+        for (const key in obj) {
+          // key首字母大写
+          newItem[itemKey + key[0].toUpperCase() + key.slice(1)] = obj[key]
+        }
+        for (const key in mapKey) {
+          newItem[mapKey[key]] = obj[key]
+        }
+        arr.push(newItem)
+      })
+    } else {
+      arr.push(item)
+    }
+  })
+  return arr
+}
+
 /**
  *
  * @param formData 表单数据
@@ -65,6 +97,13 @@ export const distinctList = (sourceList: any[], selectList: any[], compareKey = 
   return list
 }
 
+// 获取相同项SameKeyItem
+export const getSameKeyItemList = (list, sameKey = 'id') => {
+  if (!list?.length) return list
+  const baseId = list[0][sameKey]
+  return list.filter((item) => item[sameKey] === baseId)
+}
+
 /**
  * 计算税额和价税合计
  * @param list
@@ -72,13 +111,13 @@ export const distinctList = (sourceList: any[], selectList: any[], compareKey = 
  * @returns
  */
 
-export const computeTaxPriceAndAllAmount = (
+export const computeGrossPriceAndGrossTotalPrice = (
   list: any[],
   keyMap?: {
-    taxPercent?: string
+    taxRate?: string
     applyCount?: string
-    actTaxPrice?: string
-    allAmount?: string
+    grossPrice?: string
+    grossTotalPrice?: string
     taxPrice?: string
     onePrice?: string
     totalPrice?: string
@@ -86,10 +125,10 @@ export const computeTaxPriceAndAllAmount = (
 ) => {
   if (!list?.length) return list
   const {
-    taxPercent = 'taxPercent',
+    taxRate = 'taxRate',
     applyCount = 'qty',
-    actTaxPrice = 'actTaxPrice',
-    allAmount = 'allAmount',
+    grossPrice = 'grossPrice',
+    grossTotalPrice = 'grossTotalPrice',
     taxPrice = 'taxPrice',
     onePrice = 'productPrice',
     totalPrice = 'totalPrice'
@@ -97,20 +136,20 @@ export const computeTaxPriceAndAllAmount = (
 
   list.forEach((item) => {
     // 申请数量和税率都要有 才能计算出税额
-    if (item[taxPercent] && item[applyCount] && item[actTaxPrice]) {
-      const taxPercent100 = item.taxPercent / 100.0
+    if (item[taxRate] && item[applyCount] && item[grossPrice]) {
+      const taxPercent100 = item.taxRate / 100.0
       // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
       const scale = (taxPercent100 / (1 + taxPercent100)) * item[applyCount]
-      item[taxPrice] = erpPriceMultiply(item[actTaxPrice], scale)
+      item[taxPrice] = erpPriceMultiply(item[grossPrice], scale)
       // 价税合计 = 含税单价 * 申请数量。
-      item[allAmount] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+      item[grossTotalPrice] = erpPriceMultiply(item[grossPrice], item[applyCount])
     }
 
     // 税率-含税单价才能计算出产品单价
-    if (item[taxPercent] && item[actTaxPrice]) {
-      const taxPercent100 = item.taxPercent / 100.0
+    if (item[taxRate] && item[grossPrice]) {
+      const taxPercent100 = item.taxRate / 100.0
       // 单价
-      item[onePrice] = erpPriceMultiply(item[actTaxPrice], 1 / (1 + taxPercent100))
+      item[onePrice] = erpPriceMultiply(item[grossPrice], 1 / (1 + taxPercent100))
     } else {
       // 税率-含税单价 其中一个没有单价变为空
       item[onePrice] = undefined
@@ -119,7 +158,7 @@ export const computeTaxPriceAndAllAmount = (
 
   // totalPrice 总价 = 含税单价 * 数量
   list.forEach((item) => {
-    item[totalPrice] = erpPriceMultiply(item[actTaxPrice], item[applyCount])
+    item[totalPrice] = erpPriceMultiply(item[grossPrice], item[applyCount])
   })
 }
 
@@ -176,6 +215,15 @@ export const filterObjKey = (queryParams: { [key: string]: any }, saveObjkeyList
       map[key] = queryParams[key]
     })
     return map
+  } catch (e) {
+    console.log(e, '报错了')
+  }
+}
+
+export const filterListObjKey = (list: any[], saveObjkeyList: string[]) => {
+  try {
+    if (!list?.length) return []
+    return list.map((item) => filterObjKey(item, saveObjkeyList))
   } catch (e) {
     console.log(e, '报错了')
   }

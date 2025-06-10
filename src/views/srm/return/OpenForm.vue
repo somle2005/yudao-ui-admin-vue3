@@ -1,5 +1,5 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000">
+  <Dialog :title="dialogTitle" v-model="dialogVisible">
     <SmForm
       class="-mb-15px"
       ref="formRef"
@@ -10,16 +10,6 @@
       :options="requestFormOptions"
       :getModelValue="getFormData"
     >
-      <!-- <template #orderNo="{ model }">
-        <el-input v-model="model.orderNo" readonly>
-          <template #append>
-            <el-button @click="openPurchaseOrderInEnableList">
-              <Icon icon="ep:search" /> 选择
-            </el-button>
-          </template>
-        </el-input>
-      </template> -->
-
       <template #fileUrl="{ model, scope }">
         <UploadFile
           :disabled="scope?.attrs?.disabled"
@@ -31,16 +21,18 @@
 
       <template #items>
         <el-button
-          :disabled="itemsFormdisabled"
+          v-if="showAddBtn"
+          :disabled="addBtnDisabled"
           type="primary"
-          @click="openAddItem"
+          @click="openAddItem(formData.supplierId)"
           style="margin-bottom: 10px"
-          >选择入库项</el-button
+          >选择到货项</el-button
         >
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="退货产品清单" name="item">
             <ItemForm
               ref="itemFormRef"
+              :warehouseId="formData.fromWarehouseId"
               :items="formData.items"
               :disabled="itemsFormdisabled"
               :formType="formType"
@@ -75,17 +67,21 @@
   <EnableList ref="addItemRef" @success="addItem" />
 </template>
 <script setup lang="ts">
-import { PurchaseInApi, PurchaseInVO } from '@/api/srm/in'
 import ItemForm from './components/ItemForm.vue'
 import { erpPriceInputFormatter, erpPriceMultiply } from '@/utils'
 import EnableList from './components/EnableList.vue'
 import { AUDIT_TYPE, TAX_PERCENT } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
 import { useForm } from './hooks/useForm'
-import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
+import {
+  computeDiscountPriceAndTotalPrice,
+  distinctList,
+  filterListObjKey,
+  filterObjKey
+} from '@/utils/transformData'
 import { useOutData } from './components/hooks/outdata'
-import { PurchaseReturnApi } from '@/api/srm/return'
-import { PurchaseOrderApi, PurchaseOrderVO } from '@/api/srm/order'
+import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
+import { cloneDeep } from 'lodash-es'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -113,10 +109,14 @@ const initFormData = () => {
     otherPrice: 0,
     orderNo: undefined,
     items: [],
-    no: undefined // 入库单号，后端返回
+    code: undefined // 入库单号，后端返回
   }
 }
 const formData: any = ref(initFormData())
+
+// 供应商必填
+const addBtnDisabled = computed(() => !formData.value.supplierId)
+const showAddBtn = computed(() => !['audit', 'detail'].includes(formType.value))
 
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -169,7 +169,7 @@ const open = async (type: string, id?: number) => {
       //     if (a.product) {
       //       a.productId = a.product.id // 防止后端不放外面
       //       a.productName = a.product.name
-      //       a.productBarCode = a.product.barCode
+      //       a.productCode = a.product.code
       //       a.productUnitName = a.product.unitName
       //       a.productUnitId = a.product.unitId
       //     }
@@ -195,19 +195,41 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as PurchaseOrderVO
+    let data = cloneDeep(formData.value) as unknown as PurchaseReturnVO as any
+    data = filterObjKey(data, [
+      'id',
+      'code',
+      'accountId',
+      'returnTime',
+      'discountPercent',
+      'otherPrice',
+      'supplierId',
+      'fileUrl',
+      'remark',
+      'items'
+    ])
+
+    data.items = filterListObjKey(data.items, [
+      'id',
+      'arriveItemId',
+      'qty',
+      'remark',
+      'applicantId',
+      'applicationDeptId',
+      'actualQty'
+    ])
     if (formType.value === 'create') {
-      await PurchaseOrderApi.createPurchaseOrder(data)
+      await PurchaseReturnApi.createPurchaseReturn(data)
       message.success(t('common.createSuccess'))
     } else if (formType.value === 'update') {
-      await PurchaseOrderApi.updatePurchaseOrder(data)
+      await PurchaseReturnApi.updatePurchaseReturn(data)
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
-      await PurchaseOrderApi.updatePurchaseOrderAuditStatus({
+      await PurchaseReturnApi.updatePurchaseReturnAuditStatus({
+        ids: [data.id],
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
-        inId: data.id,
-        reviewComment: data.reviewComment
+        auditAdvice: data.auditAdvice
       })
       message.success(t('common.updateSuccess'))
     }
@@ -241,27 +263,29 @@ const addItem = (selectionList: any[]) => {
   // reconciliationStatus 对账状态(false:未对账 ，true:已对账) 看看是不是要加上
   nextTick(() => {
     const items = formData.value.items
-    const itemIdKey = 'inItemId'
+    const itemIdKey = 'arriveItemId'
     const selectList = selectionList.map((item: any) => {
       // 采购订单分页需带出数据
       const {
-        no,
-        rowItemsId, //list记得转化
+        code,
+        arriveCode,
+        itemsId, //list记得转化
         productId,
         productName,
-        productBarCode,
+        productCode,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         // model, // //列表要转化取item-product里面数据
 
         productPrice,
         qty,
+        actualQty,
 
-        taxPercent = TAX_PERCENT,
+        taxRate = TAX_PERCENT,
         taxPrice,
-        actTaxPrice,
-        allAmount,
-        remark,
+        grossPrice,
+        grossTotalPrice,
+        itemsRemark,
         containerRate,
 
         warehouseId,
@@ -270,10 +294,12 @@ const addItem = (selectionList: any[]) => {
         source,
 
         currencyId,
+        currencyName,
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName
+        applicationDeptName,
+        declaredType,
       } = item
 
       /**
@@ -281,23 +307,27 @@ const addItem = (selectionList: any[]) => {
        * 无法带出的内容有 exchangeRate-source
        */
       const obj = {
-        // orderNo: no,
-        [itemIdKey]: rowItemsId, //list记得转化
+        // orderNo: code,
+        arriveCode,
+        [itemIdKey]: itemsId, //list记得转化
         productId,
         productName,
-        productBarCode,
+        productCode,
+        code,
         productUnitName, //列表要转化取item-product里面数据
         productUnitId, // 列表要转化取item-product里面数据
         // model, // //列表要转化取item-product里面数据
 
         productPrice,
-        qty,
-        originCount: qty,
-        taxPercent,
+        qty:actualQty || 0,
+        originCount: actualQty || 0,
+        actualQty,
+
+        taxRate,
         taxPrice,
-        actTaxPrice,
-        allAmount,
-        remark,
+        grossPrice,
+        grossTotalPrice,
+        remark: itemsRemark,
         containerRate,
 
         warehouseId,
@@ -306,14 +336,29 @@ const addItem = (selectionList: any[]) => {
         source,
 
         currencyId,
+        currencyName,
         applicantId,
         applicantName,
         applicationDeptId,
-        applicationDeptName
+        applicationDeptName,
+        declaredType,
       }
       return obj
     })
-    formData.value.items = distinctList(items, selectList, itemIdKey)
+    // const itemsList = distinctList(items, selectList, itemIdKey)
+    // 采购退货因为是整单单选 -所以直接进行覆盖就可以了
+    const itemsList: any = selectList
+    const model = formRef.value.getFormData()
+    if (itemsList?.length) {
+      model.discountPercent = itemsList[0].discountPercent
+      model.otherPrice = itemsList[0].otherPrice
+      model.accountId = itemsList[0].accountId
+    } else {
+      model.discountPercent = undefined
+      model.otherPrice = undefined
+      model.accountId = undefined
+    }
+    formData.value.items = itemsList
   })
 }
 </script>

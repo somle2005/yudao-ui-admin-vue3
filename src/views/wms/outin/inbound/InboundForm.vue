@@ -71,6 +71,7 @@ import { FinanceSubjectVO } from '@/api/fms/company'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { filterObjKey, getLastListProp } from '@/utils/transformData'
 import { InboundItemApi } from '@/api/wms/inbound-item'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 
 // import { useOutData } from './components/hooks/outdata'
 
@@ -93,15 +94,15 @@ const initFormData = () => {
     type: undefined,
     warehouseId: undefined,
     status: undefined,
-    upstreamBillId: undefined,
-    upstreamBillCode: undefined,
-    upstreamBillType: undefined,
+    upstreamId: undefined,
+    upstreamCode: undefined,
+    upstreamType: undefined,
     referNo: undefined,
     traceNo: undefined,
     shippingMethod: undefined,
     arrivalPlanTime: undefined,
     arrivalActualTime: undefined,
-    creatorComment: undefined,
+    remark: undefined,
     initAge: undefined,
     itemList: []
   }
@@ -114,7 +115,7 @@ const financeSubjectList = ref<FinanceSubjectVO[]>([])
 /** 子表的表单 */
 const subTabsName = ref('item')
 const itemFormRef = ref()
-const itemsFormdisabled = computed(() => ['detail'].includes(formType.value))
+const itemsFormdisabled = computed(() => [OPERATE_MAP.abandon, 'detail'].includes(formType.value))
 const auditType = computed(() => formType.value === 'audit')
 
 const requestFormOptions: any = ref([])
@@ -146,7 +147,7 @@ const createRequestFormOptions = () => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
+      children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE).slice(0,3)
     },
     // {
     //   requiredFlag: true,
@@ -167,9 +168,9 @@ const createRequestFormOptions = () => {
     {
       requiredFlag: true,
       type: 'select',
-      placeholder: '请选择库存主体',
+      placeholder: '请选择库存公司',
       prop: 'companyId',
-      label: '库存主体',
+      label: '库存公司',
       attrs: {
         filterable: true,
         clearable: true,
@@ -205,9 +206,9 @@ const createRequestFormOptions = () => {
     },
     {
       type: 'date-picker',
-      placeholder: '请选择预计到货时间',
+      placeholder: '请选择计划到货时间',
       prop: 'arrivalPlanTime',
-      label: '预计到货时间',
+      label: '计划到货时间',
       attrs: {
         clearable: true,
         type: 'date',
@@ -221,7 +222,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '特别说明',
-      prop: 'creatorComment',
+      prop: 'remark',
       placeholder: '请输入特别说明',
       attrs: {
         style: { width: '100%' },
@@ -269,6 +270,27 @@ const detailOptions = (formOptions) => {
   return addDisabled(formOptions)
 }
 
+const abandonFormOptions = (formOptions) => {
+  const index = formOptions.findIndex((item) => item.slot === 'items')
+
+  const obj: any = {
+    type: 'input',
+    placeholder: '审核意见',
+    prop: 'comment',
+    label: '审核意见',
+    attrs: {
+      clearable: true,
+      class: '!w-1/1',
+      style: {
+        width: '100%'
+      }
+    }
+  }
+  formOptions.splice(index, 0, obj)
+
+  return formOptions
+}
+
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
@@ -291,6 +313,9 @@ const open = async (type: string, id?: number) => {
     },
     detail: () => {
       requestFormOptions.value = detailOptions(createRequestFormOptions())
+    },
+    [OPERATE_MAP.abandon]: () => {
+      requestFormOptions.value = abandonFormOptions(detailOptions(createRequestFormOptions()))
     }
   }
   formTypeOperate[type]()
@@ -321,6 +346,8 @@ const submitForm = async (type?: string) => {
   formLoading.value = true
   try {
     const data = formData.value as unknown as InboundVO as any
+    //  创建手工入库单时，需要把参数写死为0 -编辑的时候也带上吧
+    data.upstreamType = 0
     if (itemFormRef?.value?.formData) {
       data.itemList = cloneDeep(itemFormRef.value.formData)
     }
@@ -332,7 +359,7 @@ const submitForm = async (type?: string) => {
       message.success(t('common.updateSuccess'))
     } else if (formType.value === 'audit') {
       if (type === AUDIT_TYPE.agree) {
-        // 同意审核的时候 实际入库量设置成和计划入库量一致
+        // 同意审核的时候 入库数量设置成和计划入库量一致
         data.itemList.forEach((item) => {
           item.actualQty = item.planQty
         })
@@ -345,6 +372,9 @@ const submitForm = async (type?: string) => {
         await InboundApi.rejectInboundAuditStatus({ billId: data.id, comment: data.comment })
       }
       message.success('审核成功')
+    } else if (formType.value === OPERATE_MAP.abandon) {
+      await InboundApi.abandonInbound({ billId: data.id, comment: data.comment })
+      message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件

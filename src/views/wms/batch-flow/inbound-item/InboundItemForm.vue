@@ -1,34 +1,16 @@
 <template>
   <Dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form
+    <SmForm
+      class="-mb-15px"
       ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
+      isCol
+      label-width="150px"
+      v-model="formData"
       v-loading="formLoading"
-    >
-      <el-form-item label="入库单ID" prop="inboundId">
-        <el-input v-model="formData.inboundId" placeholder="请输入入库单ID" />
-      </el-form-item>
-      <el-form-item label="标准产品ID" prop="productId">
-        <el-input v-model="formData.productId" placeholder="请输入标准产品ID" />
-      </el-form-item>
-      <el-form-item label="标准产品SKU" prop="productSku">
-        <el-input v-model="formData.productSku" placeholder="请输入标准产品SKU" />
-      </el-form-item>
-      <el-form-item label="计划入库量" prop="planQty">
-        <el-input v-model="formData.planQty" placeholder="请输入计划入库量" />
-      </el-form-item>
-      <el-form-item label="实际入库量" prop="actual Qty">
-        <el-input v-model="formData.actualQty" placeholder="请输入实际入库量" />
-      </el-form-item>
-      <el-form-item label="批次剩余库存，出库后的剩余库存量" prop="leftQty">
-        <el-input v-model="formData.leftQty" placeholder="请输入批次剩余库存，出库后的剩余库存量" />
-      </el-form-item>
-      <el-form-item label="来源详情ID" prop="sourceItemId">
-        <el-input v-model="formData.sourceItemId" placeholder="请输入来源详情ID" />
-      </el-form-item>
-    </el-form>
+      :options="requestFormOptions"
+      :getModelValue="getFormData"
+    />
+
     <template #footer>
       <el-button @click="submitForm" type="primary" :disabled="formLoading">确 定</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -37,6 +19,13 @@
 </template>
 <script setup lang="ts">
 import { InboundItemApi, InboundItemVO } from '@/api/wms/inbound-item'
+import { getProductList } from '@/commonData'
+import { getWarehouseBinList, getWMSWarehouseList } from '@/commonData/wms'
+import { addProperty } from '@/components/SmForm/src/utils'
+import { OPERATE_MAP } from './constant/index'
+import { StockBinMoveApi } from '@/api/wms/stock-bin-move'
+import { filter } from 'min-dash'
+import { filterObjKey } from '@/utils/transformData'
 
 /** 入库单详情 表单 */
 defineOptions({ name: 'InboundItemForm' })
@@ -48,30 +37,155 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
 const formType = ref('') // 表单的类型：create - 新增；update - 修改
-const formData = ref({
-  id: undefined,
-  inboundId: undefined,
-  productId: undefined,
-  productSku: undefined,
-  planQty: undefined,
-  actualQty: undefined,
-  leftQty: undefined,
-  sourceItemId: undefined,
-})
-const formRules = reactive({
-  inboundId: [{ required: true, message: '入库单ID不能为空', trigger: 'blur' }],
-  productId: [{ required: true, message: '标准产品ID不能为空', trigger: 'blur' }],
-  productSku: [{ required: true, message: '标准产品SKU不能为空', trigger: 'blur' }],
-  planQty: [{ required: true, message: '计划入库量不能为空', trigger: 'blur' }],
-  actualQty: [{ required: true, message: '实际入库量不能为空', trigger: 'blur' }],
-})
+const initFormData = () => {
+  return {
+    id: undefined,
+    no: undefined,
+    warehouseId: undefined,
+    remark: undefined,
+    binMoveId: undefined,
+    productId: undefined,
+    fromBinId: undefined,
+    toBinId: undefined,
+    qty: undefined
+    // itemList: []
+  } as any
+}
+const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
+const productList = ref([]) // 产品列表
+const warehouseBinList = ref([])
+const WMSWarehouseList = ref([])
+
+const requestFormOptions: any = ref([])
+const moveFormOptions = () => {
+  const list = [
+    // {
+    //   componentType: 'sm-select',
+    //   label: '仓库',
+    //   prop: 'warehouseId',
+    //   attrs: {
+    //     keyMap: { label: 'name', value: 'id' },
+    //     style: { width: '100%' },
+    //     disabled: true,
+    //     filterable: true,
+    //     clearable: true,
+    //     data: WMSWarehouseList
+    //   }
+    // },
+    {
+      type: 'select',
+      label: '仓库',
+      prop: 'warehouseId',
+      attrs: {
+        style: { width: '100%' },
+        disabled: true,
+        filterable: true,
+        clearable: true
+      },
+      children: WMSWarehouseList
+    },
+    // productId
+    {
+      type: 'input',
+      prop: 'productCode',
+      label: '产品编码',
+      attrs: {
+        disabled: true,
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    // fromBinId
+    {
+      type: 'input',
+      prop: 'binName',
+      label: '调出库位',
+      attrs: {
+        disabled: true,
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      }
+    },
+    { 
+      requiredFlag: true,
+      type: 'select',
+      label: '调入库位',
+      prop: 'toBinId',
+      placeholder: '请选择调入库位',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: warehouseBinList
+    },
+    {
+      requiredFlag: true,
+      componentType: 'sm-number',
+      prop: 'qty',
+      label: '移动数量',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        max: formData.value.binAvailableQty,
+        style: {
+          width: '100%'
+        }
+      }
+    }
+  ]
+  addProperty(list)
+  return list
+}
+
+const getFormData = () => {
+  return formData.value
+}
 
 /** 打开弹窗 */
-const open = async (type: string, id?: number) => {
+const open = async (type: string, id?: number, row?: any) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
+
+  const formTypeOperate = {
+    [OPERATE_MAP.moveBin]: () => {
+      requestFormOptions.value = moveFormOptions()
+      dialogTitle.value = '移库位'
+
+      const { binAvailableQty, binName, binId, productId, productCode, warehouseId,inboundId } = row
+      const obj: any = {
+        binAvailableQty,
+        fromBinId: binId,
+        binName,
+        productId,
+        productCode,
+        qty: binAvailableQty,
+        warehouseId,
+        inboundId
+      }
+
+      nextTick(() => {
+        const qtyItem = requestFormOptions.value.find((item) => item.prop === 'qty')
+        qtyItem.attrs.max = obj.binAvailableQty
+        formData.value = obj
+        getWarehouseBinList(warehouseBinList, { warehouseId })
+        formRef.value.initForm()
+      })
+    }
+  }
+  formTypeOperate[type]()
+
+  getProductList(productList)
+  getWMSWarehouseList(WMSWarehouseList)
+
   resetForm()
   // 修改时，设置数据
   if (id) {
@@ -93,12 +207,19 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as InboundItemVO
+    let data = formData.value as unknown as InboundItemVO as any
     if (formType.value === 'create') {
       await InboundItemApi.createInboundItem(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await InboundItemApi.updateInboundItem(data)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === OPERATE_MAP.moveBin) {
+      data.itemList = [
+        filterObjKey(data, ['binMoveId', 'productId', 'fromBinId', 'toBinId', 'qty'])
+      ]
+      data = filterObjKey(data, ['inboundId', 'warehouseId', 'itemList'])
+      await StockBinMoveApi.createStockBinMove(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -111,16 +232,7 @@ const submitForm = async () => {
 
 /** 重置表单 */
 const resetForm = () => {
-  formData.value = {
-    id: undefined,
-    inboundId: undefined,
-    productId: undefined,
-    productSku: undefined,
-    planQty: undefined,
-    actualQty: undefined,
-    leftQty: undefined,
-    sourceItemId: undefined,
-  }
+  formData.value = initFormData()
   formRef.value?.resetFields()
 }
 </script>

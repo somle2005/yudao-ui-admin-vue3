@@ -33,17 +33,18 @@
 <script setup lang="ts">
 import { InboundApi, InboundVO } from '@/api/wms/inbound'
 import { getWMSWarehouseList } from '@/commonData/wms'
-import { addProperty } from '@/components/SmForm/src/utils'
+import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
 import ItemForm from './components/ItemForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { getFinanceSubjectList } from '@/commonData'
 import { FinanceSubjectVO } from '@/api/fms/company'
-import { OPERATE_MAP } from './constant'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { InboundItemApi } from '@/api/wms/inbound-item'
 import { filterObjKey } from '@/utils/transformData'
+import { addComment } from '../common/utils'
 
 /** 收货单 表单 */
 defineOptions({ name: 'OpenForm' })
@@ -62,15 +63,15 @@ const initFormData = () => {
     type: undefined,
     warehouseId: undefined,
     status: undefined,
-    upstreamBillId: undefined,
-    upstreamBillCode: undefined,
-    upstreamBillType: undefined,
+    upstreamId: undefined,
+    upstreamCode: undefined,
+    upstreamType: undefined,
     referNo: undefined,
     traceNo: undefined,
     shippingMethod: undefined,
     arrivalPlanTime: undefined,
     arrivalActualTime: undefined,
-    creatorComment: undefined,
+    remark: undefined,
     initAge: undefined,
     itemList: []
   }
@@ -84,7 +85,7 @@ const financeSubjectList = ref<FinanceSubjectVO[]>([])
 const subTabsName = ref('item')
 const itemFormRef = ref()
 const itemsFormdisabled = computed(() =>
-  [OPERATE_MAP.abandon, OPERATE_MAP['force-finish']].includes(formType.value)
+  [OPERATE_MAP.abandon, OPERATE_MAP['force-finish'], 'detail'].includes(formType.value)
 )
 
 const requestFormOptions: any = ref([])
@@ -122,9 +123,9 @@ const updateActualQuantityFormOptions = () => {
     {
       requiredFlag: true,
       type: 'select',
-      placeholder: '请选择库存主体',
+      placeholder: '请选择库存公司',
       prop: 'companyId',
-      label: '库存主体',
+      label: '库存公司',
       attrs: {
         filterable: true,
         clearable: true,
@@ -160,9 +161,9 @@ const updateActualQuantityFormOptions = () => {
     },
     {
       type: 'date-picker',
-      placeholder: '请选择预计到货时间',
+      placeholder: '请选择计划到货时间',
       prop: 'arrivalPlanTime',
-      label: '预计到货时间',
+      label: '计划到货时间',
       attrs: {
         clearable: true,
         type: 'date',
@@ -175,9 +176,9 @@ const updateActualQuantityFormOptions = () => {
     },
     {
       type: 'input',
-      label: '特别说明',
-      prop: 'creatorComment',
-      placeholder: '请输入特别说明',
+      label: '备注',
+      prop: 'remark',
+      placeholder: '请输入备注',
       attrs: {
         style: { width: '100%' },
         clearable: true
@@ -207,76 +208,68 @@ const updateActualQuantityFormOptions = () => {
 }
 
 const abandonFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.slot === 'items')
-
-  const obj: any = {
-    type: 'input',
-    placeholder: '审核意见',
-    prop: 'comment',
-    label: '审核意见',
-    attrs: {
-      clearable: true,
-      class: '!w-1/1',
-      style: {
-        width: '100%'
-      }
-    }
-  }
-  formOptions.splice(index, 0, obj)
-
+  addComment(formOptions)
   return formOptions
 }
 
 const forceFinishFormOptions = (formOptions) => {
-  const index = formOptions.findIndex((item) => item.slot === 'items')
+  addComment(formOptions)
+  return formOptions
+}
 
-  const obj: any = {
-    type: 'input',
-    placeholder: '审核意见',
-    prop: 'comment',
-    label: '审核意见',
-    attrs: {
-      clearable: true,
-      class: '!w-1/1',
-      style: {
-        width: '100%'
+const updateFormOptions = (formOptions) => {
+  // 跟踪号-运输方式-计划到货时间-备注
+  const updateList = ['traceNo', 'shippingMethod', 'arrivalPlanTime', 'remark']
+
+  formOptions.forEach((item) => {
+    if (!updateList.includes(item.prop)) return
+    if (item.attrs) {
+      item.attrs.disabled = false
+    } else {
+      item.attrs = {
+        disabled: false
       }
     }
-  }
-  formOptions.splice(index, 0, obj)
-
+  })
   return formOptions
+}
+
+const detailFormOptions = (formOptions) => {
+  return addDisabled(formOptions)
 }
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   dialogVisible.value = true
-  // dialogTitle.value = t('action.' + type)
+  dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-
-  const titleMap = {
-    [OPERATE_MAP['update-actual-quantity']]: '收货',
-    [OPERATE_MAP.abandon]: '作废',
-    [OPERATE_MAP['force-finish']]: '强制完成'
-  }
-  dialogTitle.value = titleMap[type]
 
   getFinanceSubjectList(financeSubjectList)
   getWMSWarehouseList(WMSWarehouseList)
 
   const formTypeOperate = {
     [OPERATE_MAP['update-actual-quantity']]: () => {
-      requestFormOptions.value = updateActualQuantityFormOptions()
+      dialogTitle.value = OPERATE_MAP['update-actual-quantity']
+      requestFormOptions.value = addComment(updateActualQuantityFormOptions())
     },
     [OPERATE_MAP.abandon]: () => {
+      dialogTitle.value = OPERATE_MAP.abandon
       requestFormOptions.value = abandonFormOptions(updateActualQuantityFormOptions())
     },
     [OPERATE_MAP['force-finish']]: () => {
+      dialogTitle.value = OPERATE_MAP['force-finish']
       requestFormOptions.value = forceFinishFormOptions(updateActualQuantityFormOptions())
     },
     [OPERATE_MAP['update-actual-quantityAndPickup']]: () => {
+      dialogTitle.value = OPERATE_MAP['update-actual-quantityAndPickup']
       requestFormOptions.value = updateActualQuantityFormOptions()
+    },
+    update: () => {
+      requestFormOptions.value = updateFormOptions(updateActualQuantityFormOptions())
+    },
+    detail: () => {
+      requestFormOptions.value = detailFormOptions(updateActualQuantityFormOptions())
     }
   }
   formTypeOperate[type]()
@@ -298,10 +291,10 @@ const open = async (type: string, id?: number) => {
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 const receiveDeal = (data) => {
-  // 实际入库量设置成和计划入库量一致
-  data.itemList.forEach((item) => {
-    item.actualQty = item.planQty
-  })
+  // 入库数量设置成和计划入库量一致
+  // data.itemList.forEach((item) => {
+  //   item.actualQty = item.planQty
+  // })
   const queryData = data.itemList.map((item) =>
     filterObjKey(item, ['actualQty', 'id', 'inboundId'])
   )
@@ -325,6 +318,7 @@ const submitForm = async () => {
     if (formType.value === OPERATE_MAP['update-actual-quantity']) {
       const queryData = receiveDeal(data)
       await InboundItemApi.updateInboundItemActualQuantity(queryData)
+      await InboundApi.agreeInboundAuditStatus({ billId: data.id, comment: data.comment })
       message.success(t('common.updateSuccess'))
     } else if (formType.value === OPERATE_MAP.abandon) {
       await InboundApi.abandonInbound({ billId: data.id, comment: data.comment })
@@ -335,6 +329,7 @@ const submitForm = async () => {
     } else if (formType.value === OPERATE_MAP['update-actual-quantityAndPickup']) {
       const queryData = receiveDeal(data)
       await InboundItemApi.updateInboundItemActualQuantity(queryData)
+      await InboundApi.agreeInboundAuditStatus({ billId: data.id, comment: data.comment })
       const toPickup = () => {
         window.getRouteQuery = () => {
           try {
@@ -350,6 +345,9 @@ const submitForm = async () => {
         })
       }
       setTimeout(() => toPickup(), 500)
+    } else if (formType.value === 'update') {
+      await InboundApi.updateInbound(data)
+      message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
     // 发送操作成功的事件

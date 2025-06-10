@@ -13,6 +13,7 @@ import { FinanceSubjectApi, FinanceSubjectVO } from '@/api/fms/company'
 import { ShopApi } from '@/api/oms/shop'
 import { CustomRuleCategoryApi } from '@/api/tms/custom-category'
 import { CustomProductApi } from '@/api/tms/custom-product'
+import { notEmpty } from '@/utils/judge'
 
 interface SelectProp {
   value: number
@@ -110,8 +111,8 @@ export const getProductList = (data?: any, keyMap?: { [key: string]: any }) => {
   const productList = ref<ProductVO[]>([]) // 产品列表
   ProductApi.getProductSimpleList().then((res) => {
     productList.value = res.map((item) => {
-      // item.label = item.name + '  ' + item.barCode
-      item.label = item.barCode
+      // item.label = item.name + '  ' + item.code
+      item.label = item.code
       item.value = item.id
 
       if (keyMap) {
@@ -159,7 +160,7 @@ export const getProductNameList = (data?: { dataList: any[]; sortList: string[] 
     },
     {
       productMapKey: 'productSkuList',
-      key: 'barCode'
+      key: 'code'
     },
     {
       productMapKey: 'productSeriesList',
@@ -300,4 +301,16 @@ export const getCurrencyList = (data?) => {
     data.value = list
   }
   return ref(list)
+}
+
+const currencyList = getIntDictOptions(DICT_TYPE.CURRENCY_CODE).map((item: any) => {
+  item.id = item.value
+  item.value = item.label
+  return item
+})
+
+export const getCurrencyName = (currencyId) => {
+  if (!notEmpty(currencyId)) return
+  const item = currencyList.find((item) => item.id === currencyId)
+  if (item) return item.label
 }

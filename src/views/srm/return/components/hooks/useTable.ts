@@ -3,7 +3,8 @@ import {
   useWholeOrderMergeCompute,
   useWholeOrder,
   createWholeOrder,
-  createBranchOrder
+  createBranchOrder,
+  useWholeOrderMergeComputeUp
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList } from '@/utils/transformData'
@@ -12,31 +13,33 @@ import { cloneDeep } from 'lodash-es'
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
 
-  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
+  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeComputeUp()
 
   // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
   const fieldMap = {
-    no: '单据编号', // 采购单编号
-    noTime: {
+    code: '单据编码',
+    billTime: {
       label: '单据日期',
       formatter: dateFormatter2, // 年月日-金蝶
       width: '200px'
     },
-    inTime: {
+    arriveTime: {
       label: '入库时间',
       formatter: dateFormatter, // 年月日-金蝶
       width: '200px'
     },
 
-    // items-product带出barCode SKU name
-    productBarCode: {
-      label: 'SKU',
+    // items-product带出barCode 产品编码 name
+    itemsProductCode: {
+      label: '产品编码',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     supplierName: '供应商',
+
+    totalItemsQty: '总数量',
 
     auditStatus: {
       label: '审核状态',
@@ -44,59 +47,62 @@ export const useTable = () => {
       dictAttrs: { type: DICT_TYPE.SRM_AUDIT_STATUS }
     },
 
-    // inStatus: {
-    //   label: '入库状态',
-    //   slot: 'inStatus',
-    //   dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
+    inboundStatus: {
+      label: '入库状态',
+      slot: 'inboundStatus',
+      dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
+    },
+    // payStatus: {
+    //   label: '付款状态',
+    //   slot: 'payStatus',
+    //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
     // },
-    payStatus: {
-      label: '付款状态',
-      slot: 'payStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
-    },
-    reconciliationStatus: {
-      label: '对账状态',
-      slot: 'reconciliationStatus'
-    },
-    rowPayStatus: {
-      label: '行付款状态',
-      slot: 'rowPayStatus',
-      dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    },
-    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
+    // reconciliationStatus: {
+    //   label: '对账状态',
+    //   slot: 'reconciliationStatus'
+    // },
+    // itemsPayStatus: {
+    //   label: '行付款状态',
+    //   slot: 'itemsPayStatus',
+    //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
+    //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // },
+    // totalPrice最终合计价格  totalPrice = totalProductPrice + totalGrossPrice - discountPrice 最终合计价格
     totalPrice: {
-      label: '成交金额',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
+      label: '成交金额'
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
     },
 
-    productName: {
+    itemsProductName: {
       label: '产品名称',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
     // 海关品名 产品id里面有(能带出来吗)等后端
 
-    warehouseName: {
+    itemsWarehouseName: {
       label: '仓库',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
-    qty: {
+    itemsQty: {
       label: '数量',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+      totalItemsKey: 'totalItemsQty',
+      wholeOrderEnable: [WHOLE_ORDER_TYPE.items, WHOLE_ORDER_TYPE.mergeCompute]
     },
 
-    actTaxPrice: {
+    itemsActTaxPrice: {
       label: '含税单价',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
     // taxPrice: {
     //   label: '税额',
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     // },
-    allAmount: {
+    itemsGrossTotalPrice: {
       label: '价税合计',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
 
     itemApplicantName: {
@@ -107,10 +113,10 @@ export const useTable = () => {
       label: '申请部门',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    source: '源单类型',
-    orderNo: '源单单号',
+    // source: '源单类型',
+    // orderNo: '上游单据编码',
 
-    creator: '制单人',
+    creatorName: '制单人',
     createTime: {
       label: '制单时间',
       formatter: dateFormatter,
@@ -123,7 +129,7 @@ export const useTable = () => {
       formatter: dateFormatter,
       width: '200px'
     },
-    reviewComment: '审核意见',
+    auditAdvice: '审核意见'
 
     // operate: {
     //   label: '操作',
@@ -135,10 +141,10 @@ export const useTable = () => {
 
   const allOptions = transformTableOptions(fieldMap)
   const wrapList = [
-    'no',
+    'code',
     'supplierName',
-    'productBarCode',
-    'reviewComment',
+    'productCode',
+    'auditAdvice',
     'productName',
     'remark',
     'orderNo',
@@ -154,7 +160,6 @@ export const useTable = () => {
 
   // tableOptions.value = createBranchOrder(cloneDeep(allOptions))
   tableOptions.value = createWholeOrder(cloneDeep(allOptions))
-  
 
   // 退货单只能整单
   const wholeOrderEnable = ref(true)
@@ -165,6 +170,9 @@ export const useTable = () => {
 
   // 整单分行列表切换
   const switchList = (list: any, total, data: any) => {
+    
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
 
@@ -183,8 +191,6 @@ export const useTable = () => {
     wholeOrderTotal,
 
     wholeOrderMergeCompute,
-    mergeItemsToList,
-    switchList,
-    useWholeOrder
+    switchList
   }
 }

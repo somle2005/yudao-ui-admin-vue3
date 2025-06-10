@@ -16,29 +16,35 @@ export const useProductEnableTable = () => {
 
   const fieldMap = {
     productName: '产品名称',
-    productBarCode: '产品编码',
-    // warehouseName: '仓库名称',
-    binName: '库位名称',
-    outboundPendingQty: '批待出库量',
-    sellableQty: '可售量',
-    availableQty: '可用量',
+    productCode: '产品编码',
+    // warehouseName: '仓库',
+    binName: '库位',
+    outboundPendingQty: '待出库数',
+    sellableQty: '可售数',
+    availableQty: '可用数',
 
     // updateTime: {
     //   label: '更新时间',
     //   formatter: dateFormatter,
     //   width: '200px'
     // },
-    updaterName: '更新人',
+    // updaterName: '更新人',
     // createTime: {
     //   label: '创建时间',
     //   formatter: dateFormatter,
     //   width: '200px'
     // },
-    creatorName: '创建人'
+    // creatorName: '创建人'
   }
   tableOptions.value = transformTableOptions(fieldMap, {
     allWrap: true,
-    noWidthList: ['outboundPendingQty', 'sellableQty', 'availableQty']
+    // noWidthList: ['outboundPendingQty', 'sellableQty', 'availableQty']
+    computePropList: [
+      'binName',
+      'outboundPendingQty',
+      'sellableQty',
+      'availableQty',
+    ]
   })
 
   // 注意外面都要用let

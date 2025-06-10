@@ -21,7 +21,8 @@
             :is="getComponentType(item)"
             :placeholder="getPlaceholder(item.placeholder)"
             v-model.trim="model[item.prop!]"
-            v-bind="item.attrs"
+            v-bind="getAttrs(item.attrs,item.type)"
+            :attrs="item.attrs"
             v-on="item.events || {}"
             @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
           />
@@ -44,7 +45,7 @@
           :label="item.label"
         >
           <component
-            v-bind="item.attrs"
+            v-bind="getAttrs(item.attrs,item.type)"
             :is="getComponentType(item)"
             v-model="model[item.prop!]"
             :placeholder="getPlaceholder(item.placeholder)"
@@ -90,7 +91,8 @@
                 :is="getComponentType(item)"
                 :placeholder="getPlaceholder(item.placeholder)"
                 v-model.trim="model[item.prop!]"
-                v-bind="item.attrs"
+                v-bind="getAttrs(item.attrs,item.type)"
+                :attrs="item.attrs"
                 v-on="item.events || {}"
                 @keyup.enter="(e) => dealEvents(e, item, 'keyup.enter')"
               />
@@ -116,7 +118,7 @@
               :label="item.label"
             >
               <component
-                v-bind="item.attrs"
+                v-bind="getAttrs(item.attrs,item.type)"
                 :is="getComponentType(item)"
                 v-model="model[item.prop!]"
                 :placeholder="getPlaceholder(item.placeholder)"
@@ -148,6 +150,23 @@ import { FormInstance, FormOptions } from './types/types'
 import { cloneDeep } from 'lodash-es'
 import { UploadFile, UploadFiles, UploadRawFile } from 'element-plus'
 // import E from "wangeditor"
+
+const getAttrs = (attrs, type) => {
+  const completeAttrs = attrs || {}
+  try {
+    const map = {
+      'input-number': () => {
+        if (completeAttrs.controls === null || completeAttrs.controls === undefined) {
+          completeAttrs.controls = false
+        }
+      }
+    }
+    map[type] && map[type]()
+    return completeAttrs
+  } catch (e) {
+    console.log(e, 'e')
+  }
+}
 
 const getComponentType = (item) => {
   const { type, componentType } = item

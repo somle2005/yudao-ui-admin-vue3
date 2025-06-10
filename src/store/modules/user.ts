@@ -58,6 +58,9 @@ export const useUserStore = defineStore('admin-user', {
         userInfo = await getInfo()
       }
       this.permissions = new Set(userInfo.permissions)
+      if (userInfo?.roles?.length && userInfo.roles.includes('super_admin')) {
+        this.permissions.add('*:*:*')
+      }
       this.roles = userInfo.roles
       this.user = userInfo.user
       this.isSetUser = true

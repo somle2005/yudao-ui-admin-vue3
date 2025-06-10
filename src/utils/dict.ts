@@ -274,8 +274,14 @@ export enum DICT_TYPE {
   WMS_OUTBOUND_AUDIT_STATUS = 'wms_outbound_audit_status', // WMS出库单审批状态
   WMS_STOCK_FLOW_DIRECTION = 'wms_stock_flow_direction', // WMS库存流水方向
   WMS_STOCK_TYPE = 'wms_stock_type', // WMS库存类型
-
-
+  WMS_INBOUND_SHELVING_STATUS = 'wms_inbound_shelving_status', //  WMS入库单上架状态
+  WMS_INVENTORY_AUDIT_STATUS = 'wms_inventory_audit_status', // WMS盘点单审批状态
+  WMS_STOCK_REASON = 'wms_stock_reason', // WMS流水发生的原因
+  WMS_MOVE_EXECUTE_STATUS = 'wms_move_execute_status', // WMS库存移动的执行状态
+  WMS_INVENTORY_STATUS = 'wms_inventory_status', // WMS库存移动的执行状态
+  WMS_EXCHANGE_AUDIT_STATUS = 'wms_exchange_audit_status', // WMS换货单审批状态
+  WMS_EXCHANGE_TYPE = 'wms_exchange_type', // WMS换货单类型
+  
   // ========== SRM - 采购模块  ==========
   SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态
   SRM_EXECUTE_STATUS = 'srm_execute_status', // SRM 执行状态
@@ -283,5 +289,10 @@ export enum DICT_TYPE {
   SRM_ORDER_STATUS = 'srm_order_status', // SRM 采购订购状态
   SRM_PAYMENT_STATUS = 'srm_payment_status', // SRM 采购付款状态
   SRM_OFF_STATUS = 'srm_off_status', // SRM 开关状态
-  SRM_AUDIT_STATUS = 'srm_audit_status' // SRM 审批状态
+  SRM_AUDIT_STATUS = 'srm_audit_status', // SRM 审批状态
+  SRM_OUTBOUND_STATUS = 'srm_outbound_status', // SRM 出库状态
+
+  // ========== TMS - 运输管理系统  ==========
+  TMS_CABINET_TYPE = 'tms_cabinet_type', // TMS 柜型
+  TMS_FEE_TYPE = 'tms_fee_type', // TMS 费用类型
 }

@@ -7,17 +7,17 @@
       label-width="100px"
       v-loading="formLoading"
     >
-      <el-form-item label="SKU" prop="productId">
+      <el-form-item label="产品编码" prop="productId">
         <el-select
           v-model="formData.productId"
           clearable
           filterable
-          placeholder="请选择SKU"
+          placeholder="请选择产品编码"
         >
           <el-option
             v-for="item in productList"
             :key="item.id"
-            :label="item.barCode"
+            :label="item.code"
             :value="item.id"
           />
         </el-select>

@@ -21,38 +21,75 @@ const resolveConfig = (tableOption, config) => {
       }
     })
   }
-  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config || {}
+  const {
+    allWrap,
+    wrapList,
+    noWidthList = [],
+    allWrapIgnoreList = [],
+    computePropList = [],
+    noComputePropList = []
+  } = config || {}
 
   const allWrapDeal = (allWrap, item) => {
     if (!allWrap) return
     allWrapIgnoreList.push(...['operate'])
     if (allWrapIgnoreList.includes(item.prop)) return
-    const propertyList = ['dictAttrs', 'formatter']
+    const propertyList = ['dictAttrs', 'formatter', 'slot']
     const flag = propertyList.some((a) => item[a])
     if (flag) return
 
     item.slot = item.prop
     item.wrap = true
-    if (!item.noWidth) {
-      item.width = '200px'
+    if (item.noWidth) {
+      item.width = '180px'
     }
   }
 
   const wrapListDeal = (wrapList, item) => {
-    if (!wrapList) return
+    if (!wrapList?.length) return
     if (wrapList.includes(item.prop)) {
       item.slot = item.prop
       item.wrap = true
-      if (!item.noWidth) {
-        item.width = '200px'
+      if (item.noWidth) {
+        item.width = '180px'
       }
     }
   }
 
   const noWidthListDeal = (noWidthList, item) => {
-    if (!noWidthList) return
+    if (!noWidthList?.length) return
     if (noWidthList.includes(item.prop)) {
       item.width = undefined
+    }
+  }
+
+  const scaleComputeWidth = (item) => {
+    const scale = 20
+    const len = item.label.length
+    if (len <= 4) {
+      item.width = scale * len + 20
+      return
+    }
+    item.width = scale * len + 5
+  }
+
+  // 默认20px 1字符
+  const computePropListWidth = (computePropList, item) => {
+    if (!computePropList?.length) return
+    const flag = computePropList.includes(item.prop) && item.noWidth
+    if (flag) {
+      scaleComputeWidth(item)
+    }
+  }
+
+  const noComputePropListWidth = (noComputePropList, item) => {
+    if (!noComputePropList?.length) return
+    const ignoreList = ['Time', 'operate']
+    const everyIgnore = ignoreList.every((a) => !item.prop.includes(a))
+    // 手动设置宽度不计算-自动设置的宽度才进行计算
+    const flag = !noComputePropList.includes(item.prop) && everyIgnore && item.noWidth
+    if (flag) {
+      scaleComputeWidth(item)
     }
   }
 
@@ -60,6 +97,8 @@ const resolveConfig = (tableOption, config) => {
     allWrapDeal(allWrap, item)
     wrapListDeal(wrapList, item)
     noWidthListDeal(noWidthList, item)
+    computePropListWidth(computePropList, item)
+    noComputePropListWidth(noComputePropList, item)
   })
 }
 
@@ -77,19 +116,19 @@ export const transformTableOptions = (
       width: '100px'
     }
     if (fieldMap[key] instanceof Object) {
-      Object.assign(obj, fieldMap[key])
-      // 打赏自动设置宽度的标记
-      if (!fieldMap.width) {
+      if (!fieldMap[key].width) {
         obj.noWidth = true
       }
       // 只能对时间字段-时间戳进行排序
-      if (fieldMap[key].formatter) {
+      if (fieldMap[key].formatter && !fieldMap[key].hideSort) {
         obj.sortable = true
       }
+      Object.assign(obj, fieldMap[key])
+    } else {
+      obj.noWidth = true
     }
     tableOption.push(obj)
   }
-
   resolveConfig(tableOption, config)
 
   return tableOption

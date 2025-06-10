@@ -31,23 +31,27 @@ export interface InboundItemActualQtyVO {
   /**
    * 实际入库量
    */
-  actualQty?: number;
+  actualQty?: number
   /**
    * 主键
    */
-  id: number;
+  id: number
   /**
    * 入库单ID
    */
-  inboundId?: number;
+  inboundId?: number
 }
-
 
 // 入库单详情 API
 export const InboundItemApi = {
   // 查询入库单详情分页
   getInboundItemPage: async (data: any) => {
     return await request.post({ url: `/wms/inbound-item/page`, data })
+  },
+
+  // 库位批次库存查询
+  getInboundItemPageBin: async (data: any) => {
+    return await request.post({ url: `wms/inbound-item/page-bin`, data })
   },
 
   // 查询入库单详情详情
@@ -71,8 +75,17 @@ export const InboundItemApi = {
   },
 
   // 导出入库单详情 Excel
-  exportInboundItem: async (params) => {
-    return await request.download({ url: `/wms/inbound-item/export-excel`, params })
+  exportInboundItem: async (data) => {
+    return await request.download({ url: `/wms/inbound-item/export-excel`, data, method: 'POST' })
+  },
+
+  // 导出批次库存 Excel
+  exportInboundItemExcelBin: async (data) => {
+    return await request.download({
+      url: `/wms/inbound-item/export-excel-bin`,
+      data,
+      method: 'POST'
+    })
   },
 
   // 待上架的入库明细
@@ -82,5 +95,5 @@ export const InboundItemApi = {
   // 设置实际入库量
   updateInboundItemActualQuantity: async (data: Array<InboundItemActualQtyVO>) => {
     return await request.put({ url: `/wms/inbound-item/update-actual-quantity`, data })
-  },
+  }
 }

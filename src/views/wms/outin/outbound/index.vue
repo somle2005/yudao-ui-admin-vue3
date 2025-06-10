@@ -33,7 +33,7 @@
         </el-button>
 
         <el-button
-          :disabled="oneSelectDisabledBtn"
+          :disabled="selectionList[0]?.auditStatus !== AUDIT_STATUS.pendStorage"
           type="primary"
           @click="openForm('audit', selectionList[0]?.id)"
           v-hasPermi="['wms:outbound:agree', 'wms:outbound:reject']"
@@ -84,6 +84,18 @@
         >
           编辑
         </el-button>
+
+        <!-- 作废-草稿，审批驳回	隐藏 0,2 -->
+        <el-button
+          link
+          type="warning"
+          @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
+          v-hasPermi="['wms:outbound:abandon']"
+          v-if="isAbandon(scope.row.auditStatus)"
+        >
+          作废
+        </el-button>
+
         <!-- <el-button
           link
           type="primary"
@@ -94,14 +106,14 @@
           审核
         </el-button> -->
 
-        <el-button
+        <!-- <el-button
           link
           type="success"
           @click="openForm(OPERATE_MAP.finish, scope.row.id)"
           v-hasPermi="['wms:outbound:finish']"
         >
           完成
-        </el-button>
+        </el-button> -->
 
         <el-button
           link
@@ -127,7 +139,10 @@ import OutboundForm from './OutboundForm.vue'
 import { getItemProp, useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
-import { OPERATE_MAP } from './constant'
+// import { OPERATE_MAP } from './constant'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
+import { AUDIT_STATUS } from '@/views/wms/common/constants/index'
+import { isAbandon } from '@/utils/btnManager/wms'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -139,25 +154,34 @@ const fieldMap = {
   //   dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
   // },
   code: '单据号',
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   auditStatus: {
     label: '审核状态',
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_AUDIT_STATUS }
   },
-  type: {
+
+  upstreamType: {
     label: '类型',
-    slot: 'status',
+    width: '210px',
+    slot: 'upstreamType',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_TYPE }
   },
+
+  // type: {
+  //   label: '类型',
+  //   slot: 'type',
+  //   dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_TYPE }
+  // },
+
   outboundStatus: {
     label: '出库状态',
     slot: 'outboundStatus',
     dictAttrs: { type: DICT_TYPE.WMS_OUTBOUND_STATUS }
   },
-  companyName: '库存主体',
+  // companyName: '库存公司',
   // deptName: '库存归属',
-  creatorComment: '特别说明',
+  remark: '特别说明',
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -179,7 +203,7 @@ const fieldMap = {
 }
 tableOptions.value = transformTableOptions(fieldMap, {
   noWidth: true,
-  wrapList: ['warehouseName', 'deptName', 'companyName', 'creatorComment']
+  wrapList: ['warehouseName', 'deptName', 'companyName', 'remark']
 })
 
 /** 出库单 列表 */
@@ -199,10 +223,10 @@ const queryParams = reactive({
   type: undefined,
   status: undefined,
   auditStatus: undefined,
-  upstreamBillId: undefined,
-  upstreamBillCode: undefined,
-  upstreamBillType: undefined,
-  creatorComment: undefined,
+  upstreamId: undefined,
+  upstreamCode: undefined,
+  upstreamType: undefined,
+  remark: undefined,
   createTime: []
 })
 const queryFormRef = ref() // 搜索的表单

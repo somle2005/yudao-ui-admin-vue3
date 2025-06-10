@@ -1,4 +1,5 @@
 <template>
+  <!-- 5-作废,4-强制入库,3-已入库,2-驳回,1-待入库,0-草稿 btnManage-createStr1创建  驳回对应不同意 -->
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
@@ -32,8 +33,10 @@
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
 
+        <!-- 提交审批	草稿，审批驳回	置灰 0-2 批量提交暂不做限制-->
+
         <el-button
-          :disabled="oneSelectDisabledBtn"
+          :disabled="oneSelectDisabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -42,8 +45,10 @@
           提交审核
         </el-button>
 
+        <!-- 审核	提交审核	置灰 -->
+        <!-- 待入库状态 selectionList[0]?.auditStatus !== AUDIT_STATUS.pendStorage-->
         <el-button
-          :disabled="oneSelectDisabledBtn"
+          :disabled="!isAudit(selectionList[0]?.auditStatus)"
           type="primary"
           @click="openForm('audit', selectionList[0]?.id)"
           v-hasPermi="['wms:inbound:agree', 'wms:inbound:reject']"
@@ -93,19 +98,36 @@
         >
           审核
         </el-button> -->
+
+        <!-- 作废-草稿，审批驳回	隐藏 0,2 -->
+        <el-button
+          link
+          type="warning"
+          @click="openForm(OPERATE_MAP.abandon, scope.row.id)"
+          v-hasPermi="['wms:inbound:abandon']"
+          v-if="isAbandon(scope.row.auditStatus)"
+        >
+          作废
+        </el-button>
+        <!-- 编辑	草稿，审批驳回	置灰 0,2 -->
+
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['wms:inbound:update']"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
+
+        <!-- 删除	草稿	置灰 0-->
         <el-button
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
           v-hasPermi="['wms:inbound:delete']"
+          :disabled="!isDelete(scope.row.auditStatus)"
         >
           删除
         </el-button>
@@ -126,13 +148,17 @@ import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { getLastListProp } from '@/utils/transformData'
+import { AUDIT_STATUS } from '@/views/wms/common/constants/index'
+import { isAbandon, isUpdate, isDelete, isSubmitAuditBatch, isAudit } from '@/utils/btnManager/wms'
+import { OPERATE_MAP } from '@/views/wms/common/constants/index'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
 
 const fieldMap = {
   code: '入库单号',
-  warehouseName: '仓库名称',
+  // upstreamCode: '上游单据编号',
+  warehouseName: '仓库',
 
   type: {
     label: '入库单类型',
@@ -149,6 +175,11 @@ const fieldMap = {
     slot: 'auditStatus',
     dictAttrs: { type: DICT_TYPE.WMS_INBOUND_AUDIT_STATUS }
   },
+  shelveStatus: {
+    label: '上架状态',
+    slot: 'shelveStatus',
+    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_SHELVING_STATUS }
+  },
   shippingMethod: {
     label: '运输方式',
     slot: 'shippingMethod',
@@ -161,7 +192,7 @@ const fieldMap = {
   // },
 
   arrivalPlanTime: {
-    label: '预计到货时间',
+    label: '计划到货时间',
     formatter: dateFormatter2,
     width: '200px'
   },
@@ -170,7 +201,7 @@ const fieldMap = {
     formatter: dateFormatter2,
     width: '200px'
   },
-  creatorComment: '特别说明',
+  remark: '特别说明',
   // comment: '审批意见',
   updateTime: {
     label: '更新时间',
@@ -191,8 +222,9 @@ const fieldMap = {
     width: '200px'
   }
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true})
-console.log(tableOptions.value,'tableOptions.value')
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true
+})
 
 /** 入库单 列表 */
 defineOptions({ name: 'WmsInbound' })
@@ -210,15 +242,15 @@ const queryParams = reactive({
   type: undefined,
   warehouseId: undefined,
   status: undefined,
-  upstreamBillId: undefined,
-  upstreamBillCode: undefined,
-  upstreamBillType: undefined,
+  upstreamId: undefined,
+  upstreamCode: undefined,
+  upstreamType: 0,
   referNo: undefined,
   traceNo: undefined,
   shippingMethod: undefined,
-  arrivalPlanTime: [],
-  arrivalActualTime: [],
-  creatorComment: undefined,
+  // arrivalPlanTime: [],
+  // arrivalActualTime: [],
+  remark: undefined,
   initAge: undefined,
   createTime: []
 })
@@ -228,6 +260,7 @@ const exportLoading = ref(false) // 导出的加载中
 /** 查询列表 */
 const getList = async () => {
   loading.value = true
+  queryParams.upstreamType = 0 //手工入库 防止和收货管理冲突
   try {
     const data = await InboundApi.getInboundPage(queryParams)
     list.value = getItemProp(data.list, ['warehouse']).map((item: any) => {

@@ -12,14 +12,15 @@ export interface PurchaseInVO {
   remark: string // 备注
   outCount: number // 采购出库数量
   returnCount: number // 采购退货数量
-  reviewComment?: string // 审核意见
+  auditAdvice?: string // 审核意见
+  items: any[]
 }
 
 // ERP 采购入库 API
 export const PurchaseInApi = {
   // 查询采购入库分页
-  getPurchaseInPage: async (params: any) => {
-    return await request.get({ url: `/srm/purchase-in/page`, params })
+  getPurchaseInPage: async (data: any) => {
+    return await request.post({ url: `/srm/purchase-in/page`, data })
   },
 
   // 查询采购入库详情
@@ -67,8 +68,8 @@ export const PurchaseInApi = {
   updatePurchaseInAuditStatus: async (data: {
     reviewed: boolean
     pass: boolean
-    inId: number
-    reviewComment?: string
+    arriveId: number
+    auditAdvice?: string
   }) => {
     return await request.post({
       url: `/srm/purchase-in/auditStatus`,
@@ -77,7 +78,7 @@ export const PurchaseInApi = {
   },
 
   // 采购入库提交审核
-  submitPurchaseInAudit: async (data: { inIds: number[] }) => {
+  submitPurchaseInAudit: async (data: { arriveIds: number[] }) => {
     return await request.put({
       url: `/srm/purchase-in/submitAudit`,
       data
@@ -85,7 +86,10 @@ export const PurchaseInApi = {
   },
 
   // 采购入库切换付款状态
-  changePurchaseInPayStatus: async (data: { inItemIds: number[]; pass: boolean }) => {
+  changePurchaseInPayStatus: async (data: {
+    items: { id: number; payPrice: number }[]
+    pass: boolean
+  }) => {
     return await request.post({
       url: `/srm/purchase-in/changePayStatus`,
       data

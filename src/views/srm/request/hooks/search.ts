@@ -1,20 +1,39 @@
-import { getDeptTree, getProductList, getSupplierProductList, getUserList } from '@/commonData'
+import {
+  getDeptTree,
+  getProductList,
+  getSupplierList,
+  getSupplierProductList,
+  getUserList
+} from '@/commonData'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getDictOptions } from '@/utils/dict'
 
-
 export const useSearchForm = (handleQuery) => {
-
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()
   // const supplierProductList = getSupplierProductList()
-  const productList = getProductList(null, { label: 'barCode', value: 'id' })
+  const productList = getProductList(null, { label: 'code', value: 'id' })
+  const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'select',
-      placeholder: '请选择SKU',
+      placeholder: '请选择供应商',
+      prop: 'supplierId',
+      label: '供应商',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: supplierList
+    },
+    {
+      type: 'select',
+      placeholder: '请选择产品编码',
       prop: 'productId',
-      label: 'SKU',
+      label: '产品编码',
       attrs: {
         clearable: true,
         filterable: true,
@@ -27,9 +46,9 @@ export const useSearchForm = (handleQuery) => {
     },
     {
       type: 'input',
-      label: '单据编号',
-      prop: 'no',
-      placeholder: '请输入单据编号',
+      label: '单据编码',
+      prop: 'code',
+      placeholder: '请输入单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
@@ -44,7 +63,7 @@ export const useSearchForm = (handleQuery) => {
       attrs: {
         clearable: true,
         type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        'value-format': 'x',
         'start-placeholder': '开始日期',
         'end-placeholder': '结束日期',
         defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
@@ -85,7 +104,7 @@ export const useSearchForm = (handleQuery) => {
         // style: {
         //   width: '100%'
         // }
-      },
+      }
     },
     {
       type: 'select',
@@ -132,9 +151,7 @@ export const useSearchForm = (handleQuery) => {
         }
       },
       children: userList
-    },
-
-    
+    }
 
     // {
     //   type: 'select',
@@ -174,9 +191,9 @@ export const useSearchForm = (handleQuery) => {
     //       const productItem = productList1.value.find((item: any) => item.value === value)
     //       if (productItem) {
     //         const formData = getFormData()
-    //         formData.barCode = productItem.barCode
+    //         formData.code = productItem.code
     //         // const modelVal = smFormRef.value.getFormData()
-    //         // modelVal.barCode = productItem.barCode
+    //         // modelVal.code = productItem.code
     //       }
     //     }
     //   },
@@ -199,6 +216,13 @@ export const useSearchForm = (handleQuery) => {
 
   searchFormOptions.value.forEach((item) => {
     item.events = events
+    if (item.attrs) {
+      item.attrs.class = '!w-240px'
+    } else {
+      item.attrs = {
+        class: '!w-240px'
+      }
+    }
   })
   return searchFormOptions
 }

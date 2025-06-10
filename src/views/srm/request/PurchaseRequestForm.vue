@@ -1,5 +1,5 @@
 <template>
-  <Dialog width="1400" :title="dialogTitle" v-model="dialogVisible">
+  <Dialog :title="dialogTitle" v-model="dialogVisible">
     <SmForm
       class="-mb-15px"
       ref="smFormRef"
@@ -13,16 +13,23 @@
       <template #items>
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="申请产品清单" name="item">
-            <ItemsForm ref="itemFormRef" :items="formData.items" :formType="formType" />
+            <ItemsForm
+              ref="itemFormRef"
+              :items="formData.items"
+              :formType="formType"
+            />
+            
+            <!-- <MergeOrderForm
+              v-if="mergeType"
+              ref="itemFormRef"
+              :items="formData.items"
+              :formType="formType"
+            /> -->
           </el-tab-pane>
         </el-tabs>
       </template>
       <template #fileUrl="{ model }">
-        <UploadFile
-          :is-show-tip="false"
-          v-model="model.fileUrl"
-          :limit="1"
-        />
+        <UploadFile :is-show-tip="false" v-model="model.fileUrl" :limit="1" />
       </template>
     </SmForm>
     <div class="moreBtnList">
@@ -36,9 +43,9 @@
       >
       <el-button @click="dialogVisible = false"> 取消</el-button>
       <template v-if="auditType">
-        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+        <!-- <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
           不同意</el-button
-        >
+        > -->
         <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
           同意</el-button
         >
@@ -49,6 +56,7 @@
 <script setup lang="ts">
 import { usePurchaseRequestForm } from './hooks'
 import ItemsForm from './components/ItemsForm.vue'
+// import MergeOrderForm from '@/views/srm/common/components/MergeOrderForm.vue'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { computeDiscountPriceAndTotalPrice } from '@/utils/transformData'
@@ -91,14 +99,13 @@ let {
   auditType
 } = usePurchaseRequestForm({ getResetFormData, getFormData, emit })
 
+const mergeType = computed(() => formType.value === 'merge')
+
 const changeAuditBtnType = (type) => {
   auditBtnType.value = type
   submitForm()
 }
 const submitFormDB = createDBFn(changeAuditBtnType)
-
-
-
 
 /** 计算 discountPrice、totalPrice 价格 */
 watch(
@@ -112,8 +119,6 @@ watch(
   },
   { deep: true }
 )
-
-
 
 onMounted(() => {})
 onUnmounted(() => {})

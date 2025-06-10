@@ -1,5 +1,5 @@
 <template>
-  <!-- <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" /> -->
+  <!-- <'7-审核撤销,6-审核不通过,5-已审核,4-审核中,3-未审核,2-已提交,1-草稿, btnManage-createStr1创建' -->
 
   <ContentWrap>
     <!-- 搜索工作栏 -->
@@ -7,7 +7,7 @@
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
       v-model="queryParams"
       :options="searchFormOptions"
       :getModelValue="getSearchFormData"
@@ -53,7 +53,7 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
@@ -79,14 +79,14 @@
         </el-dropdown>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isMerge(selectionList)"
           class="ml-10px"
           type="primary"
           plain
           @click="mergeOrder"
           v-hasPermi="['srm:purchase-order:merge']"
         >
-          合并入库
+          合并到货
         </el-button>
 
         <el-button
@@ -145,12 +145,13 @@
         >
           详情
         </el-button>
+        <!-- 编辑	草稿，驳回  0-2-->
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-order:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
@@ -172,6 +173,7 @@
         >
           反审核
         </el-button> -->
+        <!-- 删除-草稿 1 -->
         <el-button
           link
           type="danger"
@@ -197,14 +199,15 @@ import PurchaseOrderForm from './PurchaseOrderForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { cloneDeep } from 'lodash-es'
-import { mergeItemsToList } from '@/utils/transformData'
+import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
 import {
   useWholeOrder,
   useWholeOrderMergeCompute,
   createBranchOrder
 } from '@/hooks/common/wholeOrder'
 import { useSearchForm } from './hooks/search'
-import { generateContract, mergeItems } from '@/utils/operate/purchase'
+import { generateContract, mergeItems } from '@/utils/operate/srm'
+import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -213,15 +216,24 @@ const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
 // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
 // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
+/**
+ * 如果要支持整单计算 itemsList.value = mergeItemsUpToList(data.list, 'items', { qty: 'itemsQty1' })
+ * 参照这个items是总数 itemsQty1是适配的分行数
+ */
 const fieldMap = {
-  no: '单据编号', // 采购单编号
+  itemsId: {
+    label: '行编号',
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  },
+  code: '单据编码', // 采购单编号
   billTime: {
     label: '单据日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px'
   },
-  erpPurchaseRequestItemNo: {
-    label: '源单单号',
+  // 手动适配添加
+  purchaseApplyCode: {
+    label: '上游单据编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   supplierName: '供应商',
@@ -236,70 +248,70 @@ const fieldMap = {
     slot: 'executeStatus',
     dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS }
   },
-  inStatus: {
+  inboundStatus: {
     label: '入库状态',
-    slot: 'inStatus',
+    slot: 'inboundStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS }
   },
-  payStatus: {
-    label: '付款状态',
-    slot: 'payStatus',
-    dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
-  },
+  // payStatus: {
+  //   label: '付款状态',
+  //   slot: 'payStatus',
+  //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS }
+  // },
   offStatus: {
     label: '关闭状态',
     slot: 'offStatus',
     dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
   },
 
-  // productBarCode: {
-  //   label: 'SKU',
+  // productCode: {
+  //   label: '产品编码',
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
-  barCode: {
-    label: 'SKU',
+  itemsProductCode: {
+    label: '产品编码',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  productName: {
+  itemsProductName: {
     label: '产品名称',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  declaredType: {
+  itemsDeclaredType: {
     label: '海关品名',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  declaredTypeEn: {
+  itemsDeclaredTypeEn: {
     label: '海关品名(英文)',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
-  // totalPrice最终合计价格  totalPrice = totalProductPrice + totalTaxPrice - discountPrice 最终合计价格
+  // totalPrice最终合计价格  totalPrice = totalProductPrice + totalGrossPrice - discountPrice 最终合计价格
   totalPrice: {
     label: '成交金额',
     wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder // 整单才进行展示
   },
 
-  rowExecuteStatus: {
+  itemsExecuteStatus: {
     label: '行执行状态',
-    slot: 'rowExecuteStatus',
+    slot: 'itemsExecuteStatus',
     dictAttrs: { type: DICT_TYPE.SRM_EXECUTE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowInStatus: {
+  itemsInboundStatus: {
     label: '行入库状态',
-    slot: 'rowInStatus',
+    slot: 'itemsInboundStatus',
     dictAttrs: { type: DICT_TYPE.SRM_STORAGE_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  rowPayStatus: {
-    label: '行付款状态',
-    slot: 'rowPayStatus',
-    dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
-  },
-  rowOffStatus: {
+  // itemsPayStatus: {
+  //   label: '行付款状态',
+  //   slot: 'itemsPayStatus',
+  //   dictAttrs: { type: DICT_TYPE.SRM_PAYMENT_STATUS },
+  //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  // },
+  itemsOffStatus: {
     label: '行关闭状态',
-    slot: 'rowOffStatus',
+    slot: 'itemsOffStatus',
     dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS },
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -307,7 +319,7 @@ const fieldMap = {
   // 8:  '入库核销状态',
 
   // 海关品名
-  containerRate: {
+  itemsContainerRate: {
     label: '箱率',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -317,39 +329,43 @@ const fieldMap = {
   //   formatter: dateFormatter2, // 年月日-金蝶
   //   width: '200px'
   // },
-  deliveryTime: {
+  itemsDeliveryTime: {
     label: '交货日期',
     formatter: dateFormatter2, // 年月日-金蝶
     width: '200px',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
   // 总验货通过数-只有整单的时候才进行展示
-  totalInspectionPassCount: {
+  itemsTotalInspectionPassCount: {
     width: '250px',
     label: '总验货通过数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  totalCompletionPassCount: {
+  itemsTotalCompletionPassCount: {
     width: '250px',
     label: '总完工数',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
 
-  waitInCount: {
+  itemsWaitInCount: {
     label: '待收数量', // 待入库数量-待收数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  qty: {
+  itemsQty: {
     label: '下单数量', // 产品下单数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  inboundClosedQty: {
+  itemsInboundClosedQty: {
     label: '已入库数量', // 采购入库数量-已收数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  returnCount: {
+  itemsReturnCount: {
     label: '退货数量', // 采购退货数量
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 整单展示
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 整单展示
   },
   // items-returnCount-采购退货数量
   // currencyId: {
@@ -359,27 +375,31 @@ const fieldMap = {
   // },
 
   currencyName: '币种',
-  // itemCurrencyName: {
+  // itemsCurrencyName: {
   //   label: '币种',
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
 
-  payPrice: {
+  itemsPayPrice: {
     label: '已付款金额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
 
-  actTaxPrice: {
+  itemsActTaxPrice: {
     label: '含税单价',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  taxPrice: {
+  itemsTaxPrice: {
     label: '税额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  allAmount: {
+  itemsGrossTotalPrice: {
     label: '价税合计',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+    wholeOrderEnable: WHOLE_ORDER_TYPE.items
+    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
 
   // 取后端总的税额无法进行分行展示数据了
@@ -387,16 +407,16 @@ const fieldMap = {
   //   label:'税额',
   //   wholeOrderEnable: 'items',
   // }, // items
-  // totalTaxPrice: {
+  // totalGrossPrice: {
   //   label: '价税合计',
   //   wholeOrderEnable: 'items',
   // }, // items
 
-  applicantName: {
+  itemsApplicantName: {
     label: '申请人',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  departmentName: {
+  itemsDepartmentName: {
     label: '申请部门',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
@@ -415,7 +435,7 @@ const fieldMap = {
     width: '200px'
   },
 
-  reviewComment: '审核意见',
+  auditAdvice: '审核意见',
 
   operate: {
     label: '操作',
@@ -425,19 +445,19 @@ const fieldMap = {
   }
 }
 
-const allOptions = transformTableOptions(fieldMap)
+const allOptions = transformTableOptions(fieldMap, { noComputePropList: [] })
 const wrapList = [
-  'no',
+  'code',
   'supplierName',
-  'barCode',
-  'reviewComment',
+  'code',
+  'auditAdvice',
   'productName',
   'remark',
   'declaredType',
   'declaredTypeEn',
-  'erpPurchaseRequestItemNo',
-  'portOfLoading',
-  'portOfDischarge'
+  'purchaseApplyCode',
+  'fromPortName',
+  'toPortName'
 ]
 allOptions.forEach((item: any) => {
   if (wrapList.includes(item.prop)) {
@@ -466,14 +486,14 @@ const wholeOrderTotal = ref(0) // 整单总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   supplierId: undefined,
   productId: undefined,
-  noTime: [],
+  billTime: [],
   auditStatus: undefined,
   remark: undefined,
   creator: undefined,
-  inStatus: undefined,
+  inboundStatus: undefined,
   returnStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
@@ -483,6 +503,12 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
+    // const bodyData = getMainItemBodyData({
+    //   queryParams,
+    //   mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
+    //   itemQueryList: ['productId', 'orderCode']
+    // })
+    // bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
 
     // data.list.forEach((item) => {
@@ -490,7 +516,7 @@ const getList = async () => {
     //   item.items.forEach((a) => {
     //     if (a.product) {
     //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
+    //       a.productCode = a.product.code
     //     }
     //     // const purchaseRequestItem = a.purchaseRequestItem
     //     // if (purchaseRequestItem) {
@@ -504,18 +530,43 @@ const getList = async () => {
     //   })
     // })
 
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+    // 修改前
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'rowItemsId',
+    //   status: 'rowStatus',
+    //   // orderStatus: 'rowOrderStatus', 无该状态
+    //   offStatus: 'rowOffStatus',
+    //   executeStatus: 'rowExecuteStatus',
+    //   inboundStatus: 'rowInStatus',
+    //   payStatus: 'rowPayStatus'
+    //   // currencyName: 'itemCurrencyName',
+    // })
 
-    itemsList.value = mergeItemsToList(data.list, {
-      id: 'rowItemsId',
-      status: 'rowStatus',
-      // orderStatus: 'rowOrderStatus', 无该状态
-      offStatus: 'rowOffStatus',
-      executeStatus: 'rowExecuteStatus',
-      inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus'
-      // currencyName: 'itemCurrencyName',
+    // 修改后
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   // orderStatus: 'rowOrderStatus', 无该状态
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inboundStatus: 'itemsInboundStatus',
+    //   payStatus: 'itemsPayStatus'
+    //   // currencyName: 'itemsCurrencyName',
+    // })
+
+    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
+    itemsList.value = mergeItemsUpToList(data.list, 'items', {
+      purchaseApplyCode: 'purchaseApplyCode'
     })
+
+    /**
+     * 整单的时候才对mergeCompute进行合并计算-展示合并计算的
+     * 如果是分行的时候就要展示分行的
+     * 这样的话比如采购到货的时候 既要展示分行又要展示合并计算的逻辑就行不通了。
+     * 所以要满足这种就得加字段-涉及到options联动-设置表格 通过字段名进行区分
+     */
+    // itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+
     // 后续需要补充itemsTotal
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
@@ -567,7 +618,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await PurchaseOrderApi.exportPurchaseOrder(queryParams)
-    download.excel(data, '销售订单.xls')
+    download.excel(data, '采购订单.xls')
   } catch {
   } finally {
     exportLoading.value = false
@@ -632,7 +683,7 @@ onMounted(async () => {
 })
 
 const mergeOrder = async () => {
-  mergeItems(wholeOrderEnable, selectionList, openForm, 'rowItemsId')
+  mergeItems(wholeOrderEnable, selectionList, openForm, 'itemsId')
 }
 
 const generateContractOrder = async () => {

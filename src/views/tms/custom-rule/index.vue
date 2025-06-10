@@ -25,18 +25,18 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="SKU" prop="barCode">
+      <el-form-item label="产品编码" prop="code">
         <!-- <el-select
-          v-model.trim="queryParams.barCode"
+          v-model.trim="queryParams.code"
           clearable
           filterable
-          placeholder="请选择SKU"
+          placeholder="请选择产品编码"
           @keyup.enter="handleQuery"
           @input="insertBarcode"
           class="!w-240px"
         >
           <el-option
-            v-for="item in productSkuList"
+            v-for="item in product产品编码List"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -46,14 +46,14 @@
           v-model.trim="queryParams.productId"
           clearable
           filterable
-          placeholder="请选择SKU"
+          placeholder="请选择产品编码"
           @keyup.enter="handleQuery"
           class="!w-240px"
         >
           <el-option
             v-for="item in productList"
             :key="item.id"
-            :label="item.barCode"
+            :label="item.code"
             :value="item.id"
           />
         </el-select>
@@ -218,14 +218,13 @@ import { CustomRuleApi, CustomRuleVO } from '@/api/tms/customrule'
 import CustomRuleForm from './CustomRuleForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
-// import { type, typeFind } from '@/views/erp/logistic/constant'
 import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
 import { useTableData } from '@/components/SmTable/src/utils'
 // import { getProductNameList } from '@/commonData'
 import { insertSearchVal } from '@/utils/high'
 import { getProductList } from '@/commonData'
 
-// const { productSkuList } = getProductNameList()
+// const { product产品编码List } = getProductNameList()
 const productList = getProductList()
 
 const { tableOptions, transformTableOptions } = useTableData()
@@ -236,8 +235,8 @@ const fieldMap = {
     slot: 'primaryImageUrl',
     width: '100px'
   },
-  'product-barCode': {
-    label: 'SKU',
+  'product-code': {
+    label: '产品编码',
     width: '180px'
   },
   countryCode: {
@@ -298,7 +297,7 @@ const queryParams = reactive({
   declaredValueCurrencyCode: undefined,
   taxRate: undefined,
   logisticAttribute: undefined,
-  barCode: undefined,
+  code: undefined,
   hscode: undefined,
   createTime: [] as string[],
   fbaBarCode: undefined,
@@ -314,9 +313,8 @@ const getList = async () => {
   try {
     const data = await CustomRuleApi.getCustomRulePage(queryParams)
     list.value = data.list.map((item: any) => {
-      // item.type = typeFind(item.type)
       item['product-name'] = item.product.name
-      item['product-barCode'] = item.product.barCode
+      item['product-code'] = item.product.code
       item.primaryImageUrl = item.product.primaryImageUrl
       item.material = item.product.material
       return item
@@ -380,7 +378,7 @@ const copyForm = (id?: number) => {
 }
 
 // const columnMinWidth = computeColumnMinWidth(list, 'supplierProductCode')
-// const insertBarcode = insertSearchVal(productSkuList)
+// const insertBarcode = insertSearchVal(product产品编码List)
 
 const createTimeChange = (val: any) => {
   queryParams.createTime = val

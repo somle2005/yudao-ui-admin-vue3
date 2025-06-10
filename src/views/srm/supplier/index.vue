@@ -1,5 +1,4 @@
 <template>
-  <!-- <doc-alert title="【采购】采购订单、入库、退货" url="https://doc.iocoder.cn/erp/purchase/" /> -->
 
   <ContentWrap>
     <!-- 搜索工作栏 -->
@@ -37,6 +36,24 @@
           class="!w-240px"
         />
       </el-form-item>
+
+      <el-form-item label="状态" prop="openStatus">
+        <el-select
+          v-model="queryParams.openStatus"
+          clearable
+          filterable
+          placeholder="请选择产品"
+          class="!w-240px"
+        >
+          <el-option
+            v-for="item in getIntDictOptions(DICT_TYPE.COMMON_ENABLE_STATUS)"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -73,8 +90,8 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-      <template #status="{ scope }">
-        <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.status || ''" />
+      <template #openStatus="{ scope }">
+        <dict-tag :type="DICT_TYPE.COMMON_STATUS" :value="scope.row.openStatus || ''" />
       </template>
 
       <template #operate="{ scope }">
@@ -103,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { DICT_TYPE } from '@/utils/dict'
+import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import download from '@/utils/download'
 import { SupplierApi, SupplierVO } from '@/api/srm/supplier'
 import SupplierForm from './SupplierForm.vue'
@@ -117,10 +134,11 @@ const fieldMap = {
   mobile: '手机号码',
   telephone: '联系电话',
   email: '电子邮箱',
-  status: {
+  openStatus: {
     label: '状态',
-    slot: 'status',
-    width: '200px'
+    slot: 'openStatus',
+    width: '200px',
+    dictAttrs: { type: DICT_TYPE.COMMON_ENABLE_STATUS }
   },
   deliveryAddress: '送达地址',
   companyAddress: '公司地址',
@@ -164,6 +182,7 @@ const loading = ref(true) // 列表的加载中
 const list = ref<SupplierVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
+  openStatus: undefined,
   pageNo: 1,
   pageSize: 10,
   name: undefined,

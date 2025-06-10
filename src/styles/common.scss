@@ -1,0 +1,21 @@
+.common-wrap {
+  display: flex;
+  flex-direction: column;
+  white-space: normal;
+}
+
+.common-text {
+  width: 100%;
+  text-align: left;
+}
+
+
+.common-btnList {
+  display: flex;
+  // flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.common-btn-item {
+  cursor: pointer;
+}

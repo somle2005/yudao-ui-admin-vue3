@@ -11,9 +11,9 @@ export interface OutboundVO {
   sourceBillId: number // 来源单据ID
   sourceBillNo: string // 来源单据号
   sourceBillType: number // 来源单据类型
-  creatorComment: string // 特别说明，创建方专用
+  remark: string // 备注，创建方专用
   comment?: string // 审核意见
-  itemList: any[] 
+  itemList: any[]
 }
 
 // 出库单 API
@@ -75,6 +75,14 @@ export const OutboundApi = {
   finishOutbound: async (data: { billId: number; comment?: string }) => {
     return await request.put({
       url: `/wms/outbound/finish`,
+      data
+    })
+  },
+
+  // 作废出库单
+  abandonOutbound: async (data: { billId: number; comment?: string }) => {
+    return await request.put({
+      url: `/wms/outbound/abandon`,
       data
     })
   }

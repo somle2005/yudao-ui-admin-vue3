@@ -50,7 +50,7 @@ import { cloneDeep } from 'lodash-es'
 import ItemForm from './components/ItemForm.vue'
 import EnableList from './components/EnableList.vue'
 import { useOutData } from './components/hooks/outdata'
-import { distinctList } from '@/utils/transformData'
+import { distinctList, getSameKeyItemList } from '@/utils/transformData'
 import { getItemProp } from '@/components/SmTable/src/utils'
 
 const { addItemRef, openAddItem } = useOutData()
@@ -95,9 +95,17 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
+      // 同一批上架只会有相同的仓库
       let data = await PickupApi.getPickup(id)
       getItemProp(data.itemList, ['product'])
       formData.value = data
+      formData.value.itemList.forEach((item) => {
+        if (item.inbound) {
+          item.inboundCode = item.inbound.code
+        }
+        item.warehouseId = data.warehouseId
+      })
+
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {
@@ -193,7 +201,6 @@ const getFormData = () => {
   return formData.value
 }
 
-
 const itemIdKey = 'inboundItemId'
 const addItem = (selectionList: any[]) => {
   nextTick(() => {
@@ -209,27 +216,35 @@ const addItem = (selectionList: any[]) => {
       const {
         id,
         productId,
-        productBarCode,
-        shelveAvailableQty, // 可上架量
+        productCode,
         actualQty,
         outboundAvailableQty,
         planQty,
-        shelvedQty
+        shelveClosedQty,
+        shelveAvailableQty, // 待上架量
+        inbound,
+        warehouseId
       } = item
 
       const obj = {
         [itemIdKey]: id,
         productId,
-        productBarCode,
+        productCode,
         qty: shelveAvailableQty,
         actualQty,
         outboundAvailableQty,
         planQty,
-        shelvedQty
+        shelveClosedQty,
+        shelveAvailableQty,
+        inboundCode: inbound?.code,
+        warehouseId
       }
       return obj
     })
-    formData.value.itemList = distinctList(items, selectList, itemIdKey)
+    let itemList: any[] = distinctList(items, selectList, itemIdKey)
+    // 上架仅可选择相同仓库
+    // itemList = getSameKeyItemList(itemList, 'warehouseId')
+    formData.value.itemList = itemList
   })
 }
 </script>

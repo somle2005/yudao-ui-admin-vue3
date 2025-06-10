@@ -64,7 +64,7 @@
       <el-table-column label="条码" min-width="150">
         <template #default="{ row }">
           <el-form-item class="mb-0px!">
-            <el-input disabled v-model="row.productBarCode" />
+            <el-input disabled v-model="row.productCode" />
           </el-form-item>
         </template>
       </el-table-column>
@@ -226,7 +226,7 @@ const handleAdd = () => {
     warehouseId: defaultWarehouse.value?.id,
     productId: undefined,
     productUnitName: undefined, // 产品单位
-    productBarCode: undefined, // 产品条码
+    productCode: undefined, // 产品条码
     productPrice: undefined,
     stockCount: undefined,
     actualCount: undefined,
@@ -253,7 +253,7 @@ const onChangeProduct = (productId, row) => {
   const product = productList.value.find((item) => item.id === productId)
   if (product) {
     row.productUnitName = product.unitName
-    row.productBarCode = product.barCode
+    row.productCode = product.code
     row.productPrice = product.minPrice
   }
   // 加载库存

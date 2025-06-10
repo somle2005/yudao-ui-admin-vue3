@@ -13,6 +13,24 @@
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+         <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:inbound-item-bin:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleImport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:stock-bin-move:import']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 批量调整库位
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -29,8 +47,17 @@
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
     >
-      <!-- <template #operate="{ scope }">
-          <el-button
+      <template #operate="{ scope }">
+        <el-button
+          link
+          type="primary"
+          :loading="exportLoading"
+          @click="openForm(OPERATE_MAP.moveBin, undefined, scope.row)"
+          v-hasPermi="['wms:stock-bin-move:create']"
+        >
+          移库位
+        </el-button>
+        <!-- <el-button
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
@@ -42,16 +69,22 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['wms:inbound-item:delete']"
+          v-hasPermi="['wms:inbound-item:delete']"
           >
             删除
-          </el-button>
-      </template> -->
+          </el-button> -->
+      </template>
     </SmTable>
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
   <InboundItemForm ref="formRef" @success="getList" />
+
+  <SmImportFile
+    ref="smImportFileRef"
+    :importUrlFn="StockBinMoveApi.importStockBinMove"
+    :templateObj="templateObj"
+  />
 </template>
 
 <script setup lang="ts">
@@ -61,46 +94,85 @@ import { InboundItemApi, InboundItemVO } from '@/api/wms/inbound-item'
 import InboundItemForm from './InboundItemForm.vue'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
+import { StockBinMoveApi } from '@/api/wms/stock-bin-move'
+import { OPERATE_MAP } from './constant/index'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
-  inboundCode: '入库单编号',
-  productName: '产品名称',
-  productBarCode: '产品编码',
-  warehouseName: '仓库名称',
-  // binName: '库位名称',
-  deptName: '库存归属',
-  companyName: '库存主体',
-  inboundStatus: {
-    label: '入库状态',
-    slot: 'inboundStatus',
-    dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
-  },
+  warehouseName: '仓库',
+  binName: '库位',
+  productCode: '产品编码',
+  binAvailableQty: '库位库存',
+  stockWarehouseTotalQty: '库存总数', // availableQty+shelvingPendingQty
 
-  actualQty: '实际入库量',
+  binOutboundPendingQty: '待出数量',
+  inboundCode: '入库单号',
+  stockType: {
+    label: '存货类型',
+    slot: 'stockType',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_ZONE_PARTITION_TYPE }
+  },
   age: '库龄',
-  outboundAvailableQty: '批次剩余库存',
-  planQty: '计划入库量',
-  shelvedQty: '已上架量',
-
-
-  remark: '备注',
-
   updateTime: {
-    label: '更新时间',
+    label: '操作时间',
     formatter: dateFormatter,
     width: '200px'
   },
-  updaterName: '更新人',
-  createTime: {
-    label: '创建时间',
-    formatter: dateFormatter,
-    width: '200px'
-  },
-  creatorName: '创建人'
+
+  operate: {
+    label: '操作',
+    slot: 'operate',
+    fixed: 'right',
+    width: '100px'
+  }
+
+  // binSellableQty: '库位可售数量',
+  // remark: '备注',
+  // productName: '产品名称',
+
+  // binName: '库位',
+  // deptName: '库存归属',
+  // companyName: '库存公司',
+  // inboundDeptName: '入库库存归属',
+  // inboundCompanyName: '入库库存归属',
+  // inboundStatus: {
+  //   label: '入库状态',
+  //   slot: 'inboundStatus',
+  //   dictAttrs: { type: DICT_TYPE.WMS_INBOUND_STATUS }
+  // },
+
+  // actualQty: '入库数量',
+
+  // outboundAvailableQty: '批次剩余库存',
+  // planQty: '计划入库量',
+  // shelveClosedQty: '已上架数',
+
+  // actualQty: '数量',
+  // stockWarehouseAvailableQty: '总库存',
+  // outboundAvailableQty: '待出数量',
+
+  // updaterName: '更新人',
+  // createTime: {
+  //   label: '创建时间',
+  //   formatter: dateFormatter,
+  //   width: '200px'
+  // }
+  // creatorName: '创建人'
 }
-tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
+tableOptions.value = transformTableOptions(fieldMap, {
+  allWrap: true,
+  noComputePropList: [
+    'inboundCode',
+    'productName',
+    'productCode',
+    'warehouseName',
+    'stockType',
+    'remark'
+  ]
+})
+
+// tableOptions.value[tableOptions.value.length - 1].width = undefined
 
 /** 入库单详情 列表 */
 defineOptions({ name: 'WmsInboundItem' })
@@ -130,15 +202,17 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await InboundItemApi.getInboundItemPage(queryParams)
+    const data = await InboundItemApi.getInboundItemPageBin(queryParams)
     list.value = getItemPropList(data.list, [
       { prop: 'warehouse', keyList: ['name'] },
       // { prop: 'bin', keyList: ['name'] },
-      // { prop: 'zone', keyList: ['name'] },
-      { prop: 'product', keyList: ['name', 'barCode'] },
+      { prop: 'product', keyList: ['name', 'code'] },
       { prop: 'inbound', keyList: ['code'] },
       { prop: 'dept', keyList: ['name'] },
       { prop: 'company', keyList: ['name'] },
+      { prop: 'inboundDept', keyList: ['name'] },
+      { prop: 'inboundCompany', keyList: ['name'] },
+      { prop: 'stockWarehouse', keyList: ['totalQty'] }
     ]) as any
     total.value = data.total
   } finally {
@@ -160,8 +234,8 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
+const openForm = (type: string, id?: number, row?: any) => {
+  formRef.value.open(type, id, row)
 }
 
 /** 删除按钮操作 */
@@ -184,12 +258,25 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await InboundItemApi.exportInboundItem(queryParams)
-    download.excel(data, '入库单详情.xls')
+    const data = await InboundItemApi.exportInboundItemExcelBin(queryParams)
+    download.excel(data, '批次库存.xls')
+    // download.excel(data, '入库单详情.xls')
   } catch {
   } finally {
     exportLoading.value = false
   }
+}
+
+
+const smImportFileRef = ref()
+// wms:stock-bin-move:download-template
+const templateObj = ref({
+  url: StockBinMoveApi.downloadStockBinMoveTemplate,
+  name: '批量库位模版.xls'
+})
+/** 导入按钮操作 */
+const handleImport = async () => {
+  smImportFileRef.value.open()
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)

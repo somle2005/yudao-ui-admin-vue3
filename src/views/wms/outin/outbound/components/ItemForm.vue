@@ -15,20 +15,10 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
 
-        <el-table-column label="产品编码" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.productId`"
-              :rules="formRules.productId"
-              class="mb-0px!"
-            >
-              <el-text>{{ row.productBarCode }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="productCode" label="产品编码" width="120" align="center" />
 
         <!-- 计划出库量 -->
-        <el-table-column label="数量" width="80">
+        <el-table-column label="数量" width="80" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
               <!-- <el-input-number
@@ -43,13 +33,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="可用库存数量" width="80">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.availableQty`" class="mb-0px!">
-              <el-text>{{ row.availableQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="availableQty" label="可用库存数量" width="80" align="center" />
         <!-- <el-table-column label="不良品数量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.defectiveQty`" class="mb-0px!">
@@ -57,31 +41,32 @@
             </el-form-item>
           </template>
         </el-table-column> -->
-        <el-table-column label="计划出库数" width="80">
+        <!-- <el-table-column prop="outboundPlanQty" label="计划出库数" width="80" align="center" /> -->
+
+        <el-table-column prop="pickQty" label="已选择数" width="80" align="center" />
+
+        <el-table-column label="存货类型" width="120" align="center">
+          <template #default="{ row }">
+            <dict-tag :type="DICT_TYPE.WMS_STOCK_TYPE" :value="row.stockType" />
+          </template>
+        </el-table-column>
+
+        <!-- <el-table-column prop="binName" label="库位" width="120" align="center" /> -->
+
+        <el-table-column label="库位" width="120" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.outboundPlanQty`" class="mb-0px!">
-              <el-text>{{ row.outboundPlanQty }}</el-text>
+            <el-form-item :prop="`${$index}.binId`" class="mb-0px!">
+              <SmSelect
+                :disabled="disabled"
+                v-model="row.binId"
+                placeholder="请选择库位"
+                :data="warehouseBinList"
+              />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="已选择数" width="80">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.pickQty`" class="mb-0px!">
-              <el-text>{{ row.pickQty }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="库位" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.binName`" class="mb-0px!">
-              <el-text>{{ row.binName }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="库存归属" width="200">
+        <el-table-column v-if="showDeptCompany" label="库存归属" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
@@ -100,19 +85,20 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="库存主体" width="200">
+        <el-table-column v-if="showDeptCompany" label="库存公司" width="200" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.companyId`" class="mb-0px!" :disabled="disabled">
+            <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
               <SmSelect
+                :disabled="disabled"
                 v-model="row.companyId"
-                placeholder="请选择库存主体"
+                placeholder="请选择库存公司"
                 :data="financeSubjectList"
               />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" width="120">
+        <el-table-column label="备注" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input
@@ -138,9 +124,28 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column align="center" fixed="right" label="操作" width="60">
+        <!-- <el-table-column align="center" fixed="right" label="操作" width="60">
           <template #default="{ $index }">
-            <el-button @click="handleDelete($index)" link> — </el-button>
+            <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link>
+              —
+            </el-button>
+          </template>
+        </el-table-column> -->
+
+        <el-table-column v-if="!disabled" align="center" fixed="right" label="操作" width="60">
+          <template #default="{ $index }">
+            <div class="common-btnList">
+              <div
+                v-if="formData.length !== 1"
+                class="common-btn-item"
+                @click="handleDelete($index)"
+              >
+                <Icon icon="ep:minus" class="mr-5px" />
+              </div>
+              <div class="common-btn-item" @click="handleAddItem($index)">
+                <Icon icon="ep:plus" class="mr-5px" />
+              </div>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -157,6 +162,10 @@ import {
 } from '@/utils'
 import { getDeptTree, getFinanceSubjectList } from '@/commonData'
 import { computeTargetQty } from '@/utils/transformData'
+import { DICT_TYPE } from '@/utils/dict'
+import { InfoKeyOpenFormData } from '../hooks/injectKeys'
+import { getWarehouseBinList } from '@/commonData/wms'
+import { cloneDeep } from 'lodash-es'
 
 const props = defineProps({
   items: {
@@ -176,6 +185,11 @@ const props = defineProps({
   }
 })
 
+const openFormData = inject(InfoKeyOpenFormData)
+const showDeptCompany = computed(() => {
+  return openFormData.value.upstreamType !== 202
+}) // upstreamType: 202-退货单出库 库存归属-归属公司
+
 const auditDisabled = computed(() => props.formType === 'audit')
 const { deptList, defaultProps } = getDeptTree()
 const formLoading = ref(false) // 表单的加载中
@@ -186,6 +200,7 @@ const formRules = reactive({
 })
 const formRef = ref([]) // 表单 Ref
 const financeSubjectList = getFinanceSubjectList()
+const warehouseBinList = getWarehouseBinList()
 
 /** 初始化设置入库项 */
 watch(
@@ -203,7 +218,11 @@ watch(
     if (!val || val.length === 0) {
       return
     }
-    computeTargetQty(val)
+    computeTargetQty(val, {
+      targetQtyKey: 'pickQty',
+      computeQtyKey: 'planQty',
+      computeKey: 'productId'
+    })
     // const map = {}
     // val.forEach((item) => {
     //   if (!map[item.productId]) {
@@ -243,6 +262,14 @@ const getSummaries = (param: SummaryMethodProps) => {
 /** 删除按钮操作 */
 const handleDelete = (index: number) => {
   formData.value.splice(index, 1)
+}
+
+/** 添加按钮操作 */
+const handleAddItem = (index: number) => {
+  const row = cloneDeep(formData.value[index])
+  row.id = undefined
+  // row[props.itemIdKey] = Math.random() + formData.value.length
+  formData.value.splice(index + 1, 0, row)
 }
 
 /** 表单校验 */

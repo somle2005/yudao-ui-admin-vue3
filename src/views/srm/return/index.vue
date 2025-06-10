@@ -7,7 +7,7 @@
       class="-mb-15px"
       ref="queryFormRef"
       :inline="true"
-      label-width="68px"
+      label-width="100px"
       v-model="queryParams"
       :options="searchFormOptions"
       :getModelValue="getSearchFormData"
@@ -34,16 +34,33 @@
         </el-button>
 
         <el-button
-          :disabled="disabledBtn"
+          :disabled="disabledBtn || !isSubmitAuditBatch(selectionList)"
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['srm:purchase-return:submitAudit']"
+          v-hasPermi="['srm:purchase-return:submit']"
         >
           提交审核
         </el-button>
 
-        <el-button
+        <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px mr-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['srm:purchase-return:review']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核</div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <div @click="handleUpdateStatus(selectionList[0], false)">反审核</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <!-- <el-button
           :disabled="disabledBtn"
           type="primary"
           plain
@@ -60,7 +77,7 @@
           v-hasPermi="['srm:purchase-return:changeRefundStatus']"
         >
           撤销退款
-        </el-button>
+        </el-button> -->
 
         <el-switch
           v-model="wholeOrderEnable"
@@ -101,23 +118,23 @@
         </ElTag>
       </template>
       <template #operate="{ scope }">
-        <!-- <el-button
-            link
-            @click="openForm('detail', scope.row.id)"
-            v-hasPermi="['srm:purchase-in:query']"
-          >
-            详情
-          </el-button> -->
+        <el-button
+          link
+          @click="openForm('detail', scope.row.id)"
+          v-hasPermi="['srm:purchase-return:query']"
+        >
+          详情
+        </el-button>
         <el-button
           link
           type="primary"
           @click="openForm('update', scope.row.id)"
           v-hasPermi="['srm:purchase-return:update']"
-          v-if="scope.row.auditStatus !== 5"
+          :disabled="!isUpdate(scope.row.auditStatus)"
         >
           编辑
         </el-button>
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="handleUpdateStatus(scope.row, true)"
@@ -134,7 +151,7 @@
           v-if="scope.row.auditStatus === 5"
         >
           反审核
-        </el-button>
+        </el-button> -->
         <el-button
           link
           type="danger"
@@ -153,13 +170,14 @@
 
 <script setup lang="ts">
 import download from '@/utils/download'
-import { PurchaseInApi, PurchaseInVO } from '@/api/srm/in'
 import OpenForm from './OpenForm.vue'
 import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
-import { PurchaseReturnApi } from '@/api/srm/return'
+import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
+import { getMainItemBodyData } from '@/utils/transform'
+import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseReturn' })
@@ -168,12 +186,12 @@ const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<PurchaseInVO[]>([]) // 列表的数据
+const list = ref<PurchaseReturnVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  no: undefined,
+  code: undefined,
   supplierId: undefined,
   productId: undefined,
   warehouseId: undefined,
@@ -183,7 +201,8 @@ const queryParams = reactive({
   accountId: undefined,
   status: undefined,
   remark: undefined,
-  creator: undefined
+  creator: undefined,
+  itemsOutboundStatus: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -198,8 +217,6 @@ let {
   itemsTotal,
   wholeOrderTotal,
 
-  wholeOrderMergeCompute,
-  mergeItemsToList,
   switchList,
   useWholeOrder
 } = useTable()
@@ -208,35 +225,24 @@ let {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await PurchaseReturnApi.getPurchaseReturnPage(queryParams)
-
-    // todo取出items里面对应对象数据
-
-    // data.list.forEach((item) => {
-    //   if (!item?.items?.length) return
-    //   item.items.forEach((a) => {
-    //     if (a.product) {
-    //       a.productName = a.product.name
-    //       a.productBarCode = a.product.barCode
-    //     }
-
-    //     item.itemApplicantName = item.applicantName
-    //     item.itemApplicationDeptName = item.applicationDeptName
-    //   })
-    // })
-
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
-    itemsList.value = mergeItemsToList(data.list, {
-      id: 'rowItemsId',
-      status: 'rowStatus',
-      orderStatus: 'rowOrderStatus',
-      offStatus: 'rowOffStatus',
-      executeStatus: 'rowExecuteStatus',
-      inStatus: 'rowInStatus',
-      payStatus: 'rowPayStatus'
+    const bodyData = getMainItemBodyData({
+      queryParams,
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'outboundStatus'],
+      itemQueryList: ['arriveCode', 'productId', 'warehouseId']
     })
-
+    bodyData.itemQuery.outboundStatus = queryParams.itemsOutboundStatus
+    const data = await PurchaseReturnApi.getPurchaseReturnPage(bodyData)
     switchList(list, total, data)
+
+    // itemsList.value = mergeItemsToList(data.list, {
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inboundStatus: 'itemsInboundStatus',
+    //   payStatus: 'itemsPayStatus'
+    // })
   } finally {
     loading.value = false
   }
@@ -266,7 +272,7 @@ const handleDelete = async (ids: number[]) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await PurchaseInApi.deletePurchaseIn(ids)
+    await PurchaseReturnApi.deletePurchaseReturn(ids)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -281,8 +287,8 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await PurchaseInApi.exportPurchaseIn(queryParams)
-    download.excel(data, '销售入库.xls')
+    const data = await PurchaseReturnApi.exportPurchaseReturn(queryParams)
+    download.excel(data, '采购退货.xls')
   } catch {
   } finally {
     exportLoading.value = false
@@ -290,8 +296,8 @@ const handleExport = async () => {
 }
 
 /** 选中操作 */
-const selectionList = ref<PurchaseInVO[]>([])
-const handleSelectionChange = (rows: PurchaseInVO[]) => {
+const selectionList = ref<PurchaseReturnVO[]>([])
+const handleSelectionChange = (rows: PurchaseReturnVO[]) => {
   selectionList.value = rows
 }
 
@@ -309,8 +315,13 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changeRefundStatusBatch } =
-  useBatch(selectionList, getList, wholeOrderEnable, openForm)
+const {
+  oneSelectDisabledBtn,
+  disabledBtn,
+  handleUpdateStatus,
+  handleSubmitAuditBatch,
+  changeRefundStatusBatch
+} = useBatch(selectionList, getList, wholeOrderEnable, openForm)
 
 /** 初始化 **/
 onMounted(async () => {

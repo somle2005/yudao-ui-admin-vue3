@@ -11,8 +11,17 @@
       :getModelValue="getSearchFormData"
     >
       <template #action>
-        <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
-        <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+        <el-button @click="handleQuery"> <Icon icon="ep:search" class="mr-5px" /> 搜索 </el-button>
+        <el-button @click="resetQuery"> <Icon icon="ep:refresh" class="mr-5px" /> 重置 </el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleExport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:stock-warehouse:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -20,6 +29,7 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      class="stock-warehouse-table"
       border
       :showOverflowTooltip="false"
       :loading="loading"
@@ -50,16 +60,18 @@
       </template> -->
 
       <template #productInfo="{ scope }">
-        <ProductInfo :data="scope.row" />
+        <ProductInfo :data="scope?.row?.product" />
       </template>
       <template #warehouseInfo="{ scope }">
-        <!-- show-summary -->
         <SmTable
+          show-summary
+          :summary-method="getSummaries"
           :pagination="false"
           border
           :tooltip="false"
           :options="warehouseTableOptions"
           :data="scope.row.stockWarehouseList"
+          ref="warehouseInfoRef"
         />
       </template>
     </SmTable>
@@ -78,14 +90,15 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { StockBinApi } from '@/api/wms/stock-bin'
 import ProductInfo from './components/ProductInfo.vue'
+import { getSumValue } from '@/utils'
 
-const { tableOptions, transformTableOptions, getItemProp, getItemPropList } = useTableData()
+const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
 const fieldMap = {
   // 产品图片
-  primaryImageUrl: {
+  productPrimaryImageUrl: {
     label: '产品图片',
-    slot: 'primaryImageUrl',
+    slot: 'productPrimaryImageUrl',
     imageAttrs: {}
   },
 
@@ -95,7 +108,7 @@ const fieldMap = {
     slot: 'productInfo'
   },
   warehouseInfo: {
-    width: '2000px', // 需要综合计算后得出暂时2000
+    width: '1690px', // 需要综合计算后得出暂时2000
     label: '仓库信息',
     slot: 'warehouseInfo'
   }
@@ -120,26 +133,36 @@ const fieldMap = {
 }
 // tableOptions.value = transformTableOptions(fieldMap, { allWrap: true })
 tableOptions.value = transformTableOptions(fieldMap)
-
+// 可售数-可用数-待出库数-待上架数-不良品数-采购计划数-采购在途数-退件在途数-库龄
 const warehouseFieldMap = {
-  warehouseName: '仓库名称',
+  warehouseName: '仓库',
   warehouseMode: {
     label: '仓库经营方式',
-    width: '250px',
+    width: '150px',
     slot: 'warehouseMode',
     dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_MODE }
   },
-  availableQty: '可用量',
-  defectiveQty: '不良品数量',
-  outboundPendingQty: '待出库量',
-  purchasePlanQty: '采购计划量',
-  purchaseTransitQty: '采购在途量',
-  returnTransitQty: '退件在途数量',
-  sellableQty: '可售量',
-  shelvingPendingQty: '待上架数量'
+  sellableQty: '可售数',
+  availableQty: '可用数',
+  outboundPendingQty: '待出库数',
+  shelvingPendingQty: '待上架数',
+  defectiveQty: '不良品数',
+  // purchasePlanQty: '采购计划数',
+  transitQty: '在途数',
+  makePendingQty: '在制数',
+  // purchaseTransitQty: '采购在途数',
+  returnTransitQty: '退件在途数'
+  // age: '库龄'
 }
 
 const warehouseTableOptions = ref(transformTableOptions(warehouseFieldMap, { allWrap: true }))
+const widthList = ['warehouseName', 'warehouseMode']
+
+warehouseTableOptions.value.forEach((item: any) => {
+  if (!widthList.includes(item.prop)) {
+    item.width = '100px'
+  }
+})
 
 const warehouseInfoWidth = warehouseTableOptions.value.reduce((prev, cur) => {
   return prev + Number(cur.width!.replace('px', ''))
@@ -147,7 +170,40 @@ const warehouseInfoWidth = warehouseTableOptions.value.reduce((prev, cur) => {
 
 const warehouseInfoItem = tableOptions.value.find((item) => item.prop === 'warehouseInfo')!
 warehouseInfoItem.width = warehouseInfoWidth + 'px'
+const warehouseInfoRef = ref() // 仓库信息表格
 
+// const tableOptionsWidth = tableOptions.value.reduce((prev, cur) => {
+//   return prev + Number(cur.width!.replace('px', ''))
+// }, 0)
+
+// // 2560-1690-500 = 370
+// const remainWidthFlag = window.innerWidth - tableOptionsWidth - 500 >= 370
+// if (remainWidthFlag) {
+//   const productInfoItem = tableOptions.value.find((item) => item.prop === 'productInfo')!
+//   productInfoItem.width = undefined
+// }
+
+/** 合计 */
+const getSummaries = (param: any) => {
+  const { columns, data } = param
+  const sums: string[] = []
+  columns.forEach((column, index: number) => {
+    if (index === 0) {
+      sums[index] = '产品小计'
+      return
+    }
+
+    if (!['warehouseName', 'warehouseMode'].includes(column.property)) {
+      const sum = getSumValue(data.map((item) => Number(item[column.property])))
+      sums[index] = sum + ''
+      // column.property === 'qty' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
+    } else {
+      sums[index] = ''
+    }
+  })
+
+  return sums
+}
 
 /** 仓库库存 列表 */
 defineOptions({ name: 'WmsStockWarehouse' })
@@ -182,14 +238,20 @@ const getList = async () => {
   loading.value = true
   try {
     // const data = await StockWarehouseApi.getStockWarehousePage(queryParams)
-    const data = await StockBinApi.getStockBinGroupedPage(queryParams)
-    list.value = data.list.map((item) => {
+    // const data = await StockBinApi.getStockBinGroupedPage(queryParams)
+    const data = await StockWarehouseApi.getStockWarehousePageGrouped(queryParams)
+    list.value = data?.list?.map((item) => {
       item.stockWarehouseList = getItemPropList(item.stockWarehouseList, [
         { prop: 'warehouse', keyList: ['mode', 'name', 'code'] }
       ])
+      item.productPrimaryImageUrl = item?.product?.primaryImageUrl
       return item
-    })
+    }) || []
     total.value = data.total
+
+    // setTimeout(() => {
+    //   warehouseInfoRef.value.tableRef.doLayout()
+    // }, 1000)
   } finally {
     loading.value = false
   }
@@ -234,7 +296,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await StockWarehouseApi.exportStockWarehouse(queryParams)
-    download.excel(data, '仓库库存.xls')
+    download.excel(data, '仓库.xls')
   } catch {
   } finally {
     exportLoading.value = false
@@ -248,3 +310,8 @@ onMounted(() => {
   getList()
 })
 </script>
+<style lang="scss" scoped>
+:global(.stock-warehouse-table .cell) {
+  padding: 0 !important;
+}
+</style>

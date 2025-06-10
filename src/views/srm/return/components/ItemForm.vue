@@ -10,45 +10,20 @@
       :disabled="disabled"
     >
       <!-- show-summary :summary-method="getSummaries" -->
-      <el-table :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="formType !== 'create'" label="编号" min-width="120">
-          <template #default="{ row }">
-            <el-text>{{ row.id }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column label="SKU" width="180">
-          <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.productId`"
-              :rules="formRules.productId"
-              class="mb-0px!"
-            >
-              <el-text> {{ row.barCode }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column label="产品名称" width="180">
-          <template #default="{ row }">
-            <el-text>{{ row.productName }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column label="海关品名" width="180">
-          <template #default="{ row }">
-            <el-text>{{ row.declaredType }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column label="单位" min-width="60">
-          <template #default="{ row }">
-            <el-text>{{ row.productUnitName }}</el-text>
-          </template>
-        </el-table-column>
+        <el-table-column
+          prop="id"
+          v-if="formType !== 'create'"
+          label="编号"
+          width="80"
+          align="center"
+        />
+        <el-table-column prop="productCode" label="产品编码" width="180" align="center" />
+        <el-table-column prop="productName" label="产品名称" width="180" align="center" />
+        <el-table-column prop="declaredType" label="海关品名" width="180" align="center" />
+        <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
 
-        <el-table-column label="入库项id" width="200">
-          <template #default="{ row }">
-            <el-text>{{ row.inItemId }}</el-text>
-          </template>
-        </el-table-column>
         <!-- 
         <el-table-column label="采购订单编号" width="200">
           <template #default="{ row }">
@@ -56,23 +31,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="申请人" width="200">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.applicantId`" class="mb-0px!">
-              <el-text>{{ row.applicantName }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="部门" width="200">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.applicationDeptId`" class="mb-0px!">
-              <el-text>{{ row.applicationDeptName }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="币种" prop="currencyId" width="120">
+        <!-- <el-table-column label="币种" prop="currencyId" width="120">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.currencyId`" class="mb-0px!">
               <el-form-item
@@ -98,87 +57,52 @@
               </el-form-item>
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
-        
+        <el-table-column prop="warehouseName" label="仓库" width="150" align="center" />
 
-        <el-table-column label="仓库" width="150">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <el-text>{{ row.warehouseName }}</el-text>
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="数量" width="120">
+        <el-table-column label="数量" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" class="mb-0px!">
-              <el-input-number
+              <!-- <el-input-number
                 v-model="row.qty"
                 controls-position="right"
                 :min="1"
                 :max="row.originCount"
                 class="!w-100%"
                 @change="(val) => changeValLimit(row, 'qty', 1, val)"
-              />
-            </el-form-item>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="含税单价" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.actTaxPrice`" class="mb-0px!">
-              <el-input-number
-                disabled
-                v-model="row.actTaxPrice"
-                controls-position="right"
-                :min="0.01"
-                :precision="2"
-                class="!w-100%"
-              />
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column label="单价" width="200">
-          <template #default="{ row }">
-            <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
-          </template>
-        </el-table-column>
-
-        <el-table-column label="税率%" width="115">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPercent`" class="mb-0px!">
-              <el-input-number
-                disabled
-                v-model="row.taxPercent"
-                controls-position="right"
+              /> -->
+              <SmNumber
+                v-model="row.qty"
                 :min="0"
-                :precision="2"
-                class="!w-100%"
+                :max="row.actualQty"
+                @change="(val) => changeValLimit(row, 'qty', 1, val)"
               />
             </el-form-item>
           </template>
         </el-table-column>
 
-        <el-table-column label="税额" prop="taxPrice" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-              <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-                <el-input disabled v-model="row.taxPrice" :formatter="erpPriceInputFormatter" />
-              </el-form-item>
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="actualQty" label="入库数量" width="120" align="center" />
+        <el-table-column prop="sellableQty" label="可售数量" width="120" align="center" />
 
-        <el-table-column label="箱率" width="120">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-              <el-input disabled v-model.trim="row.containerRate" class="!w-100%" />
-            </el-form-item>
-          </template>
-        </el-table-column>
+        <el-table-column prop="grossPrice" label="含税单价" width="120" align="center" />
+        <el-table-column prop="productPrice" label="单价" width="200" align="center" />
+        <!-- <template #default="{ row }">
+            <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" />
+          </template> -->
 
-        <el-table-column label="备注" min-width="150">
+        <el-table-column prop="taxRate" label="税率%" width="115" align="center" />
+        <el-table-column label="税额" prop="taxPrice" width="120" align="center" />
+        <el-table-column prop="containerRate" label="箱率" width="120" align="center" />
+
+        <el-table-column prop="arriveItemId" label="到货项id" width="80" align="center" />
+        <el-table-column prop="applicantName" label="申请人" width="120" align="center" />
+        <el-table-column prop="applicationDeptName" label="部门" width="120" align="center" />
+        <el-table-column prop="currencyName" label="币种" width="100" align="center" />
+
+        <el-table-column prop="arriveCode" label="上游单据编号" width="160" align="center" />
+
+        <el-table-column label="备注" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
               <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
@@ -213,9 +137,10 @@ import {
 // import { WarehouseApi, WarehouseVO } from '@/api/erp/stock/warehouse'
 import { getDeptTree, getProductList, getUserList, getWarehouseList } from '@/commonData'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
-import { computeTaxPriceAndAllAmount } from '@/utils/transformData'
+import { computeGrossPriceAndGrossTotalPrice } from '@/utils/transformData'
 import { TAX_PERCENT } from '@/utils/constant'
 import { changeValLimit } from '@/utils/high/index'
+import { useAddSellableQtyBatch } from '@/views/tms/common/utils'
 
 const props = defineProps({
   items: {
@@ -232,6 +157,10 @@ const props = defineProps({
   formType: {
     type: String,
     default: ''
+  },
+  warehouseId: {
+    type: Number,
+    default: null
   }
 })
 
@@ -239,19 +168,20 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   // warehouseId: [{ required: true, message: '仓库不能为空', trigger: 'blur' }],
-  productId: [{ required: true, message: 'SKU不能为空', trigger: 'blur' }],
+  productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  actTaxPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
+  grossPrice: [{ required: true, message: '含税单价不能为空', trigger: 'blur' }],
   currencyId: [{ required: true, message: '币种不能为空', trigger: 'blur' }]
 })
 const formRef = ref([]) // 表单 Ref
 // const defaultWarehouse = ref<WarehouseVO>(undefined) // 默认仓库
 const productList = getProductList() // 产品列表
-const warehouseList = getWarehouseList()
 // const { deptList, defaultProps } = getDeptTree()
 // const userList = getUserList()
 
-/** 初始化设置入库项 */
+let { canAddSellableQtyBatch } = useAddSellableQtyBatch()
+
+/** 初始化设置到货项 */
 watch(
   () => props.items,
   async (val) => {
@@ -264,6 +194,14 @@ watch(
     //   }
     // })
     formData.value = val
+    canAddSellableQtyBatch(formData)
+    // const str = getCacheStr(formData.value)
+    // if (cacheStr === str) {
+    //   return
+    // } else {
+    //   cacheStr = str
+    //   addSellableQtyBatch(formData)
+    // }
   },
   { immediate: true, deep: true }
 )
@@ -277,19 +215,19 @@ watch(
     }
     const keyMap = {
       taxPrice: 'taxPrice',
-      taxPercent: 'taxPercent',
-      allAmount: 'allAmount',
-      actTaxPrice: 'actTaxPrice',
+      taxRate: 'taxRate',
+      grossTotalPrice: 'grossTotalPrice',
+      grossPrice: 'grossPrice',
       onePrice: 'productPrice',
       applyCount: 'qty'
     }
 
     // 编辑回显
-    computeTaxPriceAndAllAmount(val, keyMap)
+    computeGrossPriceAndGrossTotalPrice(val, keyMap)
     // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxPercent / 100.0)
+    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
     //   if (item.totalProductPrice != null) {
     //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
     //   } else {
@@ -328,17 +266,17 @@ const handleAdd = () => {
     orderItemId: undefined, //list记得转化
     productId: undefined,
     productName: undefined,
-    productBarCode: undefined,
+    productCode: undefined,
     productUnitName: undefined, //列表要转化取item-product里面数据
     productUnitId: undefined, // 列表要转化取item-product里面数据
     model: undefined, // //列表要转化取item-product里面数据
 
     productPrice: undefined,
     qty: undefined,
-    taxPercent: TAX_PERCENT,
+    taxRate: TAX_PERCENT,
     taxPrice: undefined,
-    actTaxPrice: undefined,
-    allAmount: undefined,
+    grossPrice: undefined,
+    grossTotalPrice: undefined,
     remark: undefined,
     settlementDate: undefined,
     containerRate: undefined,
@@ -351,7 +289,7 @@ const handleAdd = () => {
     applicantName: undefined,
     applicationDeptId: undefined,
     applicationDeptName: undefined
-    // productPrice: actTaxPrice
+    // productPrice: grossPrice
   }
   formData.value.push(row)
 }
@@ -389,10 +327,4 @@ const validate = () => {
   return formRef.value.validate()
 }
 defineExpose({ validate, formData })
-
-/** 初始化 */
-onMounted(async () => {
-  // warehouseList.value = await WarehouseApi.getWarehouseSimpleList()
-  // defaultWarehouse.value = warehouseList.value.find((item) => item.defaultStatus)
-})
 </script>

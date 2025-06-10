@@ -66,7 +66,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await FinanceSubjectApi.getFinanceSubject(id)
-      Object.assign(formRef.value.getFormData(), formData.value)    
+      Object.assign(formRef.value.getFormData(), formData.value)
     } finally {
       formLoading.value = false
     }
@@ -110,7 +110,9 @@ const requestFormOptions = ref([])
 const createFormOptions = () => {
   const list = [
     { prop: 'name', label: '主体名称', required: true },
+    { prop: 'nameEn', label: '公司名称(英文)' },
     { prop: 'status', label: '开启状态', required: true }, //这个要特殊处理一下
+    { prop: 'abbr', label: '公司简称', required: true },
     { prop: 'contact', label: '联系人' },
     { prop: 'mobile', label: '手机号码' },
     { prop: 'telephone', label: '联系电话' },
@@ -118,6 +120,7 @@ const createFormOptions = () => {
     { prop: 'fax', label: '传真' },
     { prop: 'deliveryAddress', label: '送达地址' },
     { prop: 'companyAddress', label: '公司地址' },
+    { prop: 'companyAddressEn', label: '公司地址(英文)' },
 
     { prop: 'taxNo', label: '纳税人识别号', required: true },
     { prop: 'bankName', label: '开户行' },

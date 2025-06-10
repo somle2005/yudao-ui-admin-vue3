@@ -1,13 +1,13 @@
 <!-- 选择采购入库（仅展示可付款）-->
 <template>
-  <Dialog title="选择采购入库项（仅展示已审核）" v-model="dialogVisible" width="1000">
+  <Dialog title="选择采购到货项（仅展示已审核）" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
         class="-mb-15px"
         ref="queryFormRef"
         :inline="true"
-        label-width="68px"
+        label-width="100px"
         v-model="queryParams"
         :options="searchFormOptions"
         :getModelValue="getSearchFormData"
@@ -46,11 +46,13 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import { resetQueryParams } from '@/utils/transformData'
+import { mergeItemsUpToList, resetQueryParams } from '@/utils/transformData'
 import { useSearchForm } from './hooks/search'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseInApi } from '@/api/srm/in'
 import { useTable } from './hooks/useTable'
+import { getMainItemBodyData } from '@/utils/transform'
+import { getCurrencyName } from '@/commonData'
 
 // 暂时都是分行展示逻辑
 
@@ -79,48 +81,53 @@ let {
   itemsTotal,
   wholeOrderTotal,
 
-  wholeOrderMergeCompute,
-  mergeItemsToList,
-  switchList,
-  useWholeOrder
+  switchList
 } = useTable()
+
+let supplierIdSave
 
 // 这里只有整单展示了-退货单是整单退货-带出子项所有id
 const getList = async () => {
-  queryParams.auditStatus = 5 // 已审核
   loading.value = true
   try {
-    const data = await PurchaseInApi.getPurchaseInPage(queryParams)
+    const bodyData = getMainItemBodyData({
+      queryParams,
+      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
+      itemQueryList: ['productId', 'orderCode']
+    })
+    // bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
+
+    // bodyData.mainQuery.inboundStatus = 3 // 3整单全部入库 2 // 部分入库
+    bodyData.mainQuery.supplierId = supplierIdSave
+    bodyData.mainQuery.auditStatus = 5 // 已审核
+    const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 
     // todo取出items里面对应对象数据
 
-    data.list.forEach((item) => {
-      if (!item?.items?.length) return
-      item.items.forEach((a) => {
-        if (a.product) {
-          a.productName = a.product.name
-          a.productBarCode = a.product.barCode
-        }
+    // data.list.forEach((item) => {
+    //   if (!item?.items?.length) return
+    //   item.items.forEach((a) => {
+    //     if (a.product) {
+    //       a.productName = a.product.name
+    //       a.productCode = a.product.code
+    //     }
 
-        item.itemApplicantName = item.applicantName
-        item.itemApplicationDeptName = item.applicationDeptName
-      })
-    })
+    //     item.itemApplicantName = item.applicantName
+    //     item.itemApplicationDeptName = item.applicationDeptName
+    //   })
+    // })
 
-    wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     // itemsList.value = mergeItemsToList(data.list, {
-    //   id: 'rowItemsId',
-    //   status: 'rowStatus',
-    //   orderStatus: 'rowOrderStatus',
-    //   offStatus: 'rowOffStatus',
-    //   executeStatus: 'rowExecuteStatus',
-    //   inStatus: 'rowInStatus',
-    //   payStatus: 'rowPayStatus'
+    //   id: 'itemsId',
+    //   status: 'itemsStatus',
+    //   orderStatus: 'itemsOrderStatus',
+    //   offStatus: 'itemsOffStatus',
+    //   executeStatus: 'itemsExecuteStatus',
+    //   inboundStatus: 'itemsInboundStatus',
+    //   payStatus: 'itemsPayStatus'
     // })
 
     switchList(list, total, data)
-    // list.value = data.list
-    // total.value = data.total
   } finally {
     loading.value = false
   }
@@ -133,26 +140,62 @@ const handleQuery = () => {
 }
 
 const handleCurrentChange = (row: any) => {
-  console.log('当前选中项', row)
   // 转换成整单数据
-  // selectionList.value = [row]
-  selectionList.value = mergeItemsToList([row], {
-    id: 'rowItemsId',
-    status: 'rowStatus',
-    orderStatus: 'rowOrderStatus',
-    offStatus: 'rowOffStatus',
-    executeStatus: 'rowExecuteStatus',
-    inStatus: 'rowInStatus',
-    payStatus: 'rowPayStatus',
-    currencyId: 'currencyId'
+  selectionList.value = mergeItemsUpToList([row], 'items', {
+    productId: 'productId',
+    productName: 'productName',
+    // code: 'code',
+    productCode: 'productCode',
+    productUnitId: 'productUnitId',
+    productUnitName: 'productUnitName',
+    productPrice: 'productPrice',
+    qty: 'qty', // 计划的数量
+    actualQty: 'actualQty', //实际入库的数量
+    arriveCode: 'arriveCode', // 适配采购退货详情接口
+
+    taxRate: 'taxRate',
+    taxPrice: 'taxPrice',
+    grossPrice: 'grossPrice',
+    grossTotalPrice: 'grossTotalPrice',
+    // remark:'remark',
+    containerRate: 'containerRate',
+
+    warehouseId: 'warehouseId',
+    warehouseName: 'warehouseName',
+    source: 'source',
+    // 整单带出来
+    // currencyId: 'currencyId',
+    // currencyName: 'currencyName',
+    applicantId: 'applicantId',
+    applicantName: 'applicantName',
+    applicationDeptId: 'applicationDeptId',
+    applicationDeptName: 'applicationDeptName',
+    declaredType: 'declaredType',
+    remark: 'remark' // remark: itemsRemark防止和主单冲突
   })
-  console.log(selectionList.value, 'selectionList.value')
+
+  selectionList.value.forEach((item) => {
+    item.currencyName = getCurrencyName(item.currencyId)
+  })
+  // selectionList.value = mergeItemsToList([row], {
+  //   id: 'itemsId',
+  //   status: 'itemsStatus',
+  //   orderStatus: 'itemsOrderStatus',
+  //   offStatus: 'itemsOffStatus',
+  //   executeStatus: 'itemsExecuteStatus',
+  //   inboundStatus: 'itemsInboundStatus',
+  //   payStatus: 'itemsPayStatus',
+  //   currencyId: 'currencyId'
+  // })queryParams
+  // console.log(selectionList.value, 'selectionList.value')
+  // console.log('当前选中项', row)
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 const resetQuery = () => {
   resetQueryParams(queryParams, queryFormRef)
+  queryParams.inboundStatus = 3 // 默认主单部分入库-可选全部入库
   handleQuery()
 }
 
@@ -170,7 +213,8 @@ const submitForm = () => {
 }
 
 /** 打开弹窗 */
-const open = async () => {
+const open = async (supplierId) => {
+  supplierIdSave = supplierId
   dialogVisible.value = true
   resetQuery()
   // await nextTick() // 等待，避免 queryFormRef 为空

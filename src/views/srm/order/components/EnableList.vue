@@ -1,6 +1,6 @@
 <!-- 可入库的订单列表 -->
 <template>
-  <Dialog title="选择采购申请项（仅展示已审核）" v-model="dialogVisible" width="1000">
+  <Dialog title="选择采购申请项（仅展示已审核）" v-model="dialogVisible">
     <ContentWrap>
       <!-- 搜索工作栏 -->
       <SmForm
@@ -47,8 +47,8 @@
           <dict-tag :type="DICT_TYPE.SRM_ORDER_STATUS" :value="scope.row.rowOrderStatus || ''" />
         </template>
 
-        <template #rowOffStatus="{ scope }">
-          <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.rowOffStatus || ''" />
+        <template #itemsOffStatus="{ scope }">
+          <dict-tag :type="DICT_TYPE.SRM_OFF_STATUS" :value="scope.row.itemsOffStatus || ''" />
         </template>
       </SmTable>
     </ContentWrap>
@@ -59,7 +59,7 @@
   </Dialog>
 </template>
 <script lang="ts" setup>
-import { useApplicantTable } from '../hooks/useApplicantTable'
+import { useApplicantTable } from './hooks/useApplicantTable'
 import { DICT_TYPE } from '@/utils/dict'
 
 let {

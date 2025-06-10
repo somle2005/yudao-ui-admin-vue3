@@ -1,5 +1,5 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" width="1000">
+  <Dialog :title="dialogTitle" v-model="dialogVisible">
     <SmForm
       class="-mb-15px"
       ref="formRef"
@@ -10,16 +10,6 @@
       :options="requestFormOptions"
       :getModelValue="getFormData"
     >
-      <!-- <template #orderNo="{ model }">
-        <el-input v-model="model.orderNo" readonly>
-          <template #append>
-            <el-button @click="openPurchaseOrderInEnableList">
-              <Icon icon="ep:search" /> 选择
-            </el-button>
-          </template>
-        </el-input>
-      </template> -->
-
       <template #fileUrl="{ model, scope }">
         <UploadFile
           :disabled="scope?.attrs?.disabled"
@@ -31,9 +21,10 @@
 
       <template #items>
         <el-button
-          :disabled="itemsFormdisabled"
+          v-if="showAddBtn"
+          :disabled="addBtnDisabled"
           type="primary"
-          @click="openAddItem"
+          @click="openAddItem(formData.supplierId)"
           style="margin-bottom: 10px"
           >选择订单项</el-button
         >
@@ -84,6 +75,8 @@ import { createDBFn } from '@/utils/decorate'
 import { useForm } from './hooks/useForm'
 import { computeDiscountPriceAndTotalPrice, distinctList } from '@/utils/transformData'
 import { useOutData } from './components/hooks/outdata'
+import { SRM_OPERATE_MAP } from '../common/constant'
+import { getCurrencyName } from '@/commonData'
 
 const { addItemRef, openAddItem } = useOutData()
 
@@ -102,7 +95,7 @@ const initFormData = () => {
     id: undefined,
     supplierId: undefined,
     accountId: undefined,
-    inTime: undefined,
+    arriveTime: undefined,
     remark: undefined,
     fileUrl: '',
     discountPercent: 0,
@@ -111,10 +104,17 @@ const initFormData = () => {
     otherPrice: 0,
     orderNo: undefined,
     items: [],
-    no: undefined // 入库单号，后端返回
+    code: undefined // 入库单号，后端返回
   }
 }
 const formData: any = ref(initFormData())
+
+// 供应商必填
+const addBtnDisabled = computed(() => !formData.value.supplierId)
+const showAddBtn = computed(
+  () =>
+    !['audit', 'detail', SRM_OPERATE_MAP.pay, SRM_OPERATE_MAP.revokePay].includes(formType.value)
+)
 
 const disabled = computed(() => formType.value === 'detail')
 const formRef = ref() // 表单 Ref
@@ -146,34 +146,29 @@ watch(
 )
 
 /** 打开弹窗 */
-const open = async (type: string, id?: number) => {
+const open = async (type: string, id?: number, data?: any) => {
   dialogVisible.value = true
   dialogTitle.value = t('action.' + type)
   formType.value = type
   resetForm()
-  operateAudit(type)
+  operateAudit(type, dialogTitle)
 
   // 初始化弹窗接口数据
   initDialogData()
+  if (data) {
+    formData.value.items = data
+  }
 
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
     try {
       formData.value = await PurchaseInApi.getPurchaseIn(id)
-
-      // if (formData.value?.items?.length) {
-      //   formData.value.items.forEach((a) => {
-      //     if (a.product) {
-      //       a.productId = a.product.id // 防止后端不放外面
-      //       a.productName = a.product.name
-      //       a.barCode = a.product.barCode
-      //       a.productUnitName = a.product.unitName
-      //       a.productUnitId = a.product.unitId
-      //     }
-      //   })
-      // }
-
+      if (formData.value?.items?.length) {
+        formData.value.items.forEach((a) => {
+          a.currencyName = getCurrencyName(formData.value.currencyId)
+        })
+      }
       // 主动触发表单数据回显
       formRef.value.initForm()
     } finally {
@@ -182,6 +177,19 @@ const open = async (type: string, id?: number) => {
   }
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
+
+const changePayStatus = async (data: any, pass: boolean) => {
+  return await PurchaseInApi.changePurchaseInPayStatus({
+    items: data.items.map((item) => {
+      return {
+        payPrice: item.payPrice,
+        id: item.itemsId // 防止整单分行冲突
+      }
+    }),
+    pass
+    // pass: true
+  })
+}
 
 const auditBtnType = ref(AUDIT_TYPE.agree)
 /** 提交表单 */
@@ -204,9 +212,15 @@ const submitForm = async () => {
       await PurchaseInApi.updatePurchaseInAuditStatus({
         reviewed: true,
         pass: auditBtnType.value === AUDIT_TYPE.agree,
-        inId: data.id,
-        reviewComment: data.reviewComment
+        arriveId: data.id,
+        auditAdvice: data.auditAdvice
       })
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === SRM_OPERATE_MAP.pay) {
+      await changePayStatus(data, true)
+      message.success(t('common.updateSuccess'))
+    } else if (formType.value === SRM_OPERATE_MAP.revokePay) {
+      await changePayStatus(data, false)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -243,24 +257,25 @@ const addItem = (selectionList: any[]) => {
     const selectList = selectionList.map((item: any) => {
       // 采购订单分页需带出数据
       const {
-        no,
-        rowItemsId, //list记得转化
+        code,
+        itemsId, //list记得转化
 
         productId,
         productName,
-        productBarCode,
-        barCode,
+        productCode,
+        // code,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
         productPrice,
         qty,
         declaredType,
+        currencyName,
 
-        taxPercent = TAX_PERCENT,
+        taxRate = TAX_PERCENT,
         taxPrice,
-        actTaxPrice,
-        allAmount,
+        grossPrice,
+        grossTotalPrice,
         remark,
         settlementDate,
         containerRate,
@@ -274,6 +289,10 @@ const addItem = (selectionList: any[]) => {
         applicantName,
         applicationDeptId,
         departmentName,
+
+        payPrice,
+        fbaCode,
+        declaredTypeEn
       } = item
 
       /**
@@ -281,24 +300,25 @@ const addItem = (selectionList: any[]) => {
        * 无法带出的内容有 exchangeRate-source
        */
       const obj = {
-        orderNo: no,
-        [itemIdKey]: rowItemsId, //list记得转化
+        orderCode: code,
+        [itemIdKey]: itemsId, //list记得转化
 
         productId,
         productName,
-        productBarCode,
-        barCode,
+        productCode,
+        code,
         productUnitId, // 列表要转化取item-product里面数据
         productUnitName, //列表要转化取item-product里面数据
         model, // //列表要转化取item-product里面数据
         productPrice,
         qty,
         declaredType,
-       
-        taxPercent,
+        currencyName,
+
+        taxRate,
         taxPrice,
-        actTaxPrice,
-        allAmount,
+        grossPrice,
+        grossTotalPrice,
         remark,
         settlementDate,
         containerRate,
@@ -312,6 +332,10 @@ const addItem = (selectionList: any[]) => {
         applicantName,
         applicationDeptId,
         applicationDeptName: departmentName,
+
+        payPrice,
+        fbaCode,
+        declaredTypeEn
       }
       return obj
     })

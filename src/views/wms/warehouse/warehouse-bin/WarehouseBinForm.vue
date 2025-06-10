@@ -58,7 +58,6 @@ const open = async (type: string, id?: number) => {
   resetForm()
 
   getWMSWarehouseList(WMSWarehouseList)
-  getWarehouseZoneList(warehouseZoneList)
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
@@ -116,7 +115,10 @@ const createRequestFormOptions = () => {
       attrs: {
         style: { width: '100%' },
         filterable: true,
-        clearable: true
+        clearable: true,
+        onChange: (val) => {
+          getWarehouseZoneList(warehouseZoneList, { warehouseId: val })
+        }
       },
       children: WMSWarehouseList
     },
@@ -147,9 +149,9 @@ const createRequestFormOptions = () => {
     {
       requiredFlag: true,
       type: 'input',
-      label: '库位名称',
+      label: '库位',
       prop: 'name',
-      placeholder: '请输入库位名称',
+      placeholder: '请输入库位',
       attrs: {
         style: { width: '100%' },
         clearable: true

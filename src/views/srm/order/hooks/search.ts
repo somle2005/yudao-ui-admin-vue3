@@ -11,19 +11,20 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const userList = getUserList()
-  const productList = getProductList(null, { label: 'barCode', value: 'id' })
+  const productList = getProductList(null, { label: 'code', value: 'id' })
   const supplierList = getSupplierList()
   const { deptList, defaultProps } = getDeptTree()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'date-picker',
       placeholder: '请选择单据日期',
-      prop: 'noTime',
+      prop: 'billTime',
       label: '单据日期',
       attrs: {
         clearable: true,
         type: 'daterange',
-        'value-format': 'YYYY-MM-DD HH:mm:ss',
+        // 'value-format': 'x',
+        'value-format': 'x',
         'start-placeholder': '开始日期',
         'end-placeholder': '结束日期',
         defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
@@ -66,9 +67,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     // 订单单号
     {
       type: 'input',
-      label: '单据编号',
-      prop: 'no',
-      placeholder: '请输入单据编号',
+      label: '单据编码',
+      prop: 'code',
+      placeholder: '请输入单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
@@ -77,21 +78,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'input',
-      label: '源单单号',
-      prop: 'erpPurchaseRequestItemNo',
-      placeholder: '请输入源单单号',
+      label: '上游单据编码',
+      prop: 'purchaseApplyCode',
+      placeholder: '请输入上游单据编码',
       attrs: {
         class: '!w-240px',
         style: { width: '100%' },
         clearable: true
       }
     },
-    // 产品用SKU
+    // 产品用产品编码
     {
       type: 'select',
-      placeholder: '请选择SKU',
+      placeholder: '请选择产品编码',
       prop: 'productId',
-      label: 'SKU',
+      label: '产品编码',
       attrs: {
         clearable: true,
         filterable: true,
@@ -111,7 +112,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   attrs: {
     //     clearable: true,
     //     type: 'daterange',
-    //     'value-format': 'YYYY-MM-DD HH:mm:ss',
+    //     'value-format': 'x',
     //     'start-placeholder': '开始日期',
     //     'end-placeholder': '结束日期',
     //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
@@ -173,7 +174,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择入库状态',
-      prop: 'inStatus',
+      prop: 'inboundStatus',
       label: '入库状态',
       attrs: {
         class: '!w-240px',

@@ -46,9 +46,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'input',
-      label: '仓库名称',
+      label: '仓库',
       prop: 'name',
-      placeholder: '请输入仓库名称',
+      placeholder: '请输入仓库',
       attrs: {
         style: { width: '100%' },
         clearable: true
@@ -70,9 +70,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'input',
-      label: '公司名称',
-      prop: 'companyName',
-      placeholder: '请输入公司名称',
+      label: '详细地址3',
+      prop: 'addressLine3',
+      placeholder: '请输入详细地址3',
       attrs: {
         style: { width: '100%' },
         clearable: true

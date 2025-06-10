@@ -89,7 +89,7 @@ export interface PurchaseOrderVO {
   outCount: number // 采购出库数量
   returnCount: number // 采购退货数量,
   items: PurchaseOrderItemVO[] // 采购订单明细
-  reviewComment?: string // 审核意见
+  auditAdvice?: string // 审核意见
   inspectionJson?: string // 检验单
   completionJson?: string // 完工单
   totalInspectionPassCount?: number // 总检验通过数量
@@ -182,8 +182,8 @@ interface PurchaseOrderContractDTO {
 // ERP 采购订单 API
 export const PurchaseOrderApi = {
   // 查询采购订单分页
-  getPurchaseOrderPage: async (params: any) => {
-    return await request.get({ url: `/srm/purchase-order/page`, params })
+  getPurchaseOrderPage: async (data: any) => {
+    return await request.post({ url: `/srm/purchase-order/page`, data })
   },
 
   // 查询采购订单详情
@@ -237,7 +237,7 @@ export const PurchaseOrderApi = {
     reviewed: boolean
     pass: boolean
     orderIds: number[]
-    reviewComment?: string
+    auditAdvice?: string
   }) => {
     return await request.post({
       url: `/srm/purchase-order/auditStatus`,

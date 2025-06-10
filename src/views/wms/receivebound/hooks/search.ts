@@ -15,12 +15,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
         clearable: true
       }
     },
-
+    {
+      type: 'input',
+      label: '上游单据编号',
+      prop: 'upstreamCode',
+      placeholder: '请输入上游单据编号',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
     {
       type: 'select',
-      placeholder: '请选择状态',
+      placeholder: '请选择审核状态',
       prop: 'auditStatus',
-      label: '状态',
+      label: '审核状态',
       attrs: {
         filterable: true,
         clearable: true,
@@ -45,8 +54,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
+      // placeholder: '请选择上游单据类型',
       placeholder: '请选择入库单类型',
-      prop: 'type',
+      prop: 'upstreamType',
+      // label: '上游单据类型',
       label: '入库单类型',
       attrs: {
         filterable: true,
@@ -57,6 +68,21 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
     },
+
+    // {
+    //   type: 'select',
+    //   placeholder: '请选择入库单类型',
+    //   prop: 'type',
+    //   label: '入库单类型',
+    //   attrs: {
+    //     filterable: true,
+    //     clearable: true,
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   },
+    //   children: getIntDictOptions(DICT_TYPE.WMS_INBOUND_TYPE)
+    // },
     // {
     //   type: 'input',
     //   label: '参考号',
@@ -109,25 +135,25 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       }
     },
-    {
-      type: 'date-picker',
-      placeholder: '请选择预计到货时间',
-      prop: 'arrivalPlanTime',
-      label: '预计到货时间',
-      attrs: {
-        clearable: true,
-        type: 'date',
-        'value-format': 'x',
-        class: '!w-1/1',
-        style: {
-          width: '100%'
-        }
-      }
-    },
+    // {
+    //   type: 'date-picker',
+    //   placeholder: '请选择计划到货时间',
+    //   prop: 'arrivalPlanTime',
+    //   label: '计划到货时间',
+    //   attrs: {
+    //     clearable: true,
+    //     type: 'date',
+    //     'value-format': 'x',
+    //     class: '!w-1/1',
+    //     style: {
+    //       width: '100%'
+    //     }
+    //   }
+    // },
     {
       type: 'input',
       label: '特别说明',
-      prop: 'creatorComment',
+      prop: 'remark',
       placeholder: '请输入特别说明',
       attrs: {
         style: { width: '100%' },

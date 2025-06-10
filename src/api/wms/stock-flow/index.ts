@@ -54,7 +54,44 @@ export const StockFlowApi = {
   },
 
   // 获得所有者库存流水分页
-  getStockFlowPageOwnership: async (data: any) => {
-    return await request.post({ url: `/wms/stock-flow/page-ownership`, data })
+  getStockFlowPageLogic: async (data: any) => {
+    return await request.post({ url: `/wms/stock-flow/page-logic`, data })
   },
+
+  // 获得仓库库存流水分页
+  getStockFlowPageWarehouse: async (data: any) => {
+    return await request.post({ url: `/wms/stock-flow/page-warehouse`, data })
+  },
+
+  // 获得仓位库存流水分页
+  getStockFlowPageBin: async (data: any) => {
+    return await request.post({ url: `/wms/stock-flow/page-bin`, data })
+  },
+
+  // 导出库位库存流水 Excel
+  exportStockFlowBin: async (data) => {
+    return await request.download({
+      url: `/admin-api/wms/stock-flow/export-bin`,
+      data,
+      method: 'POST'
+    })
+  },
+
+  // 导出仓库库存流水 Excel
+  exportStockFlowWarehouse: async (data) => {
+    return await request.download({
+      url: `/wms/stock-flow/export-warehouse`,
+      data,
+      method: 'POST'
+    })
+  },
+
+  // 导出所有者库位库存流水 Excel
+  exportStockFlowLogic: async (data) => {
+    return await request.download({
+      url: `/wms/stock-flow/export-logic`,
+      data,
+      method: 'POST'
+    })
+  }
 }
