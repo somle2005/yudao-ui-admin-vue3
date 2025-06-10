@@ -55,5 +55,10 @@ export const WarehouseApi = {
   // 获取仓库精简信息列表
   getWarehouseSimpleList: async () => {
     return await request.get({ url: '/wms/warehouse/simple-list' })
+  },
+
+  // 获取仓库精简信息列表
+  getWarehouseExchangeSimpleList: async (params: any) => {
+    return await request.get({ url: '/wms/warehouse/exchange/simple-list', params })
   }
 }

@@ -60,3 +60,19 @@ export const getWarehouseBinList = (data?: any, params?: any) => {
   })
   return warehouseBinList
 }
+
+export const getExchangeWarehouseList = (params?:any,data?: any) => {
+  const exchangeWarehouseList = ref<(WmsWarehouseVO & SelectProp)[]>([])
+
+  WmsWarehouseApi.getWarehouseExchangeSimpleList(params).then((res) => {
+    exchangeWarehouseList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = exchangeWarehouseList.value
+    }
+  })
+  return exchangeWarehouseList
+}
