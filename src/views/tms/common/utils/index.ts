@@ -360,6 +360,8 @@ export const computeVolume = (item) => {
         VOLUMN_PRECISION
       )
     )
+  } else {
+    item.volume = 0
   }
 }
 
