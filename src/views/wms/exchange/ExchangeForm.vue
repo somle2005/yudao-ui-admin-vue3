@@ -73,6 +73,7 @@ const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
 
 const {
+  changeExchangeWarehouseList,
   getFormData,
   requestFormOptions,
   operateForm,
@@ -96,6 +97,7 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await ExchangeApi.getExchange(id)
+      changeExchangeWarehouseList(formData.value.type)
       formRef.value.initForm()
     } finally {
       formLoading.value = false

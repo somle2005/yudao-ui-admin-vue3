@@ -1,16 +1,20 @@
 import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { getIntDictOptions } from '@/utils/dict'
-import { getWMSWarehouseList } from '@/commonData/wms'
+import { getExchangeWarehouseList } from '@/commonData/wms'
 import { addAuditAdvice } from '../../common/utils'
 
 export const useForm = (formType, formData) => {
-  const WMSWarehouseList = ref([])
-
+  const exchangeWarehouseList = ref([])
   const requestFormOptions: any = ref([])
 
   const detailFormOptions = (formOptions) => {
     addDisabled(formOptions)
     return formOptions
+  }
+
+  const changeExchangeWarehouseList = (val) => {
+    console.log(val, '选中了类型')
+    getExchangeWarehouseList({ exchange: val }, exchangeWarehouseList)
   }
 
   const createRequestFormOptions = () => {
@@ -25,7 +29,6 @@ export const useForm = (formType, formData) => {
           clearable: true
         }
       },
-
       {
         requiredFlag: true,
         type: 'select',
@@ -37,7 +40,8 @@ export const useForm = (formType, formData) => {
           clearable: true,
           style: {
             width: '100%'
-          }
+          },
+          onChange: changeExchangeWarehouseList
         },
         children: getIntDictOptions(DICT_TYPE.WMS_EXCHANGE_TYPE)
       },
@@ -67,7 +71,7 @@ export const useForm = (formType, formData) => {
           filterable: true,
           clearable: true
         },
-        children: WMSWarehouseList
+        children: exchangeWarehouseList
       },
       {
         type: 'input',
@@ -116,7 +120,7 @@ export const useForm = (formType, formData) => {
   }
 
   const initDialogData = () => {
-    getWMSWarehouseList(WMSWarehouseList)
+    // getWMSWarehouseList(WMSWarehouseList)
   }
   const getFormData = () => {
     return formData.value
@@ -128,6 +132,7 @@ export const useForm = (formType, formData) => {
   const itemFormRef = ref()
 
   return {
+    changeExchangeWarehouseList,
     getFormData,
     requestFormOptions,
     operateForm,
@@ -135,6 +140,6 @@ export const useForm = (formType, formData) => {
     itemFormRef,
     subTabsName,
     itemsFormdisabled,
-    auditType,
+    auditType
   }
 }
