@@ -19,16 +19,16 @@ export const useForm = (formType, formData) => {
 
   const createRequestFormOptions = () => {
     const list = [
-      {
-        type: 'input',
-        label: '单据号',
-        prop: 'code',
-        placeholder: '请输入单据号',
-        attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
+      // {
+      //   type: 'input',
+      //   label: '单据号',
+      //   prop: 'code',
+      //   placeholder: '请输入单据号',
+      //   attrs: {
+      //     style: { width: '100%' },
+      //     clearable: true
+      //   }
+      // },
       {
         requiredFlag: true,
         type: 'select',
@@ -45,21 +45,6 @@ export const useForm = (formType, formData) => {
         },
         children: getIntDictOptions(DICT_TYPE.WMS_EXCHANGE_TYPE)
       },
-      {
-        type: 'select',
-        placeholder: '请选择状态',
-        prop: 'auditStatus',
-        label: '状态',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: getIntDictOptions(DICT_TYPE.WMS_EXCHANGE_AUDIT_STATUS)
-      },
-
       {
         requiredFlag: true,
         type: 'select',
@@ -79,6 +64,17 @@ export const useForm = (formType, formData) => {
         prop: 'remark',
         placeholder: '请输入备注',
         attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      { 
+        colConfig: { span: 24 },
+        type: 'input',
+        label: '必要条件',
+        prop: 'tips',
+        attrs: {
+          disabled: true,
           style: { width: '100%' },
           clearable: true
         }

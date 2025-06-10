@@ -76,3 +76,19 @@ export const getExchangeWarehouseList = (params?:any,data?: any) => {
   })
   return exchangeWarehouseList
 }
+
+export const getWarehouseBinExchangeList = (params?:any,data?: any) => {
+  const warehouseBinExchangeList = ref<any[]>([])
+
+  WarehouseBinApi.getWarehouseBinExchangeSimpleList(params).then((res) => {
+    warehouseBinExchangeList.value = res.map((item) => {
+      item.label = item.name
+      item.value = item.id
+      return item
+    })
+    if (data) {
+      data.value = warehouseBinExchangeList.value
+    }
+  })
+  return warehouseBinExchangeList
+}

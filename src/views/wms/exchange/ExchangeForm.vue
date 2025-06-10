@@ -11,6 +11,7 @@
       :getModelValue="getFormData"
     >
       <template #items>
+        <!-- v-if="formData.type && formData.warehouseId" -->
         <el-tabs v-model="subTabsName" class="-mt-15px -mb-10px" style="width: 100%">
           <el-tab-pane label="换货清单" name="itemForm">
             <ItemForm
@@ -47,6 +48,7 @@ import ItemForm from './components/ItemForm.vue'
 import { useForm } from './hooks/useForm'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { createDBFn } from '@/utils/decorate'
+import { InfoKeyOpenFormData } from './hooks/injectKeys'
 
 /** 换货单 表单 */
 defineOptions({ name: 'ExchangeForm' })
@@ -66,11 +68,14 @@ const initFormData = () => {
     warehouseId: undefined,
     auditStatus: undefined,
     remark: undefined,
-    itemList: []
+    itemList: [],
+    tips: '调出仓库和类型选择后才能出现换货清单,联动带出源库位'
   }
 }
 const formData = ref(initFormData())
 const formRef = ref() // 表单 Ref
+
+provide(InfoKeyOpenFormData, formData)
 
 const {
   changeExchangeWarehouseList,

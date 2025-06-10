@@ -31,11 +31,7 @@
         <el-table-column label="源库位" width="120" :rules="formRules.fromBinId" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.fromBinId`" class="mb-0px!">
-              <SmSelect
-                v-model="row.fromBinId"
-                placeholder="请选择源库位"
-                :data="warehouseBinList"
-              />
+              <SmSelect v-model="row.fromBinId" placeholder="请选择源库位" :data="sourceBinList" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -97,10 +93,10 @@ import {
 } from '@/utils'
 import { cloneDeep } from 'lodash-es'
 import { getProductList } from '@/commonData'
-import { getWarehouseBinList } from '@/commonData/wms'
+import { getWarehouseBinExchangeList, getWarehouseBinList } from '@/commonData/wms'
+import { InfoKeyOpenFormData } from '../hooks/injectKeys'
+import { useSourceBinList } from '../../common/utils'
 
-const productList = getProductList()
-const warehouseBinList = getWarehouseBinList()
 
 const props = defineProps({
   items: {
@@ -120,7 +116,6 @@ const props = defineProps({
   }
 })
 
-
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
@@ -129,7 +124,21 @@ const formRules = reactive({
   fromBinId: [{ required: true, message: '源库位不能为空', trigger: 'blur' }],
   toBinId: [{ required: true, message: '目的库位不能为空', trigger: 'blur' }]
 })
+
+const productList = getProductList()
+const warehouseBinList = getWarehouseBinList()
+const sourceBinList = ref([])
 const formRef = ref() // 表单 Ref
+const openFormData = inject(InfoKeyOpenFormData)
+const { canSourceBinList } = useSourceBinList()
+
+watch(
+  () => openFormData,
+  async (val) => {
+    canSourceBinList(val,sourceBinList)
+  },
+  { immediate: true, deep: true }
+)
 
 /** 初始化设置入库项 */
 watch(

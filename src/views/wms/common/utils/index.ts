@@ -1,5 +1,6 @@
 import { getRepeatMap } from '@/utils/judge'
 import { DICT_TYPE } from '@/utils/dict'
+import { getWarehouseBinExchangeList } from '@/commonData/wms'
 
 export const isAbandon = (status: any) => {
   return [0, 2].includes(status) //草稿0 驳回2
@@ -123,4 +124,43 @@ export const getCodeValue = (row: any, type: number) => {
 // 入库单号会一直存在-其他只会存在一种
 export const getOperateNo = (row: any) => {
   return row.outboundCode || row.pickupCode || row.inboundCode
+}
+
+const getWarehousesBinExchangeParams = (formDataCopy) => {
+  const { type, warehouseId } = formDataCopy
+  return { partitionType: type, warehouseId }
+}
+
+const changeSourceBinList = (data,sourceBinList) => {
+  const { type, warehouseId } = data || {}
+  if (type && warehouseId) {
+    getWarehouseBinExchangeList({ partitionType: type, warehouseId }, sourceBinList)
+  } else {
+    sourceBinList.value = []
+  }
+}
+
+export const useSourceBinList = () => {
+ /**
+  *  因为接口修改后-值还会watch再调用一次接口
+  *  eslint-disable-next-line prefer-const
+  *  方便统一管理-否则两个调用方都要触发一次方法-并且-编辑接口调用处-还需要再调用接口处理
+  */
+  let cacheStr = ''
+  const getCacheStr = (formDataCopy) => {
+    return JSON.stringify(getWarehousesBinExchangeParams(formDataCopy))
+  }
+  const canSourceBinList = (formData,sourceBinList) => {
+    const formDataCopy = unref(formData)
+    const str = getCacheStr(formDataCopy)
+    if (cacheStr === str) {
+      return
+    } else {
+      cacheStr = str
+      changeSourceBinList(formDataCopy,sourceBinList)
+    }
+  }
+  return {
+    canSourceBinList
+  }
 }
