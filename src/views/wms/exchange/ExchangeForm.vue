@@ -87,7 +87,7 @@ const {
   subTabsName,
   itemsFormdisabled,
   auditType
-} = useForm(formType, formData)
+} = useForm(formType, formData, formRef)
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {

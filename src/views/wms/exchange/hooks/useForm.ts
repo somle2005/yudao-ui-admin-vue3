@@ -3,7 +3,7 @@ import { getIntDictOptions } from '@/utils/dict'
 import { getExchangeWarehouseList } from '@/commonData/wms'
 import { addAuditAdvice } from '../../common/utils'
 
-export const useForm = (formType, formData) => {
+export const useForm = (formType, formData, formRef) => {
   const exchangeWarehouseList = ref([])
   const requestFormOptions: any = ref([])
 
@@ -12,13 +12,21 @@ export const useForm = (formType, formData) => {
     return formOptions
   }
 
-  const changeExchangeWarehouseList = (val) => {
-    console.log(val, '选中了类型')
+  const changeBinUn = () => {
     formData.value.itemList.forEach((item) => {
       item.fromBinId = undefined
       item.toBinId = undefined
     })
+  }
+
+  const changeExchangeWarehouseList = (val) => {
     getExchangeWarehouseList({ exchange: val }, exchangeWarehouseList)
+  }
+  const changeExchangeWarehouseListMixin = (val) => {
+    const model = formRef.value.getFormData()
+    model.warehouseId = undefined
+    changeBinUn()
+    changeExchangeWarehouseList(val)
   }
 
   const createRequestFormOptions = () => {
@@ -45,7 +53,7 @@ export const useForm = (formType, formData) => {
           style: {
             width: '100%'
           },
-          onChange: changeExchangeWarehouseList
+          onChange: changeExchangeWarehouseListMixin
         },
         children: getIntDictOptions(DICT_TYPE.WMS_EXCHANGE_TYPE)
       },
@@ -58,7 +66,8 @@ export const useForm = (formType, formData) => {
         attrs: {
           style: { width: '100%' },
           filterable: true,
-          clearable: true
+          clearable: true,
+          onChange: changeBinUn
         },
         children: exchangeWarehouseList
       },
