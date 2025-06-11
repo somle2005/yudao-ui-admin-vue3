@@ -90,6 +90,7 @@ export const useBatch = (wholeOrderEnable, selectionList, getList, openForm) => 
             a.toWarehouseId = item.toWarehouseId
             a.deptId = item.requestDeptId
             a.requestCode = item.code
+            a.boxQty = a.qty // 默认箱数=件数-头程新增-头程申请合并
           })
           arr.push(...item.items)
         }

@@ -47,7 +47,7 @@
         <el-table-column label="件数" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-              <SmNumber v-model="row.qty" />
+              <SmNumber v-model="row.qty" @change="() => (row.boxQty = row.qty)" />
             </el-form-item>
           </template>
         </el-table-column>
