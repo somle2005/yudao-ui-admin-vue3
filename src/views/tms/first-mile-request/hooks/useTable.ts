@@ -8,6 +8,7 @@ import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { formatDecimalFormatter } from '@/utils/num'
 import { mergeItemsUpToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
+import { transformVolumeColumn } from '../../common/utils'
 
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
@@ -45,7 +46,7 @@ export const useTable = () => {
     totalWeight: '总重量(kg)',
     totalVolume: {
       label: '总体积(m³)',
-      formatter: formatDecimalFormatter
+      formatter: transformVolumeColumn
     },
 
     auditStatus: {
