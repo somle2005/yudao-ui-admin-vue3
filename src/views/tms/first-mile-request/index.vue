@@ -85,7 +85,7 @@
           @click="handleMerge"
           v-hasPermi="['tms:first-mile-request:merge']"
         >
-          合并
+          合并头程申请单
         </el-button>
 
         <el-switch

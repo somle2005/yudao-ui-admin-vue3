@@ -20,6 +20,7 @@
               class="mb-0px!"
             >
               <SmSelect
+                :disabled="mergeDisabled"
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 :data="productList"
@@ -95,13 +96,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="计划发货数" width="100" align="center">
+        <!-- <el-table-column label="计划发货数" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.outboundPlanQty`" class="mb-0px!">
               <SmNumber v-model="row.outboundPlanQty" />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="发出仓" width="150" align="center">
           <template #default="{ row, $index }">
@@ -235,7 +236,7 @@ const props = defineProps({
   }
 })
 
-const updateShow = computed(() => props.formType === 'update')
+const mergeDisabled = computed(() => props.formType === 'merge')
 
 /**
  * 头程单新增 有上游单据号的  也就是说从申请单过来的不可编辑  智能系统赋值 无上游单据号非合并过来 可以编辑

@@ -39,11 +39,7 @@
         <el-table-column label="目的库位" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.toBinId`" :rules="formRules.toBinId" class="mb-0px!">
-              <SmSelect
-                v-model="row.toBinId"
-                placeholder="请选择目的库位"
-                :data="warehouseBinList"
-              />
+              <SmSelect v-model="row.toBinId" placeholder="请选择目的库位" :data="toBinList" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -93,10 +89,8 @@ import {
 } from '@/utils'
 import { cloneDeep } from 'lodash-es'
 import { getProductList } from '@/commonData'
-import { getWarehouseBinExchangeList, getWarehouseBinList } from '@/commonData/wms'
 import { InfoKeyOpenFormData } from '../hooks/injectKeys'
 import { useSourceBinList } from '../../common/utils'
-
 
 const props = defineProps({
   items: {
@@ -126,16 +120,18 @@ const formRules = reactive({
 })
 
 const productList = getProductList()
-const warehouseBinList = getWarehouseBinList()
 const sourceBinList = ref([])
+const toBinList = ref([])
 const formRef = ref() // 表单 Ref
 const openFormData = inject(InfoKeyOpenFormData)
 const { canSourceBinList } = useSourceBinList()
+const { canSourceBinList: canToBinList } = useSourceBinList()
 
 watch(
   () => openFormData,
   async (val) => {
-    canSourceBinList(val,sourceBinList)
+    canSourceBinList(val, sourceBinList)
+    canToBinList(val, toBinList, 'toBin')
   },
   { immediate: true, deep: true }
 )
