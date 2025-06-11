@@ -45,7 +45,7 @@
       </template>
 
       <template #operateNo="{ scope }">
-        <div> 操作单号:{{ getOperateNo(scope.row) }}  </div>
+        <div> 操作单号:{{ getOperateNo(scope.row) }} </div>
         <div> 入库单号:{{ scope.row.inboundCode }} </div>
         <!-- <div> 出库单号:{{ scope.row.outboundCode }} </div>
         <div> 上架单号:{{ scope.row.pickupCode }} </div> -->
@@ -110,7 +110,7 @@ const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 const fieldMap = {
   productCode: {
     label: '产品编码',
-     width: '160px',
+    width: '160px'
   },
   productName: {
     label: '产品名称',
@@ -261,8 +261,9 @@ const getList = async () => {
       // { prop: 'zone', keyList: ['name'] },
       { prop: 'product', keyList: ['name', 'code'] },
       { prop: 'inbound', keyList: ['code'] },
-      // { prop: 'outbound', keyList: ['code'] },
-      // { prop: 'pickup', keyList: ['code'] },
+      { prop: 'outbound', keyList: ['code'] },
+      { prop: 'pickup', keyList: ['code'] },
+      { prop: 'exchange', keyList: ['code'] },
       { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] },
       { prop: 'inboundItemFlow', keyList: ['outboundAvailableQty'] },
 

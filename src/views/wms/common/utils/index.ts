@@ -96,7 +96,9 @@ export const codeTypeList = [
 
   { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
   { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
-  { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' }
+  { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
+
+  { name: '换货单', type: 11, dictType: 'wms_inbound_type', getValue: 'exchange.type' },
 
   // 只有出库单-入库单状态
   // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
@@ -123,7 +125,7 @@ export const getCodeValue = (row: any, type: number) => {
 
 // 入库单号会一直存在-其他只会存在一种
 export const getOperateNo = (row: any) => {
-  return row.outboundCode || row.pickupCode || row.inboundCode
+  return row.exchangeCode || row.outboundCode || row.pickupCode || row.inboundCode 
 }
 
 const getWarehousesBinExchangeParams = (formDataCopy) => {
