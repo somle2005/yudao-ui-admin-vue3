@@ -28,7 +28,7 @@
                 :min="0"
                 class="!w-100%"
               /> -->
-              <SmNumber v-model="row.planQty" />
+              <SmNumber v-model="row.planQty" :max="row.availableQty" />
             </el-form-item>
           </template>
         </el-table-column>
