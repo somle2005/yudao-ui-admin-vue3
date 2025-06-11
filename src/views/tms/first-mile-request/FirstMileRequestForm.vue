@@ -309,7 +309,7 @@ const open = async (type: string, id?: number, data?: any) => {
     merge: () => {
       dialogTitle.value = '合并头程申请单'
       const options = mergeOptions()
-      const item:any = options.find((item) => item.prop === 'toWarehouseId')
+      const item: any = options.find((item) => item.prop === 'toWarehouseId')
       item.attrs.disabled = true
       requestFormOptions.value = options
       vesselTrackingItemsOptions.value = vesselTrackingOptions()
@@ -347,6 +347,9 @@ const open = async (type: string, id?: number, data?: any) => {
     formLoading.value = true
     try {
       formData.value = await FirstMileRequestApi.getFirstMileRequest(id)
+      if (type === 'merge') {
+        formData.value.id = undefined
+      }
       formRef.value.initForm()
     } finally {
       formLoading.value = false

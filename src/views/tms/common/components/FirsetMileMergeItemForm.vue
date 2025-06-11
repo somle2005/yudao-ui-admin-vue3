@@ -20,7 +20,7 @@
               class="mb-0px!"
             >
               <SmSelect
-                :disabled="mergeDisabled"
+                :disabled="row.disabled"
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 :data="productList"
@@ -236,7 +236,6 @@ const props = defineProps({
   }
 })
 
-const mergeDisabled = computed(() => props.formType === 'merge')
 
 /**
  * 头程单新增 有上游单据号的  也就是说从申请单过来的不可编辑  智能系统赋值 无上游单据号非合并过来 可以编辑
