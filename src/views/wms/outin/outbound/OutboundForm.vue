@@ -162,21 +162,21 @@ const createRequestFormOptions = () => {
       },
       children: WMSWarehouseList
     },
-    // {
-    //   requiredFlag: true,
-    //   type: 'select',
-    //   placeholder: '请选择出库类型',
-    //   prop: 'type',
-    //   label: '出库类型',
-    //   attrs: {
-    //     filterable: true,
-    //     clearable: true,
-    //     style: {
-    //       width: '100%'
-    //     }
-    //   },
-    //   children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE).slice(0,3)
-    // },
+    {
+      requiredFlag: true,
+      type: 'select',
+      placeholder: '请选择出库类型',
+      prop: 'type',
+      label: '出库类型',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE).slice(0,3)
+    },
     {
       type: 'input',
       label: '特别说明',
