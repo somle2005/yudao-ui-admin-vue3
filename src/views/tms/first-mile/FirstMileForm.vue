@@ -282,7 +282,7 @@ const submitForm = async (type?: string) => {
       await FirstMileApi.auditFirstMileStatus({
         reviewed: true,
         pass: type === AUDIT_TYPE.agree,
-        requestId: data.id,
+        id: data.id,
         auditAdvice: data.auditAdvice
       })
       message.success(t('common.updateSuccess'))

@@ -38,7 +38,8 @@ export const useBatch = (selectionList, getList, openForm) => {
       await FirstMileApi.auditFirstMileStatus({
         reviewed, // 反审核false
         pass: true, // 反审核无意义
-        requestId: id
+        id
+        // requestId: id
         // auditAdvice: data.auditAdvice 金蝶也是直接反审核没有填写数据的-后期如果要填写-再加一个按钮进行区分开来- openForm('rejectAudit', id)
       })
       message.success('反审核成功')

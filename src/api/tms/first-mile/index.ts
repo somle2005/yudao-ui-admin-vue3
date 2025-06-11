@@ -35,7 +35,7 @@ export interface FirstMileAuditVO {
   /**
    * 头程申请单ID集合
    */
-  requestId: number
+  id: number
   /**
    * 审核意见
    */
