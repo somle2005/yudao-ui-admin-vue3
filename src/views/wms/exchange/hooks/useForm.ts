@@ -14,6 +14,10 @@ export const useForm = (formType, formData) => {
 
   const changeExchangeWarehouseList = (val) => {
     console.log(val, '选中了类型')
+    formData.value.itemList.forEach((item) => {
+      item.fromBinId = undefined
+      item.toBinId = undefined
+    })
     getExchangeWarehouseList({ exchange: val }, exchangeWarehouseList)
   }
 
@@ -68,7 +72,7 @@ export const useForm = (formType, formData) => {
           clearable: true
         }
       },
-      { 
+      {
         colConfig: { span: 24 },
         type: 'input',
         label: '必要条件',
