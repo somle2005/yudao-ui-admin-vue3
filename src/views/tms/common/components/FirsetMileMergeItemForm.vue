@@ -236,7 +236,6 @@ const props = defineProps({
   }
 })
 
-
 /**
  * 头程单新增 有上游单据号的  也就是说从申请单过来的不可编辑  智能系统赋值 无上游单据号非合并过来 可以编辑
  * 头程申请单合并 选中项无法修改
@@ -244,6 +243,7 @@ const props = defineProps({
  */
 
 const getStoreDisabled = (item) => {
+  if (item.disabled) return true
   if (item.upstreamCode) {
     return true
   }

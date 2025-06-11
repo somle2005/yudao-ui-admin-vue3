@@ -70,7 +70,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
-                :disabled="disabled"
+                disabled
                 class="!w-100%"
                 v-model="row.deptId"
                 :data="deptList"
@@ -89,7 +89,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
               <SmSelect
-                :disabled="disabled"
+                disabled
                 v-model="row.companyId"
                 placeholder="请选择库存公司"
                 :data="financeSubjectList"
