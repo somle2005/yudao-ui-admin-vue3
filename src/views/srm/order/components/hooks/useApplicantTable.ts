@@ -63,9 +63,9 @@ export const useApplicantTable = () => {
       label: '行关闭状态',
       slot: 'itemsOffStatus'
     },
-    itemsProductBarCode: {
+    itemsCode: {
       label: '产品编码',
-      slot: 'productCode',
+      slot: 'itemsCode',
       width: '200px',
       wrap: true
     },

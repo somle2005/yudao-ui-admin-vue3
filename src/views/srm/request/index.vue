@@ -273,9 +273,9 @@ const fieldMap = {
     slot: 'itemsOffStatus',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  itemsProductBarCode: {
+  itemsCode: {
     label: '产品编码',
-    slot: 'productCode',
+    slot: 'itemsCode',
     width: '200px',
     wrap: true,
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
