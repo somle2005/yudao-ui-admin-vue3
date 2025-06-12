@@ -20,6 +20,7 @@
               class="mb-0px!"
             >
               <SmSelect
+                :disabled="row.disabled"
                 v-model="row.productId"
                 placeholder="请选择产品编码"
                 :data="productList"
@@ -46,7 +47,7 @@
         <el-table-column label="件数" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-              <SmNumber v-model="row.qty" />
+              <SmNumber v-model="row.qty" @change="() => (row.boxQty = row.qty)" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -95,13 +96,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="计划发货数" width="100" align="center">
+        <!-- <el-table-column label="计划发货数" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.outboundPlanQty`" class="mb-0px!">
               <SmNumber v-model="row.outboundPlanQty" />
             </el-form-item>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="发出仓" width="150" align="center">
           <template #default="{ row, $index }">
@@ -235,8 +236,6 @@ const props = defineProps({
   }
 })
 
-const updateShow = computed(() => props.formType === 'update')
-
 /**
  * 头程单新增 有上游单据号的  也就是说从申请单过来的不可编辑  智能系统赋值 无上游单据号非合并过来 可以编辑
  * 头程申请单合并 选中项无法修改
@@ -244,6 +243,7 @@ const updateShow = computed(() => props.formType === 'update')
  */
 
 const getStoreDisabled = (item) => {
+  if (item.disabled) return true
   if (item.upstreamCode) {
     return true
   }
@@ -305,11 +305,11 @@ watch(
     if (!val || val.length === 0) {
       return
     }
-    computeTargetQty(val, {
-      targetQtyKey: 'pickQty',
-      computeQtyKey: 'qty',
-      computeKey: 'productId'
-    })
+    // computeTargetQty(val, {
+    //   targetQtyKey: 'pickQty',
+    //   computeQtyKey: 'qty',
+    //   computeKey: 'productId'
+    // })
   },
   { deep: true }
 )

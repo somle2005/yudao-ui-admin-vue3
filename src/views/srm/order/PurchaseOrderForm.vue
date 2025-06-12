@@ -745,8 +745,10 @@ const addItem = (selectionList) => {
         productName,
         productUnitName,
         code,
+        itemsCode,
         productPrice
       } = item
+      // itemsCode防止和外部list-code冲突
       const obj = {
         purchaseApplyItemId,
         // count: approvedQty || 0,
@@ -757,7 +759,7 @@ const addItem = (selectionList) => {
         warehouseId,
         expectArrivalDate,
         deliveryTime: expectArrivalDate,
-        purchaseApplyCode: code,
+        purchaseApplyCode: itemsCode,
         applicantId,
         applicationDeptId,
         departmentName: applicationDept, // 采购订单详情返回 departmentName-applicantName
@@ -774,6 +776,7 @@ const addItem = (selectionList) => {
       }
       return obj
     })
+
     formData.value.items = distinctList(items, selectList, 'purchaseApplyItemId')
   })
 }

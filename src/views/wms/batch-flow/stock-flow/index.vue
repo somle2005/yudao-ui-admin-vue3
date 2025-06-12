@@ -216,6 +216,7 @@ const getList = async () => {
       { prop: 'product', keyList: ['name', 'code'] },
       { prop: 'inbound', keyList: ['code'] },
       { prop: 'outbound', keyList: ['code'] },
+      { prop: 'exchange', keyList: ['code'] },
       { prop: 'stockWarehouse', keyList: ['availableQty', 'sellableQty'] },
       { prop: 'inboundItemFlow', keyList: ['outboundAvailableQty'] }
     ]) as any

@@ -158,7 +158,28 @@ export const useApplicantTable = () => {
     try {
       // 展示分行数据
       const data = await PurchaseRequestApi.getPurchaseRequestPage(queryParams)
-      list.value = mergeItemsUpToList(data.list)
+      list.value = mergeItemsUpToList(data.list, 'items', {
+        id: 'purchaseApplyItemId',
+        approvedQty: 'approvedQty',
+        grossPrice: 'grossPrice',
+        taxRate: 'taxRate',
+        taxPrice: 'taxPrice',
+        warehouseId: 'warehouseId',
+        expectArrivalDate: 'expectArrivalDate',
+        // code,
+        applicantId: 'applicantId',
+        applicationDeptId: 'applicationDeptId',
+        applicant: 'applicant',
+        applicationDept: 'applicationDept',
+        declaredType: 'declaredType',
+        declaredTypeEn: 'declaredTypeEn',
+        productId: 'productId',
+        productCode: 'productCode',
+        productName: 'productName',
+        productUnitName: 'productUnitName',
+        //code: 'code',
+        productPrice: 'productPrice'
+      })
       // list.value = mergeItemsToList(data.list, {
       //   id: 'purchaseApplyItemId',
       //   orderStatus: 'rowOrderStatus',

@@ -1,19 +1,19 @@
 import { useTableData } from '@/components/SmTable/src/utils'
 import {
-  useWholeOrderMergeCompute,
   useWholeOrder,
-  createBranchOrder
+  createBranchOrder,
+  useWholeOrderMergeComputeUp
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { formatDecimalFormatter } from '@/utils/num'
 import { mergeItemsUpToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
+import { transformVolumeColumn } from '../../common/utils'
 
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
 
-  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeCompute()
-
+  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } =  useWholeOrderMergeComputeUp()
   // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
@@ -41,11 +41,12 @@ export const useTable = () => {
       slot: 'offStatus',
       dictAttrs: { type: DICT_TYPE.SRM_OFF_STATUS }
     },
-    itemCount: '产品总数量',
+    // itemCount: '产品总数量',
+    totalItemsQty: '产品总数量',
     totalWeight: '总重量(kg)',
     totalVolume: {
       label: '总体积(m³)',
-      formatter: formatDecimalFormatter
+      formatter: transformVolumeColumn
     },
 
     auditStatus: {
@@ -68,7 +69,8 @@ export const useTable = () => {
     },
     itemsQty: {
       label: '数量',
-      wholeOrderEnable: WHOLE_ORDER_TYPE.items
+      totalItemsKey: 'totalItemsQty',
+      wholeOrderEnable: [WHOLE_ORDER_TYPE.mergeCompute, WHOLE_ORDER_TYPE.items]
     },
     itemsOrderStatus: {
       label: '行订购状态',
@@ -146,13 +148,15 @@ export const useTable = () => {
   const switchList = (list: any, total, data: any) => {
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsUpToList(data.list)
+    itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+
 
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
-    console.log(list.value,'list.value')
+    console.log(list.value, 'list.value-1')
   }
 
   return {

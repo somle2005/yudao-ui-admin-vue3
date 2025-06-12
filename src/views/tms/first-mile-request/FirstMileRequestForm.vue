@@ -50,7 +50,10 @@
 
       <template #mergeItems>
         <el-tabs v-model="mergeTabsName" class="-mt-15px -mb-10px" style="width: 100%">
-          <el-tab-pane :label="mergeItemsTabsName.firstMileItem" :name="mergeItemsTabsName.firstMileItem">
+          <el-tab-pane
+            :label="mergeItemsTabsName.firstMileItem"
+            :name="mergeItemsTabsName.firstMileItem"
+          >
             <FirsetMileMergeItemForm
               v-if="formData.toWarehouseId"
               ref="firstMileItemFormRef"
@@ -60,7 +63,10 @@
               :disabled="itemsFormdisabled"
             />
           </el-tab-pane>
-          <el-tab-pane :label="mergeItemsTabsName.vesselTrackingTabsName" :name="mergeItemsTabsName.vesselTrackingTabsName">
+          <el-tab-pane
+            :label="mergeItemsTabsName.vesselTrackingTabsName"
+            :name="mergeItemsTabsName.vesselTrackingTabsName"
+          >
             <SmForm
               class="-mb-15px common-form-tabs-items"
               ref="vesselTrackingFormRef"
@@ -71,7 +77,10 @@
               :getModelValue="getVesselTrackingFormData"
             />
           </el-tab-pane>
-          <el-tab-pane :label="mergeItemsTabsName.feesTabsName" :name="mergeItemsTabsName.feesTabsName">
+          <el-tab-pane
+            :label="mergeItemsTabsName.feesTabsName"
+            :name="mergeItemsTabsName.feesTabsName"
+          >
             <FeesForm
               ref="feesFormRef"
               :items="formData.fees"
@@ -89,7 +98,7 @@
       >
       <el-button @click="dialogVisible = false">取 消</el-button>
       <template v-if="auditType">
-        <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
+        <el-button type="danger" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.reject)">
           不同意</el-button
         >
         <el-button type="primary" :disabled="formLoading" @click="submitFormDB(AUDIT_TYPE.agree)">
@@ -299,7 +308,10 @@ const open = async (type: string, id?: number, data?: any) => {
     },
     merge: () => {
       dialogTitle.value = '合并头程申请单'
-      requestFormOptions.value = mergeOptions()
+      const options = mergeOptions()
+      const item: any = options.find((item) => item.prop === 'toWarehouseId')
+      item.attrs.disabled = true
+      requestFormOptions.value = options
       vesselTrackingItemsOptions.value = vesselTrackingOptions()
 
       FirstMileApi.getFirstMileLatestNo().then((res) => {
@@ -322,7 +334,7 @@ const open = async (type: string, id?: number, data?: any) => {
   }
   const fn = formTypeOperate[type]
   fn && fn()
- 
+
   mergeTabsName.value = mergeItemsTabsName.firstMileItem
   warehouse.value = {}
   const deptObj = getDeptTree(deptList)
@@ -335,6 +347,9 @@ const open = async (type: string, id?: number, data?: any) => {
     formLoading.value = true
     try {
       formData.value = await FirstMileRequestApi.getFirstMileRequest(id)
+      if (type === 'merge') {
+        formData.value.id = undefined
+      }
       formRef.value.initForm()
     } finally {
       formLoading.value = false

@@ -92,9 +92,9 @@
       </template>
 
       <template #voyageNo="{ scope }">
-        <div class="common-text">提单号:{{ scope.row.ladingNo }}</div>
-        <div class="common-text">箱号:{{ scope.row.containerNo }}</div>
-        <div class="common-text">航次:{{ scope.row.voyage }}</div>
+        <div class="common-text">提单号:{{ scope.row.vesselTrackingLadingNo }}</div>
+        <div class="common-text">箱号:{{ scope.row.vesselTrackingContainerNo }}</div>
+        <div class="common-text">航次:{{ scope.row.vesselTrackingVoyage }}</div>
       </template>
 
       <template #create="{ scope }">
@@ -144,8 +144,9 @@ import { useTable } from './hooks/useTable'
 import { formatDate } from '@/utils/formatTime'
 import { useBatch } from './hooks/useBatch'
 import { getMainItemBodyDataField } from '@/utils/transform'
+import { getItemProp } from '@/components/SmTable/src/utils'
 
-let { tableOptions } = useTable()
+let { tableOptions} = useTable()
 
 /** 头程单 列表 */
 defineOptions({ name: 'TmsFirstMile' })
@@ -204,7 +205,7 @@ const getList = async () => {
 
     const data = await FirstMileApi.getFirstMilePage(bodyData)
     // const data = await FirstMileApi.getFirstMilePage(queryParams)
-    list.value = data.list
+    list.value = getItemProp(data.list, ['vesselTracking'])
     total.value = data.total
   } finally {
     loading.value = false

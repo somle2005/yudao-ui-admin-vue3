@@ -1,11 +1,10 @@
 import { addDisabled, addProperty } from '@/components/SmForm/src/utils'
 import { getIntDictOptions } from '@/utils/dict'
-import { getWMSWarehouseList } from '@/commonData/wms'
+import { getExchangeWarehouseList } from '@/commonData/wms'
 import { addAuditAdvice } from '../../common/utils'
 
-export const useForm = (formType, formData) => {
-  const WMSWarehouseList = ref([])
-
+export const useForm = (formType, formData, formRef) => {
+  const exchangeWarehouseList = ref([])
   const requestFormOptions: any = ref([])
 
   const detailFormOptions = (formOptions) => {
@@ -13,19 +12,35 @@ export const useForm = (formType, formData) => {
     return formOptions
   }
 
+  const changeBinUn = () => {
+    formData.value.itemList.forEach((item) => {
+      item.fromBinId = undefined
+      item.toBinId = undefined
+    })
+  }
+
+  const changeExchangeWarehouseList = (val) => {
+    getExchangeWarehouseList({ exchange: val }, exchangeWarehouseList)
+  }
+  const changeExchangeWarehouseListMixin = (val) => {
+    const model = formRef.value.getFormData()
+    model.warehouseId = undefined
+    changeBinUn()
+    changeExchangeWarehouseList(val)
+  }
+
   const createRequestFormOptions = () => {
     const list = [
-      {
-        type: 'input',
-        label: '单据号',
-        prop: 'code',
-        placeholder: '请输入单据号',
-        attrs: {
-          style: { width: '100%' },
-          clearable: true
-        }
-      },
-
+      // {
+      //   type: 'input',
+      //   label: '单据号',
+      //   prop: 'code',
+      //   placeholder: '请输入单据号',
+      //   attrs: {
+      //     style: { width: '100%' },
+      //     clearable: true
+      //   }
+      // },
       {
         requiredFlag: true,
         type: 'select',
@@ -37,25 +52,11 @@ export const useForm = (formType, formData) => {
           clearable: true,
           style: {
             width: '100%'
-          }
+          },
+          onChange: changeExchangeWarehouseListMixin
         },
         children: getIntDictOptions(DICT_TYPE.WMS_EXCHANGE_TYPE)
       },
-      {
-        type: 'select',
-        placeholder: '请选择状态',
-        prop: 'auditStatus',
-        label: '状态',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: getIntDictOptions(DICT_TYPE.WMS_EXCHANGE_AUDIT_STATUS)
-      },
-
       {
         requiredFlag: true,
         type: 'select',
@@ -65,9 +66,10 @@ export const useForm = (formType, formData) => {
         attrs: {
           style: { width: '100%' },
           filterable: true,
-          clearable: true
+          clearable: true,
+          onChange: changeBinUn
         },
-        children: WMSWarehouseList
+        children: exchangeWarehouseList
       },
       {
         type: 'input',
@@ -75,6 +77,17 @@ export const useForm = (formType, formData) => {
         prop: 'remark',
         placeholder: '请输入备注',
         attrs: {
+          style: { width: '100%' },
+          clearable: true
+        }
+      },
+      {
+        colConfig: { span: 24 },
+        type: 'input',
+        label: '必要条件',
+        prop: 'tips',
+        attrs: {
+          disabled: true,
           style: { width: '100%' },
           clearable: true
         }
@@ -116,7 +129,7 @@ export const useForm = (formType, formData) => {
   }
 
   const initDialogData = () => {
-    getWMSWarehouseList(WMSWarehouseList)
+    // getWMSWarehouseList(WMSWarehouseList)
   }
   const getFormData = () => {
     return formData.value
@@ -128,6 +141,7 @@ export const useForm = (formType, formData) => {
   const itemFormRef = ref()
 
   return {
+    changeExchangeWarehouseList,
     getFormData,
     requestFormOptions,
     operateForm,
@@ -135,6 +149,6 @@ export const useForm = (formType, formData) => {
     itemFormRef,
     subTabsName,
     itemsFormdisabled,
-    auditType,
+    auditType
   }
 }

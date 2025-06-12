@@ -1,5 +1,6 @@
 import { getRepeatMap } from '@/utils/judge'
 import { DICT_TYPE } from '@/utils/dict'
+import { getWarehouseBinExchangeList } from '@/commonData/wms'
 
 export const isAbandon = (status: any) => {
   return [0, 2].includes(status) //草稿0 驳回2
@@ -95,7 +96,9 @@ export const codeTypeList = [
 
   { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
   { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
-  { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' }
+  { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
+
+  { name: '换货单', type: 10, dictType: 'wms_exchange_type', getValue: 'exchange.type' }
 
   // 只有出库单-入库单状态
   // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
@@ -122,5 +125,48 @@ export const getCodeValue = (row: any, type: number) => {
 
 // 入库单号会一直存在-其他只会存在一种
 export const getOperateNo = (row: any) => {
-  return row.outboundCode || row.pickupCode || row.inboundCode
+  return row.exchangeCode || row.outboundCode || row.pickupCode || row.inboundCode
+}
+
+const getWarehousesBinExchangeParams = (formDataCopy, targetType?) => {
+  const { type, warehouseId } = formDataCopy
+  if (targetType === 'toBin') {
+    // 源良-目的次
+    return { partitionType: type === 1 ? 2 : 1, warehouseId }
+  }
+  return { partitionType: type, warehouseId }
+}
+
+const changeSourceBinList = (data, sourceBinList, targetType?) => {
+  const { type, warehouseId } = data || {}
+  if (type && warehouseId) {
+    getWarehouseBinExchangeList(getWarehousesBinExchangeParams(data, targetType), sourceBinList)
+  } else {
+    sourceBinList.value = []
+  }
+}
+
+export const useSourceBinList = () => {
+  /**
+   *  因为接口修改后-值还会watch再调用一次接口
+   *  eslint-disable-next-line prefer-const
+   *  方便统一管理-否则两个调用方都要触发一次方法-并且-编辑接口调用处-还需要再调用接口处理
+   */
+  let cacheStr = ''
+  const getCacheStr = (formDataCopy, targetType) => {
+    return JSON.stringify(getWarehousesBinExchangeParams(formDataCopy, targetType))
+  }
+  const canSourceBinList = (formData, sourceBinList, targetType?) => {
+    const formDataCopy = unref(formData)
+    const str = getCacheStr(formDataCopy, targetType)
+    if (cacheStr === str) {
+      return
+    } else {
+      cacheStr = str
+      changeSourceBinList(formDataCopy, sourceBinList, targetType)
+    }
+  }
+  return {
+    canSourceBinList
+  }
 }

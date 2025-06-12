@@ -87,6 +87,6 @@ export const useTable = () => {
   tableOptions.value = allOptions
 
   return {
-    tableOptions
+    tableOptions,
   }
 }

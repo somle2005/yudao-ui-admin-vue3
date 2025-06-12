@@ -57,6 +57,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
       },
 
       {
+        requiredFlag: true,
         type: 'date-picker',
         placeholder: '请选择装柜日期',
         prop: 'packTime',
@@ -72,6 +73,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         }
       },
       {
+        requiredFlag: true,
         type: 'date-picker',
         placeholder: '请选择预计到货日期',
         prop: 'arrivePlanTime',
@@ -360,6 +362,8 @@ export const computeVolume = (item) => {
         VOLUMN_PRECISION
       )
     )
+  } else {
+    item.volume = 0
   }
 }
 
