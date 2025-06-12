@@ -91,6 +91,7 @@
           @click="openForm(OPERATE_MAP.stockCheck, scope.row.id)"
           v-if="
             hasAllPermission([
+              'wms:stockCheck-bin:update',
               'wms:stock-check:agree',
               'wms:stock-check-bin:append'
             ]) && !hideInventoryList.includes(scope.row.auditStatus)
