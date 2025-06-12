@@ -18,9 +18,9 @@
         <el-table-column prop="productCode" label="产品编码" width="120" align="center" />
 
         <!-- 计划出库量 -->
-        <el-table-column label="数量" width="80" align="center">
+        <el-table-column label="数量" width="100" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.planQty`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.planQty`" :rules="createPlanQtyRuleList(row)" class="mb-0px!">
               <!-- <el-input-number
                 v-model="row.planQty"
                 controls-position="right"
@@ -166,6 +166,7 @@ import { DICT_TYPE } from '@/utils/dict'
 import { InfoKeyOpenFormData } from '../hooks/injectKeys'
 import { getWarehouseBinList } from '@/commonData/wms'
 import { cloneDeep } from 'lodash-es'
+import { useRules } from '@/hooks/common/useRules'
 
 const props = defineProps({
   items: {
@@ -190,13 +191,15 @@ const showDeptCompany = computed(() => {
   return openFormData.value.upstreamType !== 202
 }) // upstreamType: 202-退货单出库 库存归属-归属公司
 
+const { planQtyRuleList, createPlanQtyRuleList } = useRules()
+
 const auditDisabled = computed(() => props.formType === 'audit')
 const { deptList, defaultProps } = getDeptTree()
 const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
+  planQty: planQtyRuleList
 })
 const formRef = ref([]) // 表单 Ref
 const financeSubjectList = getFinanceSubjectList()

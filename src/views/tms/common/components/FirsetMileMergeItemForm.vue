@@ -305,11 +305,11 @@ watch(
     if (!val || val.length === 0) {
       return
     }
-    computeTargetQty(val, {
-      targetQtyKey: 'pickQty',
-      computeQtyKey: 'qty',
-      computeKey: 'productId'
-    })
+    // computeTargetQty(val, {
+    //   targetQtyKey: 'pickQty',
+    //   computeQtyKey: 'qty',
+    //   computeKey: 'productId'
+    // })
   },
   { deep: true }
 )
