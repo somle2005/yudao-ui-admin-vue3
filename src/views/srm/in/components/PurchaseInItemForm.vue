@@ -14,7 +14,7 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="60" align="center" />
 
-        <el-table-column prop="code" label="产品编码" width="180" align="center" />
+        <el-table-column prop="productCode" label="产品编码" width="180" align="center" />
 
         <el-table-column prop="productName" label="产品名称" width="180" align="center" />
         <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
