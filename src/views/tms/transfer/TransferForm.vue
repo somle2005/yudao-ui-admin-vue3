@@ -84,6 +84,7 @@ const requestFormOptions: any = ref([])
 const createRequestFormOptions = () => {
   const list = [
     {
+      requiredFlag: true,
       type: 'input',
       label: '调拨单编码',
       prop: 'code',
