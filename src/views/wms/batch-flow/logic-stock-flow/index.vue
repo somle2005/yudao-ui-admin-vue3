@@ -18,7 +18,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['wms:stock-flow:export-ownership']"
+          v-hasPermi="['wms:stock-flow:export-logic']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
