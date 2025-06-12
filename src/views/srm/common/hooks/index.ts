@@ -37,7 +37,20 @@ export const useMergeOrderOptions = (
           }
         }
       },
-
+      {
+        type: 'select',
+        placeholder: '请选择采购公司',
+        prop: 'purchaseCompanyId',
+        label: '采购公司',
+        attrs: {
+          filterable: true,
+          clearable: true,
+          style: {
+            width: '100%'
+          }
+        },
+        children: financeSubjectList
+      },
       {
         type: 'select',
         placeholder: '请选择供应商',
@@ -52,21 +65,6 @@ export const useMergeOrderOptions = (
           onChange: supplierChange
         },
         children: supplierList
-      },
-
-      {
-        type: 'select',
-        placeholder: '请选择采购公司',
-        prop: 'purchaseCompanyId',
-        label: '采购公司',
-        attrs: {
-          filterable: true,
-          clearable: true,
-          style: {
-            width: '100%'
-          }
-        },
-        children: financeSubjectList
       },
       {
         type: 'select',
@@ -381,7 +379,7 @@ export const useInOptions = (supplierList, accountList) => {
         formItemConfig: {
           class: 'purchase-request-items'
         }
-      },
+      }
 
       // {
       //   type: 'input-number',
