@@ -106,7 +106,7 @@
       </el-table-column>
       <el-table-column label="海关品名" align="center" prop="declaredType" width="200px" />
       <el-table-column label="海关品名(英文)" width="250px" align="center" prop="declaredTypeEn" />
-      <el-table-column label="产品数量" align="center" prop="productCount" width="100px" />
+      <el-table-column label="关联产品数量" align="center" prop="productCount" width="120px" />
       <el-table-column
         label="更新时间"
         align="center"

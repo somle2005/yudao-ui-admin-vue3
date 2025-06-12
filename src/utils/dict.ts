@@ -113,6 +113,7 @@ export enum DICT_TYPE {
   TERMINAL = 'terminal', // 终端
   DATE_INTERVAL = 'date_interval', // 数据间隔
   COMMON_BOOLEAN_STATUS = 'common_boolean_status',
+  COMMON_ENABLE_STATUS = 'common_enable_status', // 通用开启状态
 
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_SEX = 'system_user_sex',
@@ -224,7 +225,11 @@ export enum DICT_TYPE {
   ERP_LOGISTIC_ATTRIBUTE = 'erp_logistic_attribute',
   CURRENCY_CODE = 'currency_code',
   ERP_PRODUCT_MATERIAL = 'erp_product_material', // 产品材质
+  ERP_SHOP_TYPE = 'erp_shop_type', // EPR店铺状态
+  ERP_PRODUCT_LISTING_STATUS = 'erp_product_listing_status', // 商品上下架状态
   REPORT_MAP = 'report_map', // 报表地图
+  ERP_SALES_PLATFORM = 'erp_sales_platform', // 销售平台
+  
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
@@ -254,6 +259,22 @@ export enum DICT_TYPE {
   IOT_DATA_TYPE = 'iot_data_type', // IOT 数据类型
   IOT_UNIT_TYPE = 'iot_unit_type', // IOT 单位类型
   IOT_RW_TYPE = 'iot_rw_type', // IOT 读写类型
+
+  // ========== WMS  ==========
+  WMS_VALID_STATUS = 'wms_valid_status', // WMS通用的对象有效状态
+  WMS_WAREHOUSE_MODE = 'wms_warehouse_mode', // 仓库经营方式-仓库属性
+  WMS_INBOUND_TYPE = 'wms_inbound_type', // 入库单类型
+  WMS_INBOUND_STATUS = 'wms_inbound_status', // 入库单状态
+  WMS_SHIPPING_METHOD = 'wms_shipping_method', // 运输方式
+  WMS_INBOUND_AUDIT_STATUS = 'wms_inbound_audit_status', // 入库单审批状态
+  WMS_WAREHOUSE_ZONE_STOCK_TYPE = 'wms_warehouse_zone_stock_type', // WMS存货类型-库存类型
+  WMS_WAREHOUSE_ZONE_PARTITION_TYPE = 'wms_warehouse_zone_partition_type', // WMS分区类型
+  WMS_OUTBOUND_TYPE = 'wms_outbound_type', // WMS出库单类型
+  WMS_OUTBOUND_STATUS = 'wms_outbound_status', // WMS出库状态
+  WMS_OUTBOUND_AUDIT_STATUS = 'wms_outbound_audit_status', // WMS出库单审批状态
+  WMS_STOCK_FLOW_DIRECTION = 'wms_stock_flow_direction', // WMS库存流水方向
+  WMS_STOCK_TYPE = 'wms_stock_type', // WMS库存类型
+
 
   // ========== SRM - 采购模块  ==========
   SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态

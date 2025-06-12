@@ -134,6 +134,7 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-ejs": "^1.7.0",
     "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-mkcert": "^1.17.8",
     "vite-plugin-progress": "^0.0.7",
     "vite-plugin-purge-icons": "^0.10.0",
     "vite-plugin-svg-icons": "^2.0.1",

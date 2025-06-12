@@ -21,24 +21,46 @@ const resolveConfig = (tableOption, config) => {
       }
     })
   }
+  const { allWrap, wrapList, noWidthList = [], allWrapIgnoreList = [] } = config || {}
 
-  if (config?.allWrap) {
-    tableOption.forEach((item) => {
-      const allWrapIgnoreList = config.allWrapIgnoreList || []
-      allWrapIgnoreList.push(...['operate'])
-      if (allWrapIgnoreList.includes(item.prop)) return
+  const allWrapDeal = (allWrap, item) => {
+    if (!allWrap) return
+    allWrapIgnoreList.push(...['operate'])
+    if (allWrapIgnoreList.includes(item.prop)) return
+    const propertyList = ['dictAttrs', 'formatter']
+    const flag = propertyList.some((a) => item[a])
+    if (flag) return
 
-      const propertyList = ['dictAttrs']
-      const flag = propertyList.some((a) => item[a])
-      if (flag) return
+    item.slot = item.prop
+    item.wrap = true
+    if (!item.noWidth) {
+      item.width = '200px'
+    }
+  }
 
+  const wrapListDeal = (wrapList, item) => {
+    if (!wrapList) return
+    if (wrapList.includes(item.prop)) {
       item.slot = item.prop
       item.wrap = true
       if (!item.noWidth) {
         item.width = '200px'
       }
-    })
+    }
   }
+
+  const noWidthListDeal = (noWidthList, item) => {
+    if (!noWidthList) return
+    if (noWidthList.includes(item.prop)) {
+      item.width = undefined
+    }
+  }
+
+  tableOption.forEach((item) => {
+    allWrapDeal(allWrap, item)
+    wrapListDeal(wrapList, item)
+    noWidthListDeal(noWidthList, item)
+  })
 }
 
 export const transformTableOptions = (
@@ -73,6 +95,57 @@ export const transformTableOptions = (
   return tableOption
 }
 
+export const capitalize = (str) => {
+  if (!str) return ''
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+export const assignItem = (item: { [key: string]: any }, parentItem, itemKey: string) => {
+  for (const key in item) {
+    // key首字母大写
+    // parentItem[itemKey + key[0].toUpperCase() + key.slice(1)] = item[key]
+    parentItem[itemKey + capitalize(key)] = item[key]
+  }
+}
+
+export const getItemProp = (list: any[], itemKeyList: string[]) => {
+  list.forEach((item) => {
+    itemKeyList.forEach((key) => {
+      const targetItem = item[key]
+      if (!targetItem) return
+      assignItem(targetItem, item, key)
+    })
+  })
+  return list
+}
+
+export const transformCapitalizeList = (item: any, prop: string, keyList: string[]) => {
+  if (!item[prop]) return
+  try {
+    keyList.forEach((key) => {
+      const val = item[prop][key]
+      item[prop + capitalize(key)] = val
+    })
+  } catch (e) {
+    console.log(e, `报错了${prop}`)
+  }
+}
+
+export const getItemPropList = (list: any[], propList: any[]) => {
+  try {
+    list.forEach((item) => {
+      propList.forEach((propItem) => {
+        const { prop, keyList } = propItem
+        // 取出list[prop]中keyList对应属性 转化成首字母大写
+        transformCapitalizeList(item, prop, keyList)
+      })
+    })
+    return list
+  } catch (e) {
+    console.log(e, '报错了')
+  }
+}
+
 export const useTableData = () => {
   const tableOptions = ref<TableOptions[]>([])
   const allTableOptions = ref<TableOptions[]>([])
@@ -80,6 +153,8 @@ export const useTableData = () => {
   return {
     allTableOptions,
     tableOptions,
-    transformTableOptions
+    transformTableOptions,
+    getItemProp,
+    getItemPropList
   }
 }

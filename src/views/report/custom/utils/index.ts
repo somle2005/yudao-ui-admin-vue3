@@ -20,3 +20,8 @@ export const createMapStyle = (key: string) => {
     console.log(e, '查询地图字典报错')
   }
 }
+
+
+export const toUrl = (value: string):string => {
+    return value
+}
