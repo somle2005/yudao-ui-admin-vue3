@@ -374,7 +374,7 @@ const createGenerateContractFormOptions = (formOptions) => {
           width: '100%'
         }
       },
-      children: financeSubjectList
+      children: supplierList
     },
 
     // {
