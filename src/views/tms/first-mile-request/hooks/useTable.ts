@@ -13,7 +13,7 @@ import { transformVolumeColumn } from '../../common/utils'
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
 
-  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } =  useWholeOrderMergeComputeUp()
+  const { wholeOrderMergeCompute, WHOLE_ORDER_TYPE } = useWholeOrderMergeComputeUp()
   // 带有items标记的都是整单不进行展示的-到时候直接进行遍历即可
 
   // 字段是不是从items里面取麻烦标明一下 各个状态的字典值记得取一下
@@ -146,10 +146,14 @@ export const useTable = () => {
 
   // 整单分行列表切换
   const switchList = (list: any, total, data: any) => {
+    data.list.forEach((item) => {
+      item.items.forEach((a) => {
+        a.code = a?.product?.code
+      })
+    })
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsUpToList(data.list)
     itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
-
 
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
