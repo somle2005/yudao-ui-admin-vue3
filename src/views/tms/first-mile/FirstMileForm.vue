@@ -211,7 +211,7 @@ const open = async (type: string, id?: number) => {
     },
     audit: () => {
       requestFormOptions.value = auditFormOptions(createRequestFormOptions())
-      vesselTrackingItemsOptions.value = detailVesselTrackingOptions(vesselTrackingOptions())
+      vesselTrackingItemsOptions.value = vesselTrackingOptions()
     }
   }
   const fn = formTypeOperate[type]

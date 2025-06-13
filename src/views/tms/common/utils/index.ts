@@ -372,6 +372,10 @@ export const transformVolume = (volume) => {
   return volume / mmToMScale
 }
 
+export const transformVolumeNum = (val) => {
+  return Number(formatDecimal(transformVolume(val), VOLUMN_PRECISION))
+}
+
 export function transformVolumeColumn(_row: any, _column: TableColumnCtx<any>, cellValue: any) {
   const val = cellValue ? transformVolume(cellValue) : null
   return Number(formatDecimal(val, VOLUMN_PRECISION))
