@@ -15,7 +15,7 @@ export const useTable = () => {
   //   <el-table-column label="主键" align="center" prop="id" />
   // <el-table-column label="单据号" align="center" prop="code" />
   // <el-table-column label="类型" align="center" prop="type" />
-  // <el-table-column label="调出仓库ID" align="center" prop="warehouseId" />
+  // <el-table-column label="仓库ID" align="center" prop="warehouseId" />
   // <el-table-column label="状态" align="center" prop="auditStatus" />
   // <el-table-column label="特别说明" align="center" prop="remark" />
   // <el-table-column

@@ -45,9 +45,9 @@ export const useSearchForm = (handleQuery, queryParams) => {
     },
     {
       type: 'select',
-      label: '调出仓库',
+      label: '仓库',
       prop: 'warehouseId',
-      placeholder: '请选择调出仓库',
+      placeholder: '请选择仓库',
       attrs: {
         style: { width: '100%' },
         filterable: true,

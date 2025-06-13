@@ -69,7 +69,7 @@ const initFormData = () => {
     auditStatus: undefined,
     remark: undefined,
     itemList: [],
-    tips: '调出仓库和类型选择后才能出现换货清单,联动带出源库位'
+    tips: '仓库和类型选择后才能出现换货清单,联动带出源库位'
   }
 }
 const formData = ref(initFormData())
