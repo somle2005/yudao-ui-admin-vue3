@@ -1,5 +1,7 @@
 import { cloneDeep } from 'lodash-es'
 import { erpPriceMultiply } from '@/utils'
+import { notEmpty } from './judge'
+import { transformDecimal3 } from '@/views/tms/common/utils'
 
 /**
  *
@@ -255,7 +257,42 @@ export const jsonToList = (list: any[], jsonList: string[]) => {
 
 export const reduceVal = (computeKey: string, list: any[]) => {
   if (!list?.length || !Array.isArray(list)) return null
-  return list.reduce((prev, cur) => prev + cur[computeKey], 0)
+  // 因为undefined会返回NaN
+  const getNum = (val) => {
+    if (notEmpty(val)) {
+      return val
+    }
+    return 0
+  }
+  return list.reduce((prev, cur) => prev + getNum(cur[computeKey]), 0)
+}
+
+export const reduceValFormData = (
+  val,
+  formRef,
+  formData,
+  computeItemsKey,
+  mapList: Array<{ targetKey: string; computeKey: string; qtyKey?: string; formatter?: Function }>
+) => {
+  // 防止一开始进来 formRef undefined
+  nextTick(() => {
+    const formDataCopy = unref(formData)
+    const model = formRef.value.getFormData()
+
+    if (!val) {
+      mapList.forEach((item) => {
+        const { targetKey } = item
+        model[targetKey] = undefined
+      })
+      return
+    }
+    mapList.forEach((item) => {
+      const { targetKey, computeKey, qtyKey, formatter } = item
+      const qty = qtyKey ? reduceVal(qtyKey, formDataCopy[computeItemsKey]) : 1
+      const sum = reduceVal(computeKey, formDataCopy[computeItemsKey])
+      model[targetKey] = formatter ? formatter(qty * sum) : qty * sum
+    })
+  })
 }
 
 interface MapListObj {

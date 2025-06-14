@@ -251,7 +251,7 @@
               :precision="2"
               class="!w-100%"
             /> -->
-            <SmNumber disabled :precision="2" v-model="row.taxRate" />
+            <SmNumber :precision="2" v-model="row.taxRate" />
           </el-form-item>
         </template>
       </el-table-column>
