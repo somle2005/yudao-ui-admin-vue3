@@ -20,11 +20,7 @@
         <!-- 计划出库量 -->
         <el-table-column label="数量" width="100" align="center">
           <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.planQty`"
-              :rules="rules.planQty"
-              class="mb-0px!"
-            >
+            <el-form-item :prop="`${$index}.planQty`" :rules="rules.planQty" class="mb-0px!">
               <!-- <el-input-number
                 v-model="row.planQty"
                 controls-position="right"
@@ -39,7 +35,7 @@
         </el-table-column>
 
         <!-- <el-table-column prop="availableQty" label="可用库存数量" width="80" align="center" /> -->
-         
+
         <!-- <el-table-column label="不良品数量" width="100">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.defectiveQty`" class="mb-0px!">
@@ -76,7 +72,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.deptId`">
               <el-tree-select
-                disabled
+                :disabled="deptCompanyDisabled"
                 class="!w-100%"
                 v-model="row.deptId"
                 :data="deptList"
@@ -95,7 +91,7 @@
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.companyId`" class="mb-0px!">
               <SmSelect
-                disabled
+                :disabled="deptCompanyDisabled"
                 v-model="row.companyId"
                 placeholder="请选择库存公司"
                 :data="financeSubjectList"
@@ -197,6 +193,9 @@ const openFormData = inject(InfoKeyOpenFormData)
 const showDeptCompany = computed(() => {
   return openFormData.value.upstreamType !== 202
 }) // upstreamType: 202-退货单出库 库存归属-归属公司
+const deptCompanyDisabled = computed(() => {
+  return [1, 2, 3].includes(openFormData.value.upstreamType)
+})
 
 // const { planQtyRuleList, createPlanQtyRuleList } = useRules()
 
@@ -206,7 +205,7 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' },]
+  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
   // planQty: planQtyRuleList
 })
 const formRef = ref([]) // 表单 Ref

@@ -466,16 +466,11 @@ const addProductItem = (selectionList: any[]) => {
         availableQty,
         // defectiveQty,
         outboundPlanQty,
-        suggestedOwnership,
+        suggestedLogic,
         bin
       } = item
 
-      let deptId = undefined
-      let companyId = undefined
-      if (suggestedOwnership) {
-        deptId = suggestedOwnership.deptId
-        companyId = suggestedOwnership.companyId
-      }
+      let { deptId, companyId } = suggestedLogic || {}
 
       const obj = {
         [itemIdKey]: id,
