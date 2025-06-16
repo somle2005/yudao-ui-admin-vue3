@@ -384,7 +384,7 @@ const submitForm = async (type?: string) => {
       } else if (type === AUDIT_TYPE.agreeOutbound) {
         //  ['actualQty', 'id', 'outboundId'])
         await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
-        await OutboundItemApi.updateOutboundItemActualQty(data)
+        // await OutboundItemApi.updateOutboundItemActualQty(data)
       }
       message.success(t('common.updateSuccess'))
     }
