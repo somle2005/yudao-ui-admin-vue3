@@ -52,7 +52,7 @@
       </template>
       <template #codeType="{ scope }">
         <dict-tag
-          :type="getCodeType(scope?.row?.reason)"
+          :type="getCodeType(scope?.row?.reason, scope.row)"
           :value="getCodeValue(scope.row, scope?.row?.reason)"
         />
       </template>

@@ -91,14 +91,17 @@ export const codeTypeList = [
   // { name: '入库', type: 1, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' }, // split('.')[0][1]
   // { name: '拣货', type: 2, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' },
 
-  { name: '入库', type: 1, dictType: 'wms_inbound_type', getValue: 'inbound.type' }, // split('.')[0][1]
-  { name: '拣货', type: 2, dictType: 'wms_inbound_type', getValue: 'inbound.type' },
-
   { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
   { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
   { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
 
-  { name: '换货单', type: 10, dictType: 'wms_exchange_type', getValue: 'exchange.type' }
+  { name: '上架单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' },
+
+  { name: '换货单', type: 10, dictType: 'wms_exchange_type', getValue: 'exchange.type' },
+
+  // 入库单优先级放最后了  split('.')[0][1]
+  { name: '入库', type: 1, dictType: 'wms_inbound_type', getValue: 'inbound.type' },
+  { name: '拣货', type: 2, dictType: 'wms_inbound_type', getValue: 'inbound.type' }
 
   // 只有出库单-入库单状态
   // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
@@ -109,19 +112,51 @@ export const codeTypeList = [
   // { name: '盘亏', type: 9, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' }
 ]
 
-export const getCodeType = (type: number) => {
+// 根据存在进行返回
+const existReturn = (row) => {
+  const list = Array.from(new Set(codeTypeList.map((item) => item.getValue)))
+  let saveLink: any = []
+  let saveGetValue
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    const link = item.split('.')
+    if (row[link[0]]) {
+      saveLink = link
+      saveGetValue = item
+      break
+    }
+  }
+
+  if (saveGetValue && saveLink?.length) {
+    const dictType = codeTypeList.find((item) => item.getValue === saveGetValue)?.dictType
+    return {
+      dictType,
+      val: row[saveLink[0]][saveLink[1]]
+    }
+  }
+  return {
+    dictType: '',
+    val: ''
+  }
+}
+
+export const getCodeType = (type: number, row: any) => {
   const item = codeTypeList.find((item) => item.type === type)
   if (item) {
     return DICT_TYPE[item.dictType.toUpperCase()]
   }
+  return DICT_TYPE[existReturn(row)?.dictType!.toUpperCase()]
 }
 export const getCodeValue = (row: any, type: number) => {
   const item = codeTypeList.find((item) => item.type === type)
   try {
     if (item) {
       const link = item.getValue.split('.')
-      return row[link[0]][link[1]]
+      if (row[link[0]]) {
+        return row[link[0]][link[1]]
+      }
     }
+    return existReturn(row).val
   } catch (e) {
     console.log(e, '报错了')
   }
