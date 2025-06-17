@@ -117,9 +117,13 @@ export const getCodeType = (type: number) => {
 }
 export const getCodeValue = (row: any, type: number) => {
   const item = codeTypeList.find((item) => item.type === type)
-  if (item) {
-    const link = item.getValue.split('.')
-    return row[link[0]][link[1]]
+  try {
+    if (item) {
+      const link = item.getValue.split('.')
+      return row[link[0]][link[1]]
+    }
+  } catch (e) {
+    console.log(e, '报错了')
   }
 }
 
