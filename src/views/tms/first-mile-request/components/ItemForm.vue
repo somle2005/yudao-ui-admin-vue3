@@ -94,7 +94,7 @@
             >
               <SmSelect
                 v-model="row.salesCompanyId"
-                placeholder="请选择库存公司"
+                placeholder="请选择销售公司"
                 :data="financeSubjectList"
               />
             </el-form-item>
