@@ -33,5 +33,6 @@ export const toUrl = (value: string): string => {
       valueStr = valueStr + '&dept=' + item
     }
   }
+  console.log(valueStr,'valueStr-报表拼接url')
   return valueStr
 }
