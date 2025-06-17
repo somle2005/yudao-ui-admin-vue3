@@ -186,7 +186,7 @@ export const useTable = () => {
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     },
-    itemsTaxPrice: {
+    itemsTax: {
       label: '税额',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute

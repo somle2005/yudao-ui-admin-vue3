@@ -171,9 +171,10 @@ watch(
       {
         targetKey: 'totalPackageWeight',
         computeKey: 'packageWeight',
-        qtyKey: 'qty'
+        qtyKey: 'qty',
+        formatter: transformDecimal3
       },
-      { targetKey: 'netWeight', computeKey: 'weight', qtyKey: 'qty' },
+      { targetKey: 'netWeight', computeKey: 'weight', qtyKey: 'qty', formatter: transformDecimal3 },
       {
         targetKey: 'totalVolume',
         computeKey: 'volume',

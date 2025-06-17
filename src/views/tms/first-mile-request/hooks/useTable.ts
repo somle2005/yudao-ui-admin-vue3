@@ -106,7 +106,8 @@ export const useTable = () => {
     },
     itemsVolume: {
       label: '体积(m³)',
-      formatter: formatDecimalFormatter,
+      // formatter: transformVolumeColumn,
+      // formatter: formatDecimalFormatter,
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 

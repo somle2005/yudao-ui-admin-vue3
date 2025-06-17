@@ -323,7 +323,7 @@ const fieldMap = {
     label: '含税单价',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  itemsTaxPrice: {
+  itemsTax: {
     label: '税额',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
@@ -585,7 +585,7 @@ const mergePurchase = async () => {
   }
 
   const data = { items }
-  openForm('merge', 1, data)
+  openForm('merge', undefined, data)
   // mergeLoading.value = false
 }
 

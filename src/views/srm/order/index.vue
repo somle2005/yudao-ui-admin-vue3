@@ -391,7 +391,7 @@ const fieldMap = {
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },
-  itemsTaxPrice: {
+  itemsTax: {
     label: '税额',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
@@ -403,7 +403,7 @@ const fieldMap = {
   },
 
   // 取后端总的税额无法进行分行展示数据了
-  // taxPrice: {
+  // tax: {
   //   label:'税额',
   //   wholeOrderEnable: 'items',
   // }, // items

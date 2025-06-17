@@ -80,7 +80,7 @@ export const useApplicantTable = () => {
     itemsApprovedQty: '批准数量',
     itemsReferenceUnitPrice: '参考单价',
     itemsActTaxPrice: '含税单价',
-    itemsTaxPrice: '税额',
+    itemsTax: '税额',
     itemsGrossTotalPrice: '价税合计',
 
     creator: '制单人',
@@ -163,7 +163,7 @@ export const useApplicantTable = () => {
         approvedQty: 'approvedQty',
         grossPrice: 'grossPrice',
         taxRate: 'taxRate',
-        taxPrice: 'taxPrice',
+        tax: 'tax',
         warehouseId: 'warehouseId',
         expectArrivalDate: 'expectArrivalDate',
         // code,
