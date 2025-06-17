@@ -371,6 +371,7 @@ export const transformVolume = (volume) => {
 }
 
 export const transformVolumeNum = (val) => {
+  if(!val) return val
   return Number(formatDecimal(transformVolume(val), VOLUMN_PRECISION))
 }
 
