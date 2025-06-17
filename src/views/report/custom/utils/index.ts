@@ -1,3 +1,4 @@
+import { getDept } from '@/utils/cache'
 import { DICT_TYPE, getDictOptions } from '@/utils/dict'
 
 export const createMapStyle = (key: string) => {
@@ -21,7 +22,16 @@ export const createMapStyle = (key: string) => {
   }
 }
 
-
-export const toUrl = (value: string):string => {
-    return value
+export const toUrl = (value: string): string => {
+  const { deptName } = getDept()
+  let valueStr = value
+  // dept会包含至少 AOK 、CBD、HCD、EBD
+  const deptList = ['AOK', 'CBD', 'HCD', 'EBD']
+  if (deptName) {
+    const item = deptList.find((item) => valueStr.includes(item))
+    if (item) {
+      valueStr = valueStr + '&dept=' + item
+    }
+  }
+  return valueStr
 }

@@ -17,8 +17,8 @@ export interface UserVO {
   createTime: Date
 }
 
-// 查询用户管理列表
-export const getUserPage = (params: PageParam) => {
+// 查询用户管理列表 PageParam
+export const getUserPage = (params: any) => {
   return request.get({ url: '/system/user/page', params })
 }
 
