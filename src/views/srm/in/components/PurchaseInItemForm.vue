@@ -99,12 +99,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="税额" prop="taxPrice" width="120" align="center">
+        <el-table-column label="税额" prop="tax" width="120" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-              <el-form-item :prop="`${$index}.taxPrice`" class="mb-0px!">
-                <!-- <el-input disabled v-model="row.taxPrice" :formatter="erpPriceInputFormatter" /> -->
-                <SmNumber disabled :precision="2" v-model="row.taxPrice" />
+            <el-form-item :prop="`${$index}.tax`" class="mb-0px!">
+              <el-form-item :prop="`${$index}.tax`" class="mb-0px!">
+                <!-- <el-input disabled v-model="row.tax" :formatter="erpPriceInputFormatter" /> -->
+                <SmNumber disabled :precision="2" v-model="row.tax" />
               </el-form-item>
             </el-form-item>
           </template>
@@ -361,7 +361,7 @@ watch(
       return
     }
     const keyMap = {
-      taxPrice: 'taxPrice',
+      tax: 'tax',
       taxRate: 'taxRate',
       grossTotalPrice: 'grossTotalPrice',
       grossPrice: 'grossPrice',
@@ -374,9 +374,9 @@ watch(
     // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-    //   item.taxPrice = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
+    //   item.tax = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
     //   if (item.totalProductPrice != null) {
-    //     item.totalPrice = item.totalProductPrice + (item.taxPrice || 0)
+    //     item.totalPrice = item.totalProductPrice + (item.tax || 0)
     //   } else {
     //     item.totalPrice = undefined
     //   }
@@ -394,7 +394,7 @@ const getSummaries = (param: SummaryMethodProps) => {
       sums[index] = '合计'
       return
     }
-    if (['qty', 'totalProductPrice', 'taxPrice', 'totalPrice'].includes(column.property)) {
+    if (['qty', 'totalProductPrice', 'tax', 'totalPrice'].includes(column.property)) {
       const sum = getSumValue(data.map((item) => Number(item[column.property])))
       sums[index] =
         column.property === 'qty' ? erpCountInputFormatter(sum) : erpPriceInputFormatter(sum)
@@ -421,7 +421,7 @@ const handleAdd = () => {
     productPrice: undefined,
     qty: undefined,
     taxRate: TAX_PERCENT,
-    taxPrice: undefined,
+    tax: undefined,
     grossPrice: undefined,
     grossTotalPrice: undefined,
     remark: undefined,

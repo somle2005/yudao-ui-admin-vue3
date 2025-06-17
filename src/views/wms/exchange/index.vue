@@ -38,7 +38,7 @@
           type="primary"
           plain
           @click="handleSubmitAuditBatch"
-          v-hasPermi="['wms:exchange:submit-audit']"
+          v-hasPermi="['wms:exchange:submit']"
         >
           提交审核
         </el-button>

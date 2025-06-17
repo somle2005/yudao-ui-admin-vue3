@@ -323,7 +323,7 @@ const fieldMap = {
     label: '含税单价',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  itemsTaxPrice: {
+  itemsTax: {
     label: '税额',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
@@ -536,17 +536,18 @@ const mergeLoading = ref(false)
 const mergePurchase = async () => {
   // 5已审核
   const auditType = 5
-  const hasAudit = selectionList.value.some((item: any) => item.auditStatus === auditType)
-  if (!hasAudit) {
-    message.error('选中行未包含审核单据，请检查')
+  const allAudit = selectionList.value.every((item: any) => item.auditStatus === auditType)
+  if (!allAudit) {
+    message.error('选中行存在未审核单据，请检查')
     return
   }
 
   let items: any = []
-  // 如果不是审核状态的要进行剔除
-  const selectList: any = cloneDeep(
-    selectionList.value.filter((item: any) => item.auditStatus === auditType)
-  )
+  // // 如果不是审核状态的要进行剔除
+  // const selectList: any = cloneDeep(
+  //   selectionList.value.filter((item: any) => item.auditStatus === auditType)
+  // )
+  const selectList: any = cloneDeep(selectionList.value)
 
   selectList.forEach((item) => {
     if (!item?.items?.length) return
@@ -584,7 +585,7 @@ const mergePurchase = async () => {
   }
 
   const data = { items }
-  openForm('merge', 1, data)
+  openForm('merge', undefined, data)
   // mergeLoading.value = false
 }
 

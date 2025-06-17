@@ -115,7 +115,7 @@ export const useTable = () => {
       label: '含税单价',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-    itemsTaxPrice: {
+    itemsTax: {
       label: '税额',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
@@ -156,7 +156,7 @@ export const useTable = () => {
     //   label: '含税单价',
     //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     // },
-    // // taxPrice: {
+    // // tax: {
     // //   label: '税额',
     // //   wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute
     // // },

@@ -1,5 +1,7 @@
 import { cloneDeep } from 'lodash-es'
 import { erpPriceMultiply } from '@/utils'
+import { notEmpty } from './judge'
+import { transformDecimal3 } from '@/views/tms/common/utils'
 
 /**
  *
@@ -118,7 +120,7 @@ export const computeGrossPriceAndGrossTotalPrice = (
     applyCount?: string
     grossPrice?: string
     grossTotalPrice?: string
-    taxPrice?: string
+    tax?: string
     onePrice?: string
     totalPrice?: string
   }
@@ -129,7 +131,7 @@ export const computeGrossPriceAndGrossTotalPrice = (
     applyCount = 'qty',
     grossPrice = 'grossPrice',
     grossTotalPrice = 'grossTotalPrice',
-    taxPrice = 'taxPrice',
+    tax = 'tax',
     onePrice = 'productPrice',
     totalPrice = 'totalPrice'
   } = keyMap || {}
@@ -140,7 +142,7 @@ export const computeGrossPriceAndGrossTotalPrice = (
       const taxPercent100 = item.taxRate / 100.0
       // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
       const scale = (taxPercent100 / (1 + taxPercent100)) * item[applyCount]
-      item[taxPrice] = erpPriceMultiply(item[grossPrice], scale)
+      item[tax] = erpPriceMultiply(item[grossPrice], scale)
       // 价税合计 = 含税单价 * 申请数量。
       item[grossTotalPrice] = erpPriceMultiply(item[grossPrice], item[applyCount])
     }
@@ -255,7 +257,58 @@ export const jsonToList = (list: any[], jsonList: string[]) => {
 
 export const reduceVal = (computeKey: string, list: any[]) => {
   if (!list?.length || !Array.isArray(list)) return null
-  return list.reduce((prev, cur) => prev + cur[computeKey], 0)
+  // 因为undefined会返回NaN
+  const getNum = (val) => {
+    if (notEmpty(val)) {
+      return val
+    }
+    return 0
+  }
+  return list.reduce((prev, cur) => prev + getNum(cur[computeKey]), 0)
+}
+
+
+export const reduceQtyVal = (list: any[],computeKey: string, qtyKey?: string,) => {
+  if (!list?.length || !Array.isArray(list)) return null
+  // 因为undefined会返回NaN
+  const getNum = (val) => {
+    if (notEmpty(val)) {
+      return val
+    }
+    return 0
+  }
+  const getQty = (cur, qtyKey) => {
+    if (!qtyKey) return 1
+    return getNum(cur[qtyKey])
+  }
+  return list.reduce((prev, cur) => prev + getNum(cur[computeKey]) * getQty(cur, qtyKey), 0)
+}
+
+export const reduceValFormData = (
+  val,
+  formRef,
+  formData,
+  computeItemsKey,
+  mapList: Array<{ targetKey: string; computeKey: string; qtyKey?: string; formatter?: Function }>
+) => {
+  // 防止一开始进来 formRef undefined
+  nextTick(() => {
+    const formDataCopy = unref(formData)
+    const model = formRef.value.getFormData()
+
+    if (!val) {
+      mapList.forEach((item) => {
+        const { targetKey } = item
+        model[targetKey] = undefined
+      })
+      return
+    }
+    mapList.forEach((item) => {
+      const { targetKey, computeKey, qtyKey, formatter } = item
+      const sum = reduceQtyVal(formDataCopy[computeItemsKey],computeKey,qtyKey)
+      model[targetKey] =  formatter ? formatter(sum) : sum
+    })
+  })
 }
 
 interface MapListObj {

@@ -68,7 +68,7 @@
               ref="feesFormRef"
               :items="formData.fees"
               :formType="formType"
-              :disabled="itemsFormdisabled"
+              :disabled="otherFormdisabled"
             />
           </el-tab-pane>
         </el-tabs>
@@ -94,7 +94,7 @@
 <script setup lang="ts">
 import { FirstMileApi, FirstMileVO } from '@/api/tms/first-mile'
 import FeeForm from './components/FeeForm.vue'
-import { useMergeFirstMileOptions } from '../common/utils'
+import { transformDecimal3, useMergeFirstMileOptions } from '../common/utils'
 import { getFinanceSubjectList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { addDisabled } from '@/components/SmForm/src/utils'
@@ -104,6 +104,7 @@ import { addAuditAdvice } from '@/views/wms/common/utils'
 import FirsetMileMergeItemForm from '@/views/tms/common/components/FirsetMileMergeItemForm.vue'
 import FeesForm from '@/views/tms/common/components/FeesForm.vue'
 import { mergeItemsTabsName } from '@/views/tms/common/constant/index'
+import { reduceVal, reduceValFormData } from '@/utils/transformData'
 
 /** 头程单 表单 */
 defineOptions({ name: 'FirstMileForm' })
@@ -142,12 +143,13 @@ const initFormData = () => {
     firstMileItems: [],
     vesselTracking: {},
     fees: []
-  }
+  } as any
 }
 const formData = ref(initFormData())
 
 const formRef = ref() // 表单 Ref
 const itemsFormdisabled = computed(() => ['detail', 'audit'].includes(formType.value))
+const otherFormdisabled = computed(() => ['detail'].includes(formType.value))
 const auditType = computed(() => formType.value === 'audit')
 
 const WMSWarehouseList = ref([])
@@ -161,6 +163,63 @@ const mergeTabsName = ref('firstMileItem')
 
 const vesselTrackingTabsName = ref('vesselTrackingTabsName')
 const vesselTrackingFormRef = ref()
+
+watch(
+  () => formData.value,
+  (val) => {
+    reduceValFormData(val, formRef, formData, 'firstMileItems', [
+      {
+        targetKey: 'totalPackageWeight',
+        computeKey: 'packageWeight',
+        qtyKey: 'qty',
+        formatter: transformDecimal3
+      },
+      { targetKey: 'netWeight', computeKey: 'weight', qtyKey: 'qty', formatter: transformDecimal3 },
+      {
+        targetKey: 'totalVolume',
+        computeKey: 'volume',
+        qtyKey: 'qty',
+        formatter: transformDecimal3
+      }
+    ])
+
+    // // 防止一开始进来undefined
+    // nextTick(() => {
+
+    //   const model = formRef.value.getFormData()
+    //   if (!val) {
+    //     model.totalPackageWeight = undefined
+    //     model.totalVolume = undefined
+    //     model.netWeight = undefined
+    //     return
+    //   }
+
+    //   model.totalPackageWeight = reduceVal('packageWeight', formData.value.firstMileItems)
+    //   model.totalVolume = reduceVal('volume', formData.value.firstMileItems)
+    //   model.netWeight = reduceVal('weight', formData.value.firstMileItems)
+    // })
+
+    // // if (!val.discountPercent) {
+    // //   return
+    // // }
+
+    // // 编辑回显
+    // computeDiscountPriceAndTotalPrice(formRef, formData.value)
+    // // nextTick(() => {
+    // //   const formValue = formRef.value.getFormData()
+    // //   formValue.discountPrice = formData.value.discountPrice
+    // //   formValue.totalPrice = formData.value.totalPrice
+    // // })
+
+    // // if (val.discountPercent) {
+    // //   const totalPrice = val.items.reduce((prev, curr) => prev + curr.totalPrice, 0)
+    // //   const discountPrice = erpPriceMultiply(totalPrice, val.discountPercent / 100.0) || 0
+    // //   formData.value.discountPrice = discountPrice
+    // //   formData.value.totalPrice = totalPrice - discountPrice
+    // // }
+  },
+  { deep: true }
+)
 
 const requestFormOptions: any = ref([])
 const { mergeOptions: createRequestFormOptions, vesselTrackingOptions } = useMergeFirstMileOptions(
@@ -211,7 +270,7 @@ const open = async (type: string, id?: number) => {
     },
     audit: () => {
       requestFormOptions.value = auditFormOptions(createRequestFormOptions())
-      vesselTrackingItemsOptions.value = detailVesselTrackingOptions(vesselTrackingOptions())
+      vesselTrackingItemsOptions.value = vesselTrackingOptions()
     }
   }
   const fn = formTypeOperate[type]

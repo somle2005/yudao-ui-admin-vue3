@@ -71,6 +71,7 @@
       :data="list"
       :total="total"
       v-model:currentPage="queryParams.pageNo"
+
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
       @selection-change="handleSelectionChange"
@@ -78,8 +79,8 @@
       <template #geometry="{ scope }">
         <div class="common-text">总箱数:{{ scope.row.totalBoxQty }}</div>
         <div class="common-text">数量:{{ scope.row.totalQty }}</div>
-        <div class="common-text">重量:{{ scope.row.totalWeight }}</div>
-        <div class="common-text">体积:{{ scope.row.totalVolume }}</div>
+        <div class="common-text">重量:{{ scope.row.totalPackageWeight }}</div>
+        <div class="common-text">体积:{{ transformVolumeNum(scope.row.totalVolume) }}</div>
       </template>
 
       <template #loadOutbound="{ scope }">
@@ -145,6 +146,7 @@ import { formatDate } from '@/utils/formatTime'
 import { useBatch } from './hooks/useBatch'
 import { getMainItemBodyDataField } from '@/utils/transform'
 import { getItemProp } from '@/components/SmTable/src/utils'
+import { transformVolumeNum } from '@/views/tms/common/utils/index'
 
 let { tableOptions} = useTable()
 

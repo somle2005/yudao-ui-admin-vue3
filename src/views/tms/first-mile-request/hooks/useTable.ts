@@ -8,7 +8,7 @@ import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { formatDecimalFormatter } from '@/utils/num'
 import { mergeItemsUpToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
-import { transformVolumeColumn } from '../../common/utils'
+import { transformVolumeColumn, transformVolumeNum } from '../../common/utils'
 
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
@@ -43,10 +43,11 @@ export const useTable = () => {
     },
     // itemCount: '产品总数量',
     totalItemsQty: '产品总数量',
-    totalWeight: '总重量(kg)',
+    totalPackageWeight: '总重量(kg)', // 取总毛重
+    // totalWeight: '总重量(kg)',
     totalVolume: {
       label: '总体积(m³)',
-      formatter: transformVolumeColumn
+      // formatter: transformVolumeColumn
     },
 
     auditStatus: {
@@ -106,7 +107,8 @@ export const useTable = () => {
     },
     itemsVolume: {
       label: '体积(m³)',
-      formatter: formatDecimalFormatter,
+      // formatter: transformVolumeColumn,
+      // formatter: formatDecimalFormatter,
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
@@ -149,7 +151,10 @@ export const useTable = () => {
     data.list.forEach((item) => {
       item.items.forEach((a) => {
         a.code = a?.product?.code
+        a.volume = transformVolumeNum(a.volume)
+        a.totalVolume = transformVolumeNum(a.totalVolume)
       })
+      item.totalVolume = transformVolumeNum(item.totalVolume)
     })
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsUpToList(data.list)

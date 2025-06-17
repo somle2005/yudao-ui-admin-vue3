@@ -374,11 +374,12 @@ const changeProduct = async (row, index, val) => {
       return
     }
 
-    const { packageHeight, packageLength, packageWidth, packageWeight } = product
+    const { packageHeight, packageLength, packageWidth, packageWeight,weight  } = product
     row.packageHeight = packageHeight
     row.packageLength = packageLength
     row.packageWidth = packageWidth
     row.packageWeight = packageWeight
+    row.weight = weight
 
     const country = props?.warehouse?.country
     const countryList = getIntDictOptions(DICT_TYPE.COUNTRY_CODE)

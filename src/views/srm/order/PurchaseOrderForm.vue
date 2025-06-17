@@ -730,7 +730,7 @@ const addItem = (selectionList) => {
         approvedQty,
         grossPrice,
         taxRate = TAX_PERCENT,
-        taxPrice,
+        tax,
         warehouseId,
         expectArrivalDate,
         // code,
@@ -755,7 +755,7 @@ const addItem = (selectionList) => {
         qty: approvedQty || 0,
         grossPrice,
         taxRate,
-        taxPrice, //税额需要动态计算
+        tax, //税额需要动态计算
         warehouseId,
         expectArrivalDate,
         deliveryTime: expectArrivalDate,

@@ -154,7 +154,7 @@ const handleCurrentChange = (row: any) => {
     arriveCode: 'arriveCode', // 适配采购退货详情接口
 
     taxRate: 'taxRate',
-    taxPrice: 'taxPrice',
+    tax: 'tax',
     grossPrice: 'grossPrice',
     grossTotalPrice: 'grossTotalPrice',
     // remark:'remark',

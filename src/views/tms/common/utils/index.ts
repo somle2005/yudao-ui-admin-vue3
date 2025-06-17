@@ -129,7 +129,7 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
       {
         type: 'input-number',
         label: '货柜毛重(kg)',
-        prop: 'totalWeight',
+        prop: 'totalPackageWeight',
         attrs: {
           disabled: true,
           style: { width: '100%' },
@@ -354,13 +354,11 @@ const mmToMScale = 1000000000
 
 // 体积= 长*宽*高*数量
 export const computeVolume = (item) => {
-  const { packageHeight, packageLength, packageWidth, qty } = item
-  if ([packageHeight, packageLength, packageWidth, qty].every((item) => item)) {
+  // const { packageHeight, packageLength, packageWidth, qty } = item
+  const { packageHeight, packageLength, packageWidth } = item
+  if ([packageHeight, packageLength, packageWidth].every((item) => item)) {
     item.volume = Number(
-      formatDecimal(
-        (packageHeight * packageLength * packageWidth * qty) / mmToMScale,
-        VOLUMN_PRECISION
-      )
+      formatDecimal((packageHeight * packageLength * packageWidth) / mmToMScale, VOLUMN_PRECISION)
     )
   } else {
     item.volume = 0
@@ -370,6 +368,16 @@ export const computeVolume = (item) => {
 // 体积立方厘米转化成立方米
 export const transformVolume = (volume) => {
   return volume / mmToMScale
+}
+
+export const transformVolumeNum = (val) => {
+  if(!val) return val
+  return Number(formatDecimal(transformVolume(val), VOLUMN_PRECISION))
+}
+
+// 立方米直接转化保留三位小数防止 0.067*30=2.0100000000000002
+export const transformDecimal3 = (val) => {
+  return Number(formatDecimal(val, VOLUMN_PRECISION))
 }
 
 export function transformVolumeColumn(_row: any, _column: TableColumnCtx<any>, cellValue: any) {

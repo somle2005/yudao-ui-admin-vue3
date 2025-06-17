@@ -102,6 +102,8 @@
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
+      show-summary
+      :summary-method="getWholeOrderSelectSummaries"
       isSelection
       :loading="loading"
       :options="tableOptions"
@@ -157,7 +159,9 @@ import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useBatch } from './hooks/useBatch'
 import { useTable } from './hooks/useTable'
-
+import { reduce } from 'lodash-es'
+import { reduceVal } from '@/utils/transformData'
+import { createSelectSummaries, createWholeOrderSelectSummaries } from '@/utils/create'
 
 let {
   allOptions,
@@ -288,6 +292,31 @@ const { handleWholeOrderEnable } = useWholeOrder(
   wholeOrderTotal
 )
 
+// 毛重(kg)-itemsPackageWeight 体积(m³)-itemsVolume-数量-itemsQty
+const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
+  wholeOrderEnable,
+  [
+    {
+      itemsColumnKey: 'itemsPackageWeight',
+      itemsKey: 'itemsTotalPackageWeight',
+      wholeOrdeColumnKey: 'totalPackageWeight',
+      wholeOrderKey: 'totalPackageWeight'
+    },
+    {
+      itemsColumnKey: 'itemsVolume',
+      itemsKey: 'itemsTotalVolume',
+      wholeOrdeColumnKey: 'totalVolume',
+      wholeOrderKey: 'totalVolume'
+    },
+    {
+      itemsColumnKey: 'itemsQty',
+      itemsKey: 'itemsQty',
+      wholeOrdeColumnKey: 'totalItemsQty',
+      wholeOrderKey: 'totalItemsQty'
+    }
+  ],
+  selectionList
+)
 /** 初始化 **/
 onMounted(() => {
   getList()

@@ -175,7 +175,7 @@ const createRequestFormOptions = () => {
           width: '100%'
         }
       },
-      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE).slice(0,3)
+      children: getIntDictOptions(DICT_TYPE.WMS_OUTBOUND_TYPE).slice(0, 3)
     },
     {
       type: 'input',
@@ -338,11 +338,21 @@ const open = async (type: string, id?: number) => {
   }
   formTypeOperate[type]()
 
+  // 123为手工类型-非123为外部单据不展示
+  const resolveType = (data) => {
+    if ([1, 2, 3].includes(data.upstreamType)) return
+    const index = requestFormOptions.value.findIndex((item) => item.prop === 'type')
+    if (index !== -1) {
+      requestFormOptions.value.splice(index, 1)
+    }
+  }
+
   // 修改时，设置数据
   if (id) {
     formLoading.value = true
     try {
       let data = await OutboundApi.getOutbound(id)
+      resolveType(data)
       getItemProp(data.itemList, ['product', 'bin'])
       formData.value = data
       // 主动触发表单数据回显
@@ -384,7 +394,7 @@ const submitForm = async (type?: string) => {
       } else if (type === AUDIT_TYPE.agreeOutbound) {
         //  ['actualQty', 'id', 'outboundId'])
         await OutboundApi.agreeOutboundAuditStatus({ billId: data.id, comment: data.comment })
-        await OutboundItemApi.updateOutboundItemActualQty(data)
+        // await OutboundItemApi.updateOutboundItemActualQty(data)
       }
       message.success(t('common.updateSuccess'))
     }
@@ -456,16 +466,11 @@ const addProductItem = (selectionList: any[]) => {
         availableQty,
         // defectiveQty,
         outboundPlanQty,
-        suggestedOwnership,
+        suggestedLogic,
         bin
       } = item
 
-      let deptId = undefined
-      let companyId = undefined
-      if (suggestedOwnership) {
-        deptId = suggestedOwnership.deptId
-        companyId = suggestedOwnership.companyId
-      }
+      let { deptId, companyId } = suggestedLogic || {}
 
       const obj = {
         [itemIdKey]: id,

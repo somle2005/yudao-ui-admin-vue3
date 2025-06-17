@@ -40,7 +40,7 @@ items-商品信息-表格列(参照-采购订单-订单产品清单)
 含税单价-grossPrice-数字输入框(手动输入，价格保留小数点后两位。)
 价税合计-grossTotalPrice-(显示在底部合计行-与含税单价联动，通过计算保持一致)
 参考单价-referenceUnitPrice-数字输入框(整数>0)
-税额，单位：元-taxPrice-(纯显示-保留小数点后两位   = 含税单价*税率   )
+税额，单位：元-tax-(纯显示-保留小数点后两位   = 含税单价*税率   )
 税率，百分比-taxRate-数字输入框(手动输入，保留小数点后两位。)
 
 
@@ -408,6 +408,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
       dialogTitle.value = '合并采购'
       const formData = getFormData()
       mergeSelectItemsData(formData, data, smFormRef)
+      console.log(formData.items,'formData.items')
       return
     }
 
