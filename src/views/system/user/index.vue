@@ -126,6 +126,13 @@
             prop="deptName"
             :show-overflow-tooltip="true"
           />
+          <el-table-column label="角色" key="roleNameList">
+            <template #default="scope">
+              <div v-for="item in scope.row.roleNameList" :key="item">
+                {{ item }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
           <el-table-column label="状态" key="status">
             <template #default="scope">
