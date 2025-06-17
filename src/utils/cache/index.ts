@@ -1,4 +1,4 @@
-import { getUserPage } from '@/api/system/user'
+import { getUserDataPermission } from '@/api/system/user'
 
 const userKey = 'userInfo'
 export const saveUser = (user: any) => {
@@ -21,17 +21,13 @@ export const saveDept = (user: any) => {
 
 export const getDept = () => {
   const data = localStorage.getItem(deptKey)
-  return data ? JSON.parse(data) : {}
+  return data ? JSON.parse(data) : []
 }
 
 export const getDeptAndSaveCache = (userInfo: any) => {
-  getUserPage({ nickname: userInfo?.user?.nickname })
+  getUserDataPermission({ id: userInfo?.user?.id })
     .then((res) => {
-      if (res?.list.length) {
-        saveDept(res.list[0])
-      } else {
-        saveDept({})
-      }
+      saveDept(res.deptList)
     })
     .catch((e) => {
       console.log(e, '报错了')

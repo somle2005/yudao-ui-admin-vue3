@@ -23,16 +23,24 @@ export const createMapStyle = (key: string) => {
 }
 
 export const toUrl = (value: string): string => {
-  const { deptName } = getDept()
+  const deptList = getDept()
   let valueStr = value
   // dept会包含至少 AOK 、CBD、HCD、EBD
-  const deptList = ['AOK', 'CBD', 'HCD', 'EBD']
-  if (deptName) {
-    const item = deptList.find((item) => valueStr.includes(item))
-    if (item) {
-      valueStr = valueStr + '&dept=' + item
+  const containList = ['AOK', 'CBD', 'HCD', 'EBD']
+  // AOK部门专设角色-所以实际上只会匹配到一个
+  let containStr
+  for (let i = 0; i < deptList.length; i++) {
+    const item = deptList[i]
+    const { name } = item
+    const matchStr = containList.find((item) => name.includes(item))
+    if (matchStr) {
+      containStr = matchStr
+      break
     }
   }
-  console.log(valueStr,'valueStr-报表拼接url')
+  if (containStr) {
+    valueStr = valueStr + '&dept=' + containStr
+  }
+  console.log(valueStr, 'valueStr-报表拼接url')
   return valueStr
 }

@@ -79,3 +79,8 @@ export const updateUserStatus = (id: number, status: number) => {
 export const getSimpleUserList = (): Promise<UserVO[]> => {
   return request.get({ url: '/system/user/simple-list' })
 }
+
+// 获得用户数据权限
+export const getUserDataPermission = (params: any) => {
+  return request.get({ url: '/system/user/get-user-data-permission', params })
+}
