@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { getAccessToken, removeToken } from '@/utils/auth'
 import { CACHE_KEY, useCache, deleteUserCache } from '@/hooks/web/useCache'
 import { getInfo, loginOut } from '@/api/login'
+import { getDeptAndSaveCache } from '@/utils/cache'
 
 const { wsCache } = useCache()
 
@@ -57,6 +58,7 @@ export const useUserStore = defineStore('admin-user', {
       if (!userInfo) {
         userInfo = await getInfo()
       }
+      getDeptAndSaveCache(userInfo)
       this.permissions = new Set(userInfo.permissions)
       if (userInfo?.roles?.length && userInfo.roles.includes('super_admin')) {
         this.permissions.add('*:*:*')
@@ -82,7 +84,7 @@ export const useUserStore = defineStore('admin-user', {
       wsCache.set(CACHE_KEY.USER, userInfo)
       wsCache.set(CACHE_KEY.ROLE_ROUTERS, userInfo.menus)
     },
-    async setUserAvatarAction(avatar: string) {
+    async setUserAvatarAction(avatar: string) { 
       const userInfo = wsCache.get(CACHE_KEY.USER)
       // NOTE: 是否需要像`setUserInfoAction`一样判断`userInfo != null`
       this.user.avatar = avatar
