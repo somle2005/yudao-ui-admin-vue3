@@ -91,14 +91,18 @@ export const codeTypeList = [
   // { name: '入库', type: 1, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' }, // split('.')[0][1]
   // { name: '拣货', type: 2, dictType: 'wms_inbound_status', getValue: 'inbound.inboundStatus' },
 
-  { name: '入库', type: 1, dictType: 'wms_inbound_type', getValue: 'inbound.type' }, // split('.')[0][1]
-  { name: '拣货', type: 2, dictType: 'wms_inbound_type', getValue: 'inbound.type' },
-
   { name: '出库', type: 3, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
   { name: '提交出库单', type: 4, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
   { name: '拒绝出库单', type: 5, dictType: 'wms_outbound_type', getValue: 'outbound.type' },
 
-  { name: '换货单', type: 10, dictType: 'wms_exchange_type', getValue: 'exchange.type' }
+  // { name: '上架单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' },
+
+  { name: '换货单', type: 10, dictType: 'wms_exchange_type', getValue: 'exchange.type' },
+
+  // 入库单优先级放最后了  split('.')[0][1]
+  { name: '入库', type: 1, dictType: 'wms_inbound_type', getValue: 'inbound.type' },
+  { name: '拣货', type: 2, dictType: 'wms_outbound_type', getValue: 'pickup.status' }
+  // { name: '拣货', type: 2, dictType: 'wms_inbound_type', getValue: 'inbound.type' }
 
   // 只有出库单-入库单状态
   // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
@@ -109,23 +113,85 @@ export const codeTypeList = [
   // { name: '盘亏', type: 9, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' }
 ]
 
-export const getCodeType = (type: number) => {
+// 根据存在进行返回
+const existReturn = (row) => {
+  const list = Array.from(new Set(codeTypeList.map((item) => item.getValue)))
+  let saveLink: any = []
+  let saveGetValue
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    const link = item.split('.')
+    if (row[link[0]]) {
+      saveLink = link
+      saveGetValue = item
+      break
+    }
+  }
+
+  if (saveGetValue && saveLink?.length) {
+    const dictType = codeTypeList.find((item) => item.getValue === saveGetValue)?.dictType
+    return {
+      dictType,
+      val: row[saveLink[0]][saveLink[1]]
+    }
+  }
+  return {
+    dictType: '',
+    val: ''
+  }
+}
+
+export const getCodeType = (type: number, row: any) => {
   const item = codeTypeList.find((item) => item.type === type)
   if (item) {
     return DICT_TYPE[item.dictType.toUpperCase()]
   }
+  return DICT_TYPE[existReturn(row)?.dictType!.toUpperCase()]
 }
 export const getCodeValue = (row: any, type: number) => {
   const item = codeTypeList.find((item) => item.type === type)
-  if (item) {
-    const link = item.getValue.split('.')
-    return row[link[0]][link[1]]
+  try {
+    if (item) {
+      const link = item.getValue.split('.')
+      if (row[link[0]]) {
+        return row[link[0]][link[1]]
+      }
+    }
+    return existReturn(row).val
+  } catch (e) {
+    console.log(e, '报错了')
   }
 }
 
 // 入库单号会一直存在-其他只会存在一种
 export const getOperateNo = (row: any) => {
-  return row.exchangeCode || row.outboundCode || row.pickupCode || row.inboundCode
+  const codeList = [
+    { name: '入库', type: 1, getValue: 'inbound' },
+    { name: '拣货', type: 2, getValue: 'pickup' },
+    { name: '完成出库', type: 3, getValue: 'outbound' },
+    { name: '同意出库单', type: 11, getValue: 'outbound' },
+    { name: '提交出库单', type: 4, getValue: 'outbound' },
+    { name: '拒绝出库单', type: 5, getValue: 'outbound' },
+
+    { name: '库位库存移动', type: 6, getValue: 'stockBinMove' },
+    { name: '逻辑库存移动', type: 7, getValue: 'stockLogicMove' },
+
+    { name: '盘赢', type: 8, getValue: 'stockCheck' },
+    { name: '盘亏', type: 9, getValue: 'stockCheck' },
+    { name: '良次转换', type: 10, getValue: 'exchange' }
+  ]
+
+  const item = codeList.find((item) => item.type === row.reason)
+  try {
+    if (item) {
+      return row[item.getValue].code
+    }
+  } catch (e) {
+    console.log(e, '报错了', item,'item-row',row)
+  }
+
+  // 入库单优先级放最后了  split('.')[0][1]
+  // return row.exchangeCode || row.outboundCode || row.pickupCode || row.inboundCode
 }
 
 const getWarehousesBinExchangeParams = (formDataCopy, targetType?) => {

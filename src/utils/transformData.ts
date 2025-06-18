@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash-es'
 import { erpPriceMultiply } from '@/utils'
 import { notEmpty } from './judge'
+import Big from 'big.js'
 import { transformDecimal3 } from '@/views/tms/common/utils'
 
 /**
@@ -255,6 +256,11 @@ export const jsonToList = (list: any[], jsonList: string[]) => {
   return list
 }
 
+// 解决js计算精度问题例如 76.24+8.368 = 84.608实际是84.60799999999999
+export const computeVal = (val1, val2) => {
+  return new Big(val1).plus(val2).toNumber()
+}
+
 export const reduceVal = (computeKey: string, list: any[]) => {
   if (!list?.length || !Array.isArray(list)) return null
   // 因为undefined会返回NaN
@@ -264,11 +270,10 @@ export const reduceVal = (computeKey: string, list: any[]) => {
     }
     return 0
   }
-  return list.reduce((prev, cur) => prev + getNum(cur[computeKey]), 0)
+  return list.reduce((prev, cur) => computeVal(prev, getNum(cur[computeKey])), 0)
 }
 
-
-export const reduceQtyVal = (list: any[],computeKey: string, qtyKey?: string,) => {
+export const reduceQtyVal = (list: any[], computeKey: string, qtyKey?: string) => {
   if (!list?.length || !Array.isArray(list)) return null
   // 因为undefined会返回NaN
   const getNum = (val) => {
@@ -281,7 +286,10 @@ export const reduceQtyVal = (list: any[],computeKey: string, qtyKey?: string,) =
     if (!qtyKey) return 1
     return getNum(cur[qtyKey])
   }
-  return list.reduce((prev, cur) => prev + getNum(cur[computeKey]) * getQty(cur, qtyKey), 0)
+  return list.reduce(
+    (prev, cur) => computeVal(prev, getNum(cur[computeKey]) * getQty(cur, qtyKey)),
+    0
+  )
 }
 
 export const reduceValFormData = (
@@ -305,8 +313,8 @@ export const reduceValFormData = (
     }
     mapList.forEach((item) => {
       const { targetKey, computeKey, qtyKey, formatter } = item
-      const sum = reduceQtyVal(formDataCopy[computeItemsKey],computeKey,qtyKey)
-      model[targetKey] =  formatter ? formatter(sum) : sum
+      const sum = reduceQtyVal(formDataCopy[computeItemsKey], computeKey, qtyKey)
+      model[targetKey] = formatter ? formatter(sum) : sum
     })
   })
 }

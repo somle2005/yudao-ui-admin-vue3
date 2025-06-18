@@ -52,7 +52,7 @@
       </template>
       <template #codeType="{ scope }">
         <dict-tag
-          :type="getCodeType(scope?.row?.reason)"
+          :type="getCodeType(scope?.row?.reason, scope.row)"
           :value="getCodeValue(scope.row, scope?.row?.reason)"
         />
       </template>
@@ -138,10 +138,16 @@ const fieldMap = {
   stockWarehouseAvailableQty: '仓库可用库存',
   stockWarehouseSellableQty: '仓库可售库存',
 
-  codeType: {
+  // codeType: {
+  //   label: '单据类型',
+  //   width: '120px',
+  //   slot: 'codeType'
+  // },
+  reason: {
     label: '单据类型',
-    width: '120px',
-    slot: 'codeType'
+    width: '200px',
+    slot: ' reason',
+    dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
   },
   operateNo: {
     label: '操作单号',

@@ -33,6 +33,7 @@ export const createWholeOrderSelectSummaries = (
     wholeOrderKey: string
     itemsColumnKey: string
     itemsKey: string
+    formatter?: Function
   }>,
   selectionList: any
 ) => {
@@ -49,14 +50,15 @@ export const createWholeOrderSelectSummaries = (
       const columnList = computeList.map((item) => item[columnKey])
       if (columnList.includes(column.property)) {
         const item = computeList.find((item) => item[columnKey] === column.property)!
-        const { wholeOrderKey, itemsKey } = item
+        const { wholeOrderKey, itemsKey, formatter } = item
         let sum
         if (wholeOrderEnable.value) {
           sum = reduceVal(wholeOrderKey, unref(selectionList))
         } else {
           sum = reduceVal(itemsKey, unref(selectionList))
         }
-        sums[index] = sum
+        // sum过滤
+        sums[index] = formatter ? formatter(sum) : sum
       } else {
         sums[index] = ''
       }
