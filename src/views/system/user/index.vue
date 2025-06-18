@@ -63,6 +63,16 @@
               class="!w-240px"
             />
           </el-form-item>
+          <el-form-item label="角色" prop="roleId">
+            <el-select v-model="queryParams.roleId" placeholder="角色" clearable class="!w-240px">
+              <el-option
+                v-for="dict in roleOptions"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button @click="handleQuery"><Icon icon="ep:search" />搜索</el-button>
             <el-button @click="resetQuery"><Icon icon="ep:refresh" />重置</el-button>
@@ -116,6 +126,13 @@
             prop="deptName"
             :show-overflow-tooltip="true"
           />
+          <el-table-column label="角色" key="roleNameList">
+            <template #default="scope">
+              <div v-for="item in scope.row.roleNameList" :key="item">
+                {{ item }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
           <el-table-column label="状态" key="status">
             <template #default="scope">
@@ -210,6 +227,7 @@ import UserForm from './UserForm.vue'
 import UserImportForm from './UserImportForm.vue'
 import UserAssignRoleForm from './UserAssignRoleForm.vue'
 import DeptTree from './DeptTree.vue'
+import { getSimpleRoleList } from '@/api/system/role'
 
 defineOptions({ name: 'SystemUser' })
 
@@ -227,7 +245,8 @@ const queryParams = reactive({
   mobile: undefined,
   status: undefined,
   deptId: undefined,
-  createTime: []
+  createTime: [],
+  roleId: undefined
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -357,8 +376,10 @@ const handleRole = (row: UserApi.UserVO) => {
   assignRoleFormRef.value.open(row)
 }
 
+const roleOptions: any = ref([])
 /** 初始化 */
-onMounted(() => {
+onMounted(async () => {
   getList()
+  roleOptions.value = await getSimpleRoleList()
 })
 </script>
