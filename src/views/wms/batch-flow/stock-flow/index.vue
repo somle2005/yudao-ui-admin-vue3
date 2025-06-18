@@ -50,12 +50,12 @@
         <!-- <div> 出库单号:{{ scope.row.outboundCode }} </div>
         <div> 上架单号:{{ scope.row.pickupCode }} </div> -->
       </template>
-      <template #codeType="{ scope }">
+      <!-- <template #codeType="{ scope }">
         <dict-tag
           :type="getCodeType(scope?.row?.reason, scope.row)"
           :value="getCodeValue(scope.row, scope?.row?.reason)"
         />
-      </template>
+      </template> -->
 
       <!-- <template #operate="{ scope }">
          <el-button
@@ -117,10 +117,17 @@ const fieldMap = {
   stockWarehouseAvailableQty: '仓库可用库存',
   stockWarehouseSellableQty: '仓库可售库存',
 
-  codeType: {
+  // codeType: {
+  //   label: '单据类型',
+  //   width: '200px',
+  //   slot: 'codeType'
+  // },
+
+  reason: {
     label: '单据类型',
     width: '200px',
-    slot: 'codeType'
+    slot: ' reason',
+    dictAttrs: { type: DICT_TYPE.WMS_STOCK_REASON }
   },
 
   operateNo: {
