@@ -162,6 +162,7 @@ import { useTable } from './hooks/useTable'
 import { reduce } from 'lodash-es'
 import { reduceVal } from '@/utils/transformData'
 import { createSelectSummaries, createWholeOrderSelectSummaries } from '@/utils/create'
+import { transformDecimal3 } from '../common/utils'
 
 let {
   allOptions,
@@ -300,19 +301,22 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
       itemsColumnKey: 'itemsPackageWeight',
       itemsKey: 'itemsTotalPackageWeight',
       wholeOrdeColumnKey: 'totalPackageWeight',
-      wholeOrderKey: 'totalPackageWeight'
+      wholeOrderKey: 'totalPackageWeight',
+      formatter: transformDecimal3
     },
     {
       itemsColumnKey: 'itemsVolume',
       itemsKey: 'itemsTotalVolume',
       wholeOrdeColumnKey: 'totalVolume',
-      wholeOrderKey: 'totalVolume'
+      wholeOrderKey: 'totalVolume',
+      formatter: transformDecimal3
     },
     {
       itemsColumnKey: 'itemsQty',
       itemsKey: 'itemsQty',
       wholeOrdeColumnKey: 'totalItemsQty',
-      wholeOrderKey: 'totalItemsQty'
+      wholeOrderKey: 'totalItemsQty',
+      formatter: transformDecimal3
     }
   ],
   selectionList
