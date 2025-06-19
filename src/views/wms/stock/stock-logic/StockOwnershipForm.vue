@@ -93,6 +93,7 @@ const moveFormOptions = () => {
       prop: 'fromCompanyId',
       label: '调出库存公司',
       attrs: {
+        disabled: true,
         filterable: true,
         clearable: true,
         style: {
@@ -108,6 +109,7 @@ const moveFormOptions = () => {
       prop: 'fromDeptId',
       placeholder: '请选择调出库存归属',
       attrs: {
+        disabled: true,
         'node-key': 'id',
         'check-strictly': true,
         props: defaultProps,
