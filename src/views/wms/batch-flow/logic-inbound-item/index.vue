@@ -88,8 +88,10 @@ const fieldMap = {
   warehouseName: '仓库',
   productCode: '产品编码',
   productName: '产品名称',
-  inboundCompanyName: '库存公司',
-  inboundDeptName: '库存归属',
+  // inboundCompanyName: '库存公司',
+  // inboundDeptName: '库存归属',
+  companyName: '库存公司',
+  deptName: '库存归属',
 
   actualQty: '批次数量',
   stockWarehouseTotalQty: '库存总数', // availableQty+shelvingPendingQty
@@ -106,8 +108,7 @@ const fieldMap = {
     label: '操作时间',
     formatter: dateFormatter,
     width: '200px'
-  },
-
+  }
 
   // 时间信息
 
@@ -197,7 +198,7 @@ const getList = async () => {
       { prop: 'company', keyList: ['name'] },
       { prop: 'inboundDept', keyList: ['name'] },
       { prop: 'inboundCompany', keyList: ['name'] },
-      { prop: 'stockWarehouse', keyList: ['totalQty'] },
+      { prop: 'stockWarehouse', keyList: ['totalQty'] }
     ]) as any
     total.value = data.total
   } finally {
