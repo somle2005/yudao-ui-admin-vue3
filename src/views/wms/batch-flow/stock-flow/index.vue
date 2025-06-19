@@ -102,14 +102,14 @@ const fieldMap = {
     width: '200px'
   },
   // availableQty: '批次可用库存',
-  binBeforeQty: '批次可用库存',
+  beforeQty: '批次可用库存',
   deltaQty: {
     label: '库存变更',
     width: '100px',
     slot: 'deltaQty'
   },
   // inboundItemFlowOutboundAvailableQty: '批次当前库存',
-  binAfterQty: '批次当前库存',
+  afterQty: '批次当前库存',
   warehouseName: '仓库',
   binName: '库位',
 

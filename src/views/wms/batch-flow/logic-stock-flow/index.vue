@@ -123,17 +123,20 @@ const fieldMap = {
     formatter: dateFormatter,
     width: '200px'
   },
-  availableQty: '批次可用库存',
+  // availableQty: '批次可用库存',
+  beforeQty: '批次可用库存',
   deltaQty: {
     label: '库存变更',
     width: '100px',
     slot: 'deltaQty'
   },
-  inboundItemFlowOutboundAvailableQty: '批次当前库存',
+  // inboundItemFlowOutboundAvailableQty: '批次当前库存',
+  afterQty: '批次当前库存',
   warehouseName: {
     label: '仓库',
     width: '160px'
   },
+
   stockWarehouseAvailableQty1: '仓库当前库存',
   stockWarehouseAvailableQty: '仓库可用库存',
   stockWarehouseSellableQty: '仓库可售库存',
