@@ -184,7 +184,7 @@ import { useTable } from './hooks/useTable'
 import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
-import { getMainItemBodyData } from '@/utils/transform'
+import { getMainItemBodyDataField } from '@/utils/transform'
 import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 
 /** Srm 销售入库列表 */
@@ -233,11 +233,17 @@ let {
 const getList = async () => {
   loading.value = true
   try {
-    const bodyData = getMainItemBodyData({
+    const bodyData = getMainItemBodyDataField({
       queryParams,
-      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
-      itemQueryList: ['productId', 'orderCode']
+      configList: [
+        {
+          name: 'mainQuery',
+          fieldList: ['code', 'supplierId', 'auditStatus', 'inboundStatus']
+        },
+        { name: 'itemQuery', fieldList: ['productId', 'orderCode'] }
+      ]
     })
+
     bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
 

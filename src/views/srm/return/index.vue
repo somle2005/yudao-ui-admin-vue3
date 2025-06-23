@@ -176,7 +176,7 @@ import { useSearchForm } from './hooks/search'
 import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseReturnApi, PurchaseReturnVO } from '@/api/srm/return'
-import { getMainItemBodyData } from '@/utils/transform'
+import { getMainItemBodyDataField } from '@/utils/transform'
 import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 
 /** Srm 销售入库列表 */
@@ -225,11 +225,17 @@ let {
 const getList = async () => {
   loading.value = true
   try {
-    const bodyData = getMainItemBodyData({
+    const bodyData = getMainItemBodyDataField({
       queryParams,
-      mainQueryList: ['code', 'supplierId', 'auditStatus', 'outboundStatus'],
-      itemQueryList: ['arriveCode', 'productId', 'warehouseId']
+      configList: [
+        {
+          name: 'mainQuery',
+          fieldList: ['code', 'supplierId', 'auditStatus', 'outboundStatus']
+        },
+        { name: 'itemQuery', fieldList: ['arriveCode', 'productId', 'warehouseId'] }
+      ]
     })
+
     bodyData.itemQuery.outboundStatus = queryParams.itemsOutboundStatus
     const data = await PurchaseReturnApi.getPurchaseReturnPage(bodyData)
     switchList(list, total, data)

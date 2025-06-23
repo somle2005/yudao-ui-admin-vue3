@@ -51,7 +51,7 @@ import { useSearchForm } from './hooks/search'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { PurchaseInApi } from '@/api/srm/in'
 import { useTable } from './hooks/useTable'
-import { getMainItemBodyData } from '@/utils/transform'
+import { getMainItemBodyDataField } from '@/utils/transform'
 import { getCurrencyName } from '@/commonData'
 
 // 暂时都是分行展示逻辑
@@ -90,13 +90,18 @@ let supplierIdSave
 const getList = async () => {
   loading.value = true
   try {
-    const bodyData = getMainItemBodyData({
+    const bodyData = getMainItemBodyDataField({
       queryParams,
-      mainQueryList: ['code', 'supplierId', 'auditStatus', 'inboundStatus'],
-      itemQueryList: ['productId', 'orderCode']
+      configList: [
+        {
+          name: 'mainQuery',
+          fieldList: ['code', 'supplierId', 'auditStatus', 'inboundStatus']
+        },
+        { name: 'itemQuery', fieldList: ['productId', 'orderCode'] }
+      ]
     })
-    // bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
 
+    // bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
     // bodyData.mainQuery.inboundStatus = 3 // 3整单全部入库 2 // 部分入库
     bodyData.mainQuery.supplierId = supplierIdSave
     bodyData.mainQuery.auditStatus = 5 // 已审核
