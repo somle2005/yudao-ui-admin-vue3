@@ -354,6 +354,9 @@ const open = async (type: string, id?: number) => {
       let data = await OutboundApi.getOutbound(id)
       resolveType(data)
       getItemProp(data.itemList, ['product', 'bin'])
+      data.itemList.forEach((item) => {
+        item.purchaseOrderCode = data.purchaseOrderCode
+      })
       formData.value = data
       // 主动触发表单数据回显
       formRef.value.initForm()
