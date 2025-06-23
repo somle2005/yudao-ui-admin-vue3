@@ -17,8 +17,8 @@ export interface UserVO {
   createTime: Date
 }
 
-// 查询用户管理列表
-export const getUserPage = (params: PageParam) => {
+// 查询用户管理列表 PageParam
+export const getUserPage = (params: any) => {
   return request.get({ url: '/system/user/page', params })
 }
 
@@ -78,4 +78,9 @@ export const updateUserStatus = (id: number, status: number) => {
 // 获取用户精简信息列表
 export const getSimpleUserList = (): Promise<UserVO[]> => {
   return request.get({ url: '/system/user/simple-list' })
+}
+
+// 获得用户数据权限
+export const getUserDataPermission = (params: any) => {
+  return request.get({ url: '/system/user/get-user-data-permission', params })
 }
