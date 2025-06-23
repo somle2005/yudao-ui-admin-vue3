@@ -1,4 +1,4 @@
-import { getProductList } from '@/commonData'
+import { getDeptTree, getProductList } from '@/commonData'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
@@ -6,6 +6,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 export const useSearchForm = (handleQuery, queryParams) => {
   const WMSWarehouseList = getWMSWarehouseList()
   const productList = getProductList()
+  const { deptList, defaultProps } = getDeptTree()
   const searchFormOptions = ref<Array<FormOptions>>([
     {
       type: 'input',
@@ -64,9 +65,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择产品编码',
-      prop: 'productId',
+      prop: 'productIds',
       label: '产品编码',
       attrs: {
+        multiple: true,
         clearable: true,
         filterable: true,
         class: '!w-240px',
@@ -75,6 +77,22 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: productList
+    },
+    {
+      type: 'tree-select',
+      placeholder: '请选择申请部门',
+      prop: 'deptIds',
+      label: '申请部门',
+      attrs: {
+        multiple: true,
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        data: deptList,
+        props: defaultProps,
+        'check-strictly': true,
+        'node-key': 'id'
+      }
     },
 
     // {

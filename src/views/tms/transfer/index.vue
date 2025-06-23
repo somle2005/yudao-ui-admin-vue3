@@ -189,9 +189,9 @@ const getList = async () => {
       configList: [
         {
           name: 'mainQueryVO',
-          fieldList: ['code', 'fromWarehouseId', 'toWarehouseId', 'traceNo', 'productId', 'remark']
+          fieldList: ['code', 'fromWarehouseId', 'toWarehouseId', 'traceNo', 'remark']
         },
-        { name: 'itemQueryVo', fieldList: [] }
+        { name: 'itemQueryVo', fieldList: ['productIds', 'deptIds'] }
       ]
     })
 
