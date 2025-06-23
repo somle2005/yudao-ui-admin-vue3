@@ -40,7 +40,7 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column label="产品编码" width="180" align="center">
+      <el-table-column label="产品编码*" width="180" align="center">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <SmSelect
@@ -74,7 +74,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="海关品名" width="120" align="center">
+      <el-table-column label="海关品名*" width="120" align="center">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.declaredType`"
@@ -137,7 +137,7 @@
 
       <el-table-column
         v-if="mergeDisabled"
-        label="下单数量"
+        label="下单数量*"
         prop="orderQuantity"
         width="80"
         align="center"
@@ -173,7 +173,7 @@
         align="center"
       />
 
-      <el-table-column label="申请数量" prop="qty" width="100" align="center">
+      <el-table-column label="申请数量*" prop="qty" width="100" align="center">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
             <!-- <el-input-number
@@ -296,7 +296,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="mergeDisabled" label="交货日期" width="150" align="center">
+      <el-table-column v-if="mergeDisabled" label="交货日期*" width="150" align="center">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.deliveryTime`"
@@ -315,7 +315,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="海关品名(英文)" width="120" align="center">
+      <el-table-column label="海关品名(英文)*" width="120" align="center">
         <template #default="{ row, $index }">
           <el-form-item
             :prop="`${$index}.declaredTypeEn`"

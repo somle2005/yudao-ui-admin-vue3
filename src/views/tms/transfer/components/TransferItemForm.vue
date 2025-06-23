@@ -11,7 +11,7 @@
     <el-table border :data="formData" class="-mt-10px">
       <el-table-column label="序号" type="index" width="100" />
 
-      <el-table-column label="产品编码" width="180" align="center">
+      <el-table-column label="产品编码*" width="180" align="center">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
             <SmSelect
@@ -25,7 +25,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="数量" width="80">
+      <el-table-column label="数量*" width="80">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
             <SmNumber v-model="row.qty" />
