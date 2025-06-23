@@ -12,7 +12,7 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" width="60" align="center" />
 
-        <el-table-column label="币种" prop="currencyType" width="120">
+        <el-table-column label="币种*" prop="currencyType" width="120">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.currencyType`"
@@ -28,7 +28,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="费用类型" width="180" align="center">
+        <el-table-column label="费用类型*" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.costType`" :rules="formRules.costType" class="mb-0px!">
               <SmSelect
@@ -40,7 +40,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="金额" width="100" align="center">
+        <el-table-column label="金额*" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.amount`" :rules="formRules.amount" class="mb-0px!">
               <SmNumber v-model="row.amount" />
