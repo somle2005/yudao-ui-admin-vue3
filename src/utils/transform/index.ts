@@ -17,23 +17,23 @@ interface MainItemBodyDataFieldProp {
   configList: MainItemBodyProp[]
 }
 
-export const getMainItemBodyData = (data: MainItemBodyDataProp) => {
-  try {
-    const { queryParams, mainQueryList, itemQueryList } = data || {}
-    const queryData = cloneDeep(queryParams)
-    const bodyData: any = {
-      mainQuery: {},
-      itemQuery: {}
-    }
-    bodyData.mainQuery = filterObjKey(queryData, mainQueryList)
-    bodyData.itemQuery = filterObjKey(queryData, itemQueryList)
-    bodyData.pageNo = queryData.pageNo
-    bodyData.pageSize = queryData.pageSize
-    return bodyData
-  } catch (e) {
-    console.log(e, '报错')
-  }
-}
+// export const getMainItemBodyData = (data: MainItemBodyDataProp) => {
+//   try {
+//     const { queryParams, mainQueryList, itemQueryList } = data || {}
+//     const queryData = cloneDeep(queryParams)
+//     const bodyData: any = {
+//       mainQuery: {},
+//       itemQuery: {}
+//     }
+//     bodyData.mainQuery = filterObjKey(queryData, mainQueryList)
+//     bodyData.itemQuery = filterObjKey(queryData, itemQueryList)
+//     bodyData.pageNo = queryData.pageNo
+//     bodyData.pageSize = queryData.pageSize
+//     return bodyData
+//   } catch (e) {
+//     console.log(e, '报错')
+//   }
+// }
 
 export const getMainItemBodyDataField = (data: MainItemBodyDataFieldProp) => {
   try {
@@ -44,6 +44,8 @@ export const getMainItemBodyDataField = (data: MainItemBodyDataFieldProp) => {
       bodyData[item.name] = {}
       bodyData[item.name] = filterObjKey(queryData, item.fieldList)
     })
+    bodyData.pageNo = queryData.pageNo
+    bodyData.pageSize = queryData.pageSize
     return bodyData
   } catch (e) {
     console.log(e, '报错')
