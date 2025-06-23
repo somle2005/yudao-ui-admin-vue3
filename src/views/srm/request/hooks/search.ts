@@ -32,9 +32,10 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'select',
       placeholder: '请选择产品编码',
-      prop: 'productId',
+      prop: 'productIds',
       label: '产品编码',
       attrs: {
+        multiple: true,
         clearable: true,
         filterable: true,
         class: '!w-240px',
@@ -91,9 +92,10 @@ export const useSearchForm = (handleQuery) => {
     {
       type: 'tree-select',
       placeholder: '请选择申请部门',
-      prop: 'applicationDeptId',
+      prop: 'applicationDeptIds',
       label: '申请部门',
       attrs: {
+        multiple: true,
         class: '!w-240px',
         filterable: true,
         clearable: true,

@@ -232,7 +232,10 @@ const getList = async () => {
           name: 'mainQuery',
           fieldList: ['code', 'supplierId', 'auditStatus', 'outboundStatus']
         },
-        { name: 'itemQuery', fieldList: ['arriveCode', 'productId', 'warehouseId'] }
+        {
+          name: 'itemQuery',
+          fieldList: ['arriveCode', 'productIds', 'applicationDeptIds', 'warehouseId']
+        }
       ]
     })
 

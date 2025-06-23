@@ -1,5 +1,5 @@
 import { PurchaseRequestApi, PurchaseRequestVO } from '@/api/srm/request'
-import { getDeptTree, getUserList } from '@/commonData'
+import { getDeptTree, getProductList, getUserList } from '@/commonData'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { getDictOptions } from '@/utils/dict'
@@ -202,6 +202,7 @@ export const useApplicantTable = () => {
     }
   }
 
+  const productList = getProductList()
   const userList = getUserList()
   const { deptList, defaultProps } = getDeptTree()
   const searchFormOptions = ref<Array<FormOptions>>([
@@ -252,9 +253,10 @@ export const useApplicantTable = () => {
     {
       type: 'tree-select',
       placeholder: '请选择申请部门',
-      prop: 'applicationDeptId',
+      prop: 'applicationDeptIds',
       label: '申请部门',
       attrs: {
+        multiple: true,
         class: '!w-160px',
         filterable: true,
         clearable: true,
@@ -266,6 +268,22 @@ export const useApplicantTable = () => {
         //   width: '100%'
         // }
       }
+    },
+    {
+      type: 'select',
+      placeholder: '请选择产品编码',
+      prop: 'productIds',
+      label: '产品编码',
+      attrs: {
+        multiple: true,
+        clearable: true,
+        filterable: true,
+        class: '!w-240px',
+        style: {
+          width: '100%'
+        }
+      },
+      children: productList
     },
     {
       type: 'select',
