@@ -17,6 +17,29 @@ export interface UserVO {
   createTime: Date
 }
 
+export interface UserConfigVO {
+  /**
+   * 配置键
+   */
+  configKey?: string
+  /**
+   * 配置值
+   */
+  configValue?: string
+  /**
+   * 创建时间
+   */
+  createTime?: string[]
+  /**
+   * 页码，从 1 开始
+   */
+  pageNo?: number
+  /**
+   * 每页条数，最大值为 100
+   */
+  pageSize?: number
+}
+
 // 查询用户管理列表
 export const getUserPage = (params: PageParam) => {
   return request.get({ url: '/system/user/page', params })
@@ -78,4 +101,14 @@ export const updateUserStatus = (id: number, status: number) => {
 // 获取用户精简信息列表
 export const getSimpleUserList = (): Promise<UserVO[]> => {
   return request.get({ url: '/system/user/simple-list' })
+}
+
+// 创建用户配置 修改用户配置
+export const saveOrUpdateUserConfig = (data: { configKey: string; configValue: string }) => {
+  return request.post({ url: '/system/user-config/saveOrUpdate', data })
+}
+
+// 获得用户配置分页 userConfigVO
+export const getUserConfigList = (params) => {
+  return request.get({ url: '/system/user-config/page', params })
 }
