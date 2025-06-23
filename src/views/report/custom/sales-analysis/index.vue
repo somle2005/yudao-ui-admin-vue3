@@ -6,7 +6,7 @@
       seamless
       frameBorder="0"
       scrolling="no"
-      :src="toUrl('https://superset.somle.com:55015/superset/dashboard/69a8b52e-9b3b-42e0-a5a8-b0517ba1fc94/?permalink_key=nOoQlaYmlja&hiddenDashboards=1')"
+      :src="toUrl('https://superset.somle.com:55015/superset/dashboard/69a8b52e-9b3b-42e0-a5a8-b0517ba1fc94/?permalink_key=bodBRj5Bej0&hiddenDashboards=1')"
     >
     </iframe>
   </div>
