@@ -27,6 +27,8 @@ export const getMainItemBodyData = (data: MainItemBodyDataProp) => {
     }
     bodyData.mainQuery = filterObjKey(queryData, mainQueryList)
     bodyData.itemQuery = filterObjKey(queryData, itemQueryList)
+    bodyData.pageNo = queryData.pageNo
+    bodyData.pageSize = queryData.pageSize
     return bodyData
   } catch (e) {
     console.log(e, '报错')
