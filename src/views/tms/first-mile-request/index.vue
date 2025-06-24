@@ -321,14 +321,14 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   [
     {
       itemsColumnKey: 'itemsPackageWeight',
-      itemsKey: 'itemsTotalPackageWeight',
+      itemsKey: 'itemsPackageWeight', // 'itemsTotalPackageWeight'
       wholeOrdeColumnKey: 'totalPackageWeight',
       wholeOrderKey: 'totalPackageWeight',
       formatter: transformDecimal3
     },
     {
       itemsColumnKey: 'itemsVolume',
-      itemsKey: 'itemsTotalVolume',
+      itemsKey: 'itemsVolume', // 'itemsTotalVolume'
       wholeOrdeColumnKey: 'totalVolume',
       wholeOrderKey: 'totalVolume',
       formatter: transformDecimal3
