@@ -109,6 +109,8 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      show-summary
+      :summary-method="getWholeOrderSelectSummaries"
       border
       isSelection
       :loading="loading"
@@ -186,6 +188,8 @@ import { useBatch } from './hooks/useBatch'
 import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { getMainItemBodyDataField } from '@/utils/transform'
 import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
+import { createWholeOrderSelectSummaries } from '@/utils/create'
+import { transformDecimal3 } from '@/views/tms/common/utils'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseIn' })
@@ -372,6 +376,35 @@ const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatus
 )
 
 const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
+
+// 箱率     itemsContainerRate
+const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
+  wholeOrderEnable,
+  [
+    { itemsKey: 'totalPrice', wholeOrderKey: 'totalPrice' },
+    { itemsKey: 'totalItemsQty', wholeOrderKey: 'totalItemsQty' },
+    { itemsKey: 'totalWeight', wholeOrderKey: 'totalWeight' },
+    { itemsKey: 'totalVolume', wholeOrderKey: 'totalVolume' },
+
+    { itemsKey: 'itemsQty' },
+    { itemsKey: 'itemsActualQty' },
+    { itemsKey: 'itemsOrderQty' },
+    { itemsKey: 'itemsProductPrice' },
+
+    { itemsKey: 'itemsGrossPrice' },
+    { itemsKey: 'itemsTax' },
+    { itemsKey: 'itemsGrossTotalPrice' }
+  ].map((item: any) => {
+    return {
+      wholeOrdeColumnKey: item.wholeOrderKey,
+      wholeOrderKey: item.wholeOrderKey,
+      itemsColumnKey: item.itemsKey,
+      itemsKey: item.itemsKey,
+      formatter: transformDecimal3
+    }
+  }),
+  selectionList
+)
 
 /** 初始化 **/
 onMounted(async () => {
