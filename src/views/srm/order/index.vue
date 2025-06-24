@@ -122,6 +122,8 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      show-summary
+      :summary-method="getWholeOrderSelectSummaries"
       border
       isSelection
       :loading="loading"
@@ -208,6 +210,8 @@ import {
 import { useSearchForm } from './hooks/search'
 import { generateContract, mergeItems } from '@/utils/operate/srm'
 import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
+import { createWholeOrderSelectSummaries } from '@/utils/create'
+import { transformDecimal3 } from '@/views/tms/common/utils'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -689,6 +693,35 @@ const mergeOrder = async () => {
 const generateContractOrder = async () => {
   generateContract(selectionList, openForm)
 }
+
+// 分行-总验货通过数 整单 成交金额
+const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
+  wholeOrderEnable,
+  [
+    { itemsKey: 'itemsTotalInspectionPassCount', wholeOrderKey: 'totalPrice' },
+    { itemsKey: 'itemsTotalCompletionPassCount' },
+    { itemsKey: 'itemsWaitInCount' },
+
+    { itemsKey: 'itemsWaitInCount' },
+    { itemsKey: 'itemsQty' },
+    { itemsKey: 'itemsInboundClosedQty' },
+    { itemsKey: 'itemsReturnCount' },
+
+    { itemsKey: 'itemsGrossPrice' },
+    { itemsKey: 'itemsTax' },
+    { itemsKey: 'itemsGrossTotalPrice' },
+    { itemsKey: 'itemsPayPrice' }
+  ].map((item: any) => {
+    return {
+      wholeOrdeColumnKey: item.wholeOrderKey,
+      wholeOrderKey: item.wholeOrderKey,
+      itemsColumnKey: item.itemsKey,
+      itemsKey: item.itemsKey,
+      formatter: transformDecimal3
+    }
+  }),
+  selectionList
+)
 
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印
