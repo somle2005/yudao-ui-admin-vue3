@@ -208,7 +208,6 @@ const getList = async () => {
     })
 
     const data = await FirstMileApi.getFirstMilePage(bodyData)
-    // const data = await FirstMileApi.getFirstMilePage(queryParams)
     list.value = getItemProp(data.list, ['vesselTracking'])
     total.value = data.total
   } finally {

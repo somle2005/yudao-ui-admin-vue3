@@ -79,7 +79,7 @@ export const useApplicantTable = () => {
     itemsQty: '申请数量',
     itemsApprovedQty: '批准数量',
     itemsReferenceUnitPrice: '参考单价',
-    itemsActTaxPrice: '含税单价',
+    itemsGrossPrice: '含税单价',
     itemsTax: '税额',
     itemsGrossTotalPrice: '价税合计',
 

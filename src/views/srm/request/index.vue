@@ -319,7 +319,7 @@ const fieldMap = {
     label: '参考单价',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
-  itemsActTaxPrice: {
+  itemsGrossPrice: {
     label: '含税单价',
     wholeOrderEnable: WHOLE_ORDER_TYPE.items
   },
