@@ -9,7 +9,8 @@
     :disabled="allDisabled"
   >
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
-    <el-table border :data="formData" class="-mt-10px">
+    <el-table border :data="formData" @selection-change="handleSelectionChange" class="-mt-10px">
+      <el-table-column fixed="left" width="40" label="选择" type="selection" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="formType !== 'create'"
@@ -291,6 +292,7 @@
               value-format="x"
               placeholder="请选择期望到货日期"
               class="!w-1/1"
+              @change="(val) => batchChange(row, val, 'expectArrivalDate')"
             />
           </el-form-item>
         </template>
@@ -310,6 +312,7 @@
               value-format="x"
               placeholder="请选择交货日期"
               class="!w-1/1"
+              @change="(val) => batchChange(row, val, 'deliveryTime')"
             />
           </el-form-item>
         </template>
@@ -380,6 +383,7 @@ import { computeGrossPriceAndGrossTotalPrice } from '@/utils/transformData'
 import { updateModelValue } from '@/utils/high/index'
 import { getDeclaredType } from '@/utils/operate/srm'
 import { getWMSWarehouseList } from '@/commonData/wms'
+import { useBatchChange } from '@/hooks/common/useBatch'
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -451,6 +455,8 @@ const formRules = reactive({
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
 
+const { addSelectionId, handleSelectionChange, batchChange } = useBatchChange(formData)
+
 /** 初始化设置入库项 */
 watch(
   () => props.items,
@@ -505,25 +511,7 @@ watch(
 
     // 编辑回显
     computeGrossPriceAndGrossTotalPrice(val, keyMap)
-    // val.forEach((item) => {
-    //   // 申请数量和税率都要有 才能计算出税额
-    //   if (item.taxRate && item.qty && item.grossPrice) {
-    //     const taxPercent100 = item.taxRate / 100.0
-    //     // 税额 = 含税单价 * (税率/(1+税率)) * 申请数量
-    //     const scale = (taxPercent100 / (1 + taxPercent100)) * item.qty
-    //     item.tax = erpPriceMultiply(item.grossPrice, scale)
-    //     // 价税合计 = 含税单价 * 申请数量。
-    //     item.grossTotalPrice = erpPriceMultiply(item.grossPrice, item.qty)
-    //   }
-
-    //   // item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)
-    //   // item.tax = erpPriceMultiply(item.totalProductPrice, item.taxRate / 100.0)
-    //   // if (item.totalProductPrice != null) {
-    //   //   item.totalPrice = item.totalProductPrice + (item.tax || 0)
-    //   // } else {
-    //   //   item.totalPrice = undefined
-    //   // }
-    // })
+    addSelectionId(val)
   },
   { deep: true, immediate: true }
 )
