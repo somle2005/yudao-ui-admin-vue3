@@ -44,9 +44,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
       requiredFlag: true,
       type: 'tree-select',
       label: '申请部门',
-      prop: 'requestDeptId',
+      prop: 'requestDeptIds',
       placeholder: '请选择申请部门',
       attrs: {
+        multiple: true,
         'node-key': 'id',
         'check-strictly': true,
         props: defaultProps,
@@ -72,9 +73,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择产品编码',
-      prop: 'productId',
+      prop: 'productIds',
       label: '产品编码',
       attrs: {
+        multiple: true,
         clearable: true,
         filterable: true,
         class: '!w-240px',

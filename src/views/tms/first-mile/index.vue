@@ -71,7 +71,6 @@
       :data="list"
       :total="total"
       v-model:currentPage="queryParams.pageNo"
-
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
       @selection-change="handleSelectionChange"
@@ -148,7 +147,7 @@ import { getMainItemBodyDataField } from '@/utils/transform'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { transformVolumeNum } from '@/views/tms/common/utils/index'
 
-let { tableOptions} = useTable()
+let { tableOptions } = useTable()
 
 /** 头程单 列表 */
 defineOptions({ name: 'TmsFirstMile' })
@@ -200,13 +199,15 @@ const getList = async () => {
       queryParams,
       configList: [
         { name: 'mainQueryVO', fieldList: ['code', 'toWarehouseId', 'auditStatus'] },
-        { name: 'itemPageReqVO', fieldList: ['productId', 'outboundStatus', 'inboundStatus'] },
+        {
+          name: 'itemPageReqVO',
+          fieldList: ['productIds', 'deptIds', 'outboundStatus', 'inboundStatus']
+        },
         { name: 'trackingQueryVO', fieldList: ['ladingNo'] }
       ]
     })
 
     const data = await FirstMileApi.getFirstMilePage(bodyData)
-    // const data = await FirstMileApi.getFirstMilePage(queryParams)
     list.value = getItemProp(data.list, ['vesselTracking'])
     total.value = data.total
   } finally {

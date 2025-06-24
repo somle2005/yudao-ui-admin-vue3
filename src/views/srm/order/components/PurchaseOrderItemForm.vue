@@ -9,7 +9,8 @@
       :inline-message="true"
     >
       <!-- show-summary :summary-method="getSummaries" -->
-      <el-table border :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px" @selection-change="handleSelectionChange">
+        <el-table-column fixed="left" width="40" label="选择" type="selection" align="center" />
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="120" align="center" />
 
@@ -300,6 +301,7 @@
                 value-format="x"
                 placeholder="请选择期望到货日期"
                 class="!w-1/1"
+                @change="(val) => batchChange(row, val, 'expectArrivalDate')"
               />
             </el-form-item>
           </template>
@@ -315,6 +317,7 @@
                 value-format="x"
                 placeholder="选择交货日期"
                 class="!w-100%"
+                @change="(val) => batchChange(row, val, 'deliveryTime')"
               />
             </el-form-item>
           </template>
@@ -443,6 +446,7 @@ import InspectionJsonForm from './InspectionJsonForm.vue'
 import CompletionJsonForm from './CompletionJsonForm.vue'
 import { InfoKeyOpenFormData } from '../hooks/injectKeys'
 import { getWMSWarehouseList } from '@/commonData/wms'
+import { useBatchChange } from '@/hooks/common/useBatch'
 
 const props = defineProps({
   items: {
@@ -514,6 +518,8 @@ const openJsonList = (type: string, index: number) => {
   map[type]()
 }
 
+const { addSelectionId, handleSelectionChange, batchChange } = useBatchChange(formData)
+
 /** 初始化设置入库项 */
 watch(
   () => props.items,
@@ -542,6 +548,7 @@ watch(
 
     // 编辑回显
     computeGrossPriceAndGrossTotalPrice(val, keyMap)
+    addSelectionId(val)
 
     // // 循环处理
     // val.forEach((item) => {

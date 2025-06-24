@@ -31,8 +31,10 @@ export const createWholeOrderSelectSummaries = (
   computeList: Array<{
     wholeOrdeColumnKey: string
     wholeOrderKey: string
+    wholeOrderTotalKey?: string
     itemsColumnKey: string
     itemsKey: string
+    itemsTotalKey?: string
     formatter?: Function
   }>,
   selectionList: any

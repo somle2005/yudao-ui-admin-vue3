@@ -8,7 +8,6 @@
       :showOverflowTooltip="showOverflowTooltip"
       :data="tableData"
       :border="border"
-      :tooltip="tooltip"
       v-bind="TableAttrs()"
       @row-click="rowClick"
       class="SmTable-el-table"

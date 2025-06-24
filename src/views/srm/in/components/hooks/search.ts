@@ -1,10 +1,11 @@
-import { getProductList, getSupplierList, getUserList } from '@/commonData'
+import { getDeptTree, getProductList, getSupplierList, getUserList } from '@/commonData'
 import { FormOptions } from '@/components/SmForm/src/types/types'
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   // const userList = getUserList()
   const productList = getProductList(null, { label: 'code', value: 'id' })
+  const { deptList, defaultProps } = getDeptTree()
   // const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
     // 订单单号
@@ -23,9 +24,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择产品编码',
-      prop: 'productId',
+      prop: 'productIds',
       label: '产品编码',
       attrs: {
+        multiple: true,
         clearable: true,
         filterable: true,
         class: '!w-240px',
@@ -34,6 +36,25 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: productList
+    },
+    {
+      type: 'tree-select',
+      placeholder: '请选择申请部门',
+      prop: 'applicationDeptIds',
+      label: '申请部门',
+      attrs: {
+        multiple: true,
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        data: deptList,
+        props: defaultProps,
+        'check-strictly': true,
+        'node-key': 'id'
+        // style: {
+        //   width: '100%'
+        // }
+      }
     },
     // 订单时间
     // {

@@ -181,7 +181,7 @@ export const useTable = () => {
     },
 
     // 行才展示这些价格就不汇总计算了-接口items里面有返回
-    itemsActTaxPrice: {
+    itemsGrossPrice: {
       label: '含税单价',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
       // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute

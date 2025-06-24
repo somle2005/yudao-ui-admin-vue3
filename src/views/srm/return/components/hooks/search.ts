@@ -1,5 +1,6 @@
 import {
   getAccountList,
+  getDeptTree,
   getProductList,
   getSupplierList,
   getUserList,
@@ -11,6 +12,7 @@ import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 
 export const useSearchForm = (handleQuery, queryParams) => {
   const productList = getProductList(null, { label: 'code', value: 'id' })
+  const { deptList, defaultProps } = getDeptTree()
   // const supplierList = getSupplierList()
   const searchFormOptions = ref<Array<FormOptions>>([
     // 入库单号
@@ -29,9 +31,10 @@ export const useSearchForm = (handleQuery, queryParams) => {
     {
       type: 'select',
       placeholder: '请选择产品编码',
-      prop: 'productId',
+      prop: 'productIds',
       label: '产品编码',
       attrs: {
+        multiple: true,
         clearable: true,
         filterable: true,
         class: '!w-240px',
@@ -40,6 +43,26 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: productList
+    },
+
+    {
+      type: 'tree-select',
+      placeholder: '请选择申请部门',
+      prop: 'applicationDeptIds',
+      label: '申请部门',
+      attrs: {
+        multiple: true,
+        class: '!w-240px',
+        filterable: true,
+        clearable: true,
+        data: deptList,
+        props: defaultProps,
+        'check-strictly': true,
+        'node-key': 'id'
+        // style: {
+        //   width: '100%'
+        // }
+      }
     },
 
     {
@@ -56,7 +79,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
         }
       },
       children: getIntDictOptions(DICT_TYPE.SRM_STORAGE_STATUS).slice(1)
-    },
+    }
 
     // {
     //   type: 'select',
@@ -100,8 +123,6 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //   },
     //   children: getIntDictOptions(DICT_TYPE.SRM_AUDIT_STATUS)
     // },
-
-
 
     // {
     //   type: 'select',

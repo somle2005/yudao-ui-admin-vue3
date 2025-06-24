@@ -39,7 +39,15 @@ export const getMainItemBodyDataField = (data: MainItemBodyDataFieldProp) => {
   try {
     const { queryParams, configList = [] } = data || {}
     const queryData = cloneDeep(queryParams)
-    const bodyData: any = {}
+    let bodyData: any = {}
+    // 主单查询-主表添加后-删除-子表中不出现
+    const mainIndex = configList.findIndex((item) => item.name === 'main')
+    if (mainIndex !== -1) {
+      const { fieldList } = configList[mainIndex]
+      bodyData = filterObjKey(queryData, fieldList)
+      configList.splice(mainIndex, 1)
+    }
+
     configList.forEach((item) => {
       bodyData[item.name] = {}
       bodyData[item.name] = filterObjKey(queryData, item.fieldList)

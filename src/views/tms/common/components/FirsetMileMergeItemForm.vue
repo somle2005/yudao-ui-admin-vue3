@@ -36,7 +36,6 @@
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.fbaBarCode`"
-              :rules="formRules.fbaBarCode"
               class="mb-0px!"
             >
               <el-input v-model="row.fbaBarCode" placeholder="请输入FBA条码" />
@@ -257,7 +256,7 @@ const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
   qty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
-  fbaBarCode: [{ required: true, message: 'FBA条码不能为空', trigger: 'blur' }],
+  // fbaBarCode: [{ required: true, message: 'FBA条码不能为空', trigger: 'blur' }],
   boxQty: [{ required: true, message: '箱数不能为空', trigger: 'blur' }]
 })
 const formRef = ref() // 表单 Ref

@@ -163,6 +163,7 @@ import { reduce } from 'lodash-es'
 import { reduceVal } from '@/utils/transformData'
 import { createSelectSummaries, createWholeOrderSelectSummaries } from '@/utils/create'
 import { transformDecimal3 } from '../common/utils'
+import { getMainItemBodyDataField } from '@/utils/transform'
 
 let {
   allOptions,
@@ -209,7 +210,28 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await FirstMileRequestApi.getFirstMileRequestPage(queryParams)
+    const bodyData = getMainItemBodyDataField({
+      queryParams,
+      configList: [
+        {
+          name: 'main',
+          fieldList: [
+            'code',
+            'requesterId',
+            'requestDeptIds',
+            'toWarehouseId',
+            'auditStatus',
+            'orderStatus',
+            'offStatus'
+          ]
+        },
+        {
+          name: 'item',
+          fieldList: ['productIds']
+        }
+      ]
+    })
+    const data = await FirstMileRequestApi.getFirstMileRequestPage(bodyData)
     // list.value = data.list
     // total.value = data.total
     switchList(list, total, data)
@@ -299,14 +321,14 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   [
     {
       itemsColumnKey: 'itemsPackageWeight',
-      itemsKey: 'itemsTotalPackageWeight',
+      itemsKey: 'itemsPackageWeight', // 'itemsTotalPackageWeight'
       wholeOrdeColumnKey: 'totalPackageWeight',
       wholeOrderKey: 'totalPackageWeight',
       formatter: transformDecimal3
     },
     {
       itemsColumnKey: 'itemsVolume',
-      itemsKey: 'itemsTotalVolume',
+      itemsKey: 'itemsVolume', // 'itemsTotalVolume'
       wholeOrdeColumnKey: 'totalVolume',
       wholeOrderKey: 'totalVolume',
       formatter: transformDecimal3

@@ -201,7 +201,7 @@ const fieldMap = {
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
 
-  itemsActTaxPrice: {
+  itemsGrossPrice: {
     label: '含税单价'
     // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
   },

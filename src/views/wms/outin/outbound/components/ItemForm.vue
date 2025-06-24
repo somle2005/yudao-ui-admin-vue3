@@ -100,6 +100,8 @@
           </template>
         </el-table-column>
 
+        <el-table-column prop="purchaseOrderCode" label="采购订单编码" width="120" align="center" />
+
         <el-table-column label="备注" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
