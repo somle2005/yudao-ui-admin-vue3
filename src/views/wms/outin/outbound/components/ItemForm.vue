@@ -55,9 +55,9 @@
 
         <!-- <el-table-column prop="binName" label="库位" width="120" align="center" /> -->
 
-        <el-table-column label="库位" width="120" align="center">
+        <el-table-column label="库位*" width="120" align="center">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.binId`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.binId`" :rules="formRules.binId" class="mb-0px!">
               <SmSelect
                 :disabled="disabled"
                 v-model="row.binId"
@@ -207,7 +207,8 @@ const formLoading = ref(false) // 表单的加载中
 const formData: any = ref([])
 const formRules = reactive({
   productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }]
+  planQty: [{ required: true, message: '数量不能为空', trigger: 'blur' }],
+  binId: [{ required: true, message: '库位不能为空', trigger: 'blur' }]
   // planQty: planQtyRuleList
 })
 const formRef = ref([]) // 表单 Ref
