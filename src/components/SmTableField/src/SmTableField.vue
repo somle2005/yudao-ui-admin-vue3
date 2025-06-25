@@ -1,3 +1,83 @@
+<template>
+  <div id="table-options">
+    <Icon icon="ep:setting" :size="iconSize" style="cursor: pointer" @click="clickIcon" />
+    <ElDialog :width="dialogWidth" v-model="dialogTable" draggable>
+      <div class="dialog-table">
+        <ElTable
+          class="!h-100% table-options-table"
+          ref="elTableRef"
+          :data="tableData"
+          row-key="prop"
+          border
+          default-expand-all
+        >
+          <ElTableColumn
+            v-for="item in columnData"
+            :prop="item.prop"
+            :key="item.prop"
+            :label="item.label"
+            :width="item.width"
+            align="center"
+          >
+            <template v-if="item.prop === 'originLabel'" #default="{ row }">
+              <span>{{ row.originLabel }}</span>
+            </template>
+            <template v-else-if="item.prop === 'label'" #default="{ row }">
+              <ElInput size="small" v-model="row.label" />
+            </template>
+            <template v-else-if="item.prop === 'width'" #default="{ row }">
+              <SmNumber size="small" v-model="row.width" />
+            </template>
+            <template v-else-if="item.prop === 'isEnable'" #default="{ row }">
+              <ElCheckbox v-model="row.isEnable" />
+            </template>
+            <!-- <template v-else-if="item.prop === 'align'" #default="{ row }">
+              <el-select v-model="row.align" clearable placeholder="请选择左右固定">
+                <el-option
+                  v-for="dict in item.data"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </template>
+            <template v-else-if="item.prop === 'fixed'" #default="{ row }">
+              <el-select v-model="row.fixed" clearable placeholder="请选择左右固定">
+                <el-option
+                  v-for="dict in item.data"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </template> -->
+          </ElTableColumn>
+        </ElTable>
+        <div class="table-config">
+          <div class="table-config-title">排序</div>
+          <div class="table-config-content">
+            <div
+              v-for="(item, index) in tableData"
+              :key="item.prop"
+              class="item"
+              draggable="true"
+              @dragstart="handleDragStart($event, index, item)"
+              @dragover.prevent="handleDragOver($event)"
+              @dragenter.prevent="handleDragEnter($event, item)"
+            >
+              {{ item.originLabel }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-btn">
+        <ElButton @click="formClick(false)">取消</ElButton>
+        <ElButton class="m-0" type="primary" @click="formClick(true)"> 确认修改 </ElButton>
+      </div>
+    </ElDialog>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { Icon } from '@/components/Icon'
 import { PropType, ref, watch } from 'vue'
@@ -5,11 +85,12 @@ import { DEFAULT_TABLE_CONFIG_VAl } from './utils'
 import { cloneDeep, debounce } from 'lodash-es'
 
 const props = defineProps({
+  // 处理字段映射关系
   tableConfig: {
     type: Object as PropType<TableOptionsConfig>,
     default: () => {
       return {
-        originLabel: 'label',
+        originLabel: 'originLabel',
         label: 'label',
         prop: 'prop',
         width: 'width',
@@ -20,71 +101,93 @@ const props = defineProps({
       }
     }
   },
-  tableList: {
+  tableFieldOptions: {
     type: Array as PropType<Array<any>>,
-    defalult: () => {
+    default: () => {
       return []
     }
   },
   iconSize: {
     type: Number,
-    defalult: 25
+    default: 25
   }
 })
 
 const dialogTable = ref(false)
 
-// 这里还可以进行扩展提示-比如字段要求
+// 这里还可以进行扩展提示-比如字段要求 排顺序可以把sort字段放出来
 const columnData = [
-  // {
-  //   prop: 'originLabel',
-  //   label: '原字段名称'
-  // },
+  {
+    prop: 'originLabel',
+    label: '原名称',
+    width: '150px'
+  },
+  // 留给多语言用户改字段
   {
     prop: 'label',
-    label: '字段名称'
+    label: '显示名称',
+    width: '150px'
   },
   {
     prop: 'isEnable',
-    label: '是否启用'
+    label: '是否启用',
+    width: '100px'
   },
+  // 后续如果必要再扩展右侧单位下拉框
   {
     prop: 'width',
-    label: '宽度'
+    label: '宽度(px)',
+    width: '100px'
   },
   {
-    prop: 'align',
-    label: '居中方式',
-    data: [
-      {
-        label: '左',
-        value: 'left'
-      },
-      {
-        label: '中',
-        value: 'center'
-      },
-      {
-        label: '右',
-        value: 'right'
-      }
-    ]
-  },
-  {
-    prop: 'fixed',
-    label: '是否固定',
-    data: [
-      {
-        label: '左固定',
-        value: 'left'
-      },
-      {
-        label: '右固定',
-        value: 'right'
-      }
-    ]
+    prop: 'prop',
+    label: '列prop',
+    width: '200px'
   }
+  // {
+  //   prop: 'align',
+  //   label: '居中方式',
+  //   data: [
+  //     {
+  //       label: '左',
+  //       value: 'left'
+  //     },
+  //     {
+  //       label: '中',
+  //       value: 'center'
+  //     },
+  //     {
+  //       label: '右',
+  //       value: 'right'
+  //     }
+  //   ]
+  // },
+  // {
+  //   prop: 'fixed',
+  //   label: '是否固定',
+  //   data: [
+  //     {
+  //       label: '左固定',
+  //       value: 'left'
+  //     },
+  //     {
+  //       label: '右固定',
+  //       value: 'right'
+  //     }
+  //   ]
+  // }
 ]
+const extraWidth = 240 // 包含table-config宽度+其余列paddding
+let dialogWidth =
+  columnData.reduce((prev, cur) => {
+    const { width } = cur
+    if (width) {
+      return (prev += Number(width.replace('px', '')))
+    }
+    return prev
+  }, 0) +
+  extraWidth +
+  'px'
 
 const tableData = ref<Array<any>>([])
 const emits = defineEmits(['update:modelValue', 'confirm'])
@@ -93,12 +196,14 @@ let dragItem: any = {}
 
 const clickIcon = () => {
   dialogTable.value = true
+  // 重置数据 取消-右上角关闭按钮
+  tableData.value = initTableData(cloneDeep(props.tableFieldOptions))
 }
 const formClick = (val) => {
   dialogTable.value = false
   if (val) {
     emtiFilterList()
-  }
+  } 
 }
 const handleDragStart = (e, index, item) => {
   e.dataTransfer.setData('data', JSON.stringify({ index }))
@@ -123,6 +228,7 @@ const handleDragEnter = debounce((e, item) => {
 }, 100)
 
 // const transformTableData = (data: Array<TableOptionsProps>): Array<TableOptionsProps> => {
+// 通过对比是否有属性值-带上默认属性值  reverseTableConfig传递还原成外部传入的
 const transformTableData = (data: Array<TableOptionsProps>, config = props.tableConfig) => {
   const tableData = cloneDeep(data).map((temp) => {
     // const item = {} as TableOptionsProps
@@ -148,7 +254,8 @@ const handleSort = (data: Array<TableOptionsProps>) => {
 }
 
 const initTableData = (data: Array<TableOptionsProps>) => {
-  const list = transformTableData(cloneDeep(data))
+  // const list = transformTableData(cloneDeep(data))
+  const list = cloneDeep(data)
   return handleSort(list)
 }
 
@@ -163,10 +270,10 @@ const emtiFilterList = () => {
 }
 
 watch(
-  () => props.tableList,
+  () => props.tableFieldOptions,
   (newVal) => {
     if (newVal?.length) {
-      tableData.value = initTableData(newVal)
+      tableData.value = initTableData(cloneDeep(newVal))
     } else {
       tableData.value = []
     }
@@ -193,84 +300,6 @@ watch(
   }
 )
 </script>
-
-<template>
-  <div id="table-options">
-    <Icon icon="ep:setting" :size="iconSize" style="cursor: pointer" @click="clickIcon" />
-    <ElDialog width="80%" v-model="dialogTable" draggable>
-      <div class="dialog-table">
-        <ElTable
-          class="!h-100% table-options-table"
-          ref="elTableRef"
-          :data="tableData"
-          row-key="prop"
-          border
-          default-expand-all
-        >
-          <ElTableColumn
-            v-for="item in columnData"
-            :prop="item.prop"
-            :key="item.prop"
-            :label="item.label"
-          >
-            <template v-if="item.prop === 'label'" #default="{ row }">
-              <span>{{ row.label }}</span>
-            </template>
-            <!-- <template v-else-if="item.prop === 'originLabel'" #default="{ row }">
-              <span>{{ row.originLabel }}</span>
-            </template> -->
-            <template v-else-if="item.prop === 'width'" #default="{ row }">
-              <ElInput size="small" v-model="row.width" />
-            </template>
-            <template v-else-if="item.prop === 'isEnable'" #default="{ row }">
-              <ElCheckbox v-model="row.isEnable" />
-            </template>
-            <template v-else-if="item.prop === 'align'" #default="{ row }">
-              <el-select v-model="row.align" clearable placeholder="请选择左右固定">
-                <el-option
-                  v-for="dict in item.data"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                />
-              </el-select>
-            </template>
-            <template v-else-if="item.prop === 'fixed'" #default="{ row }">
-              <el-select v-model="row.fixed" clearable placeholder="请选择左右固定">
-                <el-option
-                  v-for="dict in item.data"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                />
-              </el-select>
-            </template>
-          </ElTableColumn>
-        </ElTable>
-        <div class="table-config">
-          <div class="table-config-title">排序</div>
-          <div class="table-config-content">
-            <div
-              v-for="(item, index) in tableData"
-              :key="item.prop"
-              class="item"
-              draggable="true"
-              @dragstart="handleDragStart($event, index, item)"
-              @dragover.prevent="handleDragOver($event)"
-              @dragenter.prevent="handleDragEnter($event, item)"
-            >
-              {{ item.originName }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="table-btn">
-        <ElButton @click="formClick(false)">取消</ElButton>
-        <ElButton class="m-0" type="primary" @click="formClick(true)"> 确认修改 </ElButton>
-      </div>
-    </ElDialog>
-  </div>
-</template>
 <style scoped lang="scss">
 .dialog-table {
   display: flex;
@@ -282,6 +311,7 @@ watch(
   margin-top: 20px;
 }
 .table-config-title {
+  width: 200px;
   white-space: nowrap;
   height: 40px;
   display: flex;

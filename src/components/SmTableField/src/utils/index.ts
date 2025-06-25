@@ -1,8 +1,10 @@
+// import { getUserId } from '@/utils/cache'
+import { getUserConfigList, saveOrUpdateUserConfig } from '@/api/system/user'
 import { WHOLE_ORDER_TYPE } from '@/hooks/common/wholeOrder'
-import { getUserId } from '@/utils/cache'
+import { cloneDeep } from 'lodash-es'
 
 export const DEFAULT_TABLE_CONFIG_VAl = {
-  originName: '',
+  // originLabel: '',
   prop: '',
   // width: '120px',
   // 'min-width': '120px',
@@ -11,7 +13,21 @@ export const DEFAULT_TABLE_CONFIG_VAl = {
   sort: 0 // 后期会排序
 }
 
+// 添加额外补充字段比如原字段-显示字段-进行区分
+export const addFieldProp = (data: any[]) => {
+  //  originLabel: 'originLabel', label
+  return cloneDeep(data).map((item) => {
+    item.originLabel = item.label
+    item.isEnable = DEFAULT_TABLE_CONFIG_VAl.isEnable
+    item.sort = DEFAULT_TABLE_CONFIG_VAl.sort
+    item.width = Number(item.width.toString().replace('px', ''))
+    return item
+  })
+}
+
 const tableFieldConfigKey = 'tableFieldConfig'
+
+export const enableTableFieldConfigKey = 'enable-tableFieldConfig'
 
 /**
  * 一个页面也有可能存在多个表格数据-多个配置
@@ -22,22 +38,40 @@ const tableFieldConfigKey = 'tableFieldConfig'
  * 后面大概率要改成接口调用-所以还是层级低一些好(key value格式给接口)
  * http://localhost/erp/purchase/return?abc=3 pathName经过检验不会带上url参数后缀可以作为唯一页面key
  */
-const getCacheKey = () => {
+
+/**
+  saveOrUpdateUserConfig(data: { configKey: string; configValue: string })
+  getUserConfigList(configKey)
+ */
+/**
+ *   cachekey默认使用查询接口字符串 例如/system/user-config/page 但是为了去重可以后面自己 + -1 -2 进行去重
+ *   携带这个路径的话 window.location.pathname 就会无法复用暂时去掉 唯一性交给用户cachekey去处理 去重可以比如加统一前缀 enable
+ */
+const getCacheKey = (cachekey: string) => {
   // tableFieldConfigKey + path+userId作为key
-  return tableFieldConfigKey + '-' + getUserId() + '-' + window.location.pathname
+  // return tableFieldConfigKey + '-' + getUserId() + '-' + window.location.pathname
+  return tableFieldConfigKey + '-' + cachekey
 }
 
-const getTableFieldConfig = () => {
-  const data = localStorage.getItem(getCacheKey())
-  return data ? JSON.parse(data) : {}
+// 直接取cachekey减少歧义
+export const getTableFieldConfig = async (cachekey: string) => {
+  // const configKey = getCacheKey(cachekey)
+  const configKey = cachekey
+  const data = await getUserConfigList({ configKey })
+
+  let configValue = ''
+  if (data?.list?.length) {
+    configValue = data.list[0].configValue
+  }
+
+  return configValue ? JSON.parse(configValue) : []
 }
 
-const saveTableFieldConfig = (data, dataCacheKey) => {
+// dataCacheKey
+export const saveTableFieldConfig = (data, configKey) => {
   try {
-    const cacheDataStr = localStorage.getItem(getCacheKey())
-    const cacheData = cacheDataStr ? JSON.parse(cacheDataStr) : {}
-    cacheData[dataCacheKey] = data
-    localStorage.setItem(getCacheKey(), JSON.stringify(cacheData))
+    const cache = { configKey, configValue: JSON.stringify(data) }
+    saveOrUpdateUserConfig(cache)
   } catch (e) {
     console.log(e, '报错缓存处理')
   }
@@ -79,6 +113,7 @@ export const useSmTableField = (tableOptions) => {
   }
 }
 
+// 整单分行处理
 export const useTableFieldConfigConfirm = (
   dataCacheKey,
   tableFieldColumnList,
@@ -97,7 +132,6 @@ export const useTableFieldConfigConfirm = (
   return tableFieldConfigConfirm
 }
 
-
 export const useTableFieldConfigConfirmWholeOrder = (
   wholeOrderEnable,
   dataCacheKey,
@@ -107,14 +141,12 @@ export const useTableFieldConfigConfirmWholeOrder = (
 ) => {
   // todo整单分行要做区分通过create整单分行区分
   const tableFieldConfigConfirmWholeOrder = (data) => {
-
     // 内部有兜底处理成对象{}
     const cache = getTableFieldConfig()
     // 区分-分行整单作为key
     const cacheKey = wholeOrderEnable.value ? WHOLE_ORDER_TYPE.wholeOrder : WHOLE_ORDER_TYPE.items
     cache[dataCacheKey] = cache[dataCacheKey] || {}
     cache[dataCacheKey][cacheKey] = data
-
 
     saveTableFieldConfig(cache, dataCacheKey)
     tableFieldColumnList.value = data

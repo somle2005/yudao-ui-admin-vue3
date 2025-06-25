@@ -1,6 +1,8 @@
 <template>
   <div id="SmTable">
     <!-- v-bind="$attrs" style="height:calc(100vh - 285px)"-->
+    <SmTableField v-if="isTabledField" :tableFieldOptions="tableFieldOptions" />
+
     <el-table
       ref="tableRef"
       v-loading="loading"
@@ -12,7 +14,14 @@
       @row-click="rowClick"
       class="SmTable-el-table"
     >
-      <el-table-column v-if="isSelection" fixed="left" width="40" label="选择" type="selection" align="center" />
+      <el-table-column
+        v-if="isSelection"
+        fixed="left"
+        width="40"
+        label="选择"
+        type="selection"
+        align="center"
+      />
       <!-- 后期可以补充oneSelectionAttrs进行扩展 -->
       <el-table-column v-if="oneSelection" fixed="left" align="center" width="40">
         <template #default="scope">
@@ -217,6 +226,17 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  // 是否开启表格设置齿轮
+  isTabledField: {
+    type: Boolean,
+    default: false
+  },
+  tableFieldOptions: {
+    type: Array,
+    default: () => {
+      return []
+    }
+  }
 })
 
 const emits = defineEmits([

@@ -64,6 +64,8 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      isTabledField
+      :tableFieldOptions="tableFieldOptions"
       border
       isSelection
       :loading="loading"
@@ -146,8 +148,11 @@ import { useBatch } from './hooks/useBatch'
 import { getMainItemBodyDataField } from '@/utils/transform'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { transformVolumeNum } from '@/views/tms/common/utils/index'
+import { addFieldProp, getTableFieldConfig } from '@/components/SmTableField/src/utils'
 
 let { tableOptions } = useTable()
+
+
 
 /** 头程单 列表 */
 defineOptions({ name: 'TmsFirstMile' })
@@ -274,6 +279,16 @@ const { disabledBtn, oneSelectDisabledBtn, handleUpdateStatus, handleSubmitAudit
   getList,
   openForm
 )
+
+
+const tableCacheKey = '/tms/first-mile-request/page'
+const tableFieldOptions = addFieldProp(tableOptions.value)
+console.log(tableFieldOptions,'tableFieldOptions')
+
+const testClick = async () => {
+  const data = await getTableFieldConfig(tableCacheKey)
+  console.log(data, 'data-是不是promise')
+}
 
 /** 初始化 **/
 onMounted(() => {
