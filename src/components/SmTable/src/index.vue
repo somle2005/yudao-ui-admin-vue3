@@ -1,7 +1,7 @@
 <template>
   <div id="SmTable">
     <!-- v-bind="$attrs" style="height:calc(100vh - 285px)"-->
-    <SmTableField v-if="isTabledField" :tableFieldOptions="tableFieldOptions" />
+    <SmTableField v-if="isTabledField" v-bind="tableFieldAttrs()" />
 
     <el-table
       ref="tableRef"
@@ -154,6 +154,19 @@ const TableAttrs = () => {
   return obj
 }
 
+// 事件字段都要在这里统一添加
+const tableFieldAttrs = () => {
+  const attrs = useAttrs() || {}
+  const obj: any = {}
+  const filterAttrs = ['tableFieldMap','tableFieldOptions','tableFieldKey','iconSize', 'onTableFieldConfirm']
+  for (let key in attrs) {
+    if (filterAttrs.includes(key)) {
+      obj[key] = attrs[key]
+    }
+  }
+  return obj
+}
+
 const columnItem = (item) => {
   const list = ['label', 'prop', 'width', 'align', 'formatter']
   const filterItem = {}
@@ -231,12 +244,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  tableFieldOptions: {
-    type: Array,
-    default: () => {
-      return []
-    }
-  }
 })
 
 const emits = defineEmits([

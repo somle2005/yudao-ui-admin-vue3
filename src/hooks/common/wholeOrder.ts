@@ -27,6 +27,15 @@ export const createBranchOrder = (allOptions) => {
   )
 }
 
+export const switchWholeOrderOptions = (wholeOrderEnable, tableOptions, allOptions) => {
+  if (wholeOrderEnable.value) {
+    const options = createWholeOrder(cloneDeep(allOptions))
+    tableOptions.value = options
+  } else {
+    tableOptions.value = createBranchOrder(cloneDeep(allOptions))
+  }
+}
+
 export const useWholeOrder = (
   allOptions,
   tableOptions,

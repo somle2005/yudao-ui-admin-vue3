@@ -66,7 +66,6 @@ const currentPage = computed({
     return props.currentPage
   },
   set(val) {
-    console.log('currentPage-props', val)
     // 触发 update:currentPage 事件，更新 pageSize 属性，从而更新 pageNo
     emit('update:currentPage', val)
   }

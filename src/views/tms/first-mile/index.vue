@@ -66,6 +66,8 @@
     <SmTable
       isTabledField
       :tableFieldOptions="tableFieldOptions"
+      :tableFieldKey="tableFieldKey"
+      @table-field-confirm="tableFieldConfirm"
       border
       isSelection
       :loading="loading"
@@ -148,11 +150,9 @@ import { useBatch } from './hooks/useBatch'
 import { getMainItemBodyDataField } from '@/utils/transform'
 import { getItemProp } from '@/components/SmTable/src/utils'
 import { transformVolumeNum } from '@/views/tms/common/utils/index'
-import { addFieldProp, getTableFieldConfig } from '@/components/SmTableField/src/utils'
+import { useTableField } from '@/components/SmTableField/src/hooks'
 
 let { tableOptions } = useTable()
-
-
 
 /** 头程单 列表 */
 defineOptions({ name: 'TmsFirstMile' })
@@ -280,18 +280,23 @@ const { disabledBtn, oneSelectDisabledBtn, handleUpdateStatus, handleSubmitAudit
   openForm
 )
 
+const tableFieldKey = '/tms/first-mile-request/page'
+const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useTableField(
+  tableOptions,
+  tableFieldKey
+)
 
-const tableCacheKey = '/tms/first-mile-request/page'
-const tableFieldOptions = addFieldProp(tableOptions.value)
-console.log(tableFieldOptions,'tableFieldOptions')
-
-const testClick = async () => {
-  const data = await getTableFieldConfig(tableCacheKey)
-  console.log(data, 'data-是不是promise')
+// 整单分行处理逻辑
+const tableFieldwholeOrderConfirm = (data: any[]) => {
+  // tableOptions.value = data
+  // allOptions = data
+  // switchWholeOrderOptions(wholeOrderEnable, tableOptions, allOptions)
+  console.log('tableFieldConfirm', data)
 }
 
 /** 初始化 **/
 onMounted(() => {
   getList()
+  createTableFiledOptions()
 })
 </script>

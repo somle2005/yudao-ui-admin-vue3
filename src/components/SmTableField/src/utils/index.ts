@@ -10,17 +10,30 @@ export const DEFAULT_TABLE_CONFIG_VAl = {
   // 'min-width': '120px',
   align: 'center',
   isEnable: true,
-  sort: 0 // 后期会排序
+  sort: -1 // 后期会排序 后面出去排序按照index最小0 但是新增项要是-1排到最前面
+}
+
+export const TABLE_FIDLD_MAP = {
+  originLabel: 'originLabel',
+  label: 'label',
+  prop: 'prop',
+  width: 'width',
+  align: 'align',
+  isEnable: 'isEnable',
+  sort: 'sort',
+  fixed: 'fixed'
 }
 
 // 添加额外补充字段比如原字段-显示字段-进行区分
 export const addFieldProp = (data: any[]) => {
   //  originLabel: 'originLabel', label
   return cloneDeep(data).map((item) => {
-    item.originLabel = item.label
-    item.isEnable = DEFAULT_TABLE_CONFIG_VAl.isEnable
-    item.sort = DEFAULT_TABLE_CONFIG_VAl.sort
-    item.width = Number(item.width.toString().replace('px', ''))
+    if (!item.saveFlag) {
+      item.originLabel = item.label
+      item.isEnable = DEFAULT_TABLE_CONFIG_VAl.isEnable
+      item.sort = DEFAULT_TABLE_CONFIG_VAl.sort
+      item.width = Number(item.width.toString().replace('px', ''))
+    }
     return item
   })
 }
@@ -32,7 +45,7 @@ export const enableTableFieldConfigKey = 'enable-tableFieldConfig'
 /**
  * 一个页面也有可能存在多个表格数据-多个配置
  * 一个页面只有一个唯一CacheKey 但是这个key下面可以有多个属性对象 (如果有多个key人为进行设置很容易进行冲突)
- * 外部自行拿到 getTableFieldConfig和saveTableFieldConfig进行处理
+ * 外部自行拿到 getTableFieldOptions和saveTableFieldConfig进行处理
  * 一个页面很容易有多个表格-弹窗=== 所以默认自行做成多属性对象配置
  *
  * 后面大概率要改成接口调用-所以还是层级低一些好(key value格式给接口)
@@ -54,7 +67,7 @@ const getCacheKey = (cachekey: string) => {
 }
 
 // 直接取cachekey减少歧义
-export const getTableFieldConfig = async (cachekey: string) => {
+export const getTableFieldOptions = async (cachekey: string) => {
   // const configKey = getCacheKey(cachekey)
   const configKey = cachekey
   const data = await getUserConfigList({ configKey })
@@ -68,10 +81,10 @@ export const getTableFieldConfig = async (cachekey: string) => {
 }
 
 // dataCacheKey
-export const saveTableFieldConfig = (data, configKey) => {
+export const saveTableFieldConfig = async (data, configKey) => {
   try {
     const cache = { configKey, configValue: JSON.stringify(data) }
-    saveOrUpdateUserConfig(cache)
+    await saveOrUpdateUserConfig(cache)
   } catch (e) {
     console.log(e, '报错缓存处理')
   }
@@ -79,7 +92,7 @@ export const saveTableFieldConfig = (data, configKey) => {
 
 const transformTableFieldConfig = (tableOptions) => {
   // 如果没有缓存或者数据库数据 初始化
-  const persistData = getTableFieldConfig()
+  const persistData = getTableFieldOptions()
   if (!persistData?.length) return tableOptions
   return persistData
 }
@@ -107,7 +120,7 @@ export const useSmTableField = (tableOptions) => {
   return {
     tableFieldColumnList,
     saveTableFieldConfig,
-    getTableFieldConfig,
+    getTableFieldOptions,
     transformTableFieldConfig,
     dealTableField
   }
@@ -142,7 +155,7 @@ export const useTableFieldConfigConfirmWholeOrder = (
   // todo整单分行要做区分通过create整单分行区分
   const tableFieldConfigConfirmWholeOrder = (data) => {
     // 内部有兜底处理成对象{}
-    const cache = getTableFieldConfig()
+    const cache = getTableFieldOptions()
     // 区分-分行整单作为key
     const cacheKey = wholeOrderEnable.value ? WHOLE_ORDER_TYPE.wholeOrder : WHOLE_ORDER_TYPE.items
     cache[dataCacheKey] = cache[dataCacheKey] || {}

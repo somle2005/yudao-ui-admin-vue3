@@ -72,7 +72,9 @@
       </div>
       <div class="table-btn">
         <ElButton @click="formClick(false)">取消</ElButton>
-        <ElButton class="m-0" type="primary" @click="formClick(true)"> 确认修改 </ElButton>
+        <ElButton v-loading="loading" class="m-0" type="primary" @click="formClick(true)">
+          确认修改
+        </ElButton>
       </div>
     </ElDialog>
   </div>
@@ -81,24 +83,15 @@
 <script setup lang="ts">
 import { Icon } from '@/components/Icon'
 import { PropType, ref, watch } from 'vue'
-import { DEFAULT_TABLE_CONFIG_VAl } from './utils'
+import { DEFAULT_TABLE_CONFIG_VAl, saveTableFieldConfig, TABLE_FIDLD_MAP } from './utils'
 import { cloneDeep, debounce } from 'lodash-es'
 
 const props = defineProps({
   // 处理字段映射关系
-  tableConfig: {
+  tableFieldMap: {
     type: Object as PropType<TableOptionsConfig>,
     default: () => {
-      return {
-        originLabel: 'originLabel',
-        label: 'label',
-        prop: 'prop',
-        width: 'width',
-        align: 'align',
-        isEnable: 'isEnable',
-        sort: 'sort',
-        fixed: 'fixed'
-      }
+      return TABLE_FIDLD_MAP
     }
   },
   tableFieldOptions: {
@@ -107,13 +100,21 @@ const props = defineProps({
       return []
     }
   },
+  // 开启之后才是必填项
+  tableFieldKey: {
+    type: String,
+    default: ''
+  },
   iconSize: {
     type: Number,
     default: 25
   }
 })
 
+const message = useMessage() // 消息弹窗
+
 const dialogTable = ref(false)
+const loading = ref(false)
 
 // 这里还可以进行扩展提示-比如字段要求 排顺序可以把sort字段放出来
 const columnData = [
@@ -190,7 +191,7 @@ let dialogWidth =
   'px'
 
 const tableData = ref<Array<any>>([])
-const emits = defineEmits(['update:modelValue', 'confirm'])
+const emits = defineEmits(['update:modelValue', 'TableField-confirm'])
 
 let dragItem: any = {}
 
@@ -203,7 +204,7 @@ const formClick = (val) => {
   dialogTable.value = false
   if (val) {
     emtiFilterList()
-  } 
+  }
 }
 const handleDragStart = (e, index, item) => {
   e.dataTransfer.setData('data', JSON.stringify({ index }))
@@ -229,16 +230,19 @@ const handleDragEnter = debounce((e, item) => {
 
 // const transformTableData = (data: Array<TableOptionsProps>): Array<TableOptionsProps> => {
 // 通过对比是否有属性值-带上默认属性值  reverseTableConfig传递还原成外部传入的
-const transformTableData = (data: Array<TableOptionsProps>, config = props.tableConfig) => {
+// const transformTableData = (data: Array<TableOptionsProps>, config = props.tableFieldMap
+const transformTableData = (data: Array<TableOptionsProps>, config) => {
   const tableData = cloneDeep(data).map((temp) => {
     // const item = {} as TableOptionsProps
     const item = {}
     for (const key in config) {
-      item[key] =
-        temp[config[key]] !== undefined && temp[config[key]] !== null
-          ? temp[config[key]]
-          : DEFAULT_TABLE_CONFIG_VAl[key]
+      // item[key] =
+      //   temp[config[key]] !== undefined && temp[config[key]] !== null
+      //     ? temp[config[key]]
+      //     : DEFAULT_TABLE_CONFIG_VAl[key]
+      item[key] = temp[config[key]]
     }
+    Object.assign(item, temp)
     return item
   })
   return tableData
@@ -259,14 +263,28 @@ const initTableData = (data: Array<TableOptionsProps>) => {
   return handleSort(list)
 }
 
-const emtiFilterList = () => {
-  // 还原成外部传进来的值,方便外部table表格组件处理数据-(同时内部组件的初始化逻辑始终一致)
-  const reverseTableConfig: any = {}
-  for (const key in props.tableConfig) {
-    reverseTableConfig[props.tableConfig[key]] = key
+const emtiFilterList = async () => {
+  try {
+    // 还原成外部传进来的值,方便外部table表格组件处理数据-(同时内部组件的初始化逻辑始终一致)
+    const reverseTableConfig: any = {}
+    for (const key in props.tableFieldMap) {
+      reverseTableConfig[props.tableFieldMap[key]] = key
+    }
+    const restoreValue = transformTableData(tableData.value, reverseTableConfig)
+    // 需要有保存标记字段saveFlag=true 确保有没有保存过 内部addFieldProp才会带上默认值和扩展字段
+    restoreValue.forEach((item: any) => {
+      item.saveFlag = true
+    })
+
+    console.log(restoreValue, 'restoreValue')
+    await saveTableFieldConfig(restoreValue, props.tableFieldKey)
+    message.success('保存成功')
+
+    // 还是得交给外部处理整单分行
+    emits('TableField-confirm', restoreValue, cloneDeep(tableData.value))
+  } finally {
+    loading.value = false
   }
-  const restoreValue = transformTableData(tableData.value, reverseTableConfig)
-  emits('confirm', restoreValue)
 }
 
 watch(
@@ -284,7 +302,7 @@ watch(
   }
 )
 watch(
-  () => props.tableConfig,
+  () => props.tableFieldMap,
   () => {},
   {
     deep: true,
