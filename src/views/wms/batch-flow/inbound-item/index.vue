@@ -105,8 +105,8 @@ const fieldMap = {
   productCode: '产品编码',
   // binAvailableQty: '库位库存',
   // stockWarehouseTotalQty: '库存总数', // availableQty+shelvingPendingQty
-  actualQty: '库位库存',
-  binAvailableQty: '库存总数', // availableQty+shelvingPendingQty
+  binAvailableQty: '库位库存',
+  outboundAvailableQty: '库存总数', // availableQty+shelvingPendingQty
 
   binOutboundPendingQty: '待出数量',
   inboundCode: '入库单号',
