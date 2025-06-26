@@ -59,3 +59,13 @@ export const getMainItemBodyDataField = (data: MainItemBodyDataFieldProp) => {
     console.log(e, '报错')
   }
 }
+
+// data项item 取map中key映射到 item[map[key]] 取键key映射到键值
+export const dataKeyToMapKey = (data: any[], map: { [key: string]: string }) => {
+  data.forEach((item) => {
+    for (const key in map) {
+      item[map[key]] = item[key]
+    }
+  })
+  return data
+}

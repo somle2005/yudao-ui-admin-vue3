@@ -233,6 +233,7 @@ let {
   useWholeOrder
 } = useTable()
 
+const summary = ref({})
 /** 查询列表 */
 const getList = async () => {
   loading.value = true
@@ -250,52 +251,8 @@ const getList = async () => {
 
     bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
     const data = await PurchaseInApi.getPurchaseInPage(bodyData)
-
-    // todo取出items里面对应对象数据
-
-    // data.list.forEach((item) => {
-    //   if (!item?.items?.length) return
-    //   item.items.forEach((a) => {
-    //     if (a.product) {
-    //       a.productName = a.product.name
-    //       a.productCode = a.product.code
-    //     }
-
-    //     // item.itemApplicantName = item.applicantName
-    //     // item.itemApplicationDeptName = item.applicationDeptName
-    //   })
-    // })
-
     switchList(list, total, data)
-
-    // 替换后
-
-    // itemsList.value = mergeItemsToList(data.list, {
-    //   id: 'itemsId',
-    //   status: 'itemsStatus',
-    //   orderStatus: 'itemsOrderStatus',
-    //   offStatus: 'itemsOffStatus',
-    //   executeStatus: 'itemsExecuteStatus',
-    //   inboundStatus: 'itemsInboundStatus',
-    //   payStatus: 'itemsPayStatus',
-    //   totalPrice: 'itemsTotalPrice',
-    //   code: 'itemsProductCode',
-    //   qty: 'itemsQty'
-    // })
-
-    // 替换前
-    // itemsList.value = mergeItemsToList(data.list, {
-    //   id: 'rowItemsId',
-    //   status: 'rowStatus',
-    //   orderStatus: 'rowOrderStatus',
-    //   offStatus: 'rowOffStatus',
-    //   executeStatus: 'rowExecuteStatus',
-    //   inboundStatus: 'rowInStatus',
-    //   payStatus: 'rowPayStatus',
-    //   totalPrice: 'itemTotalPrice',
-    //   code: 'rowBarCode',
-    //   qty: 'itemQty'
-    // })
+    summary.value = data.summary || {}
   } finally {
     loading.value = false
   }
@@ -377,23 +334,28 @@ const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatus
 
 const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
-// 箱率     itemsContainerRate
+
+
+
+
+
+// totalVolume字段前端注意转化后端格式 formatter
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'totalPrice', wholeOrderKey: 'totalPrice' },
-    { itemsKey: 'totalItemsQty', wholeOrderKey: 'totalItemsQty' },
+    { itemsKey: 'totalPrice', wholeOrderKey: 'totalPrice' }, // sumTotalPrice 总价
+    { itemsKey: 'totalItemsQty', wholeOrderKey: 'totalItemsQty' }, // totalItemsQty总数量用 sumQty 到货数量 计算的是到货单的总数量(分行可能同一个到货单-总数量一致)
     { itemsKey: 'totalWeight', wholeOrderKey: 'totalWeight' },
     { itemsKey: 'totalVolume', wholeOrderKey: 'totalVolume' },
 
-    { itemsKey: 'itemsQty' },
-    { itemsKey: 'itemsActualQty' },
+    { itemsKey: 'itemsQty' }, // sumQty 到货数量
+    { itemsKey: 'itemsActualQty' }, // sumActualQty 实际入库数量
     { itemsKey: 'itemsOrderQty' },
     { itemsKey: 'itemsProductPrice' },
 
     { itemsKey: 'itemsGrossPrice' },
-    { itemsKey: 'itemsTax' },
-    { itemsKey: 'itemsGrossTotalPrice' }
+    { itemsKey: 'itemsTax' }, // sumTax 税额
+    { itemsKey: 'itemsGrossTotalPrice' } // sumGrossTotalPrice 价税合计
   ].map((item: any) => {
     return {
       wholeOrdeColumnKey: item.wholeOrderKey,
@@ -403,7 +365,8 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
       formatter: transformDecimal3
     }
   }),
-  selectionList
+  selectionList,
+  summary
 )
 
 /** 初始化 **/

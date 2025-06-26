@@ -1,7 +1,5 @@
 <template>
-  <div @click="clearCache">
-    清除缓存
-  </div>
+  <div @click="clearCache"> 清除缓存 </div>
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
@@ -110,7 +108,6 @@
       :tableFieldOptions="tableFieldOptions"
       :tableFieldKey="tableFieldKey"
       @table-field-confirm="tableFieldConfirm"
-
       show-summary
       :summary-method="getWholeOrderSelectSummaries"
       isSelection
@@ -219,8 +216,6 @@ import { createWholeOrderSelectSummaries } from '@/utils/create'
 import { transformDecimal3 } from '@/views/tms/common/utils'
 import { useWholeOrderTableField } from '@/components/SmTableField/src/hooks'
 import { clearTableFieldConfig } from '@/components/SmTableField/src/utils'
-
-
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -435,6 +430,7 @@ const getItemsId = () => {
   return ids
 }
 
+const summary = ref({})
 /** 查询列表 */
 const getList = async () => {
   selectionList.value = []
@@ -455,6 +451,8 @@ const getList = async () => {
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
+
+    summary.value = data.summary || {}
   } finally {
     loading.value = false
   }
@@ -677,7 +675,6 @@ const clearCache = () => {
 }
 
 const { handleWholeOrderEnable } = useWholeOrder(
-  createTableFiledOptions,
   allOptions,
   tableOptions,
   selectionList,
@@ -686,16 +683,18 @@ const { handleWholeOrderEnable } = useWholeOrder(
   itemsList,
   itemsTotal,
   wholeOrderList,
-  wholeOrderTotal
+  wholeOrderTotal,
+  createTableFiledOptions
 )
 
 const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
-// 只有分行没有整单
+
+// 只有分行没有整单 wholeOrderTotalKey, itemsTotalKey
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'itemsUnOrderCount' }, // 
+    { itemsKey: 'itemsUnOrderCount' }, //
     { itemsKey: 'itemsOrderClosedQty' }, // sumOrderClosedQty-产品已订购数量
     { itemsKey: 'itemsInboundClosedQty' }, // sumInboundClosedQty入库数量
 
@@ -712,7 +711,8 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
       formatter: transformDecimal3
     }
   }),
-  selectionList
+  selectionList,
+  summary
 )
 
 /** 初始化 **/

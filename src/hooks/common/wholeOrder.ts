@@ -75,7 +75,6 @@ export const switchWholeOrderOptions = (
 }
 
 export const useWholeOrder = (
-  createTableFiledOptions,
   allOptions,
   tableOptions,
   selectionList,
@@ -84,7 +83,8 @@ export const useWholeOrder = (
   itemsList,
   itemsTotal,
   wholeOrderList,
-  wholeOrderTotal
+  wholeOrderTotal,
+  createTableFiledOptions?
 ) => {
   const handleWholeOrderEnable = (val) => {
     try {
@@ -108,7 +108,10 @@ export const useWholeOrder = (
         total.value = itemsTotal.value
       }
       selectionList.value = []
-      createTableFiledOptions()
+
+      if (createTableFiledOptions) {
+        createTableFiledOptions()
+      }
     } catch (e) {
       console.log(e, '报错了')
     }

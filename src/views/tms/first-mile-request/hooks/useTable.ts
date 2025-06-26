@@ -9,6 +9,7 @@ import { formatDecimalFormatter } from '@/utils/num'
 import { mergeItemsUpToList } from '@/utils/transformData'
 import { cloneDeep } from 'lodash-es'
 import { transformVolumeColumn, transformVolumeNum } from '../../common/utils'
+import { dataKeyToMapKey } from '@/utils/transform'
 
 export const useTable = () => {
   const { tableOptions, transformTableOptions } = useTableData()
@@ -46,7 +47,7 @@ export const useTable = () => {
     totalPackageWeight: '总重量(kg)', // 取总毛重
     // totalWeight: '总重量(kg)',
     totalVolume: {
-      label: '总体积(m³)',
+      label: '总体积(m³)'
       // formatter: transformVolumeColumn
     },
 
@@ -158,14 +159,14 @@ export const useTable = () => {
     })
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsUpToList(data.list)
-    itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+    // itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+    itemsList.value = dataKeyToMapKey(itemsList.value, { itemsQty: 'totalItemsQty' })
 
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
-    console.log(list.value, 'list.value-1')
   }
 
   return {

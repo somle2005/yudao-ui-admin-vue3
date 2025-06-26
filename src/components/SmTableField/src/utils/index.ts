@@ -101,7 +101,6 @@ export const saveTableFieldConfig = async (data, configKey) => {
 
 export const saveWholeOrderTableFieldConfig = async (data, configKey) => {
   try {
-    console.log('整单分行进行报错')
     const cacheData = (await getTableFieldOptions(configKey)) || {}
     Object.assign(cacheData, data)
     const cache = { configKey, configValue: JSON.stringify(cacheData) }

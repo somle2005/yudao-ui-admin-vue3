@@ -6,6 +6,7 @@ import {
   useWholeOrderMergeComputeUp
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
+import { dataKeyToMapKey } from '@/utils/transform'
 import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
 import { transformVolumeColumn, transformVolumeNum } from '@/views/tms/common/utils'
 import { cloneDeep } from 'lodash-es'
@@ -112,7 +113,7 @@ export const useTable = () => {
     totalWeight: '总毛重',
     totalVolume: {
       label: '总体积(m³)',
-      hideSort: true,
+      hideSort: true
       // formatter: transformVolumeColumn
     },
 
@@ -320,7 +321,6 @@ export const useTable = () => {
 
   // 整单分行列表切换
   const switchList = (list: any, total, data: any) => {
-
     /**
      * 防止后期值不明确来自哪里-统一命名-1
      * WHOLE_ORDER_TYPE.items-状态下的值都需要同步更名-1
@@ -328,13 +328,15 @@ export const useTable = () => {
      * PurchaseInPaymentEnableList-可选列表值也要注意修改
      * 如果有别名id注意自己进行适配
      */
-    data.list.forEach(item=> {
+    data.list.forEach((item) => {
       item.totalVolume = transformVolumeNum(item.totalVolume)
     })
 
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsUpToList(data.list, 'items', { qty: 'itemsQty1' })
-    itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+    // 分行的时候还是取itemsQty不进行合并计算不然整单-总计值会对应不起来
+    // itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+    itemsList.value = dataKeyToMapKey(itemsList.value, { itemsQty: 'totalItemsQty' })
 
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total

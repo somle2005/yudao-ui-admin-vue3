@@ -503,6 +503,7 @@ const queryParams = reactive({
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
 
+const summary = ref({})
 /** 查询列表 */
 const getList = async () => {
   loading.value = true
@@ -514,50 +515,6 @@ const getList = async () => {
     // })
     // bodyData.itemQuery.inboundStatus = queryParams.itemsInboundStatus
     const data = await PurchaseOrderApi.getPurchaseOrderPage(queryParams)
-
-    // data.list.forEach((item) => {
-    //   if (!item?.items?.length) return
-    //   item.items.forEach((a) => {
-    //     if (a.product) {
-    //       a.productName = a.product.name
-    //       a.productCode = a.product.code
-    //     }
-    //     // const purchaseRequestItem = a.purchaseRequestItem
-    //     // if (purchaseRequestItem) {
-    //     //   const { creator, departmentName } = purchaseRequestItem
-    //     //   item.PRItemCreator = creator
-    //     //   item.PRItemDepartmentName = departmentName
-    //     // }
-    //     // const { applicantName, departmentName } = a
-    //     // item.itemApplicantName = applicantName
-    //     // item.itemDepartmentName = departmentName
-    //   })
-    // })
-
-    // 修改前
-    // itemsList.value = mergeItemsToList(data.list, {
-    //   id: 'rowItemsId',
-    //   status: 'rowStatus',
-    //   // orderStatus: 'rowOrderStatus', 无该状态
-    //   offStatus: 'rowOffStatus',
-    //   executeStatus: 'rowExecuteStatus',
-    //   inboundStatus: 'rowInStatus',
-    //   payStatus: 'rowPayStatus'
-    //   // currencyName: 'itemCurrencyName',
-    // })
-
-    // 修改后
-    // itemsList.value = mergeItemsToList(data.list, {
-    //   id: 'itemsId',
-    //   status: 'itemsStatus',
-    //   // orderStatus: 'rowOrderStatus', 无该状态
-    //   offStatus: 'itemsOffStatus',
-    //   executeStatus: 'itemsExecuteStatus',
-    //   inboundStatus: 'itemsInboundStatus',
-    //   payStatus: 'itemsPayStatus'
-    //   // currencyName: 'itemsCurrencyName',
-    // })
-
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsUpToList(data.list, 'items', {
       purchaseApplyCode: 'purchaseApplyCode'
@@ -577,6 +534,8 @@ const getList = async () => {
 
     list.value = wholeOrderEnable.value ? wholeOrderList.value : itemsList.value
     total.value = wholeOrderEnable.value ? wholeOrderTotal.value : itemsTotal.value
+
+    summary.value = data.summary || {}
   } finally {
     loading.value = false
   }
@@ -694,23 +653,25 @@ const generateContractOrder = async () => {
   generateContract(selectionList, openForm)
 }
 
+
+
+
 // 分行-总验货通过数 整单 成交金额
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'itemsTotalInspectionPassCount', wholeOrderKey: 'totalPrice' },
-    { itemsKey: 'itemsTotalCompletionPassCount' },
-    { itemsKey: 'itemsWaitInCount' },
+    { itemsKey: 'itemsTotalInspectionPassCount', wholeOrderKey: 'totalPrice' }, // sumTotalInspectionPassCount 质检通过数量 sumTotalPrice 税额
+    { itemsKey: 'itemsTotalCompletionPassCount' }, // sumTotalCompletionPassCount 完工通过数量
 
     { itemsKey: 'itemsWaitInCount' },
-    { itemsKey: 'itemsQty' },
-    { itemsKey: 'itemsInboundClosedQty' },
-    { itemsKey: 'itemsReturnCount' },
+    { itemsKey: 'itemsQty' }, // sumQty 下单数量
+    { itemsKey: 'itemsInboundClosedQty' }, // sumInboundClosedQty 入库数量
+    { itemsKey: 'itemsReturnCount' }, // sumReturnCount 退货数量
 
-    { itemsKey: 'itemsGrossPrice' },
-    { itemsKey: 'itemsTax' },
-    { itemsKey: 'itemsGrossTotalPrice' },
-    { itemsKey: 'itemsPayPrice' }
+    { itemsKey: 'itemsGrossPrice' }, // sumGrossPrice 含税单价 
+    { itemsKey: 'itemsTax' }, // sumTax 税额
+    { itemsKey: 'itemsGrossTotalPrice' }, // sumGrossTotalPrice 价税合计
+    { itemsKey: 'itemsPayPrice' } // sumPayPrice 已付款金额
   ].map((item: any) => {
     return {
       wholeOrdeColumnKey: item.wholeOrderKey,
@@ -720,7 +681,8 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
       formatter: transformDecimal3
     }
   }),
-  selectionList
+  selectionList,
+  summary
 )
 
 // TODO 芋艿：可优化功能：列表界面，支持导入

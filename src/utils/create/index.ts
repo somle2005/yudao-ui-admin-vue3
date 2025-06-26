@@ -37,7 +37,8 @@ export const createWholeOrderSelectSummaries = (
     itemsTotalKey?: string
     formatter?: Function
   }>,
-  selectionList: any
+  selectionList: any,
+  summary
 ) => {
   /** 合计 */
   const getWholeOrderSelectSummaries = (param: any) => {
@@ -63,11 +64,11 @@ export const createWholeOrderSelectSummaries = (
 
         // 看后端这种总值是否是list[0]-还是data-再提供一个接口进行带出
         if (wholeOrderEnable.value) {
-          // sum = data[wholeOrderTotalKey]
-          sum = 200
+          sum = unref(summary)[wholeOrderTotalKey]
+          // sum = 200
         } else {
-          // sum = data[itemsTotalKey]
-          sum = 300
+          sum = unref(summary)[itemsTotalKey]
+          // sum = 300
         }
         // sum过滤
         sums[index] = formatter ? formatter(sum) : sum
@@ -90,8 +91,7 @@ export const createWholeOrderSelectSummaries = (
         sums[index] = ''
         return
       }
-      computeColumn(sums)
-      // selectList.length ? computeColumn(sums) : resolveTotal(sums)
+      selectList.length ? computeColumn(sums) : resolveTotal(sums)
     })
     return sums
   }

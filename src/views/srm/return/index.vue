@@ -225,6 +225,7 @@ let {
   useWholeOrder
 } = useTable()
 
+const summary = ref({})
 /** 查询列表 */
 const getList = async () => {
   loading.value = true
@@ -246,16 +247,7 @@ const getList = async () => {
     bodyData.itemQuery.outboundStatus = queryParams.itemsOutboundStatus
     const data = await PurchaseReturnApi.getPurchaseReturnPage(bodyData)
     switchList(list, total, data)
-
-    // itemsList.value = mergeItemsToList(data.list, {
-    //   id: 'itemsId',
-    //   status: 'itemsStatus',
-    //   orderStatus: 'itemsOrderStatus',
-    //   offStatus: 'itemsOffStatus',
-    //   executeStatus: 'itemsExecuteStatus',
-    //   inboundStatus: 'itemsInboundStatus',
-    //   payStatus: 'itemsPayStatus'
-    // })
+    summary.value = data.summary || {}
   } finally {
     loading.value = false
   }
@@ -336,20 +328,23 @@ const {
   changeRefundStatusBatch
 } = useBatch(selectionList, getList, wholeOrderEnable, openForm)
 
-// 箱率 itemsContainerRate
+
+
+
+// totalVolume注意可能要formatter转化
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'totalPrice', wholeOrderKey: 'totalPrice' },
+    { itemsKey: 'totalPrice', wholeOrderKey: 'totalPrice' }, // sumTotalPrice 总价
     { itemsKey: 'totalReturnCount', wholeOrderKey: 'totalReturnCount' },
     { itemsKey: 'totalWeight', wholeOrderKey: 'totalWeight' },
     { itemsKey: 'totalVolume', wholeOrderKey: 'totalVolume' },
 
-    { itemsKey: 'itemsQty' },
+    { itemsKey: 'itemsQty' }, // sumQty 数量
 
     { itemsKey: 'itemsProductPrice' },
     { itemsKey: 'itemsGrossPrice' },
-    { itemsKey: 'itemsTax' },
+    { itemsKey: 'itemsTax' }, // sumTax 税额
     { itemsKey: 'itemsGrossTotalPrice' }
   ].map((item: any) => {
     return {
@@ -360,7 +355,9 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
       formatter: transformDecimal3
     }
   }),
-  selectionList
+  selectionList,
+  summary
+  
 )
 
 /** 初始化 **/

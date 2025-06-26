@@ -6,6 +6,7 @@ import {
   useWholeOrderMergeComputeUp
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
+import { dataKeyToMapKey } from '@/utils/transform'
 import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
 import { transformVolumeColumn, transformVolumeNum } from '@/views/tms/common/utils'
 import { cloneDeep } from 'lodash-es'
@@ -243,10 +244,13 @@ export const useTable = () => {
       item.totalVolume = transformVolumeNum(item.totalVolume)
     })
 
-    itemsList.value = mergeItemsUpToList(data.list, 'items')
+
     // todo取出items里面对应对象数据
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
-    itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+    
+    itemsList.value = mergeItemsUpToList(data.list, 'items')
+    // itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
+    itemsList.value = dataKeyToMapKey(itemsList.value, { itemsQty: 'totalItemsQty' })
 
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total
