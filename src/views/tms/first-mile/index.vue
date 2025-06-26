@@ -286,14 +286,6 @@ const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useTab
   tableFieldKey
 )
 
-// 整单分行处理逻辑
-const tableFieldwholeOrderConfirm = (data: any[]) => {
-  // tableOptions.value = data
-  // allOptions = data
-  // switchWholeOrderOptions(wholeOrderEnable, tableOptions, allOptions)
-  console.log('tableFieldConfirm', data)
-}
-
 /** 初始化 **/
 onMounted(() => {
   getList()

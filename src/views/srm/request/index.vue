@@ -1,4 +1,7 @@
 <template>
+  <div @click="clearCache">
+    清除缓存
+  </div>
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm
@@ -101,6 +104,13 @@
   <!-- 列表 -->
   <ContentWrap style="padding-bottom: 0">
     <SmTable
+      isTabledField
+      isWholeOrder
+      :wholeOrderEnable="wholeOrderEnable"
+      :tableFieldOptions="tableFieldOptions"
+      :tableFieldKey="tableFieldKey"
+      @table-field-confirm="tableFieldConfirm"
+
       show-summary
       :summary-method="getWholeOrderSelectSummaries"
       isSelection
@@ -207,6 +217,10 @@ import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnMana
 import { notEmpty } from '@/utils/judge'
 import { createWholeOrderSelectSummaries } from '@/utils/create'
 import { transformDecimal3 } from '@/views/tms/common/utils'
+import { useWholeOrderTableField } from '@/components/SmTableField/src/hooks'
+import { clearTableFieldConfig } from '@/components/SmTableField/src/utils'
+
+
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -650,7 +664,20 @@ const handleUpdateStatusEnableBatch = async (enable: boolean) => {
 
 const disabledBtn = computed(() => selectionList.value.length === 0)
 
+const tableFieldKey = '/srm/purchase-request/page'
+const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useWholeOrderTableField(
+  wholeOrderEnable,
+  tableOptions,
+  tableFieldKey,
+  allOptions
+)
+
+const clearCache = () => {
+  clearTableFieldConfig(tableFieldKey)
+}
+
 const { handleWholeOrderEnable } = useWholeOrder(
+  createTableFiledOptions,
   allOptions,
   tableOptions,
   selectionList,
@@ -668,17 +695,17 @@ const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'itemsUnOrderCount'},
-    { itemsKey: 'itemsOrderClosedQty'},
-    { itemsKey: 'itemsInboundClosedQty'},
+    { itemsKey: 'itemsUnOrderCount' }, // 
+    { itemsKey: 'itemsOrderClosedQty' }, // sumOrderClosedQty-产品已订购数量
+    { itemsKey: 'itemsInboundClosedQty' }, // sumInboundClosedQty入库数量
 
-    { itemsKey: 'itemsQty'},
-    { itemsKey: 'itemsApprovedQty'},
-    { itemsKey: 'itemsReferenceUnitPrice'},
-    { itemsKey: 'itemsGrossPrice'},
-    { itemsKey: 'itemsTax'},
-    { itemsKey: 'itemsGrossTotalPrice'},
-  ].map(item => {
+    { itemsKey: 'itemsQty' }, // sumQty-申请数量
+    { itemsKey: 'itemsApprovedQty' }, // sumApprovedQty-批准数量
+    { itemsKey: 'itemsReferenceUnitPrice' }, // sumReferenceUnitPrice-参考单价合计
+    { itemsKey: 'itemsGrossPrice' }, // sumGrossPrice-含税单价
+    { itemsKey: 'itemsTax' }, // sumTax-税额
+    { itemsKey: 'itemsGrossTotalPrice' } // sumGrossTotalPrice-价税合计
+  ].map((item) => {
     return {
       itemsColumnKey: item.itemsKey,
       itemsKey: item.itemsKey,
@@ -691,6 +718,7 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
 /** 初始化 **/
 onMounted(async () => {
   getList()
+  createTableFiledOptions()
 })
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印

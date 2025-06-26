@@ -158,7 +158,15 @@ const TableAttrs = () => {
 const tableFieldAttrs = () => {
   const attrs = useAttrs() || {}
   const obj: any = {}
-  const filterAttrs = ['tableFieldMap','tableFieldOptions','tableFieldKey','iconSize', 'onTableFieldConfirm']
+  const filterAttrs = [
+    'tableFieldMap',
+    'tableFieldOptions',
+    'tableFieldKey',
+    'iconSize',
+    'isWholeOrder',
+    'wholeOrderEnable',
+    'onTableFieldConfirm'
+  ]
   for (let key in attrs) {
     if (filterAttrs.includes(key)) {
       obj[key] = attrs[key]
@@ -243,7 +251,7 @@ const props = defineProps({
   isTabledField: {
     type: Boolean,
     default: false
-  },
+  }
 })
 
 const emits = defineEmits([

@@ -18,25 +18,64 @@ export const WHOLE_ORDER_TYPE = {
   wholeOrder: 'wholeOrder' // 整单才进行展示
 }
 
-export const createWholeOrder = (allOptions) => {
-  return allOptions.filter((item) => noIncludesType(item.wholeOrderEnable, WHOLE_ORDER_TYPE.items))
-}
-export const createBranchOrder = (allOptions) => {
-  return allOptions.filter((item) =>
-    noIncludesType(item.wholeOrderEnable, WHOLE_ORDER_TYPE.wholeOrder)
-  )
+const isWholeOrder = (item) => {
+  return noIncludesType(item.wholeOrderEnable, WHOLE_ORDER_TYPE.items)
 }
 
-export const switchWholeOrderOptions = (wholeOrderEnable, tableOptions, allOptions) => {
-  if (wholeOrderEnable.value) {
-    const options = createWholeOrder(cloneDeep(allOptions))
-    tableOptions.value = options
-  } else {
-    tableOptions.value = createBranchOrder(cloneDeep(allOptions))
-  }
+const isBranch = (item) => {
+  return noIncludesType(item.wholeOrderEnable, WHOLE_ORDER_TYPE.wholeOrder)
+}
+
+export const createWholeOrder = (allOptions) => {
+  return allOptions.filter((item) => isWholeOrder(item))
+}
+export const createBranchOrder = (allOptions) => {
+  return allOptions.filter((item) => isBranch(item))
+}
+
+const isEnableFlag = (wholeOrderEnable, item) => {
+  return wholeOrderEnable.value ? isWholeOrder(item) : isBranch(item)
+}
+
+// 因为整单分行需要区分对应状态下-是否启用字段 齿轮设置项使用
+export const addWholeOrderProp = (wholeOrderEnable, allOptions) => {
+  allOptions.forEach((item) => {
+    const flag = isEnableFlag(wholeOrderEnable, item)
+    if (flag) {
+      item.isEnable = true
+    } else {
+      item.isEnable = false
+    }
+  })
+  return allOptions
+}
+
+export const createWholeOrderOrBranchOptions = (wholeOrderEnable, allOptions) => {
+  return wholeOrderEnable.value
+    ? createWholeOrder(cloneDeep(allOptions))
+    : createBranchOrder(cloneDeep(allOptions))
+}
+
+// wholeOrderTableFieldOptions-可能是allOptions也可能是diffTableOptions
+export const switchWholeOrderOptions = (
+  wholeOrderEnable,
+  tableOptions,
+  wholeOrderTableFieldOptions
+) => {
+  tableOptions.value = wholeOrderTableFieldOptions.filter((item) => {
+    const flag = isEnableFlag(wholeOrderEnable, item)
+    // 保存过saveFlag 就应该取保存过的isEnable 为true  就不能过滤 虽然应该是整单或者分行才能展示字段-但是用户强行点击保存启用-后面可以齿轮再扩展一列-整单分行应展示 标记可用
+    return item.saveFlag ? item.isEnable : flag
+  })
+
+  // tableOptions.value = createWholeOrderOrBranchOptions(
+  //   wholeOrderEnable,
+  //   wholeOrderTableFieldOptions
+  // )
 }
 
 export const useWholeOrder = (
+  createTableFiledOptions,
   allOptions,
   tableOptions,
   selectionList,
@@ -48,26 +87,31 @@ export const useWholeOrder = (
   wholeOrderTotal
 ) => {
   const handleWholeOrderEnable = (val) => {
-    if (val) {
-      // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
-      const options = createWholeOrder(cloneDeep(allOptions))
-      // 采购申请-采购订单-采购入库 列数超过10条以上-整单
-      // const len = options.length - 1
-      // const limit = len - 4
-      // // 宽度适配
-      // for (let i = limit; i < len; i++) {
-      //   options[i].width = undefined
-      // }
+    try {
+      if (val) {
+        // 防止大屏宽度没有占满对最后四项做处理最后一项操作不做处理
+        const options = createWholeOrder(cloneDeep(allOptions))
+        // 采购申请-采购订单-采购入库 列数超过10条以上-整单
+        // const len = options.length - 1
+        // const limit = len - 4
+        // // 宽度适配
+        // for (let i = limit; i < len; i++) {
+        //   options[i].width = undefined
+        // }
 
-      tableOptions.value = options
-      list.value = wholeOrderList.value
-      total.value = wholeOrderTotal.value
-    } else {
-      tableOptions.value = createBranchOrder(cloneDeep(allOptions))
-      list.value = itemsList.value
-      total.value = itemsTotal.value
+        tableOptions.value = options
+        list.value = wholeOrderList.value
+        total.value = wholeOrderTotal.value
+      } else {
+        tableOptions.value = createBranchOrder(cloneDeep(allOptions))
+        list.value = itemsList.value
+        total.value = itemsTotal.value
+      }
+      selectionList.value = []
+      createTableFiledOptions()
+    } catch (e) {
+      console.log(e, '报错了')
     }
-    selectionList.value = []
   }
 
   return {

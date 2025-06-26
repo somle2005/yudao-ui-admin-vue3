@@ -18,7 +18,8 @@
             :label="item.label"
             :width="item.width"
             align="center"
-          >
+          > 
+            <!-- 方便注释label -->
             <template v-if="item.prop === 'originLabel'" #default="{ row }">
               <span>{{ row.originLabel }}</span>
             </template>
@@ -83,9 +84,16 @@
 <script setup lang="ts">
 import { Icon } from '@/components/Icon'
 import { PropType, ref, watch } from 'vue'
-import { DEFAULT_TABLE_CONFIG_VAl, saveTableFieldConfig, TABLE_FIDLD_MAP } from './utils'
+import {
+  DEFAULT_TABLE_CONFIG_VAl,
+  saveTableFieldConfig,
+  saveWholeOrderTableFieldConfig,
+  TABLE_FIDLD_MAP,
+  WHOLE_ORDER_SAVE_DATA_MAP
+} from './utils'
 import { cloneDeep, debounce } from 'lodash-es'
 
+// 加配置项不要忘记在 SmTable里面进行处理操作
 const props = defineProps({
   // 处理字段映射关系
   tableFieldMap: {
@@ -108,6 +116,15 @@ const props = defineProps({
   iconSize: {
     type: Number,
     default: 25
+  },
+  // 是否开启整单分行表格配置项模式
+  isWholeOrder: {
+    type: Boolean,
+    default: false
+  },
+  wholeOrderEnable: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -178,7 +195,7 @@ const columnData = [
   //   ]
   // }
 ]
-const extraWidth = 240 // 包含table-config宽度+其余列paddding
+const extraWidth = 240 // 包含table-config 200宽度+其余列paddding40
 let dialogWidth =
   columnData.reduce((prev, cur) => {
     const { width } = cur
@@ -216,6 +233,7 @@ const handleDragOver = (e) => {
   e.dataTransfer.dropEffect = 'move'
 }
 
+// 交换的时候替你排序了
 const handleDragEnter = debounce((e, item) => {
   e.dataTransfer.effectAllowed = 'move'
   if (dragItem === item) {
@@ -263,6 +281,14 @@ const initTableData = (data: Array<TableOptionsProps>) => {
   return handleSort(list)
 }
 
+// 判断是不是单表还是整单分行表 取整单分行状态进行判断-存储的是整单还是分行
+const createSaveData = (restoreValue) => {
+  if (!props.isWholeOrder) return restoreValue
+  return props.wholeOrderEnable
+    ? { [WHOLE_ORDER_SAVE_DATA_MAP.wholeOrderList]: restoreValue }
+    : { [WHOLE_ORDER_SAVE_DATA_MAP.itemsList]: restoreValue }
+}
+
 const emtiFilterList = async () => {
   try {
     // 还原成外部传进来的值,方便外部table表格组件处理数据-(同时内部组件的初始化逻辑始终一致)
@@ -277,10 +303,17 @@ const emtiFilterList = async () => {
     })
 
     console.log(restoreValue, 'restoreValue')
-    await saveTableFieldConfig(restoreValue, props.tableFieldKey)
+    const saveData = createSaveData(restoreValue)
+
+    if (props.isWholeOrder) {
+      await saveWholeOrderTableFieldConfig(saveData, props.tableFieldKey)
+    } else {
+      await saveTableFieldConfig(saveData, props.tableFieldKey)
+    }
+
     message.success('保存成功')
 
-    // 还是得交给外部处理整单分行
+    // 还是得交给外部处理整单分行-交换的位置的时候已经排序了所以restoreValue无需排序
     emits('TableField-confirm', restoreValue, cloneDeep(tableData.value))
   } finally {
     loading.value = false
@@ -328,7 +361,11 @@ watch(
   justify-content: flex-end;
   margin-top: 20px;
 }
+.table-config {
+  width: 200px; // 这里如果修改了记得修改上面的extraWidth 
+}
 .table-config-title {
+  // 这里如果修改了记得修改上面的extraWidth 
   width: 200px;
   white-space: nowrap;
   height: 40px;
