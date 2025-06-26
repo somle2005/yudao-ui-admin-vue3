@@ -1,6 +1,8 @@
 <template>
   <div id="SmTable">
     <!-- v-bind="$attrs" style="height:calc(100vh - 285px)"-->
+    <SmTableField v-if="isTabledField" v-bind="tableFieldAttrs()" />
+
     <el-table
       ref="tableRef"
       v-loading="loading"
@@ -12,7 +14,14 @@
       @row-click="rowClick"
       class="SmTable-el-table"
     >
-      <el-table-column v-if="isSelection" fixed="left" width="40" label="选择" type="selection" align="center" />
+      <el-table-column
+        v-if="isSelection"
+        fixed="left"
+        width="40"
+        label="选择"
+        type="selection"
+        align="center"
+      />
       <!-- 后期可以补充oneSelectionAttrs进行扩展 -->
       <el-table-column v-if="oneSelection" fixed="left" align="center" width="40">
         <template #default="scope">
@@ -145,6 +154,19 @@ const TableAttrs = () => {
   return obj
 }
 
+// 事件字段都要在这里统一添加
+const tableFieldAttrs = () => {
+  const attrs = useAttrs() || {}
+  const obj: any = {}
+  const filterAttrs = ['tableFieldMap','tableFieldOptions','tableFieldKey','iconSize', 'onTableFieldConfirm']
+  for (let key in attrs) {
+    if (filterAttrs.includes(key)) {
+      obj[key] = attrs[key]
+    }
+  }
+  return obj
+}
+
 const columnItem = (item) => {
   const list = ['label', 'prop', 'width', 'align', 'formatter']
   const filterItem = {}
@@ -216,6 +238,11 @@ const props = defineProps({
   pagination: {
     type: Boolean,
     default: true
+  },
+  // 是否开启表格设置齿轮
+  isTabledField: {
+    type: Boolean,
+    default: false
   },
 })
 

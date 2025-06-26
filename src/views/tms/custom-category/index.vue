@@ -256,7 +256,7 @@ const handleExport = async () => {
     // 发起导出
     exportLoading.value = true
     const data = await CustomRuleCategoryApi.exportCustomRuleCategory(queryParams)
-    download.excel(data, '海关品类.xls')
+    download.excel(data, '海关分类.xls')
   } catch {
   } finally {
     exportLoading.value = false

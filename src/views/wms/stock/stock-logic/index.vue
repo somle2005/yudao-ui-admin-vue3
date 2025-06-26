@@ -108,7 +108,7 @@ const fieldMap = {
   companyName: '库存公司',
   availableQty: '可用数',
   outboundPendingQty: '待出库数',
-  shelvingPendingQty: '待上架数',
+  shelvePendingQty: '待上架数',
 
   updateTime: {
     label: '更新时间',

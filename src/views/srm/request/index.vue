@@ -101,6 +101,8 @@
   <!-- 列表 -->
   <ContentWrap style="padding-bottom: 0">
     <SmTable
+      show-summary
+      :summary-method="getWholeOrderSelectSummaries"
       isSelection
       :loading="loading"
       :options="tableOptions"
@@ -203,6 +205,8 @@ import {
 } from '@/hooks/common/wholeOrder'
 import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
 import { notEmpty } from '@/utils/judge'
+import { createWholeOrderSelectSummaries } from '@/utils/create'
+import { transformDecimal3 } from '@/views/tms/common/utils'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -659,6 +663,30 @@ const { handleWholeOrderEnable } = useWholeOrder(
 )
 
 const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
+
+// 只有分行没有整单
+const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
+  wholeOrderEnable,
+  [
+    { itemsKey: 'itemsUnOrderCount'},
+    { itemsKey: 'itemsOrderClosedQty'},
+    { itemsKey: 'itemsInboundClosedQty'},
+
+    { itemsKey: 'itemsQty'},
+    { itemsKey: 'itemsApprovedQty'},
+    { itemsKey: 'itemsReferenceUnitPrice'},
+    { itemsKey: 'itemsGrossPrice'},
+    { itemsKey: 'itemsTax'},
+    { itemsKey: 'itemsGrossTotalPrice'},
+  ].map(item => {
+    return {
+      itemsColumnKey: item.itemsKey,
+      itemsKey: item.itemsKey,
+      formatter: transformDecimal3
+    }
+  }),
+  selectionList
+)
 
 /** 初始化 **/
 onMounted(async () => {

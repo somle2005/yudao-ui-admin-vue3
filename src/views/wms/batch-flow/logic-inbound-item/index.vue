@@ -93,7 +93,8 @@ const fieldMap = {
   companyName: '库存公司',
   deptName: '库存归属',
 
-  actualQty: '批次数量',
+  // actualQty: '批次数量',
+  outboundAvailableQty: '批次数量',
   stockWarehouseTotalQty: '库存总数', // availableQty+shelvingPendingQty
   outboundPendingQty: '待出数量',
   // outboundAvailableQty: '待出数量',

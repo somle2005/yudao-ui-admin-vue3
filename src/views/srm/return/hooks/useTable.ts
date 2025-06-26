@@ -7,7 +7,7 @@ import {
 } from '@/hooks/common/wholeOrder'
 import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
 import { mergeItemsToList, mergeItemsUpToList } from '@/utils/transformData'
-import { transformVolumeColumn } from '@/views/tms/common/utils'
+import { transformVolumeColumn, transformVolumeNum } from '@/views/tms/common/utils'
 import { cloneDeep } from 'lodash-es'
 
 /**
@@ -65,14 +65,14 @@ export const useTable = () => {
     },
 
     totalPrice: '采购总价', // 汇总该退货单的总金额
-
-    totalItemsQty: '退货数',
+    totalReturnCount: '退货数',
+    // totalItemsQty: '退货数',
 
     totalWeight: '总毛重',
     totalVolume: {
       label: '总体积(m³)',
-      hideSort: true,
-      formatter: transformVolumeColumn
+      hideSort: true
+      // formatter: transformVolumeColumn
     },
 
     // 下面是分行内容
@@ -239,6 +239,10 @@ export const useTable = () => {
 
   // 整单分行列表切换
   const switchList = (list: any, total, data: any) => {
+    data.list.forEach((item) => {
+      item.totalVolume = transformVolumeNum(item.totalVolume)
+    })
+
     itemsList.value = mergeItemsUpToList(data.list, 'items')
     // todo取出items里面对应对象数据
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
