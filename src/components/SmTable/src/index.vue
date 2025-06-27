@@ -80,12 +80,12 @@
               <template v-else>
                 <slot v-if="item.slot" :name="item.slot" :scope="scope"></slot>
                 <!-- <span v-else>{{ scope.row[item.prop!] }}</span> -->
-                <component
+                <!-- <component
                   :is="`el-icon-${toLine(editIcon)}`"
                   v-if="item.editable"
                   class="edit"
                   @click.stop="clickEditIcon(scope)"
-                />
+                /> -->
               </template>
             </template>
           </template>

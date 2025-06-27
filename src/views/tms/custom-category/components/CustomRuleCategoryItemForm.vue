@@ -33,7 +33,7 @@
           </el-form-item>
         </template>
       </el-table-column>
-      <el-table-column label="hs编码*" min-width="150">
+      <el-table-column label="*hs编码" min-width="150">
         <template #default="{ row, $index }">
           <el-form-item :prop="`${$index}.hscode`" :rules="formRules.hscode" class="mb-0px!">
             <el-input v-model="row.hscode" placeholder="请输入hs编码" />

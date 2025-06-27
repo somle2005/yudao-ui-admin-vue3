@@ -42,7 +42,7 @@
           </el-table-column>
         </template>
 
-        <el-table-column label="产品编码*" width="180" align="center">
+        <el-table-column label="*产品编码" width="180" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -118,7 +118,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="productUnitName" label="单位" min-width="60" align="center" />
-        <el-table-column label="仓库*" width="150" align="center">
+        <el-table-column label="*仓库" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.warehouseId`"
@@ -231,7 +231,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="含税单价*" width="120" align="center">
+        <el-table-column label="*含税单价" width="120" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.grossPrice`"

@@ -14,13 +14,13 @@ const resolveConfig = (tableOption, config) => {
   //   }
   //   return prev + curWidth
   // },0)
-  if (window.innerWidth > 1200 && config?.noWidth) {
-    tableOption.forEach((item) => {
-      if (!item.noWidth) {
-        item.width = undefined
-      }
-    })
-  }
+  // if (window.innerWidth > 1200 && config?.noWidth) {
+  //   tableOption.forEach((item) => {
+  //     if (!item.noWidth) {
+  //       item.width = undefined
+  //     }
+  //   })
+  // }
   const {
     allWrap,
     wrapList,

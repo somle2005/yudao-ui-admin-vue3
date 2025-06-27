@@ -1,5 +1,4 @@
 <template>
-  <div @click="clearCache"> 清除缓存 </div>
   <ContentWrap>
     <!-- 搜索工作栏 -->
     <SmForm

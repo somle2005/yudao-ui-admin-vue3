@@ -12,7 +12,7 @@
       <el-table border :data="formData" class="-mt-10px">
         <el-table-column label="序号" type="index" width="60" align="center" />
 
-        <el-table-column label="产品编码*" width="150" align="center">
+        <el-table-column label="*产品编码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.productId`"
@@ -32,7 +32,7 @@
         </el-table-column>
 
         <!-- 自动带出该目的仓库所在国家的产品FBA条码 -->
-        <el-table-column label="FBA条码*" width="150" align="center">
+        <el-table-column label="*FBA条码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.fbaBarCode`"
@@ -44,7 +44,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="数量*" width="100" align="center">
+        <el-table-column label="*数量" width="100" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
               <SmNumber :disabled="disabled" v-model="row.qty" />
@@ -85,7 +85,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="销售公司*" width="200" align="center">
+        <el-table-column label="*销售公司" width="200" align="center">
           <template #default="{ row, $index }">
             <el-form-item
               :prop="`${$index}.salesCompanyId`"
