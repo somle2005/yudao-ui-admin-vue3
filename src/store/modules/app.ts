@@ -69,7 +69,8 @@ export const useAppStore = defineStore('app', {
 
       layout: wsCache.get(CACHE_KEY.LAYOUT) || 'classic', // layout布局
       isDark: wsCache.get(CACHE_KEY.IS_DARK) || false, // 是否是暗黑模式
-      currentSize: wsCache.get('default') || 'default', // 组件尺寸
+      // currentSize: wsCache.get('default') || 'default', // 组件尺寸
+      currentSize: 'small', // 组件尺寸 'large' | 'default' | 'small' 或者找这个组件SizeDropdown 生命周期中去修改
       theme: wsCache.get(CACHE_KEY.THEME) || {
         // 主题色
         elColorPrimary: '#409eff',
