@@ -328,36 +328,54 @@ const {
   changeRefundStatusBatch
 } = useBatch(selectionList, getList, wholeOrderEnable, openForm)
 
-
-
-
-// totalVolume注意可能要formatter转化
+// totalVolume注意可能要formatter转化 wholeOrderTotalKey, itemsTotalKey
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'totalPrice', wholeOrderKey: 'totalPrice' }, // sumTotalPrice 总价
-    { itemsKey: 'totalReturnCount', wholeOrderKey: 'totalReturnCount' },
-    { itemsKey: 'totalWeight', wholeOrderKey: 'totalWeight' },
-    { itemsKey: 'totalVolume', wholeOrderKey: 'totalVolume' },
+    {
+      itemsKey: 'totalPrice',
+      itemsTotalKey: 'sumTotalPrice',
+      wholeOrderKey: 'totalPrice',
+      wholeOrderTotalKey: 'sumTotalPrice'
+    }, // sumTotalPrice 总价
+    {
+      itemsKey: 'totalReturnCount',
+      itemsTotalKey: 'sumTotalReturnCount',
+      wholeOrderKey: 'totalReturnCount',
+      wholeOrderTotalKey: 'sumTotalReturnCount'
+    },
+    {
+      itemsKey: 'totalWeight',
+      itemsTotalKey: 'sumTotalWeight',
+      wholeOrderKey: 'totalWeight',
+      wholeOrderTotalKey: 'sumTotalWeight'
+    },
+    {
+      itemsKey: 'totalVolume',
+      itemsTotalKey: 'sumTotalVolume',
+      wholeOrderKey: 'totalVolume',
+      wholeOrderTotalKey: 'sumTotalVolume'
+    },
 
-    { itemsKey: 'itemsQty' }, // sumQty 数量
+    { itemsKey: 'itemsQty', itemsTotalKey: 'sumQty' }, // sumQty 数量
 
-    { itemsKey: 'itemsProductPrice' },
-    { itemsKey: 'itemsGrossPrice' },
-    { itemsKey: 'itemsTax' }, // sumTax 税额
-    { itemsKey: 'itemsGrossTotalPrice' }
+    { itemsKey: 'itemsProductPrice', itemsTotalKey: 'sumProductPrice' },
+    { itemsKey: 'itemsGrossPrice', itemsTotalKey: 'sumGrossPrice' },
+    { itemsKey: 'itemsTax', itemsTotalKey: 'sumTax' }, // sumTax 税额
+    { itemsKey: 'itemsGrossTotalPrice', itemsTotalKey: 'sumGrossTotalPrice' }
   ].map((item: any) => {
     return {
       wholeOrdeColumnKey: item.wholeOrderKey,
       wholeOrderKey: item.wholeOrderKey,
       itemsColumnKey: item.itemsKey,
       itemsKey: item.itemsKey,
+      itemsTotalKey: item.itemsTotalKey,
+      wholeOrderTotalKey: item.wholeOrderTotalKey,
       formatter: transformDecimal3
     }
   }),
   selectionList,
   summary
-  
 )
 
 /** 初始化 **/

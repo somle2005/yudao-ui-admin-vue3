@@ -56,35 +56,46 @@ export const createWholeOrderSelectSummaries = (
 
       const selectList = unref(selectionList)
 
+      const resolveSum = (formatter, sum) => {
+        sum = formatter ? formatter(sum) : sum
+        if (isNaN(sum)) {
+          return ''
+        }
+        return sum
+      }
+
       // 选中项空数组时处理
       const resolveTotal = (sums) => {
         let sum
         const item = computeList.find((item) => item[columnKey] === column.property)!
+        if (!item) return
+
         const { wholeOrderTotalKey, itemsTotalKey, formatter } = item as any
 
         // 看后端这种总值是否是list[0]-还是data-再提供一个接口进行带出
         if (wholeOrderEnable.value) {
           sum = unref(summary)[wholeOrderTotalKey]
-          // sum = 200
         } else {
           sum = unref(summary)[itemsTotalKey]
-          // sum = 300
         }
         // sum过滤
-        sums[index] = formatter ? formatter(sum) : sum
+        sums[index] = resolveSum(formatter, sum)
       }
 
       const computeColumn = (sums) => {
         let sum
         const item = computeList.find((item) => item[columnKey] === column.property)!
+        if (!item) return
+
         const { wholeOrderKey, itemsKey, formatter } = item as any
         if (wholeOrderEnable.value) {
           sum = reduceVal(wholeOrderKey, selectList)
         } else {
           sum = reduceVal(itemsKey, selectList)
         }
+
         // sum过滤
-        sums[index] = formatter ? formatter(sum) : sum
+        sums[index] = resolveSum(formatter, sum)
       }
 
       if (!columnList.includes(column.property)) {

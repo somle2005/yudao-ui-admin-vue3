@@ -334,34 +334,51 @@ const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatus
 
 const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
-
-
-
-
-
-// totalVolume字段前端注意转化后端格式 formatter
+// totalVolume字段前端注意转化后端格式 formatter wholeOrderTotalKey, itemsTotalKey
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'totalPrice', wholeOrderKey: 'totalPrice' }, // sumTotalPrice 总价
-    { itemsKey: 'totalItemsQty', wholeOrderKey: 'totalItemsQty' }, // totalItemsQty总数量用 sumQty 到货数量 计算的是到货单的总数量(分行可能同一个到货单-总数量一致)
-    { itemsKey: 'totalWeight', wholeOrderKey: 'totalWeight' },
-    { itemsKey: 'totalVolume', wholeOrderKey: 'totalVolume' },
+    {
+      itemsKey: 'itemsTotalPrice',
+      itemsTotalKey: 'sumTotalPrice',
+      wholeOrderKey: 'totalPrice',
+      wholeOrderTotalKey: 'sumTotalPrice'
+    }, // sumTotalPrice 总价
+    {
+      itemsKey: 'totalItemsQty',
+      itemsTotalKey: 'sumQty',
+      wholeOrderTotalKey: 'sumQty',
+      wholeOrderKey: 'totalItemsQty'
+    }, // totalItemsQty总数量用 sumQty 到货数量 计算的是到货单的总数量(分行可能同一个到货单-总数量一致)
+    {
+      itemsKey: 'totalWeight',
+      itemsTotalKey: 'sumTotalWeight',
+      wholeOrderKey: 'totalWeight',
+      wholeOrderTotalKey: 'sumTotalWeight'
+    },
+    {
+      itemsKey: 'totalVolume',
+      itemsTotalKey: 'sumTotalVolume',
+      wholeOrderKey: 'totalVolume',
+      wholeOrderTotalKey: 'sumTotalVolume'
+    },
 
-    { itemsKey: 'itemsQty' }, // sumQty 到货数量
-    { itemsKey: 'itemsActualQty' }, // sumActualQty 实际入库数量
-    { itemsKey: 'itemsOrderQty' },
-    { itemsKey: 'itemsProductPrice' },
+    { itemsKey: 'itemsQty', itemsTotalKey: 'sumQty' }, // sumQty 到货数量
+    { itemsKey: 'itemsActualQty', itemsTotalKey: 'sumActualQty' }, // sumActualQty 实际入库数量
+    { itemsKey: 'itemsOrderQty', itemsTotalKey: 'sumOrderQty' },
+    { itemsKey: 'itemsProductPrice', itemsTotalKey: 'sumProductPrice' },
 
-    { itemsKey: 'itemsGrossPrice' },
-    { itemsKey: 'itemsTax' }, // sumTax 税额
-    { itemsKey: 'itemsGrossTotalPrice' } // sumGrossTotalPrice 价税合计
+    { itemsKey: 'itemsGrossPrice', itemsTotalKey: 'sumGrossPrice' },
+    { itemsKey: 'itemsTax', itemsTotalKey: 'sumTax' }, // sumTax 税额
+    { itemsKey: 'itemsGrossTotalPrice', itemsTotalKey: 'sumGrossTotalPrice' } // sumGrossTotalPrice 价税合计
   ].map((item: any) => {
     return {
       wholeOrdeColumnKey: item.wholeOrderKey,
       wholeOrderKey: item.wholeOrderKey,
       itemsColumnKey: item.itemsKey,
       itemsKey: item.itemsKey,
+      wholeOrderTotalKey: item.wholeOrderTotalKey,
+      itemsTotalKey: item.itemsTotalKey,
       formatter: transformDecimal3
     }
   }),

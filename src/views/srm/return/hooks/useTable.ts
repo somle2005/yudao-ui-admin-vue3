@@ -95,7 +95,7 @@ export const useTable = () => {
       width: '100px',
       wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
-
+    
     itemsQty: {
       label: '数量',
       totalItemsKey: 'totalItemsQty',

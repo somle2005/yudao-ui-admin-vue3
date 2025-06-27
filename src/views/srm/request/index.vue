@@ -689,25 +689,25 @@ const { handleWholeOrderEnable } = useWholeOrder(
 
 const oneSelectDisabledBtn = computed(() => selectionList.value.length !== 1)
 
-
 // 只有分行没有整单 wholeOrderTotalKey, itemsTotalKey
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'itemsUnOrderCount' }, //
-    { itemsKey: 'itemsOrderClosedQty' }, // sumOrderClosedQty-产品已订购数量
-    { itemsKey: 'itemsInboundClosedQty' }, // sumInboundClosedQty入库数量
+    { itemsKey: 'itemsUnOrderCount', itemsTotalKey: 'sumUnOrderCount' }, //
+    { itemsKey: 'itemsOrderClosedQty', itemsTotalKey: 'sumOrderClosedQty' }, // sumOrderClosedQty-产品已订购数量
+    { itemsKey: 'itemsInboundClosedQty', itemsTotalKey: 'sumInboundClosedQty' }, // sumInboundClosedQty入库数量
 
-    { itemsKey: 'itemsQty' }, // sumQty-申请数量
-    { itemsKey: 'itemsApprovedQty' }, // sumApprovedQty-批准数量
-    { itemsKey: 'itemsReferenceUnitPrice' }, // sumReferenceUnitPrice-参考单价合计
-    { itemsKey: 'itemsGrossPrice' }, // sumGrossPrice-含税单价
-    { itemsKey: 'itemsTax' }, // sumTax-税额
-    { itemsKey: 'itemsGrossTotalPrice' } // sumGrossTotalPrice-价税合计
+    { itemsKey: 'itemsQty', itemsTotalKey: 'sumQty' }, // sumQty-申请数量
+    { itemsKey: 'itemsApprovedQty', itemsTotalKey: 'sumApprovedQty' }, // sumApprovedQty-批准数量
+    { itemsKey: 'itemsReferenceUnitPrice', itemsTotalKey: 'sumReferenceUnitPrice' }, // sumReferenceUnitPrice-参考单价合计
+    { itemsKey: 'itemsGrossPrice', itemsTotalKey: 'sumGrossPrice' }, // sumGrossPrice-含税单价
+    { itemsKey: 'itemsTax', itemsTotalKey: 'sumTax' }, // sumTax-税额
+    { itemsKey: 'itemsGrossTotalPrice', itemsTotalKey: 'sumGrossTotalPrice' } // sumGrossTotalPrice-价税合计
   ].map((item) => {
     return {
       itemsColumnKey: item.itemsKey,
       itemsKey: item.itemsKey,
+      itemsTotalKey: item.itemsTotalKey,
       formatter: transformDecimal3
     }
   }),

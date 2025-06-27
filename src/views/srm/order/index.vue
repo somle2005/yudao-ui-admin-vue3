@@ -653,31 +653,35 @@ const generateContractOrder = async () => {
   generateContract(selectionList, openForm)
 }
 
-
-
-
-// 分行-总验货通过数 整单 成交金额
+// 分行-总验货通过数 整单 成交金额 wholeOrderTotalKey, itemsTotalKey
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
   [
-    { itemsKey: 'itemsTotalInspectionPassCount', wholeOrderKey: 'totalPrice' }, // sumTotalInspectionPassCount 质检通过数量 sumTotalPrice 税额
-    { itemsKey: 'itemsTotalCompletionPassCount' }, // sumTotalCompletionPassCount 完工通过数量
+    {
+      itemsKey: 'itemsTotalInspectionPassCount',
+      itemsTotalKey: 'sumTotalInspectionPassCount',
+      wholeOrderKey: 'totalPrice',
+      wholeOrderTotalKey: 'sumTotalPrice'
+    }, // sumTotalInspectionPassCount 质检通过数量 sumTotalPrice 税额
+    { itemsKey: 'itemsTotalCompletionPassCount', itemsTotalKey: 'sumTotalCompletionPassCount' }, // sumTotalCompletionPassCount 完工通过数量
 
-    { itemsKey: 'itemsWaitInCount' },
-    { itemsKey: 'itemsQty' }, // sumQty 下单数量
-    { itemsKey: 'itemsInboundClosedQty' }, // sumInboundClosedQty 入库数量
-    { itemsKey: 'itemsReturnCount' }, // sumReturnCount 退货数量
+    { itemsKey: 'itemsWaitInCount', itemsTotalKey: 'sumWaitInCount' },
+    { itemsKey: 'itemsQty', itemsTotalKey: 'sumQty' }, // sumQty 下单数量
+    { itemsKey: 'itemsInboundClosedQty', itemsTotalKey: 'sumInboundClosedQty' }, // sumInboundClosedQty 入库数量
+    { itemsKey: 'itemsReturnCount', itemsTotalKey: 'sumReturnCount' }, // sumReturnCount 退货数量
 
-    { itemsKey: 'itemsGrossPrice' }, // sumGrossPrice 含税单价 
-    { itemsKey: 'itemsTax' }, // sumTax 税额
-    { itemsKey: 'itemsGrossTotalPrice' }, // sumGrossTotalPrice 价税合计
-    { itemsKey: 'itemsPayPrice' } // sumPayPrice 已付款金额
+    { itemsKey: 'itemsGrossPrice', itemsTotalKey: 'sumGrossPrice' }, // sumGrossPrice 含税单价
+    { itemsKey: 'itemsTax', itemsTotalKey: 'sumTax' }, // sumTax 税额
+    { itemsKey: 'itemsGrossTotalPrice', itemsTotalKey: 'sumGrossTotalPrice' }, // sumGrossTotalPrice 价税合计
+    { itemsKey: 'itemsPayPrice', itemsTotalKey: 'sumPayPrice' } // sumPayPrice 已付款金额
   ].map((item: any) => {
     return {
       wholeOrdeColumnKey: item.wholeOrderKey,
       wholeOrderKey: item.wholeOrderKey,
       itemsColumnKey: item.itemsKey,
       itemsKey: item.itemsKey,
+      itemsTotalKey: item.itemsTotalKey,
+      wholeOrderTotalKey: item.wholeOrderTotalKey,
       formatter: transformDecimal3
     }
   }),
