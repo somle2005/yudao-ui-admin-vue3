@@ -1,6 +1,7 @@
 // import { getUserId } from '@/utils/cache'
 import { getUserConfigList, saveOrUpdateUserConfig } from '@/api/system/user'
 import { WHOLE_ORDER_TYPE } from '@/hooks/common/wholeOrder'
+import { notEmpty } from '@/utils/judge'
 import { cloneDeep } from 'lodash-es'
 
 export const DEFAULT_TABLE_CONFIG_VAl = {
@@ -40,7 +41,10 @@ export const addFieldProp = (data: any[]) => {
   return cloneDeep(data).map((item) => {
     if (!item.saveFlag) {
       item.originLabel = item.label
-      item.isEnable = DEFAULT_TABLE_CONFIG_VAl.isEnable
+      // 空值才能拿默认值 可能初始化使用的是清单行 通过状态动态绑定 computed(() => props.formType !== 'create')
+      if (!notEmpty(item.isEnable)) {
+        item.isEnable = DEFAULT_TABLE_CONFIG_VAl.isEnable
+      }
       item.sort = DEFAULT_TABLE_CONFIG_VAl.sort
       item.width = Number(item.width.toString().replace('px', ''))
     }
@@ -115,5 +119,3 @@ export const clearTableFieldConfig = (configKey) => {
   // configValue可以为空-等架构师操作
   saveOrUpdateUserConfig({ configKey, configValue: '' })
 }
-
-

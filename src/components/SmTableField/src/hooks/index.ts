@@ -11,6 +11,7 @@ import { addFieldProp, getTableFieldOptions, WHOLE_ORDER_SAVE_DATA_MAP } from '.
 
     tableOptions为本地内容最新(必须全量在)
     data为线上保存数据为补充 对比差异 覆盖 (本地可能新增对象属性-新增对象或者删除对象)
+    初始化用addFieldProp方法即可不用排序sort用本地默认顺序即可
 */
 
 const createDiffTableOptions = (tableOptions, data) => {
@@ -37,17 +38,26 @@ const createDiffTableOptions = (tableOptions, data) => {
 export const useTableField = (tableOptions: any, tableFieldKey: string) => {
   const tableFieldOptions = ref<any[]>([])
 
+  // 过滤isEnable为false的
+  const filterOptions = (data: any[]) => {
+    return data.filter((item) => item.isEnable)
+  }
+
   const createTableFiledOptions = async () => {
     const data = await getTableFieldOptions(tableFieldKey)
+    // 一开始默认取初始表格配置项-如果有接口值就取接口值
+    let diffTableOptions: any = tableOptions.value  
     if (data.length) {
       // 对比之后还需要排序否则顺序会错乱
-      tableOptions.value = createDiffTableOptions(tableOptions, data)
+      diffTableOptions = createDiffTableOptions(tableOptions, data)
+      tableOptions.value = filterOptions(diffTableOptions)
     }
-    tableFieldOptions.value = addFieldProp(tableOptions.value)
+    // 全量必须都在数据
+    tableFieldOptions.value = addFieldProp(diffTableOptions)
   }
 
   const tableFieldConfirm = (restoreValue, data: any[]) => {
-    tableOptions.value = restoreValue
+    tableOptions.value = filterOptions(restoreValue)
     tableFieldOptions.value = data
   }
   return {
