@@ -109,6 +109,12 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      isTabledField
+      isWholeOrder
+      :wholeOrderEnable="wholeOrderEnable"
+      :tableFieldOptions="tableFieldOptions"
+      :tableFieldKey="tableFieldKey"
+      @table-field-confirm="tableFieldConfirm"
       show-summary
       :summary-method="getWholeOrderSelectSummaries"
       border
@@ -190,6 +196,7 @@ import { getMainItemBodyDataField } from '@/utils/transform'
 import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 import { createWholeOrderSelectSummaries } from '@/utils/create'
 import { transformDecimal3 } from '@/views/tms/common/utils'
+import { useWholeOrderTableField } from '@/components/SmTableField/src/hooks'
 
 /** Srm 销售入库列表 */
 defineOptions({ name: 'SrmPurchaseIn' })
@@ -311,18 +318,6 @@ const handleSelectionChange = (rows: PurchaseInVO[]) => {
   selectionList.value = rows
 }
 
-const { handleWholeOrderEnable } = useWholeOrder(
-  allOptions,
-  tableOptions,
-  selectionList,
-  list,
-  total,
-  itemsList,
-  itemsTotal,
-  wholeOrderList,
-  wholeOrderTotal
-)
-
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
 const { disabledBtn, handleUpdateStatus, handleSubmitAuditBatch, changePayStatusBatch } = useBatch(
@@ -386,10 +381,32 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   summary
 )
 
+const tableFieldKey = '/srm/purchase-in/page'
+const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useWholeOrderTableField(
+  wholeOrderEnable,
+  tableOptions,
+  tableFieldKey,
+  allOptions
+)
+
+const { handleWholeOrderEnable } = useWholeOrder(
+  allOptions,
+  tableOptions,
+  selectionList,
+  list,
+  total,
+  itemsList,
+  itemsTotal,
+  wholeOrderList,
+  wholeOrderTotal,
+  createTableFiledOptions
+)
+
 /** 初始化 **/
 onMounted(async () => {
   // 加载 列表 产品、仓库列表、供应商
   getList()
+  createTableFiledOptions()
 })
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印

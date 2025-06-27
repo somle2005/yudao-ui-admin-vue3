@@ -122,6 +122,12 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      isTabledField
+      isWholeOrder
+      :wholeOrderEnable="wholeOrderEnable"
+      :tableFieldOptions="tableFieldOptions"
+      :tableFieldKey="tableFieldKey"
+      @table-field-confirm="tableFieldConfirm"
       show-summary
       :summary-method="getWholeOrderSelectSummaries"
       border
@@ -212,6 +218,7 @@ import { generateContract, mergeItems } from '@/utils/operate/srm'
 import { isUpdate, isDelete, isSubmitAuditBatch, isMerge } from '@/utils/btnManager/srm'
 import { createWholeOrderSelectSummaries } from '@/utils/create'
 import { transformDecimal3 } from '@/views/tms/common/utils'
+import { useWholeOrderTableField } from '@/components/SmTableField/src/hooks'
 
 const { tableOptions, transformTableOptions } = useTableData()
 
@@ -626,24 +633,8 @@ const handleUpdateStatus = async (row: any, reviewed: boolean) => {
   } catch {}
 }
 
-const { handleWholeOrderEnable } = useWholeOrder(
-  allOptions,
-  tableOptions,
-  selectionList,
-  list,
-  total,
-  itemsList,
-  itemsTotal,
-  wholeOrderList,
-  wholeOrderTotal
-)
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
-
-/** 初始化 **/
-onMounted(async () => {
-  getList()
-})
 
 const mergeOrder = async () => {
   mergeItems(wholeOrderEnable, selectionList, openForm, 'itemsId')
@@ -688,6 +679,33 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   selectionList,
   summary
 )
+
+const tableFieldKey = '/srm/purchase-order/page'
+const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useWholeOrderTableField(
+  wholeOrderEnable,
+  tableOptions,
+  tableFieldKey,
+  allOptions
+)
+
+const { handleWholeOrderEnable } = useWholeOrder(
+  allOptions,
+  tableOptions,
+  selectionList,
+  list,
+  total,
+  itemsList,
+  itemsTotal,
+  wholeOrderList,
+  wholeOrderTotal,
+  createTableFiledOptions
+)
+
+/** 初始化 **/
+onMounted(async () => {
+  getList()
+  createTableFiledOptions()
+})
 
 // TODO 芋艿：可优化功能：列表界面，支持导入
 // TODO 芋艿：可优化功能：详情界面，支持打印

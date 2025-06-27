@@ -101,6 +101,12 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      isTabledField
+      isWholeOrder
+      :wholeOrderEnable="wholeOrderEnable"
+      :tableFieldOptions="tableFieldOptions"
+      :tableFieldKey="tableFieldKey"
+      @table-field-confirm="tableFieldConfirm"
       border
       show-summary
       :summary-method="getWholeOrderSelectSummaries"
@@ -164,6 +170,7 @@ import { reduceVal } from '@/utils/transformData'
 import { createSelectSummaries, createWholeOrderSelectSummaries } from '@/utils/create'
 import { transformDecimal3 } from '../common/utils'
 import { getMainItemBodyDataField } from '@/utils/transform'
+import { useWholeOrderTableField } from '@/components/SmTableField/src/hooks'
 
 let {
   allOptions,
@@ -205,6 +212,7 @@ const queryParams = reactive({
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
+const summary = ref({})
 
 /** 查询列表 */
 const getList = async () => {
@@ -232,9 +240,8 @@ const getList = async () => {
       ]
     })
     const data = await FirstMileRequestApi.getFirstMileRequestPage(bodyData)
-    // list.value = data.list
-    // total.value = data.total
     switchList(list, total, data)
+    summary.value = data.summary || {}
   } finally {
     loading.value = false
   }
@@ -303,18 +310,6 @@ const {
   handleMerge
 } = useBatch(wholeOrderEnable, selectionList, getList, openForm)
 
-const { handleWholeOrderEnable } = useWholeOrder(
-  allOptions,
-  tableOptions,
-  selectionList,
-  list,
-  total,
-  itemsList,
-  itemsTotal,
-  wholeOrderList,
-  wholeOrderTotal
-)
-
 // 毛重(kg)-itemsPackageWeight 体积(m³)-itemsVolume-数量-itemsQty
 const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
   wholeOrderEnable,
@@ -341,10 +336,34 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
       formatter: transformDecimal3
     }
   ],
-  selectionList
+  selectionList,
+  summary
 )
+
+const tableFieldKey = '/tms/first-mile-request/page'
+const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useWholeOrderTableField(
+  wholeOrderEnable,
+  tableOptions,
+  tableFieldKey,
+  allOptions
+)
+
+const { handleWholeOrderEnable } = useWholeOrder(
+  allOptions,
+  tableOptions,
+  selectionList,
+  list,
+  total,
+  itemsList,
+  itemsTotal,
+  wholeOrderList,
+  wholeOrderTotal,
+  createTableFiledOptions
+)
+
 /** 初始化 **/
 onMounted(() => {
   getList()
+  createTableFiledOptions()
 })
 </script>
