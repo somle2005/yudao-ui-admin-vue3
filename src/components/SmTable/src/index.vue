@@ -22,6 +22,7 @@
         type="selection"
         align="center"
       />
+      <el-table-column v-if="isIndex" label="序号" type="index" align="center" width="60" />
       <!-- 后期可以补充oneSelectionAttrs进行扩展 -->
       <el-table-column v-if="oneSelection" fixed="left" align="center" width="40">
         <template #default="scope">
@@ -78,7 +79,14 @@
                 </div>
               </template>
               <template v-else>
-                <slot v-if="item.slot" :name="item.slot" :scope="scope"></slot>
+                <!-- eslint-disable vue/valid-attribute-name -->
+                <slot
+                  v-if="item.slot && scope.$index >= 0"
+                  :name="item.slot"
+                  :scope="scope"
+                  :row="scope.row"
+                  :$index="scope.$index"
+                ></slot>
                 <!-- <span v-else>{{ scope.row[item.prop!] }}</span> -->
                 <!-- <component
                   :is="`el-icon-${toLine(editIcon)}`"
@@ -197,6 +205,11 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  // 是否开启序号
+  isIndex: {
+    type: Boolean,
+    default: false
+  },
   // 是否在加载中
   loading: {
     type: Boolean,
@@ -211,6 +224,10 @@ const props = defineProps({
   data: {
     type: Array,
     required: true
+  },
+  getTableData: {
+    type: Function,
+    default: null
   },
   // 是否开启
   border: {
@@ -259,7 +276,8 @@ const emits = defineEmits([
   'cancel',
   'update:editRowType',
   'row-click',
-  'oneSelectionChange'
+  'oneSelectionChange',
+  'update:data'
 ])
 
 // 当前被点击的单元格的标识
@@ -280,6 +298,27 @@ watch(
     } else {
       tableData.value = []
     }
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => tableData.value,
+  (val) => {
+    if (props.getTableData) {
+      const outTableData = props.getTableData()
+      if (val?.length) {
+        // 更新每个项的数据
+        val.forEach((item, index) => {
+          Object.assign(unref(outTableData)[index], item)
+        })
+      } else {
+        outTableData.value = []
+      }
+    }
+    // 空数组也需要处理
+    // emits('update:data', val)
+    //  console.log(val, 'val数据变化了')
   },
   { immediate: true, deep: true }
 )

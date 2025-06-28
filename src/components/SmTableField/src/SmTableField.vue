@@ -30,7 +30,7 @@
               <SmNumber size="small" v-model="row.width" />
             </template>
             <template v-else-if="item.prop === 'isEnable'" #default="{ row }">
-              <ElCheckbox v-model="row.isEnable" />
+              <ElCheckbox v-model="row.isEnable" :disabled="row.listDisabled" />
             </template>
             <!-- <template v-else-if="item.prop === 'align'" #default="{ row }">
               <el-select v-model="row.align" clearable placeholder="请选择左右固定">

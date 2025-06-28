@@ -437,6 +437,7 @@ export const usePurchaseRequestForm = ({ getResetFormData, getFormData, emit }) 
 
       // 税率拿到提交数据进行转换处理
       const data = cloneDeep(getFormData())
+      // data.items = itemFormRef.value.formData
       data.items.forEach((item) => {
         // item.taxRate = item.taxRate / 100
         return item

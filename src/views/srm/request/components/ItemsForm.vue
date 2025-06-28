@@ -9,360 +9,191 @@
     :disabled="allDisabled"
   >
     <!-- <el-table :data="formData" show-summary :summary-method="getSummaries" class="-mt-10px"> -->
-    <el-table border :data="formData" @selection-change="handleSelectionChange" class="-mt-10px">
-      <el-table-column fixed="left" width="40" label="选择" type="selection" align="center" />
-      <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
-        v-if="formType !== 'create'"
-        prop="id"
-        label="编号"
-        width="60"
-        align="center"
-      />
-      <!-- <el-table-column label="产品编码" min-width="180">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
-            <el-select
-              v-model="row.productId"
-              clearable
-              filterable
-              @change="onChangeProduct($event, row)"
-              placeholder="请选择产品编码"
-              :disabled="disabled"
-            >
-              <el-option
-                v-for="item in productList"
-                :key="item.id"
-                :label="item.code"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </template>
-      </el-table-column> -->
-
-      <el-table-column label="产品编码*" width="180" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
-            <SmSelect
-              :disabled="productDisabled"
-              v-model="row.productId"
-              placeholder="请选择产品编码"
-              @change="
-                (val) =>
-                  updateModelValue(
-                    val,
-                    row,
-                    productList,
-                    'id',
-                    {
-                      productName: 'name',
-                      productCode: 'code',
-                      productUnitName: 'unitName'
-                    },
-                    getDeclaredType
-                  )
-              "
-              :data="productList"
-              :keyMap="{ label: 'code', value: 'id' }"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-      <el-table-column label="产品名称" width="160" align="center">
-        <template #default="{ row }">
-          <el-text>{{ row.productName }}</el-text>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="海关品名*" width="120" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item
-            :prop="`${$index}.declaredType`"
-            :rules="formRules.declaredType"
-            class="mb-0px!"
-          >
-            <el-input :disabled="productDisabled" v-model="row.declaredType" />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <template v-if="mergeDisabled">
-        <!-- <el-table-column label="条码" width="120" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.fbaCode`" class="mb-0px!">
-              <el-input v-model.trim="row.fbaCode" :disabled="disabled" class="!w-100%" />
-            </el-form-item>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="箱率" width="100" align="center">
-          <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
-              <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
-            </el-form-item>
-          </template>
-        </el-table-column>
+    <SmTable
+      v-if="formData.length"
+      :pagination="false"
+      isIndex
+      isSelection
+      :options="tableOptions"
+      :data="formData"
+      :getTableData="getTableData"
+      @selection-change="handleSelectionChange"
+    >
+      <template #productId="{ row, $index }">
+        <el-form-item :prop="`${$index}.productId`" :rules="formRules.productId" class="mb-0px!">
+          <SmSelect
+            :disabled="productDisabled"
+            v-model="row.productId"
+            placeholder="请选择产品编码"
+            @change="
+              (val) =>
+                updateModelValue(
+                  val,
+                  row,
+                  productList,
+                  'id',
+                  {
+                    productName: 'name',
+                    productCode: 'code',
+                    productUnitName: 'unitName'
+                  },
+                  getDeclaredType
+                )
+            "
+            :data="productList"
+            :keyMap="{ label: 'code', value: 'id' }"
+          />
+        </el-form-item>
       </template>
 
-      <el-table-column prop="productUnitName" label="单位" width="100" align="center" />
-
-      <el-table-column label="仓库" width="120" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-            <el-select
-              :disabled="disabled"
-              v-model="row.warehouseId"
-              clearable
-              filterable
-              placeholder="请选择仓库"
-            >
-              <el-option
-                v-for="item in WMSWarehouseList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <!-- <el-table-column label="库存" min-width="100">
-        <template #default="{ row }">
-          <el-form-item class="mb-0px!">
-            <el-input disabled v-model="row.stockCount" :formatter="erpCountInputFormatter" />
-          </el-form-item>
-        </template>
-      </el-table-column>
-    -->
-
-      <el-table-column
-        v-if="mergeDisabled"
-        label="下单数量*"
-        prop="orderQuantity"
-        width="80"
-        align="center"
-      >
-        <template #default="{ row, $index }">
-          <el-form-item
-            :prop="`${$index}.orderQuantity`"
-            :rules="formRules.orderQuantity"
-            class="mb-0px!"
-          >
-            <!-- <el-input-number
-              v-model="row.orderQuantity"
-              controls-position="right"
-              :min="0"
-              :max="row.unOrderCount"
-              class="!w-100%"
-              @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
-            /> -->
-            <SmNumber
-              :max="row.unOrderCount"
-              v-model="row.orderQuantity"
-              @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        v-if="mergeDisabled"
-        prop="unOrderCount"
-        label="未订购数量"
-        min-width="120"
-        align="center"
-      />
-
-      <el-table-column label="申请数量*" prop="qty" width="100" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
-            <!-- <el-input-number
-              :disabled="productDisabled"
-              v-model="row.qty"
-              controls-position="right"
-              :min="1"
-              class="!w-100%"
-            /> -->
-            <SmNumber :disabled="productDisabled" :min="1" v-model="row.qty" />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        v-if="approveCountShow"
-        label="批准数量"
-        prop="approvedQty"
-        width="100"
-        align="center"
-      >
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.approvedQty`" class="mb-0px!">
-            <!-- <el-input-number
-              :disabled="approveCountDisabled"
-              v-model="row.approvedQty"
-              controls-position="right"
-              :min="1"
-              :max="row.qty"
-              class="!w-100%"
-              @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
-            /> -->
-            <SmNumber
-              :disabled="approveCountDisabled"
-              :min="1"
-              :max="row.qty"
-              v-model="row.approvedQty"
-              @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="含税单价" prop="grossPrice" width="100" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.grossPrice`" class="mb-0px!">
-            <!-- <el-input-number
-              :disabled="disabled"
-              v-model="row.grossPrice"
-              controls-position="right"
-              :min="0.01"
-              :precision="2"
-              class="!w-100%"
-            /> -->
-            <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.grossPrice" />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="单价" width="100" align="center">
-        <template #default="{ row }">
-          <!-- <el-input disabled v-model="row.productPrice" :formatter="erpPriceInputFormatter" /> -->
-          <SmNumber disabled :min="0.01" :precision="2" v-model="row.productPrice" />
-        </template>
-      </el-table-column>
-
-      <el-table-column label="税率%" prop="taxRate" width="100" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.taxRate`" class="mb-0px!">
-            <!-- <el-input-number
-              :disabled="disabled"
-              v-model="row.taxRate"
-              controls-position="right"
-              :min="0"
-              :precision="2"
-              class="!w-100%"
-            /> -->
-            <SmNumber :precision="2" v-model="row.taxRate" />
-          </el-form-item>
-        </template>
-      </el-table-column>
-
-      <template v-if="noCreate">
-        <el-table-column prop="tax" label="税额" width="100" align="center" />
-        <el-table-column prop="grossTotalPrice" label="价税合计" width="100" align="center" />
+      <template #declaredType="{ row, $index }">
+        <el-form-item
+          :prop="`${$index}.declaredType`"
+          :rules="formRules.declaredType"
+          class="mb-0px!"
+        >
+          <el-input :disabled="productDisabled" v-model="row.declaredType" />
+        </el-form-item>
       </template>
-      <el-table-column label="参考单价" prop="referenceUnitPrice" width="100" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
-            <!-- <el-input-number
-              :disabled="disabled"
-              v-model="row.referenceUnitPrice"
-              controls-position="right"
-              :min="0.01"
-              :precision="2"
-              class="!w-100%"
-            /> -->
-            <SmNumber
-              :disabled="disabled"
-              :min="0.01"
-              :precision="2"
-              v-model="row.referenceUnitPrice"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
 
-      <el-table-column label="期望到货日期" width="150" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
-            <el-date-picker
-              :disabled="mergeDisabled"
-              v-model="row.expectArrivalDate"
-              type="date"
-              value-format="x"
-              placeholder="请选择期望到货日期"
-              class="!w-1/1"
-              @change="(val) => batchChange(row, val, 'expectArrivalDate')"
-            />
-          </el-form-item>
-        </template>
-      </el-table-column>
+      <template #containerRate="{ row, $index }">
+        <el-form-item :prop="`${$index}.containerRate`" class="mb-0px!">
+          <el-input v-model.trim="row.containerRate" :disabled="disabled" class="!w-100%" />
+        </el-form-item>
+      </template>
 
-      <el-table-column v-if="mergeDisabled" label="交货日期*" width="150" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item
-            :prop="`${$index}.deliveryTime`"
-            :rules="formRules.deliveryTime"
-            class="mb-0px!"
+      <template #warehouseId="{ row, $index }">
+        <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
+          <el-select
+            :disabled="disabled"
+            v-model="row.warehouseId"
+            clearable
+            filterable
+            placeholder="请选择仓库"
           >
-            <el-date-picker
-              :disabled="disabled"
-              v-model="row.deliveryTime"
-              type="date"
-              value-format="x"
-              placeholder="请选择交货日期"
-              class="!w-1/1"
-              @change="(val) => batchChange(row, val, 'deliveryTime')"
+            <el-option
+              v-for="item in WMSWarehouseList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             />
-          </el-form-item>
-        </template>
-      </el-table-column>
+          </el-select>
+        </el-form-item>
+      </template>
 
-      <el-table-column label="海关品名(英文)*" width="120" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item
-            :prop="`${$index}.declaredTypeEn`"
-            :rules="formRules.declaredTypeEn"
-            class="mb-0px!"
-          >
-            <el-input :disabled="productDisabled" v-model="row.declaredTypeEn" />
-          </el-form-item>
-        </template>
-      </el-table-column>
+      <template #orderQuantity="{ row, $index }">
+        <el-form-item
+          :prop="`${$index}.orderQuantity`"
+          :rules="formRules.orderQuantity"
+          class="mb-0px!"
+        >
+          <SmNumber
+            :max="row.unOrderCount"
+            v-model="row.orderQuantity"
+            @change="(val) => changeValLimit(row, 'orderQuantity', 0, val)"
+          />
+        </el-form-item>
+      </template>
 
-      <el-table-column v-if="mergeDisabled" label="备注" width="150" align="center">
-        <template #default="{ row, $index }">
-          <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
-            <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
-          </el-form-item>
-        </template>
-      </el-table-column>
+      <template #qty="{ row, $index }">
+        <el-form-item :prop="`${$index}.qty`" :rules="formRules.qty" class="mb-0px!">
+          <SmNumber :disabled="productDisabled" :min="1" v-model="row.qty" />
+        </el-form-item>
+      </template>
 
-      <!-- applicantId -->
-      <el-table-column
-        v-if="mergeDisabled"
-        prop="applicant"
-        label="申请人"
-        width="160"
-        align="center"
-      />
-      <!-- applicationDeptId -->
-      <el-table-column
-        v-if="mergeDisabled"
-        prop="applicationDept"
-        label="申请部门"
-        width="160"
-        align="center"
-      />
+      <template #approvedQty="{ row, $index }">
+        <el-form-item :prop="`${$index}.approvedQty`" class="mb-0px!">
+          <SmNumber
+            :disabled="approveCountDisabled"
+            :min="1"
+            :max="row.qty"
+            v-model="row.approvedQty"
+            @change="(val) => changeValLimit(row, 'approvedQty', 1, val)"
+          />
+        </el-form-item>
+      </template>
 
-      <el-table-column v-if="showOperate" align="center" fixed="right" label="操作" width="60">
-        <template #default="{ $index }">
-          <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link
-            >—</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+      <template #grossPrice="{ row, $index }">
+        <el-form-item :prop="`${$index}.grossPrice`" class="mb-0px!">
+          <SmNumber :disabled="disabled" :min="0.01" :precision="2" v-model="row.grossPrice" />
+        </el-form-item>
+      </template>
+
+      <template #productPrice="{ row }">
+        <SmNumber disabled :min="0.01" :precision="2" v-model="row.productPrice" />
+      </template>
+
+      <template #taxRate="{ row, $index }">
+        <el-form-item :prop="`${$index}.taxRate`" class="mb-0px!">
+          <SmNumber :precision="2" v-model="row.taxRate" />
+        </el-form-item>
+      </template>
+
+      <template #referenceUnitPrice="{ row, $index }">
+        <el-form-item :prop="`${$index}.referenceUnitPrice`" class="mb-0px!">
+          <SmNumber
+            :disabled="disabled"
+            :min="0.01"
+            :precision="2"
+            v-model="row.referenceUnitPrice"
+          />
+        </el-form-item>
+      </template>
+
+      <template #expectArrivalDate="{ row, $index }">
+        <el-form-item :prop="`${$index}.expectArrivalDate`" class="mb-0px!">
+          <el-date-picker
+            :disabled="mergeDisabled"
+            v-model="row.expectArrivalDate"
+            type="date"
+            value-format="x"
+            placeholder="请选择期望到货日期"
+            class="!w-1/1"
+            @change="(val) => batchChange(row, val, 'expectArrivalDate')"
+          />
+        </el-form-item>
+      </template>
+
+      <template #deliveryTime="{ row, $index }">
+        <el-form-item
+          :prop="`${$index}.deliveryTime`"
+          :rules="formRules.deliveryTime"
+          class="mb-0px!"
+        >
+          <el-date-picker
+            :disabled="disabled"
+            v-model="row.deliveryTime"
+            type="date"
+            value-format="x"
+            placeholder="请选择交货日期"
+            class="!w-1/1"
+            @change="(val) => batchChange(row, val, 'deliveryTime')"
+          />
+        </el-form-item>
+      </template>
+
+      <template #declaredTypeEn="{ row, $index }">
+        <el-form-item
+          :prop="`${$index}.declaredTypeEn`"
+          :rules="formRules.declaredTypeEn"
+          class="mb-0px!"
+        >
+          <el-input :disabled="productDisabled" v-model="row.declaredTypeEn" />
+        </el-form-item>
+      </template>
+
+      <template #remark="{ row, $index }">
+        <el-form-item :prop="`${$index}.remark`" class="mb-0px!">
+          <el-input v-model.trim="row.remark" type="textarea" placeholder="请输入备注" />
+        </el-form-item>
+      </template>
+
+      <template #operate="{ $index }">
+        <el-button :disabled="formData.length === 1" @click="handleDelete($index)" link
+          >—</el-button
+        >
+      </template>
+    </SmTable>
   </el-form>
   <el-row justify="center" class="mt-3" v-if="!productDisabled">
     <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
@@ -384,6 +215,10 @@ import { updateModelValue } from '@/utils/high/index'
 import { getDeclaredType } from '@/utils/operate/srm'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { useBatchChange } from '@/hooks/common/useBatch'
+import { useTableData } from '@/components/SmTable/src/utils'
+import { WHOLE_ORDER_TYPE } from '@/hooks/common/wholeOrder'
+import { dateFormatter, dateFormatter2 } from '@/utils/formatTime'
+import { addFieldProp } from '@/components/SmTableField/src/utils'
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -425,22 +260,6 @@ const props = defineProps({
   }
 })
 
-const productDisabled = computed(() => ['audit', 'detail', 'merge'].includes(props.formType))
-const allDisabled = computed(() => ['detail'].includes(props.formType))
-const disabled = computed(() => ['audit', 'detail'].includes(props.formType))
-// 批准数量在merge下要禁用
-const mergeDisabled = computed(() => props.formType === 'merge')
-const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')
-const showOperate = computed(() => ['create', 'update'].includes(props.formType))
-
-const approveCountDisabled = computed(() => !['audit'].includes(props.formType))
-const approveCountShow = computed(() =>
-  ['detail', 'update', 'merge', 'audit'].includes(props.formType)
-)
-
-// 非新增下才会展示税额-价税合计
-const noCreate = computed(() => !['create'].includes(props.formType))
-
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
 // 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-产品编码(产品名称-单位) 申请数量
@@ -454,6 +273,198 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 const productList = getProductList() // 产品列表
+
+const productDisabled = computed(() => ['audit', 'detail', 'merge'].includes(props.formType))
+const allDisabled = computed(() => ['detail'].includes(props.formType))
+const disabled = computed(() => ['audit', 'detail'].includes(props.formType))
+// 批准数量在merge下要禁用
+const mergeDisabled = computed(() => props.formType === 'merge')
+const showAudit = computed(() => props.formType === 'audit' || props.formType === 'merge')
+const showOperate = computed(() => ['create', 'update'].includes(props.formType))
+
+const approveCountDisabled = computed(() => !['audit'].includes(props.formType))
+const approveCountShow = computed(() =>
+  ['detail', 'update', 'merge', 'audit'].includes(props.formType)
+)
+const showMerge = computed(() => props.formType === 'merge')
+const noCreate = computed(() => props.formType !== 'create')
+
+// 非新增下才会展示税额-价税合计
+
+// noCreate.value能否正确响应式要测试下-可以正确响应
+// :rules="formRules.qty" 测试检验功能是否ok
+
+// 选择项记得开启 isSelection isIndex
+//  <el-table-column fixed="left" width="40" label="选择" type="selection" align="center" />
+//     <el-table-column label="序号" type="index" align="center" width="60" />
+// 清单标记listDisabled 清单强制字段 无法被启用 应该会disabled
+// 抛出$index字段 <template #operate="{ scope }"> 直接取scope.$index  row, $index
+const fieldMap = {
+  id: {
+    width: '60',
+    label: '行编号',
+    isEnable: noCreate.value,
+    listDisabled: true
+  },
+
+  productId: {
+    width: '180',
+    label: '*产品编码',
+    slot: 'productId'
+  },
+  productName: {
+    width: '160',
+    label: '产品名称'
+  },
+  declaredType: {
+    width: '180',
+    label: '*海关品名',
+    slot: 'declaredType'
+  },
+
+  containerRate: {
+    width: '100',
+    label: '箱率',
+    slot: 'containerRate',
+    isEnable: disabled.value,
+    listDisabled: true
+  },
+
+  productUnitName: {
+    width: '100',
+    label: '单位'
+  },
+
+  warehouseId: {
+    width: '120',
+    label: '仓库',
+    slot: 'warehouseId',
+    isEnable: disabled.value,
+    listDisabled: true
+  },
+
+  orderQuantity: {
+    width: '80',
+    label: '*下单数量',
+    slot: 'orderQuantity',
+    isEnable: mergeDisabled.value,
+    listDisabled: true
+  },
+  unOrderCount: {
+    width: '120',
+    label: '未订购数量',
+    slot: 'unOrderCount',
+    isEnable: mergeDisabled.value,
+    listDisabled: true
+  },
+
+  qty: {
+    width: '100',
+    label: '*申请数量',
+    slot: 'qty'
+  },
+
+  approvedQty: {
+    width: '100',
+    label: '批准数量',
+    slot: 'approvedQty',
+    isEnable: approveCountShow.value,
+    listDisabled: true
+  },
+
+  grossPrice: {
+    width: '100',
+    label: '含税单价',
+    slot: 'grossPrice'
+  },
+
+  productPrice: {
+    width: '100',
+    label: '单价',
+    slot: 'productPrice'
+  },
+
+  taxRate: {
+    width: '100',
+    label: '税率%',
+    slot: 'taxRate'
+  },
+
+  tax: {
+    width: '100',
+    label: '税额',
+    isEnable: showMerge.value,
+    listDisabled: true
+  },
+
+  grossTotalPrice: {
+    width: '100',
+    label: '价税合计',
+    isEnable: showMerge.value,
+    listDisabled: true
+  },
+
+  referenceUnitPrice: {
+    width: '100',
+    label: '参考单价',
+    slot: 'referenceUnitPrice'
+  },
+
+  expectArrivalDate: {
+    width: '150',
+    label: '期望到货日期',
+    slot: 'expectArrivalDate'
+  },
+
+  deliveryTime: {
+    width: '150',
+    label: '*交货日期',
+    slot: 'deliveryTime'
+  },
+
+  declaredTypeEn: {
+    width: '150',
+    label: '*海关品名(英文)',
+    slot: 'declaredTypeEn'
+  },
+
+  remark: {
+    width: '100',
+    label: '备注',
+    slot: 'remark',
+    isEnable: mergeDisabled.value,
+    listDisabled: true
+  },
+
+  applicant: {
+    width: '160',
+    label: '申请人',
+    isEnable: mergeDisabled.value,
+    listDisabled: true
+  },
+  applicationDept: {
+    width: '160',
+    label: '申请部门',
+    isEnable: mergeDisabled.value,
+    listDisabled: true
+  },
+
+  operate: {
+    width: '60',
+    label: '操作',
+    slot: 'operate',
+    isEnable: showOperate.value,
+    listDisabled: true
+  }
+}
+
+const { tableOptions, transformTableOptions } = useTableData()
+const allOptions = transformTableOptions(fieldMap)
+tableOptions.value = addFieldProp(allOptions).filter((item) => item.isEnable)
+
+const getTableData = () => {
+  return formData
+}
 
 const { addSelectionId, handleSelectionChange, batchChange } = useBatchChange(formData)
 
@@ -604,7 +615,7 @@ const validate = () => {
 
 const WMSWarehouseList = getWMSWarehouseList()
 
-defineExpose({ validate })
+defineExpose({ validate, formData })
 
 /** 初始化 */
 onMounted(async () => {
