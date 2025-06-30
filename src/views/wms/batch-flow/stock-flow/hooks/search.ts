@@ -47,6 +47,22 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: warehouseBinList
     },
+
+    {
+      type: 'select',
+      label: '值类型',
+      prop: 'direction',
+      placeholder: '请选择值类型',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: [
+        { label: '正数', value: '+1' },
+        { label: '负数', value: '-1' }
+      ]
+    },
     // {
     //   type: 'tree-select',
     //   label: '库存归属',

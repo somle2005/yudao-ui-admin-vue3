@@ -195,7 +195,7 @@ import { RECONCILIATION_STSTUS_MAP } from '@/utils/constant'
 import { getMainItemBodyDataField } from '@/utils/transform'
 import { isUpdate, isDelete, isSubmitAuditBatch } from '@/utils/btnManager/srm'
 import { createWholeOrderSelectSummaries } from '@/utils/create'
-import { transformDecimal3 } from '@/views/tms/common/utils'
+import { transformDecimal3, transformVolumeNum } from '@/views/tms/common/utils'
 import { useWholeOrderTableField } from '@/components/SmTableField/src/hooks'
 
 /** Srm 销售入库列表 */
@@ -367,7 +367,7 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
     { itemsKey: 'itemsTax', itemsTotalKey: 'sumTax' }, // sumTax 税额
     { itemsKey: 'itemsGrossTotalPrice', itemsTotalKey: 'sumGrossTotalPrice' } // sumGrossTotalPrice 价税合计
   ].map((item: any) => {
-    return {
+    const obj = {
       wholeOrdeColumnKey: item.wholeOrderKey,
       wholeOrderKey: item.wholeOrderKey,
       itemsColumnKey: item.itemsKey,
@@ -376,6 +376,10 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
       itemsTotalKey: item.itemsTotalKey,
       formatter: transformDecimal3
     }
+    if (item.itemsKey === 'totalVolume') {
+      obj.formatter = transformVolumeNum
+    }
+    return obj
   }),
   selectionList,
   summary
