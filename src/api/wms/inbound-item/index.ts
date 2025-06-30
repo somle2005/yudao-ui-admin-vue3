@@ -51,7 +51,7 @@ export const InboundItemApi = {
 
   // 库位批次库存查询
   getInboundItemPageBin: async (data: any) => {
-    return await request.post({ url: `wms/inbound-item/page-bin`, data })
+    return await request.post({ url: `/wms/inbound-item/page-bin`, data })
   },
 
   // 查询入库单详情详情

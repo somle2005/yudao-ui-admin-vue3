@@ -59,6 +59,20 @@ export const useSearchForm = (handleQuery, queryParams) => {
       },
       children: warehouseBinList
     },
+    {
+      type: 'select',
+      placeholder: '请选择存货类型',
+      prop: 'stockType',
+      label: '存货类型',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_ZONE_PARTITION_TYPE)
+    }
 
     // {
     //   type: 'tree-select',
@@ -134,7 +148,7 @@ export const useSearchForm = (handleQuery, queryParams) => {
     //     defaultTime: [new Date('1 00:00:00'), new Date('1 23:59:59')],
     //     class: '!w-240px',
     //     style: {
-  //       width: '100%'
+    //       width: '100%'
     //     }
     //   }
     // }
