@@ -32,7 +32,8 @@ export const WHOLE_ORDER_SAVE_DATA_MAP = {
 }
 
 export const TABLE_FIDLD_SUFFIX_MAP = {
-  enable: 'enable' // 可用列表
+  enable: 'enable', // 可用列表
+  formList: 'formList' // 新增表单-清单
 }
 
 // 添加额外补充字段比如原字段-显示字段-进行区分

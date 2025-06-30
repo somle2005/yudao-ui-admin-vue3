@@ -46,12 +46,50 @@ export const useTableField = (tableOptions: any, tableFieldKey: string) => {
   const createTableFiledOptions = async () => {
     const data = await getTableFieldOptions(tableFieldKey)
     // 一开始默认取初始表格配置项-如果有接口值就取接口值
-    let diffTableOptions: any = tableOptions.value  
+    let diffTableOptions: any = tableOptions.value
     if (data.length) {
       // 对比之后还需要排序否则顺序会错乱
       diffTableOptions = createDiffTableOptions(tableOptions, data)
       tableOptions.value = filterOptions(diffTableOptions)
     }
+    // 全量必须都在数据
+    tableFieldOptions.value = addFieldProp(diffTableOptions)
+  }
+
+  const tableFieldConfirm = (restoreValue, data: any[]) => {
+    tableOptions.value = filterOptions(restoreValue)
+    tableFieldOptions.value = data
+  }
+  return {
+    createTableFiledOptions,
+    tableFieldOptions,
+    tableFieldConfirm
+  }
+}
+
+// 清单表格配置 tableOptions(isEnable)和 tableFieldOptions -addFieldProp
+export const useListTableField = (tableOptions: any, allOptions: any, tableFieldKey: string) => {
+  // 需要先带上isEnable字段
+  // const allTableFieldOptions = addFieldProp(allOptions)
+
+  // 过滤isEnable为false的
+  const filterOptions = (data: any[]) => {
+    return data.filter((item) => item.isEnable)
+  }
+  tableOptions.value = filterOptions(addFieldProp(allOptions))
+
+  const tableFieldOptions = ref<any[]>([])
+
+  const createTableFiledOptions = async () => {
+    const data = await getTableFieldOptions(tableFieldKey)
+    // 一开始默认取初始表格配置项-如果有接口值就取接口值
+    let diffTableOptions: any = tableOptions.value
+    if (data.length) {
+      // 对比之后还需要排序否则顺序会错乱
+      diffTableOptions = createDiffTableOptions(tableOptions, data)
+    }
+    // if还是else都取这个
+    tableOptions.value = filterOptions(diffTableOptions)
     // 全量必须都在数据
     tableFieldOptions.value = addFieldProp(diffTableOptions)
   }
