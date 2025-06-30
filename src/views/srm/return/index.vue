@@ -354,7 +354,7 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
 
     { itemsKey: 'itemsQty', itemsTotalKey: 'sumQty' }, // sumQty 数量
 
-    { itemsKey: 'itemsProductPrice', itemsTotalKey: 'sumProductPrice' },
+    // { itemsKey: 'itemsProductPrice', itemsTotalKey: 'sumProductPrice' },
     { itemsKey: 'itemsGrossPrice', itemsTotalKey: 'sumGrossPrice' },
     { itemsKey: 'itemsTax', itemsTotalKey: 'sumTax' }, // sumTax 税额
     { itemsKey: 'itemsGrossTotalPrice', itemsTotalKey: 'sumGrossTotalPrice' }
