@@ -391,11 +391,11 @@ const fieldMap = {
   //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
   // },
 
-  itemsPayPrice: {
-    label: '已付款金额',
-    wholeOrderEnable: WHOLE_ORDER_TYPE.items
-    // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
-  },
+  // itemsPayPrice: {
+  //   label: '已付款金额',
+  //   wholeOrderEnable: WHOLE_ORDER_TYPE.items
+  //   // wholeOrderEnable: WHOLE_ORDER_TYPE.mergeCompute // 需要整单合并计算的
+  // },
 
   itemsGrossPrice: {
     label: '含税单价',

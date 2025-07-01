@@ -93,6 +93,9 @@ import {
 } from './utils'
 import { cloneDeep, debounce } from 'lodash-es'
 
+
+const fontSize = window.innerWidth > 2000 ? '14px' : '12px'
+
 // 加配置项不要忘记在 SmTable里面进行处理操作
 const props = defineProps({
   // 处理字段映射关系
@@ -365,6 +368,7 @@ watch(
   width: 200px; // 这里如果修改了记得修改上面的extraWidth 
 }
 .table-config-title {
+  font-size: v-bind(fontSize);
   // 这里如果修改了记得修改上面的extraWidth 
   width: 200px;
   white-space: nowrap;
@@ -377,6 +381,7 @@ watch(
   background: rgb(229, 229, 229);
 }
 .table-config-content .item {
+  font-size: v-bind(fontSize);
   display: flex;
   align-items: center;
   height: 49px;
