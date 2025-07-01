@@ -102,15 +102,6 @@ export const codeTypeList = [
   // 入库单优先级放最后了  split('.')[0][1]
   { name: '入库', type: 1, dictType: 'wms_inbound_type', getValue: 'inbound.type' },
   { name: '拣货', type: 2, dictType: 'wms_outbound_type', getValue: 'pickup.status' }
-  // { name: '拣货', type: 2, dictType: 'wms_inbound_type', getValue: 'inbound.type' }
-
-  // 只有出库单-入库单状态
-  // { name: '拒绝出库单', type: 6, dictType: 'wms_outbound_type', getValue: 'pickup.status' }, // 库位移动单等后端加字典
-
-  // { name: '所有者移动单', type: 7, dictType: 'wms_move_execute_status', getValue: 'pickup.status' },
-
-  // { name: '盘赢', type: 8, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' },
-  // { name: '盘亏', type: 9, dictType: 'wms_inventory_audit_status', getValue: 'inventory.status' }
 ]
 
 // 根据存在进行返回
