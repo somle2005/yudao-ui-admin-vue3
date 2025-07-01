@@ -9,8 +9,9 @@
 const list = [
   { prop: 'code', label: '产品编码' },
   { prop: 'name', label: '产品名称' },
+  { prop: 'englishName', label: '英文名' },
   { prop: 'material', label: '材料(中文)' },
-  { prop: 'brand', label: '品牌' },
+  { prop: 'brand', label: '品牌' }
   // { prop: 'unitName', label: '单位名称' }
 ]
 
@@ -27,8 +28,7 @@ const props = defineProps({
 /** 初始化设置入库项 */
 watch(
   () => props.data,
-  async (val) => {
-  },
+  async (val) => {},
   { immediate: true, deep: true }
 )
 
