@@ -189,7 +189,7 @@ const createRequestFormOptions = () => {
       requiredFlag: true,
       type: 'select',
       placeholder: '请选择类型',
-      prop: 'status',
+      prop: 'type',
       label: '类型',
       attrs: {
         filterable: true,
@@ -203,7 +203,7 @@ const createRequestFormOptions = () => {
     {
       type: 'input',
       label: '货架',
-      prop: 'name',
+      prop: 'shelf',
       placeholder: '请输入货架',
       attrs: {
         style: { width: '100%' },
