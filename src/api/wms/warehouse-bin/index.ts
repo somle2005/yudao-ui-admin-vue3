@@ -2,13 +2,62 @@ import request from '@/config/axios'
 
 // 库位 VO
 export interface WarehouseBinVO {
-  id: number // 主键
-  code: string // 代码
-  name: string // 名称
-  warehouseId: number // 归属的仓库ID
-  zoneId: number // 库区ID
-  pickingOrder: number // 拣货顺序
-  status: number // 状态，WMS通用的对象有效状态 ; ValidStatus : 0-不可用 , 1-可用
+  /**
+   * 巷道
+   */
+  aisle?: string
+  /**
+   * 代码
+   */
+  code: string
+  /**
+   * 高度mm
+   */
+  height?: number
+  /**
+   * 主键
+   */
+  id?: number
+  /**
+   * 层数
+   */
+  layer?: number
+  /**
+   * 长度mm
+   */
+  length?: number
+  /**
+   * 名称
+   */
+  name: string
+  /**
+   * 拣货顺序
+   */
+  pickingOrder?: number
+  /**
+   * 货架
+   */
+  shelf?: string
+  /**
+   * 状态，WMS通用的对象有效状态 ; ValidStatus : 0-不可用 , 1-可用
+   */
+  status: number
+  /**
+   * 类型 1标准 2超长
+   */
+  type: number
+  /**
+   * 归属的仓库ID
+   */
+  warehouseId: number
+  /**
+   * 宽度mm
+   */
+  width?: number
+  /**
+   * 库区ID
+   */
+  zoneId: number
 }
 
 export interface WarehouseBinSimpleVO {
@@ -80,5 +129,10 @@ export const WarehouseBinApi = {
   // 导入库位
   importWarehouseBin: async (data: any) => {
     return await request.upload({ url: `/wms/warehouse-bin/import-excel`, data })
+  },
+
+  // 修改库位
+  updateWarehouseBinBatch: async (data: WarehouseBinVO[]) => {
+    return await request.put({ url: `/wms/warehouse-bin/batch/update`, data })
   }
 }

@@ -31,6 +31,24 @@
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
         <el-button
+          :disabled="disabledBtn"
+          type="primary"
+          plain
+          @click="handleUpdateStatusEnableBatch(1)"
+          v-hasPermi="['wms:warehouse-bin:update']"
+        >
+          启用
+        </el-button>
+
+        <el-button
+          :disabled="disabledBtn"
+          plain
+          @click="handleUpdateStatusEnableBatch(0)"
+          v-hasPermi="['wms:warehouse-bin:update']"
+        >
+          禁用
+        </el-button>
+        <el-button
           type="success"
           plain
           @click="handleImport"
@@ -46,6 +64,7 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      isSelection
       border
       :loading="loading"
       :options="tableOptions"
@@ -54,6 +73,7 @@
       v-model:currentPage="queryParams.pageNo"
       v-model:pageSize="queryParams.pageSize"
       @pagination="getList"
+      @selection-change="handleSelectionChange"
     >
       <template #operate="{ scope }">
         <el-button
@@ -64,14 +84,14 @@
         >
           编辑
         </el-button>
-        <el-button
+        <!-- <el-button
           link
           type="danger"
           @click="handleDelete(scope.row.id)"
           v-hasPermi="['wms:warehouse-bin:delete']"
         >
           删除
-        </el-button>
+        </el-button> -->
       </template>
     </SmTable>
   </ContentWrap>
@@ -94,6 +114,7 @@ import WarehouseBinForm from './WarehouseBinForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useImport } from '@/hooks/common/useImport'
+import { useBatch } from './hooks/useBatch'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 
@@ -242,7 +263,15 @@ const importUrlFn = (importData) => {
     // operateImportFormDataResult(res.data)
     // refreshDetail()
   })
-} 
+}
+
+/** 选中操作 */
+const selectionList = ref<any[]>([])
+const handleSelectionChange = (rows: any[]) => {
+  selectionList.value = rows
+}
+
+const { disabledBtn, handleUpdateStatusEnableBatch } = useBatch(selectionList, getList)
 
 /** 初始化 **/
 onMounted(() => {
