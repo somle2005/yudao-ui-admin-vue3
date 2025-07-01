@@ -91,6 +91,7 @@ import { useSearchForm } from './hooks/search'
 import { StockBinApi } from '@/api/wms/stock-bin'
 import ProductInfo from './components/ProductInfo.vue'
 import { getSumValue } from '@/utils'
+import { transformVolumeNum } from '@/views/tms/common/utils'
 
 const { tableOptions, transformTableOptions, getItemPropList } = useTableData()
 
@@ -151,7 +152,10 @@ const warehouseFieldMap = {
   transitQty: '在途数',
   makePendingQty: '在制数',
   // purchaseTransitQty: '采购在途数',
-  returnTransitQty: '退件在途数'
+  returnTransitQty: '退件在途数',
+  grossVolume: {
+    label: '体积(m³)',
+  }
   // age: '库龄'
 }
 
@@ -240,14 +244,22 @@ const getList = async () => {
     // const data = await StockWarehouseApi.getStockWarehousePage(queryParams)
     // const data = await StockBinApi.getStockBinGroupedPage(queryParams)
     const data = await StockWarehouseApi.getStockWarehousePageGrouped(queryParams)
-    list.value = data?.list?.map((item) => {
-      item.stockWarehouseList = getItemPropList(item.stockWarehouseList, [
-        { prop: 'warehouse', keyList: ['mode', 'name', 'code'] }
-      ])
-      item.productPrimaryImageUrl = item?.product?.primaryImageUrl
-      return item
-    }) || []
+    list.value =
+      data?.list?.map((item) => {
+        item.stockWarehouseList = getItemPropList(item.stockWarehouseList, [
+          { prop: 'warehouse', keyList: ['mode', 'name', 'code'] }
+        ])
+        item.stockWarehouseList.forEach(item => {
+          item.grossVolume = transformVolumeNum(item.grossVolume)
+        })
+        item.productPrimaryImageUrl = item?.product?.primaryImageUrl
+        return item
+      }) || []
     total.value = data.total
+
+    
+
+    // transformVolumeNum
 
     // setTimeout(() => {
     //   warehouseInfoRef.value.tableRef.doLayout()
