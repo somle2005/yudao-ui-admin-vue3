@@ -135,17 +135,17 @@ const createRequestFormOptions = () => {
       },
       children: warehouseZoneList
     },
-    {
-      requiredFlag: true,
-      type: 'input',
-      label: '库位代码',
-      prop: 'code',
-      placeholder: '请输入库位代码',
-      attrs: {
-        style: { width: '100%' },
-        clearable: true
-      }
-    },
+    // {
+    //   requiredFlag: true,
+    //   type: 'input',
+    //   label: '库位代码',
+    //   prop: 'code',
+    //   placeholder: '请输入库位代码',
+    //   attrs: {
+    //     style: { width: '100%' },
+    //     clearable: true
+    //   }
+    // },
     {
       requiredFlag: true,
       type: 'input',
