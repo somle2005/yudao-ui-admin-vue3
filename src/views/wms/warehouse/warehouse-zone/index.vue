@@ -101,8 +101,8 @@ const fieldMap = {
     dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
   },
   priority: {
-    label: '优先级',
-    width: '100px'
+    label: '优先级(值大优)',
+    width: '160px'
   },
   updateTime: {
     label: '更新时间',
