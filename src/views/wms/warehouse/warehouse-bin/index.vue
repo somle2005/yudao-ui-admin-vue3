@@ -30,6 +30,15 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleImport"
+          :loading="exportLoading"
+          v-hasPermi="['wms:warehouse-bin:update']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 批量调整库位
+        </el-button>
       </template>
     </SmForm>
   </ContentWrap>
@@ -69,6 +78,12 @@
 
   <!-- 表单弹窗：添加/修改 -->
   <WarehouseBinForm ref="formRef" @success="getList" />
+
+  <SmImportFile
+    ref="smImportFileRef"
+    :importUrlFn="WarehouseBinApi.importWarehouseBin"
+    :templateObj="templateObj"
+  />
 </template>
 
 <script setup lang="ts">
@@ -78,6 +93,7 @@ import { WarehouseBinApi, WarehouseBinVO } from '@/api/wms/warehouse-bin'
 import WarehouseBinForm from './WarehouseBinForm.vue'
 import { useSearchForm } from './hooks/search'
 import { useTableData } from '@/components/SmTable/src/utils'
+import { useImport } from '@/hooks/common/useImport'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 
@@ -95,6 +111,19 @@ const fieldMap = {
     label: '拣货顺序',
     width: '100px'
   },
+
+  type: {
+    label: '类型',
+    slot: 'type',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_BIN_TYPE }
+  },
+  shelf: '货架',
+  aisle: '巷道',
+  layer: '层数',
+  length: '长度mm',
+  width: '宽度mm',
+  height: '高度mm',
+
   updateTime: {
     label: '更新时间',
     formatter: dateFormatter,
@@ -201,6 +230,19 @@ const handleExport = async () => {
 }
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
+
+const { smImportFileRef, templateObj, handleImport } = useImport({
+  url: WarehouseBinApi.downloadWarehouseBinTemplate,
+  name: '批量库位模版.xls'
+})
+
+const importUrlFn = (importData) => {
+  // importData.append('stockCheckId', stockCheckId.value)
+  return WarehouseBinApi.importWarehouseBin(importData).then((res) => {
+    // operateImportFormDataResult(res.data)
+    // refreshDetail()
+  })
+}
 
 /** 初始化 **/
 onMounted(() => {

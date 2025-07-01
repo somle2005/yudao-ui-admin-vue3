@@ -70,5 +70,15 @@ export const WarehouseBinApi = {
   // 获得库位置精简列表
   getWarehouseBinExchangeSimpleList: async (params?: any) => {
     return await request.get({ url: '/wms/warehouse-bin/exchange/simple-list', params })
+  },
+
+  // 下载模版 库位表
+  downloadWarehouseBinTemplate: async (params) => {
+    return await request.download({ url: `/wms/warehouse-bin/download/template`, params })
+  },
+
+  // 导入库位
+  importWarehouseBin: async (data: any) => {
+    return await request.upload({ url: `/wms/warehouse-bin/import-excel`, data })
   }
 }

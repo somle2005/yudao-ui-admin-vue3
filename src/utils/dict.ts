@@ -281,6 +281,7 @@ export enum DICT_TYPE {
   WMS_INVENTORY_STATUS = 'wms_inventory_status', // WMS库存移动的执行状态
   WMS_EXCHANGE_AUDIT_STATUS = 'wms_exchange_audit_status', // WMS换货单审批状态
   WMS_EXCHANGE_TYPE = 'wms_exchange_type', // WMS换货单类型
+  WMS_WAREHOUSE_BIN_TYPE = 'wms_warehouse_bin_type', // WMS库位类型
   
   // ========== SRM - 采购模块  ==========
   SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态

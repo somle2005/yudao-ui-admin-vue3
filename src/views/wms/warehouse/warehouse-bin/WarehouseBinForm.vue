@@ -84,7 +84,7 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await WarehouseBinApi.createWarehouseBin(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await WarehouseBinApi.updateWarehouseBin(data)
       message.success(t('common.updateSuccess'))
     }
@@ -179,6 +179,92 @@ const createRequestFormOptions = () => {
       prop: 'pickingOrder',
       placeholder: '请输入拣货顺序',
       attrs: {
+        style: { width: '100%' },
+        clearable: true,
+        min: 0
+      }
+    },
+
+    {
+      requiredFlag: true,
+      type: 'select',
+      placeholder: '请选择类型',
+      prop: 'status',
+      label: '类型',
+      attrs: {
+        filterable: true,
+        clearable: true,
+        style: {
+          width: '100%'
+        }
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_BIN_TYPE)
+    },
+    {
+      type: 'input',
+      label: '货架',
+      prop: 'name',
+      placeholder: '请输入货架',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      type: 'input',
+      label: '巷道',
+      prop: 'aisle',
+      placeholder: '请输入巷道',
+      attrs: {
+        style: { width: '100%' },
+        clearable: true
+      }
+    },
+    {
+      type: 'input-number',
+      label: '层数',
+      prop: 'layer',
+      placeholder: '请输入层数',
+      attrs: {
+        controls: false,
+        style: { width: '100%' },
+        clearable: true,
+        min: 0
+      }
+    },
+
+    {
+      type: 'input-number',
+      label: '长度mm',
+      prop: 'length',
+      placeholder: '请输入长度mm',
+      attrs: {
+        controls: false,
+        style: { width: '100%' },
+        clearable: true,
+        min: 0
+      }
+    },
+
+    {
+      type: 'input-number',
+      label: '宽度mm',
+      prop: 'width',
+      placeholder: '请输入宽度mm',
+      attrs: {
+        controls: false,
+        style: { width: '100%' },
+        clearable: true,
+        min: 0
+      }
+    },
+    {
+      type: 'input-number',
+      label: '高度mm',
+      prop: 'height',
+      placeholder: '请输入高度mm',
+      attrs: {
+        controls: false,
         style: { width: '100%' },
         clearable: true,
         min: 0
