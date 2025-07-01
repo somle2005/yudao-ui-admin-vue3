@@ -66,8 +66,8 @@ export const useTable = () => {
     },
 
     totalPrice: '采购总价', // 汇总该退货单的总金额
-    totalReturnCount: '退货数',
-    // totalItemsQty: '退货数',
+    // totalReturnCount: '退货数',
+    totalItemsQty: '退货数',
 
     totalWeight: '总毛重',
     totalVolume: {
