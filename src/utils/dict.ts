@@ -229,7 +229,7 @@ export enum DICT_TYPE {
   ERP_PRODUCT_LISTING_STATUS = 'erp_product_listing_status', // 商品上下架状态
   REPORT_MAP = 'report_map', // 报表地图
   ERP_SALES_PLATFORM = 'erp_sales_platform', // 销售平台
-  
+
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
@@ -275,7 +275,6 @@ export enum DICT_TYPE {
   WMS_STOCK_FLOW_DIRECTION = 'wms_stock_flow_direction', // WMS库存流水方向
   WMS_STOCK_TYPE = 'wms_stock_type', // WMS库存类型
 
-
   // ========== SRM - 采购模块  ==========
   SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态
   SRM_EXECUTE_STATUS = 'srm_execute_status', // SRM 执行状态
@@ -283,5 +282,10 @@ export enum DICT_TYPE {
   SRM_ORDER_STATUS = 'srm_order_status', // SRM 采购订购状态
   SRM_PAYMENT_STATUS = 'srm_payment_status', // SRM 采购付款状态
   SRM_OFF_STATUS = 'srm_off_status', // SRM 开关状态
-  SRM_AUDIT_STATUS = 'srm_audit_status' // SRM 审批状态
+  SRM_AUDIT_STATUS = 'srm_audit_status', // SRM 审批状态
+
+  // ========== CMS内容管理  ==========
+  CMS_MEDIA_TYPE = 'cms_media_type', // CMS资源类型
+  CMS_MODULE_CODE = 'cms_module_code', // CMS模块编码
+  CMS_APP_CODE = 'cms_app_code' // CMS应用编码
 }
