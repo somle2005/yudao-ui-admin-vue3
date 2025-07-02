@@ -47,8 +47,14 @@ export const useTable = () => {
     totalPackageWeight: '总重量(kg)', // 取总毛重
     // totalWeight: '总重量(kg)',
     totalVolume: {
-      label: '总体积(m³)'
+      label: '总体积(m³)',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.wholeOrder
       // formatter: transformVolumeColumn
+    },
+    // 做齿轮如何进行区分-不同的字段这是属于
+    itemsTotalVolume: {
+      label: '总体积(m³)',
+      wholeOrderEnable: WHOLE_ORDER_TYPE.items
     },
 
     auditStatus: {
@@ -157,10 +163,14 @@ export const useTable = () => {
       })
       item.totalVolume = transformVolumeNum(item.totalVolume)
     })
+    data.summary.sumVolume = transformVolumeNum(data.summary.sumVolume)
+
+    
     wholeOrderList.value = wholeOrderMergeCompute(data.list, allOptions)
     itemsList.value = mergeItemsUpToList(data.list)
     // itemsList.value = wholeOrderMergeCompute(itemsList.value, allOptions)
     itemsList.value = dataKeyToMapKey(itemsList.value, { itemsQty: 'totalItemsQty' })
+    console.log(itemsList.value,'itemsList.value')
 
     itemsTotal.value = data.itemsTotal || data.total
     wholeOrderTotal.value = data.total

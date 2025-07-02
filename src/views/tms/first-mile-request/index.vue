@@ -317,22 +317,28 @@ const { getWholeOrderSelectSummaries } = createWholeOrderSelectSummaries(
     {
       itemsColumnKey: 'itemsPackageWeight',
       itemsKey: 'itemsPackageWeight', // 'itemsTotalPackageWeight'
+      itemsTotalKey: 'sumPackageHeight',
       wholeOrdeColumnKey: 'totalPackageWeight',
       wholeOrderKey: 'totalPackageWeight',
+      wholeOrderTotalKey: 'sumPackageHeight',
       formatter: transformDecimal3
     },
     {
       itemsColumnKey: 'itemsVolume',
       itemsKey: 'itemsVolume', // 'itemsTotalVolume'
+      itemsTotalKey: 'sumVolume',
       wholeOrdeColumnKey: 'totalVolume',
       wholeOrderKey: 'totalVolume',
+      wholeOrderTotalKey: 'sumVolume',
       formatter: transformDecimal3
     },
     {
       itemsColumnKey: 'itemsQty',
       itemsKey: 'itemsQty',
+      itemsTotalKey: 'sumQty',
       wholeOrdeColumnKey: 'totalItemsQty',
       wholeOrderKey: 'totalItemsQty',
+      wholeOrderTotalKey: 'sumQty',
       formatter: transformDecimal3
     }
   ],
