@@ -69,6 +69,7 @@ const open = async (type: string, id?: number) => {
     try {
       formData.value = await MediaResourceApi.getMediaResource(id)
       formData.value.fileUrl = formData.value.storagePath[0]
+      formRef.value.initForm()
     } finally {
       formLoading.value = false
     }
