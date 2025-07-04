@@ -106,7 +106,7 @@ export const useForm = (formType) => {
       {
         type: 'input-number',
         placeholder: '请输入包装重量(kg)',
-        prop: 'packageHeight',
+        prop: 'packageWeight',
         label: '包装重量(kg)',
         attrs: {
           controls: false,

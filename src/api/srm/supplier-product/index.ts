@@ -51,5 +51,12 @@ export const SupplierProductApi = {
   // 导出ERP 供应商产品 Excel
   exportSupplierProduct: async (params) => {
     return await request.download({ url: `/srm/supplier-product/export-excel`, params })
+  },
+
+  // 批量获取产品+供应商的上一次成交价，返回列表
+  getBatchSupplierProductDefaultLastPrice: async (
+    data: { supplierId: number; productId: number }[]
+  ) => {
+    return await request.post({ url: `/srm/supplier-product/batch-default-last-price`, data })
   }
 }
