@@ -62,9 +62,9 @@ export const useForm = (formType) => {
 
       {
         type: 'input-number',
-        placeholder: '请输入包装长度（cm）',
+        placeholder: '请输入包装长度(cm)',
         prop: 'packageLength',
-        label: '包装长度（cm）',
+        label: '包装长度(cm)',
         attrs: {
           controls: false,
           min: 0,
@@ -77,9 +77,9 @@ export const useForm = (formType) => {
 
       {
         type: 'input-number',
-        placeholder: '请输入包装宽度（cm）',
+        placeholder: '请输入包装宽度(cm)',
         prop: 'packageWidth',
-        label: '包装宽度（cm）',
+        label: '包装宽度(cm)',
         attrs: {
           controls: false,
           min: 0,
@@ -91,9 +91,9 @@ export const useForm = (formType) => {
       },
       {
         type: 'input-number',
-        placeholder: '请输入包装高度（cm）',
+        placeholder: '请输入包装高度(cm)',
         prop: 'packageHeight',
-        label: '包装高度（cm）',
+        label: '包装高度(cm)',
         attrs: {
           controls: false,
           min: 0,
@@ -105,9 +105,9 @@ export const useForm = (formType) => {
       },
       {
         type: 'input-number',
-        placeholder: '请输入包装重量（kg）',
+        placeholder: '请输入包装重量(kg)',
         prop: 'packageHeight',
-        label: '包装重量（kg）',
+        label: '包装重量(kg)',
         attrs: {
           controls: false,
           min: 0,
@@ -119,9 +119,9 @@ export const useForm = (formType) => {
       },
       {
         type: 'input-number',
-        placeholder: '请输入采购价格（元）',
+        placeholder: '请输入采购价格(元)',
         prop: 'purchasePrice',
-        label: '采购价格（元）',
+        label: '采购价格(元)',
         attrs: {
           controls: false,
           min: 0,
@@ -144,6 +144,46 @@ export const useForm = (formType) => {
           }
         },
         children: getIntDictOptions(DICT_TYPE.CURRENCY_CODE)
+      },
+
+      {
+        type: 'input-number',
+        placeholder: '请输入上次采购价格',
+        prop: 'lastPurchasePrice',
+        label: '上次采购价格',
+        attrs: {
+          controls: false,
+          min: 0,
+          precision: 2,
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'input-number',
+        placeholder: '请输入税率',
+        prop: 'taxRate',
+        label: '税率',
+        attrs: {
+          controls: false,
+          min: 0,
+          precision: 2,
+          style: {
+            width: '100%'
+          }
+        }
+      },
+      {
+        type: 'switch',
+        placeholder: '是否默认供应商',
+        prop: 'defaultSupplier',
+        label: '税率',
+        attrs: {
+          style: {
+            width: '100%'
+          }
+        }
       }
     ]
     addProperty(list)

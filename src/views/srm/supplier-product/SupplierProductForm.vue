@@ -18,7 +18,7 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
+import { SupplierProductApi, SupplierProductVO } from '@/api/srm/supplier-product'
 import { useForm } from './hooks/useForm'
 
 /** ERP 供应商产品 表单 */
@@ -42,7 +42,8 @@ const initFormData = () => {
     packageWeight: undefined,
     packageWidth: undefined,
     purchasePrice: undefined,
-    purchasePriceCurrencyCode: undefined
+    purchasePriceCurrencyCode: undefined,
+    defaultSupplier: true
   }
 }
 const formData = ref(initFormData())

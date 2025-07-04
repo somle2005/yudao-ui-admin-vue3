@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { SupplierProductApi, SupplierProductVO } from '@/api/srm/product'
+import { SupplierProductApi, SupplierProductVO } from '@/api/srm/supplier-product'
 import SupplierProductForm from './SupplierProductForm.vue'
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { DictTag } from '@/components/DictTag'
