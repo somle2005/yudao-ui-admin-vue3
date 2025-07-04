@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash-es"
 
-export const useJsonList = (formData) => {
+export const useJsonList = (formRef,formData) => {
   const dialogVisible = ref(false) // 弹窗的是否展示
   const currentRow: any = {}
 
@@ -13,7 +13,8 @@ export const useJsonList = (formData) => {
     dialogVisible.value = true
   }
 
-  const addJsonList = () => {
+  const addJsonList = async () => {
+    await formRef.value?.validate()
     const { index, type, parentFormData } = currentRow
     parentFormData.value[index][type] = formData.value
     dialogVisible.value = false

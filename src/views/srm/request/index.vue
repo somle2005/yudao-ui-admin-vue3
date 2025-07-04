@@ -230,6 +230,7 @@ const fieldMap = {
     formatter: dateFormatter2, // 年月日-金蝶
     width: '180px'
   },
+  itemsDefaultSupplierName: '默认供应商',
   code: {
     label: '单据编码',
     width: '200px',

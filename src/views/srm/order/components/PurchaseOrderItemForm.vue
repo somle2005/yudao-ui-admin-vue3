@@ -418,8 +418,8 @@
       <el-button @click="handleAdd" round>+ 添加采购产品</el-button>
     </el-row>
 
-    <InspectionJsonForm ref="inspectionJsonFormRef" :disabled="jsonDisabled" />
-    <CompletionJsonForm ref="completionJsonFormRef" :disabled="jsonDisabled" />
+    <InspectionJsonForm ref="inspectionJsonFormRef" :disabled="jsonDisabled" :item="clickItem" />
+    <CompletionJsonForm ref="completionJsonFormRef" :disabled="jsonDisabled" :item="clickItem" />
   </div>
 </template>
 <script setup lang="ts">
@@ -462,6 +462,8 @@ const props = defineProps({
     default: ''
   }
 })
+
+const clickItem = ref({})
 
 const showMerge = computed(() => ['merge'].includes(props.formType))
 
@@ -506,6 +508,7 @@ const jsonDisabled = computed(() => {
 
 const openJsonList = (type: string, index: number) => {
   const row = formData.value[index]
+  clickItem.value = row
   const map = {
     inspectionJson: () => {
       inspectionJsonFormRef.value.open(row, formData, index, type)

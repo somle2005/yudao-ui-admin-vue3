@@ -2,32 +2,19 @@ export const notEmpty = (val) => {
   return ![null, undefined, ''].includes(val)
 }
 
-export const hasRepeat = (
-  list: any[],
-  keyMap?: {
-    parentKey
-    sonKey
-  }
-) => {
+export const isValRepeat = (list: any[], val: any, key: string) => {
   try {
     let hasRepeat = false
-    const { parentKey = 'productId', sonKey = 'binId' } = keyMap || {}
     const map = {}
-    for (const item of list) {
-      const parentId = item[parentKey]
-      const sonId = item[sonKey]
 
-      if (!map[parentId]) {
-        map[parentId] = {
-          [sonId]: 1
-        }
-      } else {
-        if (map[parentId][sonId]) {
-          map[parentId][sonId] += 1
+    for (const item of list) {
+      const keyId = item[key]
+      if (val === keyId) {
+        if (!map[keyId]) {
+          map[keyId] = 1
+        } else {
           hasRepeat = true
           break
-        } else {
-          map[parentId][sonId] = 1
         }
       }
     }

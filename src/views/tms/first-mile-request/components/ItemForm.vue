@@ -123,7 +123,6 @@ import {
 } from '@/utils'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
-import { hasRepeat } from '@/utils/judge'
 import { getFinanceSubjectList, getProductList } from '@/commonData'
 import { changeAppStatus } from '@/api/pay/app'
 import { CustomRuleApi } from '@/api/tms/customrule'

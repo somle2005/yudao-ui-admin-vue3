@@ -26,12 +26,17 @@
         </el-table-column>
         <el-table-column label="通过数量" fixed="right" min-width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.inspectionPassCount`" class="mb-0px!">
+            <el-form-item
+              :prop="`${$index}.inspectionPassCount`"
+              :rules="createReduceMaxRules('inspectionPassCount')"
+              class="mb-0px!"
+            >
               <el-input-number
                 v-model="row.inspectionPassCount"
                 placeholder="请输入通过数量"
                 controls-position="right"
                 :min="0"
+                :max="item.originCount"
                 :precision="0"
                 class="!w-100%"
               />
@@ -40,12 +45,17 @@
         </el-table-column>
         <el-table-column label="未通过数量" fixed="right" min-width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.noInspectionPassCount`" class="mb-0px!">
+            <el-form-item
+              :prop="`${$index}.noInspectionPassCount`"
+              :rules="createReduceMaxRules('noInspectionPassCount')"
+              class="mb-0px!"
+            >
               <el-input-number
                 v-model="row.noInspectionPassCount"
                 placeholder="请输入未通过数量"
                 controls-position="right"
                 :min="0"
+                :max="item.originCount"
                 :precision="0"
                 class="!w-100%"
               />
@@ -71,6 +81,13 @@
 <script setup lang="ts">
 import { ElForm } from 'element-plus'
 import { useJsonList } from './hooks/useJsonList'
+import { getReduceMaxRules } from '../../common/utils'
+
+/**
+  disabled 已审核状态下才能使用
+  能合并说明已经是已审核状态下 出现下单数量 v-if="showOringinCount" label="数量"
+  const showOringinCount = computed(() => ['merge'].includes(props.formType))
+ */
 
 const props = defineProps({
   // items: {
@@ -80,8 +97,21 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  item: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
+
+watch(
+  () => props.item,
+  async (val) => {},
+  { immediate: true, deep: true }
+)
+
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<any[]>([])
 const formRules = reactive({
@@ -89,6 +119,17 @@ const formRules = reactive({
   // price: [{ required: true, message: '指导价不能为空', trigger: 'blur' }]
 })
 const formRef = ref<InstanceType<typeof ElForm>>() // 表单 Ref
+
+const { createReduceMaxRules } = getReduceMaxRules(
+  formData,
+  props.item,
+  { maxLabel: '下单数量', maxKey: 'originCount' },
+  [
+    { label: '通过数量', reduceKey: 'inspectionPassCount' },
+    { label: '未通过数量', reduceKey: 'noInspectionPassCount' }
+  ]
+)
+
 /** 初始化设置入库项 */
 // watch(
 //   () => props.items,
@@ -117,7 +158,7 @@ const validate = () => {
   return formRef.value?.validate()
 }
 
-const { dialogVisible, open, addJsonList } = useJsonList(formData)
+const { dialogVisible, open, addJsonList } = useJsonList(formRef, formData)
 
 defineExpose({ validate, formData, open })
 

@@ -26,12 +26,13 @@
         </el-table-column>
         <el-table-column label="完工数量" fixed="right" min-width="120">
           <template #default="{ row, $index }">
-            <el-form-item :prop="`${$index}.finishCount`" class="mb-0px!">
+            <el-form-item :prop="`${$index}.finishCount`" :rules="createReduceMaxRules('finishCount')" class="mb-0px!">
               <el-input-number
                 v-model="row.finishCount"
                 placeholder="请输入完工数量"
                 controls-position="right"
                 :min="0"
+                :max="item.originCount"
                 :precision="0"
                 class="!w-100%"
               />
@@ -57,6 +58,7 @@
 <script setup lang="ts">
 import { ElForm } from 'element-plus'
 import { useJsonList } from './hooks/useJsonList'
+import { getReduceMaxRules } from '../../common/utils'
 
 const props = defineProps({
   // items: {
@@ -66,8 +68,20 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  item: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
+
+watch(
+  () => props.item,
+  async (val) => {},
+  { immediate: true, deep: true }
+)
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<any[]>([])
 const formRules = reactive({
@@ -83,6 +97,13 @@ const formRef = ref<InstanceType<typeof ElForm>>() // 表单 Ref
 //   },
 //   { immediate: true, deep: true }
 // )
+
+const { createReduceMaxRules } = getReduceMaxRules(
+  formData,
+  props.item,
+  { maxLabel: '下单数量', maxKey: 'originCount' },
+  [{ label: '完工数量', reduceKey: 'finishCount' }]
+)
 
 /** 新增按钮操作 */
 const handleAdd = () => {
@@ -103,7 +124,7 @@ const validate = () => {
   return formRef.value?.validate()
 }
 
-const { dialogVisible, open, addJsonList } = useJsonList(formData)
+const { dialogVisible, open, addJsonList } = useJsonList(formRef, formData)
 
 defineExpose({ validate, formData, open })
 

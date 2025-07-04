@@ -193,7 +193,6 @@ import {
 } from '@/utils'
 import { cloneDeep } from 'lodash-es'
 import { computeTargetQty } from '@/utils/transformData'
-import { hasRepeat } from '@/utils/judge'
 import { getDeptTree, getFinanceSubjectList, getProductList, getWarehouseList } from '@/commonData'
 import { CustomRuleApi } from '@/api/tms/customrule'
 import { getIntDictOptions } from '@/utils/dict'
