@@ -126,12 +126,22 @@
         <el-button
           type="success"
           plain
-          @click="handleExport"
+          @click="handleExport()"
           :loading="exportLoading"
           v-hasPermi="['erp:product:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handleExport(true)"
+          :loading="exportLoading"
+          v-hasPermi="['erp:product:export']"
+        >
+          <Icon icon="ep:download" class="mr-5px" /> 导出含图片
+        </el-button>
+
         <el-button @click="moreDialog = true"
           ><Icon icon="ep:search" class="mr-5px" /> 更多</el-button
         >
@@ -165,7 +175,6 @@
     </div>
   </Dialog>
 
-
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
       border
@@ -184,8 +193,6 @@
       <template #status="{ scope }">
         <dict-tag :type="DICT_TYPE.COMMON_BOOLEAN_STATUS" :value="scope.row.status || ''" />
       </template>
-
-
 
       <template #operate="{ scope }">
         <el-button
@@ -236,7 +243,6 @@ import { getProductNameList, getUserList } from '@/commonData'
 import { useTableData } from '@/components/SmTable/src/utils'
 import { useFormData } from '@/components/SmForm/src/utils'
 import { insertSearchVal } from '@/utils/high'
-
 
 const { productNameList, productSkuList, productSeriesList, productBrandList } =
   getProductNameList()
@@ -324,13 +330,16 @@ const handleDelete = async (id: number) => {
 }
 
 /** 导出按钮操作 */
-const handleExport = async () => {
+const handleExport = async (hasImg?: boolean) => {
   try {
     // 导出的二次确认
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await ProductApi.exportProduct(queryParams)
+    const data = await ProductApi.exportProduct({
+      ...queryParams,
+      hasImg
+    })
     download.excel(data, 'ERP 产品.xls')
   } catch {
   } finally {
