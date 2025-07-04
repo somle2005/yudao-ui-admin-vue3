@@ -18,7 +18,7 @@
             :label="item.label"
             :width="item.width"
             align="center"
-          > 
+          >
             <!-- 方便注释label -->
             <template v-if="item.prop === 'originLabel'" #default="{ row }">
               <span>{{ row.originLabel }}</span>
@@ -32,8 +32,8 @@
             <template v-else-if="item.prop === 'isEnable'" #default="{ row }">
               <ElCheckbox v-model="row.isEnable" :disabled="row.listDisabled" />
             </template>
-            <!-- <template v-else-if="item.prop === 'align'" #default="{ row }">
-              <el-select v-model="row.align" clearable placeholder="请选择左右固定">
+            <template v-else-if="item.prop === 'fixed'" #default="{ row }">
+              <el-select v-model="row.fixed" clearable>
                 <el-option
                   v-for="dict in item.data"
                   :key="dict.value"
@@ -42,8 +42,8 @@
                 />
               </el-select>
             </template>
-            <template v-else-if="item.prop === 'fixed'" #default="{ row }">
-              <el-select v-model="row.fixed" clearable placeholder="请选择左右固定">
+            <!-- <template v-else-if="item.prop === 'align'" #default="{ row }">
+              <el-select v-model="row.align" clearable placeholder="请选择左右固定">
                 <el-option
                   v-for="dict in item.data"
                   :key="dict.value"
@@ -92,7 +92,6 @@ import {
   WHOLE_ORDER_SAVE_DATA_MAP
 } from './utils'
 import { cloneDeep, debounce } from 'lodash-es'
-
 
 const fontSize = window.innerWidth > 2000 ? '14px' : '12px'
 
@@ -161,10 +160,20 @@ const columnData = [
     width: '100px'
   },
   {
-    prop: 'prop',
-    label: '列prop',
-    width: '200px'
-  }
+    prop: 'fixed',
+    label: '固定',
+    width: '120px',
+    data: [
+      {
+        label: '左固定',
+        value: 'left'
+      },
+      {
+        label: '右固定',
+        value: 'right'
+      }
+    ]
+  },
   // {
   //   prop: 'align',
   //   label: '居中方式',
@@ -183,20 +192,11 @@ const columnData = [
   //     }
   //   ]
   // },
-  // {
-  //   prop: 'fixed',
-  //   label: '是否固定',
-  //   data: [
-  //     {
-  //       label: '左固定',
-  //       value: 'left'
-  //     },
-  //     {
-  //       label: '右固定',
-  //       value: 'right'
-  //     }
-  //   ]
-  // }
+  {
+    prop: 'prop',
+    label: '列prop',
+    width: '200px'
+  }
 ]
 const extraWidth = 240 // 包含table-config 200宽度+其余列paddding40
 let dialogWidth =
@@ -365,11 +365,11 @@ watch(
   margin-top: 20px;
 }
 .table-config {
-  width: 200px; // 这里如果修改了记得修改上面的extraWidth 
+  width: 200px; // 这里如果修改了记得修改上面的extraWidth
 }
 .table-config-title {
   font-size: v-bind(fontSize);
-  // 这里如果修改了记得修改上面的extraWidth 
+  // 这里如果修改了记得修改上面的extraWidth
   width: 200px;
   white-space: nowrap;
   height: 40px;

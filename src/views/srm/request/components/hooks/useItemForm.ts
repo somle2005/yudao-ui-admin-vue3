@@ -43,7 +43,8 @@ export const useItemForm = (props, formData) => {
     productId: {
       width: '180',
       label: '*产品编码',
-      slot: 'productId'
+      slot: 'productId',
+      fixed: 'left'
     },
     productName: {
       width: '160',
