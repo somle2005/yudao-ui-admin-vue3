@@ -60,8 +60,9 @@ import ItemsForm from './components/ItemsForm.vue'
 import { createDBFn } from '@/utils/decorate'
 import { AUDIT_TYPE } from '@/utils/constant'
 import { computeDiscountPriceAndTotalPrice } from '@/utils/transformData'
+import { InfoKeyOpenFormData } from './hooks/injectKeys'
 
-const resetFormData = () => {
+const initFormData = () => {
   return {
     billTime: undefined,
     applicantId: undefined,
@@ -72,10 +73,12 @@ const resetFormData = () => {
   }
 }
 
-const formData = ref(resetFormData())
+const formData = ref(initFormData())
+
+provide(InfoKeyOpenFormData, formData)
 
 const getResetFormData = () => {
-  formData.value = resetFormData()
+  formData.value = initFormData()
 }
 
 const getFormData = () => {

@@ -225,6 +225,8 @@ import { getWMSWarehouseList } from '@/commonData/wms'
 import { useBatchChange } from '@/hooks/common/useBatch'
 import { useItemForm } from './hooks/useItemForm'
 import { getProductIdRules } from '../../common/utils'
+import { InfoKeyOpenFormData } from '../hooks/injectKeys'
+import { useSupplierProductList } from '../../common/hooks/add'
 
 /**
     items-商品信息-表格列(参照-采购订单-订单产品清单)
@@ -268,6 +270,20 @@ const props = defineProps({
 
 const formLoading = ref(false) // 表单的加载中
 const formData = ref<Array<any>>([])
+// 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-产品编码(产品名称-单位) 申请数量
+const formRules = reactive({
+  deliveryTime: [{ required: true, message: '交货日期不能为空', trigger: 'blur' }],
+  // productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
+  // productId: productIdRuleList,
+  qty: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
+  orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],
+  declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
+  declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
+})
+const formRef = ref() // 表单 Ref
+const productList = getProductList() // 产品列表
+
+const openFormData = inject(InfoKeyOpenFormData)
 
 const {
   allDisabled,
@@ -288,18 +304,20 @@ const { addSelectionId, handleSelectionChange, batchChange } = useBatchChange(fo
 
 const { createProductIdRule } = getProductIdRules(formData, props.formType)
 
-// 必填项 单据日期 申请人 申请部门(在外部父表单) 产品编码-产品编码(产品名称-单位) 申请数量
-const formRules = reactive({
-  deliveryTime: [{ required: true, message: '交货日期不能为空', trigger: 'blur' }],
-  // productId: [{ required: true, message: '产品编码不能为空', trigger: 'blur' }],
-  // productId: productIdRuleList,
-  qty: [{ required: true, message: '申请数量不能为空', trigger: 'blur' }],
-  orderQuantity: [{ required: true, message: '下单数量不能为空', trigger: 'blur' }],
-  declaredType: [{ required: true, message: '海关品名不能为空', trigger: 'blur' }],
-  declaredTypeEn: [{ required: true, message: '海关品名(英文)不能为空', trigger: 'blur' }]
-})
-const formRef = ref() // 表单 Ref
-const productList = getProductList() // 产品列表
+// 合并采购时-产品无法变更只有供应商可变更
+const { canSupplierProductList } = useSupplierProductList(
+  ['merge'],
+  openFormData
+)
+
+watch(
+  () => openFormData.value.supplierId,
+  async (val) => {
+    console.log(val, 'val-supplierId')
+    canSupplierProductList(props, formData, val)
+  },
+  { immediate: true, deep: true }
+)
 
 /** 初始化设置入库项 */
 watch(

@@ -153,7 +153,9 @@ export const useItemForm = (props, formData) => {
     deliveryTime: {
       width: '150',
       label: '*交货日期',
-      slot: 'deliveryTime'
+      slot: 'deliveryTime',
+      isEnable: mergeDisabled.value,
+      listDisabled: true
     },
 
     declaredTypeEn: {
