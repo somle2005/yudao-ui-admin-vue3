@@ -162,6 +162,7 @@ export const useItemForm = (props, formData) => {
       slot: 'declaredTypeEn'
     },
 
+    // 暂时合并的时候存在
     remark: {
       width: '100',
       label: '备注',

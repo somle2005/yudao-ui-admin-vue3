@@ -289,12 +289,12 @@ const tableData = ref<any[]>([])
 watch(
   () => props.data,
   (val) => {
-    // console.log(val, '拿到data值了')
     if (val?.length) {
-      tableData.value = cloneDeep(val).map((item: any) => {
-        item.rowEdit = false
-        return item
-      })
+      // tableData.value = cloneDeep(val).map((item: any) => {
+      //   item.rowEdit = false
+      //   return item
+      // })
+      tableData.value = val
     } else {
       tableData.value = []
     }
@@ -305,20 +305,17 @@ watch(
 watch(
   () => tableData.value,
   (val) => {
-    if (props.getTableData) {
-      const outTableData = props.getTableData()
-      if (val?.length) {
-        // 更新每个项的数据
-        val.forEach((item, index) => {
-          Object.assign(unref(outTableData)[index], item)
-        })
-      } else {
-        outTableData.value = []
-      }
-    }
-    // 空数组也需要处理
-    // emits('update:data', val)
-    //  console.log(val, 'val数据变化了')
+    // if (props.getTableData) {
+    //   const outTableData = props.getTableData()
+    //   if (val?.length) {
+    //     // 更新每个项的数据
+    //     val.forEach((item, index) => {
+    //       Object.assign(unref(outTableData)[index], item)
+    //     })
+    //   } else {
+    //     outTableData.value = []
+    //   }
+    // }
   },
   { immediate: true, deep: true }
 )
