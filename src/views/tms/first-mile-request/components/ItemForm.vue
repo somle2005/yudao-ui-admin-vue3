@@ -9,9 +9,9 @@
       :inline-message="true"
       :disabled="disabled"
     >
-      <el-table border :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px" @selection-change="handleSelectionChange">
         <el-table-column label="序号" type="index" width="60" align="center" />
-
+        <el-table-column fixed="left" width="40" label="选择" type="selection" align="center" />
         <el-table-column label="*产品编码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
@@ -80,6 +80,7 @@
                 :disabled="disabled"
                 type="textarea"
                 placeholder="请输入备注"
+                @change="(val) => batchChange(row, val, 'remark')"
               />
             </el-form-item>
           </template>
@@ -96,6 +97,7 @@
                 v-model="row.salesCompanyId"
                 placeholder="请选择销售公司"
                 :data="financeSubjectList"
+                @change="(val) => batchChange(row, val, 'salesCompanyId')"
               />
             </el-form-item>
           </template>
@@ -130,6 +132,7 @@ import { getIntDictOptions } from '@/utils/dict'
 import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
 import { addFbaBarCode, addShowQtyDB, computeVolume } from '../../common/utils'
 import { useInitNum } from '../../common/hooks'
+import { useBatchChange } from '@/hooks/common/useBatch'
 
 const productList = getProductList()
 const financeSubjectList = getFinanceSubjectList()
@@ -176,6 +179,8 @@ const formRef = ref() // 表单 Ref
 
 const { addInitNum, judgeNum } = useInitNum()
 
+const { addSelectionId, handleSelectionChange, batchChange } = useBatchChange(formData)
+
 watch(
   () => props.itemIdKey,
   (val) => {}
@@ -213,6 +218,8 @@ watch(
     if (!val || val.length === 0) {
       return
     }
+
+    addSelectionId(val)
     // computeTargetQty(val, {
     //   targetQtyKey: 'pickQty',
     //   computeQtyKey: 'qty',

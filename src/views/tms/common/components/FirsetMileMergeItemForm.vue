@@ -9,9 +9,9 @@
       :inline-message="true"
       :disabled="disabled"
     >
-      <el-table border :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px" @selection-change="handleSelectionChange">
         <el-table-column label="序号" type="index" width="60" align="center" />
-
+        <el-table-column fixed="left" width="40" label="选择" type="selection" align="center" />
         <el-table-column label="*产品编码" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item
@@ -34,10 +34,7 @@
         <!-- 自动带出该目的仓库所在国家的产品FBA条码 -->
         <el-table-column label="*FBA条码" width="150" align="center">
           <template #default="{ row, $index }">
-            <el-form-item
-              :prop="`${$index}.fbaBarCode`"
-              class="mb-0px!"
-            >
+            <el-form-item :prop="`${$index}.fbaBarCode`" class="mb-0px!">
               <el-input v-model="row.fbaBarCode" placeholder="请输入FBA条码" />
             </el-form-item>
           </template>
@@ -151,6 +148,7 @@
                 v-model="row.salesCompanyId"
                 placeholder="请选择库存公司"
                 :data="financeSubjectList"
+                @change="(val) => batchChange(row, val, 'salesCompanyId')"
               />
             </el-form-item>
           </template>
@@ -200,6 +198,7 @@ import { formatDecimal, formatDecimalFormatter } from '@/utils/num'
 import { computeVolume, addFbaBarCode, addCompanyList, addCompany, addShowQtyDB } from '../utils'
 import { useInitNum } from '../hooks'
 import { getWMSWarehouseList } from '@/commonData/wms'
+import { useBatchChange } from '@/hooks/common/useBatch'
 
 const productList = getProductList()
 const WMSWarehouseList = getWMSWarehouseList()
@@ -261,6 +260,7 @@ const formRules = reactive({
 const formRef = ref() // 表单 Ref
 
 const { addInitNum, judgeNum } = useInitNum()
+const { addSelectionId, handleSelectionChange, batchChange } = useBatchChange(formData)
 
 watch(
   () => props.itemIdKey,
@@ -303,6 +303,7 @@ watch(
     if (!val || val.length === 0) {
       return
     }
+    addSelectionId(val)
     // computeTargetQty(val, {
     //   targetQtyKey: 'pickQty',
     //   computeQtyKey: 'qty',
@@ -372,7 +373,7 @@ const changeProduct = async (row, index, val) => {
       return
     }
 
-    const { packageHeight, packageLength, packageWidth, packageWeight,weight  } = product
+    const { packageHeight, packageLength, packageWidth, packageWeight, weight } = product
     row.packageHeight = packageHeight
     row.packageLength = packageLength
     row.packageWidth = packageWidth

@@ -10,7 +10,8 @@
       :disabled="disabled"
     >
       <!-- show-summary :summary-method="getSummaries" -->
-      <el-table border :data="formData" class="-mt-10px">
+      <el-table border :data="formData" class="-mt-10px" @selection-change="handleSelectionChange">
+        <el-table-column fixed="left" width="40" label="选择" type="selection" align="center" />
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column v-if="!showCreate" prop="id" label="编号" min-width="60" align="center" />
 
@@ -24,7 +25,13 @@
         <el-table-column label="仓库" width="150" align="center">
           <template #default="{ row, $index }">
             <el-form-item :prop="`${$index}.warehouseId`" class="mb-0px!">
-              <el-select v-model="row.warehouseId" clearable filterable placeholder="请选择仓库">
+              <el-select
+                v-model="row.warehouseId"
+                clearable
+                filterable
+                placeholder="请选择仓库"
+                @change="(val) => batchChange(row, val, 'warehouseId')"
+              >
                 <el-option
                   v-for="item in WMSWarehouseList"
                   :key="item.id"
@@ -296,6 +303,7 @@ import { TAX_PERCENT } from '@/utils/constant'
 import { currencyNameChange } from '@/utils/operate/srm'
 import { getWMSWarehouseList } from '@/commonData/wms'
 import { SRM_OPERATE_MAP } from '../../common/constant'
+import { useBatchChange } from '@/hooks/common/useBatch'
 
 const props = defineProps({
   items: {
@@ -336,6 +344,8 @@ const WMSWarehouseList = getWMSWarehouseList()
 // const { deptList, defaultProps } = getDeptTree()
 // const userList = getUserList()
 
+const { addSelectionId, handleSelectionChange, batchChange } = useBatchChange(formData)
+
 /** 初始化设置入库项 */
 watch(
   () => props.items,
@@ -371,6 +381,7 @@ watch(
 
     // 编辑回显
     computeGrossPriceAndGrossTotalPrice(val, keyMap)
+    addSelectionId(val)
     // 循环处理
     // val.forEach((item) => {
     //   item.totalProductPrice = erpPriceMultiply(item.productPrice, item.qty)

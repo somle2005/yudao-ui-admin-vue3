@@ -78,6 +78,7 @@
             clearable
             filterable
             placeholder="请选择仓库"
+            @change="(val) => batchChange(row, val, 'warehouseId')"
           >
             <el-option
               v-for="item in WMSWarehouseList"
@@ -133,7 +134,7 @@
 
       <template #taxRate="{ row, $index }">
         <el-form-item :prop="`${$index}.taxRate`" class="mb-0px!">
-          <SmNumber :precision="2" v-model="row.taxRate" />
+          <SmNumber :precision="2" v-model="row.taxRate" @change="(val) => batchChange(row, val, 'taxRate')" />
         </el-form-item>
       </template>
 

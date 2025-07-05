@@ -73,8 +73,6 @@ export const useItemForm = (props, formData) => {
       width: '120',
       label: '仓库',
       slot: 'warehouseId',
-      isEnable: disabled.value,
-      listDisabled: true
     },
 
     orderQuantity: {
