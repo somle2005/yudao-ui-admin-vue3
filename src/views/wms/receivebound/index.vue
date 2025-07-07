@@ -13,6 +13,15 @@
       <template #action>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
+          <!-- <el-dropdown
+          :disabled="oneSelectDisabledBtn"
+          class="ml-10px"
+          split-button
+          type="primary"
+          v-hasPermi="['wms:exchange:audit']"
+        >
+          <div @click="handleUpdateStatus(selectionList[0], true)">审核(权限字符-后端给后修改)</div>
+        </el-dropdown> -->
       </template>
     </SmForm>
   </ContentWrap>
@@ -82,6 +91,14 @@
         >
           收货并上架
         </el-button> -->
+        <el-button
+          link
+          type="primary"
+          @click="toPickUp"
+          v-if="hasAllPermission(['wms:pickup:create'])"
+        >
+          上架
+        </el-button>
       </template>
     </SmTable>
   </ContentWrap>
@@ -101,6 +118,22 @@ import { cloneDeep } from 'lodash-es'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { isAbandon } from '../common/utils'
 import { useTableField } from '@/components/SmTableField/src/hooks'
+
+const router = useRouter()
+const toPickUp = () => {
+  window.getRouteQuery = () => {
+    try {
+      return {
+        routeJump: true
+      }
+    } finally {
+      window.getRouteQuery = null as any
+    }
+  }
+  router.push({
+    path: `/wms/pickup`
+  })
+}
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -254,7 +287,7 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
-const tableFieldKey = '/wms/inbound/page' + '-' +'receivebound' // WMS很多页面可能复用一个接口
+const tableFieldKey = '/wms/inbound/page' + '-' + 'receivebound' // WMS很多页面可能复用一个接口
 const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useTableField(
   tableOptions,
   tableFieldKey

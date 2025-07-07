@@ -3,9 +3,10 @@ export const AUDIT_STATUS = {
 }
 
 export const OPERATE_MAP = {
-  'update-actual-quantity':'收货',
+  'update-actual-quantity': '收货',
   abandon: '作废',
   'force-finish': '强制完成',
   'update-actual-quantityAndPickup': '收货并上架',
-  finish: '完成'
+  finish: '完成',
+  pickup: '上架'
 }
