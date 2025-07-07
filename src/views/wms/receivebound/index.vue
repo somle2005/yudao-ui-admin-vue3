@@ -20,6 +20,10 @@
   <!-- 列表 -->
   <ContentWrap :bodyStyle="{ padding: '20px', 'padding-bottom': 0 }">
     <SmTable
+      isTabledField
+      :tableFieldOptions="tableFieldOptions"
+      :tableFieldKey="tableFieldKey"
+      @table-field-confirm="tableFieldConfirm"
       border
       :loading="loading"
       :options="tableOptions"
@@ -70,14 +74,14 @@
         >
           强制完成
         </el-button>
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           @click="openForm(OPERATE_MAP['update-actual-quantityAndPickup'], scope.row.id)"
           v-if="hasAllPermission(['wms:inbound-item:update', 'wms:pickup:create'])"
         >
           收货并上架
-        </el-button>
+        </el-button> -->
       </template>
     </SmTable>
   </ContentWrap>
@@ -96,6 +100,7 @@ import OpenForm from './OpenForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { hasAllPermission } from '@/directives/permission/hasPermi'
 import { isAbandon } from '../common/utils'
+import { useTableField } from '@/components/SmTableField/src/hooks'
 
 const { tableOptions, transformTableOptions, getItemProp } = useTableData()
 // itemList-易仓上面没有展示
@@ -249,6 +254,12 @@ const handleExport = async () => {
 
 const { getSearchFormData, searchFormOptions } = useSearchForm(handleQuery, queryParams)
 
+const tableFieldKey = '/wms/inbound/page' + '-' +'receivebound' // WMS很多页面可能复用一个接口
+const { createTableFiledOptions, tableFieldOptions, tableFieldConfirm } = useTableField(
+  tableOptions,
+  tableFieldKey
+)
+
 onActivated(() => {
   const routeQuery = window.getRouteQuery && window.getRouteQuery()
   if (routeQuery?.no) {
@@ -257,5 +268,6 @@ onActivated(() => {
     queryFormRef.value.initForm()
   }
   getList()
+  createTableFiledOptions()
 })
 </script>
