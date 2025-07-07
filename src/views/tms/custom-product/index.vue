@@ -17,7 +17,8 @@
           class="!w-240px"
         /> -->
         <el-select
-          v-model="queryParams.productId"
+          v-model="queryParams.productIds"
+          multiple
           clearable
           filterable
           placeholder="请选择产品编码"
@@ -204,7 +205,7 @@ const total = ref(0) // 列表的总页数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  productId: undefined,
+  productIds: [],
   customCategoryId: undefined,
   createTime: [],
   updateTime: []
