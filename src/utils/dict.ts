@@ -229,7 +229,7 @@ export enum DICT_TYPE {
   ERP_PRODUCT_LISTING_STATUS = 'erp_product_listing_status', // 商品上下架状态
   REPORT_MAP = 'report_map', // 报表地图
   ERP_SALES_PLATFORM = 'erp_sales_platform', // 销售平台
-  
+
   ERP_SUPPLIER_ENGLISH = 'erp_supplier_english', // 供应商-外币采购（英文）
   ERP_SUPPLIER_CHINESE = 'erp_supplier_chinese', // 供应商-外币采购（中文）
   ERP_SUPPLIER_RMB = 'erp_supplier_rmb', // 供应商-人民币采购
@@ -282,7 +282,9 @@ export enum DICT_TYPE {
   WMS_EXCHANGE_AUDIT_STATUS = 'wms_exchange_audit_status', // WMS换货单审批状态
   WMS_EXCHANGE_TYPE = 'wms_exchange_type', // WMS换货单类型
   WMS_WAREHOUSE_BIN_TYPE = 'wms_warehouse_bin_type', // WMS库位类型
-  
+  WMS_WAREHOUSE_OUTBOUND_MODE = 'wms_warehouse_outbound_mode', //  WMS出货模式
+  WMS_WAREHOUSE_SHELF_MODE = 'wms_warehouse_shelf_mode', // WMS上架模式
+
   // ========== SRM - 采购模块  ==========
   SRM_RETURN_STATUS = 'srm_return_status', // SRM 退货状态
   SRM_EXECUTE_STATUS = 'srm_execute_status', // SRM 执行状态
@@ -295,5 +297,5 @@ export enum DICT_TYPE {
 
   // ========== TMS - 运输管理系统  ==========
   TMS_CABINET_TYPE = 'tms_cabinet_type', // TMS 柜型
-  TMS_FEE_TYPE = 'tms_fee_type', // TMS 费用类型
+  TMS_FEE_TYPE = 'tms_fee_type' // TMS 费用类型
 }

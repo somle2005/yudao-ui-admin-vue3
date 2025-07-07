@@ -97,7 +97,7 @@ const submitForm = async () => {
     if (formType.value === 'create') {
       await WarehouseApi.createWarehouse(data)
       message.success(t('common.createSuccess'))
-    } else {
+    } else if (formType.value === 'update') {
       await WarehouseApi.updateWarehouse(data)
       message.success(t('common.updateSuccess'))
     }
@@ -239,7 +239,7 @@ const createRequestFormOptions = () => {
       type: 'select',
       label: '国家编码',
       prop: 'country',
-      placeholder: '请输入国家编码',
+      placeholder: '请选择国家编码',
       attrs: {
         style: { width: '100%' },
         filterable: true,
@@ -326,6 +326,32 @@ const createRequestFormOptions = () => {
         style: { width: '100%' },
         clearable: true
       }
+    },
+
+    {
+      type: 'select',
+      label: '出货模式',
+      prop: 'outboundMode',
+      placeholder: '请选择出货模式',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_OUTBOUND_MODE)
+    },
+
+    {
+      type: 'select',
+      label: '上架模式',
+      prop: 'shelfMode',
+      placeholder: '请选择上架模式',
+      attrs: {
+        style: { width: '100%' },
+        filterable: true,
+        clearable: true
+      },
+      children: getIntDictOptions(DICT_TYPE.WMS_WAREHOUSE_SHELF_MODE)
     }
   ]
 

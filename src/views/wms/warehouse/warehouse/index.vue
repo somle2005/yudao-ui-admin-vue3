@@ -80,7 +80,6 @@ import { useTableData } from '@/components/SmTable/src/utils'
 import { useSearchForm } from './hooks/search'
 import { DICT_TYPE } from '@/utils/dict'
 
-
 const { tableOptions, transformTableOptions } = useTableData()
 
 const fieldMap = {
@@ -95,6 +94,16 @@ const fieldMap = {
     label: '状态',
     slot: 'status',
     dictAttrs: { type: DICT_TYPE.WMS_VALID_STATUS }
+  },
+  outboundMode: {
+    label: '出货模式',
+    slot: 'outboundMode',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_OUTBOUND_MODE }
+  },
+  shelfMode: {
+    label: '上架模式',
+    slot: 'shelfMode',
+    dictAttrs: { type: DICT_TYPE.WMS_WAREHOUSE_SHELF_MODE }
   },
   addressLine3: '详细地址3',
   country: '国家编码',
