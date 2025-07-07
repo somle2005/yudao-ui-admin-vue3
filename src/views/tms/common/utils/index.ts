@@ -90,7 +90,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
       },
 
       {
-        requiredFlag: true,
         type: 'select',
         label: '出口公司',
         prop: 'exportCompanyId',
@@ -103,7 +102,6 @@ export const useMergeFirstMileOptions = (warehouse, WMSWarehouseList, financeSub
         children: financeSubjectList
       },
       {
-        requiredFlag: true,
         type: 'select',
         label: '中转公司',
         prop: 'transitCompanyId',
