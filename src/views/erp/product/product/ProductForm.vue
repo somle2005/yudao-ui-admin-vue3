@@ -29,6 +29,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item label="英文名称" prop="englishName">
+            <el-input v-model="formData.englishName" placeholder="请输入英文名称" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="产品分类" prop="categoryId">
             <el-tree-select
               v-model="formData.categoryId"
