@@ -23,6 +23,7 @@ import { getWMSWarehouseList } from '@/commonData/wms'
 import { addProperty } from '@/components/SmForm/src/utils'
 import { createDBFn } from '@/utils/decorate'
 import { getIntDictOptions } from '@/utils/dict'
+import { validateCnChart } from '@/utils/validate'
 
 /** 库区 表单 */
 defineOptions({ name: 'WarehouseZoneForm' })
@@ -140,7 +141,15 @@ const createRequestFormOptions = () => {
       attrs: {
         style: { width: '100%' },
         clearable: true
-      }
+      },
+      rules: [
+        {
+          required: true,
+          message: `库区名称不能为空`,
+          trigger: 'blur'
+        },
+        validateCnChart('库区名称')
+      ]
     },
 
     {
